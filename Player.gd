@@ -1,6 +1,6 @@
 extends KinematicBody
 
-const MOVE_SPEED = 100
+const MOVE_SPEED = 130
 const JUMP_FORCE = 30
 const GRAVITY = 0.98
 const MAX_FALL_SPEED = 30
@@ -20,11 +20,9 @@ func _ready():
 	anim.get_animation("walk").set_loop(true)
 	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-func _input(event):
-	if event is InputEventMouseMotion:
-		cam.rotation_degrees.x -= event.relative.y * V_LOOK_SENS
-		cam.rotation_degrees.x = clamp(cam.rotation_degrees.x, -90, 90)
-		rotation.y -= event.relative.x * H_LOOK_SENS
+#func _input(event):
+#	if event is InputEventMouseMotion:
+#		rotation.y -= event.relative.x * H_LOOK_SENS
 		
 func handle_animations(just_jumped, grounded, move_vec):
 	if just_jumped:
@@ -59,9 +57,10 @@ func _physics_process(_delta):
 	move_vec = move_vec.rotated(Vector3(0, 1, 0), rotation.y)
 	move_vec *= MOVE_SPEED
 	move_vec.y = y_velo
+	
 	move_and_slide(move_vec, Vector3(0, 1, 0))
 	
-	# Handles jumping. -----------
+	# Handles jumping. ----------- Not sure we need this.
 	var grounded = is_on_floor()
 	y_velo -= GRAVITY
 	var just_jumped = false
