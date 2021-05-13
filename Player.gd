@@ -1,87 +1,90 @@
 extends KinematicBody
 
-const MOVE_SPEED = 130
-const JUMP_FORCE = 30
-const GRAVITY = 0.98
-const MAX_FALL_SPEED = 30
+const MOVE_SPEED = 2.2
 
-const H_LOOK_SENS = 0.01
-const V_LOOK_SENS = 0.2
-
-onready var cam = $CamBase
+onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
-
-var y_velo = 0
+onready var gui = get_node("/root/World/GUI")
+onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # Used to store the action for the next turn.
 var proposed_action = ""
 
+var ready_status = false
+var is_timer_zero = false
+
+var anim_state = "idle"
+
+var target_pos = Vector3()
+
+var t = 0 
+
 func _ready():
-	anim.get_animation("walk").set_loop(true)
-	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	
-#func _input(event):
-#	if event is InputEventMouseMotion:
-#		rotation.y -= event.relative.x * H_LOOK_SENS
+	pass
 		
-func handle_animations(just_jumped, grounded, move_vec):
-	if just_jumped:
-		play_anim("jump")
-	elif grounded:
-		if move_vec.x ==0 and move_vec.z == 0:
-			play_anim("idle")
-		else:
-			play_anim("walk")
-		
-func get_movement_transforms():
-	var move_vec = Vector3()
-	
-	if Input.is_action_just_pressed("move_forwards"):
-		move_vec.z -= 1
-		proposed_action = "move up"
-	if Input.is_action_just_pressed("move_backwards"):
-		move_vec.z += 1
-		proposed_action = "move down"
-	if Input.is_action_just_pressed("move_left"):
-		move_vec.x -= 1	
-		proposed_action = "move left"
-	if Input.is_action_just_pressed("move_right"):
-		move_vec.x += 1
-		proposed_action = "move right"
-	return move_vec
-	
-func _physics_process(_delta):
-	# Get movement vector from input, apply it,
-	var move_vec = get_movement_transforms().normalized()
-	
-	move_vec = move_vec.rotated(Vector3(0, 1, 0), rotation.y)
-	move_vec *= MOVE_SPEED
-	move_vec.y = y_velo
-	
-	move_and_slide(move_vec, Vector3(0, 1, 0))
-	
-	# Handles jumping. ----------- Not sure we need this.
-	var grounded = is_on_floor()
-	y_velo -= GRAVITY
-	var just_jumped = false
-	
-	if grounded and Input.is_action_just_pressed("jump"):
-		just_jumped = true
-		y_velo = JUMP_FORCE
-	if grounded and y_velo <= 0:
-		y_velo = -0.1
-	if y_velo < -MAX_FALL_SPEED:
-		y_velo = -MAX_FALL_SPEED
-	# ----------------------------
-	
-	handle_animations(just_jumped, grounded, move_vec)
-	
 func play_anim(name):
 	if anim.current_animation == name:
 		return
 	anim.play(name)
 
+func get_input():
+	if is_timer_zero != true: # We don't wanna collect input if turn in action.
+		return
 	
+	if Input.is_action_just_pressed("w"):
+		proposed_action = "move up"
+		gui.propose_action(proposed_action)
+		ready_status = true
+	if Input.is_action_just_pressed("s"):
+		proposed_action = "move down"
+		gui.propose_action(proposed_action)
+		ready_status = true
+	if Input.is_action_just_pressed("a"):
+		proposed_action = "move left"
+		gui.propose_action(proposed_action)
+		ready_status = true
+	if Input.is_action_just_pressed("d"):
+		proposed_action = "move right"
+		gui.propose_action(proposed_action)
+		ready_status = true
 	
+func process_turn():
 	
+	# IF ACTION IS MOVE
+	if proposed_action == "move up":
+		target_pos.x = translation.x + MOVE_SPEED
+		model.rotation_degrees.y = 90
+	if proposed_action == "move down":
+		target_pos.x = translation.x + -MOVE_SPEED
+		model.rotation_degrees.y = 90 + 180
+	if proposed_action == "move left":
+		target_pos.z = translation.z + -MOVE_SPEED
+		model.rotation_degrees.y = 180
+	if proposed_action == "move right":
+		target_pos.z = translation.z + MOVE_SPEED
+		model.rotation_degrees.y = 180 + 180
 	
+	# CLEAR ACTION
+	proposed_action = ""
+	
+func _physics_process(_delta):
+	# Update local variable.
+	is_timer_zero = turn_timer.is_timer_zero
+	
+	# Change position based on time tickdown.
+	translation = translation.linear_interpolate(target_pos, (1-turn_timer.time_left)) 
+	
+	if translation != target_pos:
+		anim_state = "walk"
+	else:
+		anim_state = "idle"
+	
+	get_input()
+	
+	handle_animations()
+
+func handle_animations():
+	if anim_state == "idle":
+		play_anim("idle")
+	else:
+		play_anim("walk")
