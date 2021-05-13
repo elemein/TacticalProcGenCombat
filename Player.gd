@@ -54,6 +54,14 @@ func _physics_process(_delta):
 	if y_velo < -MAX_FALL_SPEED:
 		y_velo = -MAX_FALL_SPEED
 	
+	if just_jumped:
+		play_anim("jump")
+	elif grounded:
+		if move_vec.x ==0 and move_vec.z == 0:
+			play_anim("idle")
+		else:
+			play_anim("walk")
+	
 func play_anim(name):
 	if anim.current_animation == name:
 		return
