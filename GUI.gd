@@ -12,7 +12,7 @@ onready var player = get_node("/root/World/Player")
 func clear_action():
 	action_holder.set_texture(blank_action)
 
-func propose_action(proposed_action):
+func set_action(proposed_action):
 	if proposed_action == "move up":
 		action_holder.set_texture(movement_arrow)
 		action_holder.rotation_degrees = -90

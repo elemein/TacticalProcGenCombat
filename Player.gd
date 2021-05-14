@@ -15,7 +15,6 @@ var ready_status = false
 
 var direction_facing = "down"
 var directional_timer = Timer.new()
-var still_deciding_direction = false
 
 var anim_state = "idle"
 
@@ -25,13 +24,7 @@ var target_pos = Vector3()
 func _ready():
 	directional_timer.set_one_shot(true)
 	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
-	directional_timer.connect("timeout", self, "on_direction_timer_complete")
 	add_child(directional_timer)
-		
-func play_anim(name):
-	if anim.current_animation == name:
-		return
-	anim.play(name)
 
 func get_input():
 	if turn_timer.time_left > 0: # We don't wanna collect input if turn in action.
@@ -39,64 +32,50 @@ func get_input():
 	
 	# Below sets direction. It checks for the directional key being used, AND
 	# if the char is not already facing that direction, and then starts the 
-	# timer to decide direction.
-	if Input.is_action_pressed("w") && direction_facing != 'up':
-		model.rotation_degrees.y = 90
-		direction_facing = "up"
-		still_deciding_direction = true
-		directional_timer.start(DIRECTION_SELECT_TIME) 
-	if Input.is_action_pressed("s") && direction_facing != 'down':
-		model.rotation_degrees.y = 90 + 180
-		direction_facing = "down"
-		still_deciding_direction = true
-		directional_timer.start(DIRECTION_SELECT_TIME)
-	if Input.is_action_pressed("a") && direction_facing != 'left':
-		model.rotation_degrees.y = 180
-		direction_facing = "left"
-		still_deciding_direction = true
-		directional_timer.start(DIRECTION_SELECT_TIME)
-	if Input.is_action_pressed("d") && direction_facing != 'right':
-		model.rotation_degrees.y = 180 + 180
-		direction_facing = "right"
-		still_deciding_direction = true
-		directional_timer.start(DIRECTION_SELECT_TIME)
+	# timer to decide direction so that it doesnt just auto-move.
+	if Input.is_action_pressed("w") && direction_facing != 'up': set_direction('up')
+	if Input.is_action_pressed("s") && direction_facing != 'down': set_direction('down')
+	if Input.is_action_pressed("a") && direction_facing != 'left': set_direction('left')
+	if Input.is_action_pressed("d") && direction_facing != 'right': set_direction('right')
 
 	# As the move buttons are used to change direction, these need to abide
 	# to the directional timer.
-	if still_deciding_direction == false:
-		if Input.is_action_pressed("w"):
-			proposed_action = "move up"
-			gui.propose_action(proposed_action)
-			ready_status = true
-		if Input.is_action_pressed("s"):
-			proposed_action = "move down"
-			gui.propose_action(proposed_action)
-			ready_status = true
-		if Input.is_action_pressed("a"):
-			proposed_action = "move left"
-			gui.propose_action(proposed_action)
-			ready_status = true
-		if Input.is_action_pressed("d"):
-			proposed_action = "move right"
-			gui.propose_action(proposed_action)
-			ready_status = true
+	if directional_timer.time_left == 0:
+		if Input.is_action_pressed("w"): set_action('move up')
+		if Input.is_action_pressed("s"): set_action('move down')
+		if Input.is_action_pressed("a"): set_action('move left')
+		if Input.is_action_pressed("d"): set_action('move right')
 	
 	# Basic attacks only need one press.
-	if Input.is_action_pressed("space"):
-		proposed_action = "basic attack"
-		gui.propose_action(proposed_action)
-		ready_status = true
+	if Input.is_action_pressed("space"): set_action('basic attack')
 	
 	# Skills will need two taps to confirm.
 	pass
 
-func on_direction_timer_complete():
-	still_deciding_direction = false	
-		
-func process_turn():
+func set_direction(direction):
+	match direction:
+		'up':
+			direction_facing = "up"
+			model.rotation_degrees.y = 90
+		'down':
+			direction_facing = "down"
+			model.rotation_degrees.y = 90 + 180
+		'left':
+			direction_facing = "left"
+			model.rotation_degrees.y = 180
+		'right':
+			direction_facing = "right"
+			model.rotation_degrees.y = 180 + 180
+
+	directional_timer.start(DIRECTION_SELECT_TIME) 
 	
+func set_action(action):
+	proposed_action = action
+	gui.set_action(proposed_action)
+	ready_status = true
+	
+func process_turn():
 	ready_status = false
-	target_pos = translation # Reset this.
 	
 	if proposed_action.split(" ")[0] == 'move' || proposed_action == 'basic attack':
 		match direction_facing:
@@ -111,11 +90,13 @@ func process_turn():
 		
 func end_turn():
 	# Clear action.
+	target_pos = translation
 	saved_pos = translation
 	proposed_action = ''
 
 func _physics_process(_delta):
-	
+	get_input()
+
 	# Change position based on time tickdown.
 	if proposed_action.split(" ")[0] == 'move':
 		translation = translation.linear_interpolate(target_pos, (1-turn_timer.time_left)) 
@@ -130,13 +111,17 @@ func _physics_process(_delta):
 		anim_state = "walk"
 	else:
 		anim_state = "idle"
-	
-	get_input()
-	
+
 	handle_animations()
 
 func handle_animations():
-	if anim_state == "idle":
-		play_anim("idle")
-	else:
-		play_anim("walk")
+	match anim_state:
+		'idle':
+			play_anim("idle")
+		'walk':
+			play_anim("walk")
+
+func play_anim(name):
+	if anim.current_animation == name:
+		return
+	anim.play(name)
