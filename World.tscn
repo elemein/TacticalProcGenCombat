@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Map.gd" type="Script" id=2]
@@ -6,19 +6,14 @@
 [ext_resource path="res://GUI.gd" type="Script" id=4]
 [ext_resource path="res://TurnTimer.gd" type="Script" id=5]
 
-[sub_resource type="CubeMesh" id=1]
-
-[sub_resource type="SpatialMaterial" id=2]
-albedo_color = Color( 0.572549, 0.129412, 0.129412, 1 )
-
-[sub_resource type="ConcavePolygonShape" id=3]
-data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
-
 [node name="World" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00459242, -0.00956917, -0.00249863 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
-transform = Transform( 0.531987, -0.248753, 0.80939, 0.0458215, 0.962932, 0.265824, -0.845512, -0.104327, 0.523665, 0, 0, 0 )
+transform = Transform( 0.531987, -0.248753, 0.80939, 0.0458215, 0.962932, 0.265824, -0.845512, -0.104328, 0.523665, 5.14202, 4.6998, 0 )
+light_color = Color( 0.933333, 0.901961, 0.54902, 1 )
+light_specular = 1.0
+shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 
@@ -26,170 +21,10 @@ transform = Transform( 0.531987, -0.248753, 0.80939, 0.0458215, 0.962932, 0.2658
 transform = Transform( -1.62921e-07, 0, -1, 0, 1, 0, 1, 0, -1.62921e-07, 0, 0, 0 )
 
 [node name="Camera" parent="Player/CamBase" index="0"]
-transform = Transform( -1.62921e-07, 0.707107, -0.707107, 0, 0.707107, 0.707107, 1, 1.15202e-07, -1.15202e-07, -5, 5, 0 )
+transform = Transform( -1.62921e-07, 0.766045, -0.642788, 0, 0.642788, 0.766045, 1, 1.24805e-07, -1.04723e-07, -4, 5, 0 )
 
 [node name="Map" type="Node" parent="."]
 script = ExtResource( 2 )
-
-[node name="Front Row" type="Node" parent="Map"]
-
-[node name="MeshInstance6" type="MeshInstance" parent="Map/Front Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, -2.2, -0.309569, 0.00056076 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Front Row/MeshInstance6"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Front Row/MeshInstance6/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance7" type="MeshInstance" parent="Map/Front Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, -2.2, -0.310569, -2.19944 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Front Row/MeshInstance7"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Front Row/MeshInstance7/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance9" type="MeshInstance" parent="Map/Front Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, -2.2, -0.310569, -4.39944 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Front Row/MeshInstance9"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Front Row/MeshInstance9/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance8" type="MeshInstance" parent="Map/Front Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, -2.2, -0.310569, 2.20056 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Front Row/MeshInstance8"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Front Row/MeshInstance8/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance10" type="MeshInstance" parent="Map/Front Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, -2.2, -0.310569, 4.40056 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Front Row/MeshInstance10"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Front Row/MeshInstance10/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="Middle Row" type="Node" parent="Map"]
-
-[node name="MeshInstance6" type="MeshInstance" parent="Map/Middle Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, -0.00459242, -0.309569, -0.00249863 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Middle Row/MeshInstance6"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Middle Row/MeshInstance6/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance7" type="MeshInstance" parent="Map/Middle Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, -0.00459242, -0.310569, -2.2025 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Middle Row/MeshInstance7"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Middle Row/MeshInstance7/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance9" type="MeshInstance" parent="Map/Middle Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, -0.00459242, -0.310569, -4.4025 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Middle Row/MeshInstance9"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Middle Row/MeshInstance9/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance8" type="MeshInstance" parent="Map/Middle Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, -0.00459242, -0.310569, 2.1975 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Middle Row/MeshInstance8"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Middle Row/MeshInstance8/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance10" type="MeshInstance" parent="Map/Middle Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, -0.00459242, -0.310569, 4.3975 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Middle Row/MeshInstance10"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Middle Row/MeshInstance10/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="Back Row" type="Node" parent="Map"]
-
-[node name="MeshInstance6" type="MeshInstance" parent="Map/Back Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, 2.2, -0.309569, -0.00249863 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Back Row/MeshInstance6"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Back Row/MeshInstance6/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance7" type="MeshInstance" parent="Map/Back Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, 2.2, -0.310569, -2.2025 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Back Row/MeshInstance7"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Back Row/MeshInstance7/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance9" type="MeshInstance" parent="Map/Back Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, 2.2, -0.310569, -4.4025 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Back Row/MeshInstance9"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Back Row/MeshInstance9/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance8" type="MeshInstance" parent="Map/Back Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, 2.2, -0.310569, 2.1975 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Back Row/MeshInstance8"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Back Row/MeshInstance8/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="MeshInstance10" type="MeshInstance" parent="Map/Back Row"]
-transform = Transform( 0.990834, 0, 0, 0, 0.247708, 0, 0, 0, 0.990834, 2.2, -0.310569, 4.3975 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
-
-[node name="StaticBody" type="StaticBody" parent="Map/Back Row/MeshInstance10"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Map/Back Row/MeshInstance10/StaticBody"]
-shape = SubResource( 3 )
-
-[node name="TurnTimer" type="Timer" parent="."]
-one_shot = true
-script = ExtResource( 5 )
 
 [node name="Label" type="Label" parent="."]
 margin_left = 200.0
@@ -213,5 +48,10 @@ __meta__ = {
 [node name="Proposed Action" type="Sprite" parent="GUI"]
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 3 )
+
+[node name="TurnTimer" type="Timer" parent="."]
+one_shot = true
+script = ExtResource( 5 )
+[connection signal="timeout" from="TurnTimer" to="TurnTimer" method="_on_TurnTimer_timeout"]
 
 [editable path="Player"]

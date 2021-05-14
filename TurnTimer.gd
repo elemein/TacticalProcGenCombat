@@ -3,7 +3,6 @@ extends Timer
 onready var player = get_node("/root/World/Player")
 
 var turn_counter = 1
-var is_timer_zero = false
 
 # Use this to hold all of the actors in the world; players, enemies, etc.
 var actors = []
@@ -13,24 +12,18 @@ func _ready():
 	actors.append(player)
 
 func process_turn():
+	turn_counter += 1
+	
 	start()
 	
 	for actor in actors:
 		actor.process_turn()
 	
-	reset_ready_statuses()
-	turn_counter += 1
-
-func reset_ready_statuses():
+func end_turn():
 	for actor in actors:
-		actor.ready_status = false
+		actor.end_turn()
 
 func _physics_process(_delta):
-	if time_left > 0: # We dont wanna process anything while turn is in action.
-		is_timer_zero = false
-	else:
-		is_timer_zero = true
-	
 	var all_ready = true
 	
 	for actor in actors:
@@ -39,3 +32,7 @@ func _physics_process(_delta):
 
 	if all_ready:
 		process_turn()
+
+
+func _on_TurnTimer_timeout():
+	end_turn()

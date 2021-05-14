@@ -2,6 +2,7 @@ extends MarginContainer
 
 var blank_action = preload("res://Assets/GUI/Blank_Action.png")
 var movement_arrow = preload("res://Assets/GUI/Arrow.png")
+var basic_attack = preload("res://Assets/GUI/Basic_Attack.png")
 
 onready var action_holder = get_node("/root/World/GUI/Proposed Action")
 onready var turn_timer = get_node("/root/World/TurnTimer")
@@ -24,6 +25,9 @@ func propose_action(proposed_action):
 	if proposed_action == "move left":
 		action_holder.set_texture(movement_arrow)
 		action_holder.rotation_degrees = 180
+	if proposed_action == "basic attack":
+		action_holder.set_texture(basic_attack)
+		action_holder.rotation_degrees = 0
 
 func _physics_process(_delta):
 	# We want to continuously display the time left on the turn timer.

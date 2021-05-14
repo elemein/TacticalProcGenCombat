@@ -19,5 +19,4 @@ Inspirations: Zettai Hero Project, Pokemon Mystery Dungeon, Izuna: Unemployed Ni
 Possible Longterm Directions?:
 	- Single player story based, like ZHP and most existing Mystery Dungeon games.
 	- Multi player based? It doesnt look like theres very many games like this from my searches.
-
 """
