@@ -7,11 +7,13 @@ onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI")
 onready var turn_timer = get_node("/root/World/TurnTimer")
+onready var map = get_node("/root/World/Map")
 
 # Used to store the action for the next turn.
 var proposed_action = ""
 
 var ready_status = false
+var attacked = false
 
 var direction_facing = "down"
 var directional_timer = Timer.new()
@@ -93,6 +95,7 @@ func end_turn():
 	target_pos = translation
 	saved_pos = translation
 	proposed_action = ''
+	attacked = false
 
 func _physics_process(_delta):
 	get_input()
@@ -103,11 +106,14 @@ func _physics_process(_delta):
 	
 	if proposed_action == "basic attack":
 		if turn_timer.time_left > 0.5: # Move char towards attack cell.
-			translation = translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5))) 
+			translation = translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5)))
+			if attacked == false:
+				map.get_tree().call_group('enemies', 'attacked_by_player')
+				attacked = true
 		else: # Move char back.
 			translation = translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
 	
-	if proposed_action != '':
+	if proposed_action != '' and turn_timer.time_left > 0.5:
 		anim_state = "walk"
 	else:
 		anim_state = "idle"
