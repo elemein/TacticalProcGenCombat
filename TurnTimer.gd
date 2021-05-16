@@ -14,7 +14,7 @@ func _ready():
 func process_turn():
 	turn_counter += 1
 	
-	start()
+	start() #This starts the timer on self.
 	
 	for actor in actors:
 		actor.process_turn()
