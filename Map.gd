@@ -63,7 +63,6 @@ func place_on_map(object, curr_pos):
 	var x_pos = int(curr_pos.x/TILE_OFFSET)
 	var z_pos = int(curr_pos.z/TILE_OFFSET)
 	map_grid[x_pos][z_pos] = object
-
 	return [x_pos, z_pos]
 
 func move_on_map(object, old_pos, new_pos):
