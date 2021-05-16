@@ -17,7 +17,7 @@ func process_turn():
 	turn_counter += 1
 	
 	start()
-	
+
 	for category in actors:
 		if category == 'player':
 			for actor in actors[category]:
@@ -26,7 +26,7 @@ func process_turn():
 			for actor in actors[category]:
 #				actor.process_turn()
 				pass
-	
+
 func end_turn():
 	for category in actors:
 		for actor in actors[category]:
