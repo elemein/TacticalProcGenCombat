@@ -45,3 +45,6 @@ func _physics_process(_delta):
 
 func _on_TurnTimer_timeout():
 	end_turn()
+	
+func add_to_timer_group(actor):
+	actors.append(actor)

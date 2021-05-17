@@ -7,6 +7,8 @@ const MAX_NUMBER_OF_ENEMIES = 2
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 
+onready var turn_timer = get_node("/root/World/TurnTimer")
+
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
 var map_x = 5
 var map_z = 7
@@ -35,6 +37,7 @@ func _ready():
 			if z_coord == '1':
 				var enemy = base_enemy.instance()
 				add_child(enemy)
+				turn_timer.add_to_timer_group(enemy)
 				enemy.translation = Vector3(x_offset, Y_OFFSET+0.3, z_offset)
 				enemy.add_to_group('enemies')
 
