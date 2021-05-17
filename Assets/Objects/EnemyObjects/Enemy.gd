@@ -12,6 +12,7 @@ var health
 func _ready():
 	health = MAX_HEALTH
 	#print(health)
+	# this is a test
 	
 func attacked_by_player():
 	health -= 10
