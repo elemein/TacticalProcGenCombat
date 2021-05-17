@@ -5,7 +5,7 @@ const TILE_OFFSET = 2.2
 const MAX_NUMBER_OF_ENEMIES = 2
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
-var base_enemy = preload("res://Enemy.tscn")
+var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
 var map_x = 5
@@ -15,12 +15,12 @@ var map_grid = []
 var current_number_of_enemies = 0
 
 func _ready():
-    randomize()
+	randomize()
 	var x_offset = -TILE_OFFSET
 	var z_offset = -TILE_OFFSET
 
 	create_empty_map()
-    spawn_enemies()
+	spawn_enemies()
 
 	for x_coord in map_grid:
 		x_offset += TILE_OFFSET
@@ -33,10 +33,10 @@ func _ready():
 			block.translation = Vector3(x_offset, Y_OFFSET, z_offset)
 
 			if z_coord == '1':
-                var enemy = base_enemy.instance()
-                add_child(enemy)
-                enemy.translation = Vector3(x_offset, Y_OFFSET+0.3, z_offset)
-                enemy.add_to_group('enemies')
+				var enemy = base_enemy.instance()
+				add_child(enemy)
+				enemy.translation = Vector3(x_offset, Y_OFFSET+0.3, z_offset)
+				enemy.add_to_group('enemies')
 
 func create_empty_map():
 	# create the map based on the map_x and map_y variables

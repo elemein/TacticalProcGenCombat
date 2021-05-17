@@ -26,9 +26,9 @@ var target_pos = Vector3()
 
 func _ready():
 	directional_timer.set_one_shot(true)
-    	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
-    	directional_timer.connect("timeout", self, "on_direction_timer_complete")
-    	add_child(directional_timer)
+		directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
+		directional_timer.connect("timeout", self, "on_direction_timer_complete")
+		add_child(directional_timer)
 		
 func play_anim(name):
 	if anim.current_animation == name:
@@ -127,8 +127,8 @@ func _physics_process(_delta):
 		if turn_timer.time_left > 0.5: # Move char towards attack cell.
 			translation = translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5)))
 			if attacked == false:
-            	map.get_tree().call_group('enemies', 'attacked_by_player')
-            	attacked = true
+				map.get_tree().call_group('enemies', 'attacked_by_player')
+				attacked = true
 		else: # Move char back.
 			translation = translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
 
