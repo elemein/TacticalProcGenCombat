@@ -55,6 +55,7 @@ transform = Transform( -1.62921e-07, 0, -1, 0, 1, 0, 1, 0, -1.62921e-07, 0, 0, 0
 transform = Transform( -1.62921e-07, 0.766045, -0.642788, 0, 0.642788, 0.766045, 1, 1.24805e-07, -1.04723e-07, -4, 5, 0 )
 
 [node name="Enemy" parent="." instance=ExtResource( 6 )]
+visible = false
 
 [connection signal="timeout" from="TurnTimer" to="TurnTimer" method="_on_TurnTimer_timeout"]
 
