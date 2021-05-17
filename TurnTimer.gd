@@ -14,7 +14,16 @@ func _ready():
 func process_turn():
 	turn_counter += 1
 	
-	start() #This starts the timer on self.
+	wait_time = 0.1 # Reset this. 0 is NOT valid for some reason, so 0.1.
+	
+	for actor in actors: # Checks if everyone is just moving to shorten the time.
+		if actor.proposed_action.split(" ")[0] == 'move':
+			if !(wait_time > 0.4) or wait_time == 0:
+				wait_time = 0.4
+		else:
+			wait_time = 1
+			
+	start() #This starts the timer.
 	
 	for actor in actors:
 		actor.process_turn()

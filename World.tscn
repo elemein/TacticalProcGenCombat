@@ -55,3 +55,5 @@ transform = Transform( -1.62921e-07, 0.766045, -0.642788, 0, 0.642788, 0.766045,
 [connection signal="timeout" from="TurnTimer" to="TurnTimer" method="_on_TurnTimer_timeout"]
 
 [editable path="Player"]
+
+[editable path="Player/Graphics"]
