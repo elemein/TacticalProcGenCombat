@@ -17,11 +17,12 @@ func process_turn():
 	wait_time = 0.1 # Reset this. 0 is NOT valid for some reason, so 0.1.
 	
 	for actor in actors: # Checks if everyone is just moving to shorten the time.
-		if actor.proposed_action.split(" ")[0] == 'move':
-			if !(wait_time > 0.4) or wait_time == 0:
-				wait_time = 0.4
+		if (actor.proposed_action.split(" ")[0] == 'move' 
+		or actor.proposed_action.split(" ")[0] == 'idle'):
+			if !(wait_time > 0.35) or wait_time == 0.1:
+				wait_time = 0.35
 		else:
-			wait_time = 1
+			wait_time = 0.95
 			
 	start() #This starts the timer.
 	
