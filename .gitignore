@@ -8,10 +8,6 @@ export_presets.cfg
 .mono/
 data_*/
 
-
-
-
-
-
-
-
+# Jetbrains
+.idea/
+addons/

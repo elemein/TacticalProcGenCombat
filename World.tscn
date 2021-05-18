@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Assets/Objects/PlayerObjects/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Map.gd" type="Script" id=2]
 [ext_resource path="res://Assets/GUI/Arrow.png" type="Texture" id=3]
 [ext_resource path="res://Assets/GUI/GUI.gd" type="Script" id=4]
 [ext_resource path="res://TurnTimer.gd" type="Script" id=5]
+[ext_resource path="res://Assets/Objects/EnemyObjects/Enemy.tscn" type="PackedScene" id=6]
 
 [node name="World" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00459242, -0.00956917, -0.00249863 )

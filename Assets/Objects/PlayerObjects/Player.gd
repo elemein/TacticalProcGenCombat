@@ -27,8 +27,7 @@ func _ready():
 	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
 	add_child(directional_timer)
 	
-	map_pos = map.place_on_map(self, translation) # Links to grid.
-	# test
+	map_pos = map.place_on_map(self, translation)
 
 func get_input():
 	if turn_timer.time_left > 0: # We don't wanna collect input if turn in action.
