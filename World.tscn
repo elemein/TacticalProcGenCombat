@@ -52,14 +52,9 @@ shadow_enabled = true
 transform = Transform( -1.62921e-07, 0, -1, 0, 1, 0, 1, 0, -1.62921e-07, 0, 0, 0 )
 
 [node name="Camera" parent="Player/CamBase" index="0"]
-transform = Transform( -1.62921e-07, 0.766045, -0.642788, 0, 0.642788, 0.766045, 1, 1.24805e-07, -1.04723e-07, -4, 5, 0 )
-
-[node name="Enemy" parent="." instance=ExtResource( 6 )]
-visible = false
-
+transform = Transform( -1.62921e-07, 0.939693, -0.34202, 0, 0.34202, 0.939693, 1, 1.53095e-07, -5.57222e-08, -2.5, 10, 0 )
 [connection signal="timeout" from="TurnTimer" to="TurnTimer" method="_on_TurnTimer_timeout"]
 
 [editable path="Player"]
+
 [editable path="Player/Graphics"]
-[editable path="Enemy"]
-[editable path="Enemy/Graphics"]
