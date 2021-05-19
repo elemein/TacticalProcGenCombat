@@ -18,12 +18,21 @@ var current_number_of_enemies = 0
 
 func _ready():
 	randomize()
-	var x_offset = -TILE_OFFSET
-	var z_offset = -TILE_OFFSET
-
 	create_empty_map()
 	spawn_enemies()
 
+func create_empty_map():
+	# create the map based on the map_x and map_y variables
+	var map_width = []
+	for x in map_x:
+		map_width.append('0')
+
+	for z in map_z:
+		map_grid.append(map_width.duplicate())
+		
+	var x_offset = -TILE_OFFSET
+	var z_offset = -TILE_OFFSET
+		
 	for x_coord in map_grid:
 		x_offset += TILE_OFFSET
 		z_offset = -TILE_OFFSET # Reset
@@ -34,32 +43,17 @@ func _ready():
 			add_child(block)
 			block.translation = Vector3(x_offset, Y_OFFSET, z_offset)
 
-			if z_coord == '1':
-				var enemy = base_enemy.instance()
-				add_child(enemy)
-				enemy.translation = Vector3(x_offset, Y_OFFSET+0.3, z_offset)
-				enemy.add_to_group('enemies')
-				enemy.setup_actor()
-
-func create_empty_map():
-	# create the map based on the map_x and map_y variables
-	var map_width = []
-	for x in map_x:
-		map_width.append('0')
-
-	for z in map_z:
-		map_grid.append(map_width.duplicate())
-
 func spawn_enemies():
 	for enemy_cnt in MAX_NUMBER_OF_ENEMIES:
-
 		# Get random x/y coords to spawn enemy
-		var enemy_x = 0
-		var enemy_z = 0
-		while enemy_x == 0 and enemy_z == 0 and map_grid[enemy_x][enemy_z] != '1':
-			enemy_x = randi() % map_grid.size()
-			enemy_z = randi() % map_grid[enemy_x].size()
-		map_grid[enemy_x][enemy_z] = '1'
+		var enemy_x = randi() % map_grid.size()
+		var enemy_z = randi() % map_grid[enemy_x].size()
+		var enemy = base_enemy.instance()
+		add_child(enemy)
+		enemy.translation = Vector3(enemy_x * TILE_OFFSET, Y_OFFSET+0.3, enemy_z * TILE_OFFSET)
+		enemy.add_to_group('enemies')
+		enemy.setup_actor()
+		
 		current_number_of_enemies += 1
 
 func place_on_map(object, curr_pos):
@@ -70,16 +64,11 @@ func place_on_map(object, curr_pos):
 	return [x_pos, z_pos]
 
 func move_on_map(object, old_pos, new_pos):
-	# Place object at new location.
-	var new_x_pos = int(stepify(new_pos.x, 0.1)/TILE_OFFSET)
-	var new_z_pos = int(stepify(new_pos.z, 0.1)/TILE_OFFSET)
-	map_grid[new_x_pos][new_z_pos] = object
 	# Clear old location.
-	var old_x_pos = int(stepify(old_pos.x, 0.1)/TILE_OFFSET)
-	var old_z_pos = int(stepify(old_pos.z, 0.1)/TILE_OFFSET)
-	map_grid[old_x_pos][old_z_pos] = '0'
+	map_grid[old_pos[0]][old_pos[1]] = '0'
+	map_grid[new_pos[0]][new_pos[1]] = object
 
-	return [new_x_pos, new_z_pos]
+	return [new_pos[0], new_pos[1]]
 
 func tile_available(x,z): # Is a tile 
 	if (x >= 0 && z >= 0 && x < map_grid.size()): # There's no try-except, so this has to be very explicit.
