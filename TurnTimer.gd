@@ -37,6 +37,7 @@ func process_turn():
 func end_turn():
 	for actor in actors:
 		actor.end_turn()
+	map.print_map_grid()
 
 func _physics_process(_delta):
 	var all_ready = false

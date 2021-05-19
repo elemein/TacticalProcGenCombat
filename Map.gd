@@ -2,7 +2,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const MAX_NUMBER_OF_ENEMIES = 2
+const MAX_NUMBER_OF_ENEMIES = 3
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
@@ -88,4 +88,11 @@ func tile_available(x,z): # Is a tile
 				if map_grid[x][z] == '0':
 					return true
 		
-	else : return false
+	return false
+
+func print_map_grid():
+	map_grid.invert()
+	print('---')
+	for line in map_grid:
+		print(line)
+	map_grid.invert()

@@ -28,66 +28,24 @@ var direction_facing = ''
 var target_pos = Vector3()
 var saved_pos = Vector3()
 
+# Desired flow:
+# Turn starts:
+# decide_action()
+# AI will decide on an action, check if it is possible.
+# If it is: set_action()
+# ready_status = true
+# turn will start in TurnTimer
+# process_turn()
+# all turns are taken
+# end_turn()
+
 func _ready():
 	randomize()
 	health = MAX_HEALTH
 	#print(health)
-
 func setup_actor():
 	turn_timer.add_to_timer_group(self)
 	map_pos = map.place_on_map(self, translation)
-	print(map_pos)
-
-func attacked_by_player():
-	health -= 10
-	#print(health)
-	
-func end_turn():
-	target_pos = translation
-	saved_pos = translation
-	proposed_action = ''
-	in_turn = false
-	ready_status = false
-	
-func decide_next_action():
-	randomize()
-	match rng.randi_range(1,4):
-		1:
-			check_move_action('move up')
-		2:
-			check_move_action('move down')
-		3:
-			check_move_action('move left')
-		4:
-			check_move_action('move right')
-
-func process_turn():
-	# Sets target positions for move and basic attack.
-	
-	print(translation)
-	
-	if proposed_action.split(\" \")[0] == 'move' || proposed_action == 'basic attack':
-		match direction_facing:
-			'up':
-				target_pos.x = translation.x + MOVE_SPEED
-				target_pos.z = translation.z
-			'down':
-				target_pos.x = translation.x + -MOVE_SPEED
-				target_pos.z = translation.z
-			'left':
-				target_pos.z = translation.z + -MOVE_SPEED
-				target_pos.x = translation.x
-			'right':
-				target_pos.z = translation.z + MOVE_SPEED
-				target_pos.x = translation.x
-
-	print(target_pos)
-
-	# If position will actually be changing, update to map.
-	if proposed_action.split(\" \")[0] == 'move':
-		map_pos = map.move_on_map(self, translation, target_pos)
-	
-	in_turn = true
 
 func _physics_process(_delta):
 	if turn_timer.time_left == 0: # We don't wanna decide a turn if timer isn't 0.
@@ -98,33 +56,88 @@ func _physics_process(_delta):
 		if proposed_action.split(\" \")[0] == 'move':
 			translation = translation.linear_interpolate(target_pos, (1-turn_timer.time_left)) 
 
+func decide_next_action():
+	randomize()
+	match rng.randi_range(1,4):
+		1:
+			if check_move_action('move up'):
+				set_action('move up')
+		2:
+			if check_move_action('move down'):
+				set_action('move down')
+		3:
+			if check_move_action('move left'):
+				set_action('move left')
+		4:
+			if check_move_action('move right'):
+				set_action('move right')
+
+func set_action(action):
+	proposed_action = action
+	gui.set_action(proposed_action)
+	ready_status = true
+
+func process_turn():
+	# Sets target positions for move and basic attack.
+	if proposed_action.split(\" \")[0] == 'move' || proposed_action == 'basic attack':
+		match proposed_action.split(\" \")[1]:
+			'up':
+				set_direction('up')
+				target_pos.x = translation.x + MOVE_SPEED
+				target_pos.z = translation.z
+			'down':
+				set_direction('down')
+				target_pos.x = translation.x + -MOVE_SPEED
+				target_pos.z = translation.z
+			'left':
+				set_direction('left')
+				target_pos.z = translation.z + -MOVE_SPEED
+				target_pos.x = translation.x
+			'right':
+				set_direction('right')
+				target_pos.z = translation.z + MOVE_SPEED
+				target_pos.x = translation.x
+
+	# If position will actually be changing, update to map.
+	if proposed_action.split(\" \")[0] == 'move':
+		map_pos = map.move_on_map(self, translation, target_pos)
+	
+	in_turn = true
+
+func end_turn():
+	target_pos = translation
+	saved_pos = translation
+	proposed_action = ''
+	in_turn = false
+	ready_status = false
+	
+
+func attacked_by_player():
+	health -= 10
+	#print(health)
+
+# Movement related functions.
 func check_move_action(move):
 	match move:
 		'move up':
 			if map.tile_available(map_pos[0] + 1, map_pos[1]) == true: 
-				set_direction('up')
 				proposed_action = 'move up'
+				return true
 		'move down':
-			if map.tile_available(map_pos[0] - 1, map_pos[1]) == true: 
-				set_direction('down')
+			if map.tile_available(map_pos[0] - 1, map_pos[1]) == true:
 				proposed_action = 'move down'
+				return true
 		'move left':
 			if map.tile_available(map_pos[0], map_pos[1] - 1) == true: 
-				set_direction('left')
 				proposed_action = 'move left'
+				return true
 		'move right':
 			if map.tile_available(map_pos[0], map_pos[1] + 1) == true: 
-				set_direction('right')
 				proposed_action = 'move right'
+				return true
 				
-	if proposed_action != '':
-		ready_status = true
-		print(proposed_action)
-		return true
-	else:
-		return false
+	return false
 
-				
 func set_direction(direction):
 	match direction:
 		'up':
