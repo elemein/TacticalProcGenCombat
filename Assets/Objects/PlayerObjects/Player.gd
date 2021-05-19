@@ -16,6 +16,7 @@ var ready_status = false
 
 var direction_facing = "down"
 var directional_timer = Timer.new()
+var in_turn = false
 
 var anim_state = "idle"
 
@@ -89,14 +90,15 @@ func check_move_action(move):
 		'move right':
 			if map.tile_available(map_pos[0], map_pos[1] + 1) == true: set_action('move right')
 
+	if proposed_action != '':
+		return true
+
 func set_action(action):
 	proposed_action = action
 	gui.set_action(proposed_action)
 	ready_status = true
 	
-func process_turn():
-	ready_status = false # I'd prefer to move this to end_turn but something breaks.
-	
+func process_turn():	
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(" ")[0] == 'move' || proposed_action == 'basic attack':
 		match direction_facing:
@@ -114,34 +116,38 @@ func process_turn():
 	# If position will actually be changing, update to map.
 	if proposed_action.split(" ")[0] == 'move':
 		map_pos = map.move_on_map(self, translation, target_pos)
-		
+	
+	in_turn = true
 		
 func end_turn():
 	# Reset position and action vars.
 	target_pos = translation
 	saved_pos = translation
 	proposed_action = ''
+	ready_status = false 
+	in_turn = false
 
 func _physics_process(_delta):
 	get_input()
-
-	# Change position based on time tickdown.
-	if proposed_action.split(" ")[0] == 'move':
-		translation = translation.linear_interpolate(target_pos, (1-turn_timer.time_left)) 
 	
-	if proposed_action == "basic attack":
-		if turn_timer.time_left > 0.5: # Move char towards attack cell.
-			translation = translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5))) 
-		else: # Move char back.
-			translation = translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
-	
-	if proposed_action == 'fireball':
-		if turn_timer.time_left > 0.1: # Move fireball towards attack cell.
-			effect.translation = effect.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.1))) 
-		else: # Delete fireball.
-			if effect != null:
-				remove_child(get_node("/root/World/Player/Fire"))
-				effect = null
+	if in_turn == true:
+		# Change position based on time tickdown.
+		if proposed_action.split(" ")[0] == 'move':
+			translation = translation.linear_interpolate(target_pos, (1-turn_timer.time_left)) 
+		
+		if proposed_action == "basic attack":
+			if turn_timer.time_left > 0.5: # Move char towards attack cell.
+				translation = translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5))) 
+			else: # Move char back.
+				translation = translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
+		
+		if proposed_action == 'fireball':
+			if turn_timer.time_left > 0.1: # Move fireball towards attack cell.
+				effect.translation = effect.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.1))) 
+			else: # Delete fireball.
+				if effect != null:
+					remove_child(get_node("/root/World/Player/Fire"))
+					effect = null
 			
 		
 	if proposed_action != '':
