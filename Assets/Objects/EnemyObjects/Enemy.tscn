@@ -10,9 +10,10 @@ onready var map = get_node(\"/root/World/Map\")
 
 onready var ready_status = true
 
-
 var MAX_HEALTH = 100
 var health
+
+var proposed_action = 'idle'
 
 func _ready():
 	health = MAX_HEALTH

@@ -3,6 +3,7 @@ extends MarginContainer
 var blank_action = preload("res://Assets/GUI/Blank_Action.png")
 var movement_arrow = preload("res://Assets/GUI/Arrow.png")
 var basic_attack = preload("res://Assets/GUI/Basic_Attack.png")
+var fireball = preload("res://Assets/GUI/Fireball.png")
 
 onready var action_holder = get_node("/root/World/GUI/Proposed Action")
 onready var turn_timer = get_node("/root/World/TurnTimer")
@@ -27,6 +28,9 @@ func set_action(proposed_action):
 		action_holder.rotation_degrees = 180
 	if proposed_action == "basic attack":
 		action_holder.set_texture(basic_attack)
+		action_holder.rotation_degrees = 0
+	if proposed_action == "fireball":
+		action_holder.set_texture(fireball)
 		action_holder.rotation_degrees = 0
 
 func _physics_process(_delta):
