@@ -37,9 +37,9 @@ func _ready():
 			if z_coord == '1':
 				var enemy = base_enemy.instance()
 				add_child(enemy)
-				turn_timer.add_to_timer_group(enemy)
 				enemy.translation = Vector3(x_offset, Y_OFFSET+0.3, z_offset)
 				enemy.add_to_group('enemies')
+				enemy.setup_actor()
 
 func create_empty_map():
 	# create the map based on the map_x and map_y variables
@@ -73,22 +73,19 @@ func move_on_map(object, old_pos, new_pos):
 	# Place object at new location.
 	var new_x_pos = int(stepify(new_pos.x, 0.1)/TILE_OFFSET)
 	var new_z_pos = int(stepify(new_pos.z, 0.1)/TILE_OFFSET)
-	print ([new_x_pos, new_z_pos])
 	map_grid[new_x_pos][new_z_pos] = object
 	# Clear old location.
 	var old_x_pos = int(stepify(old_pos.x, 0.1)/TILE_OFFSET)
 	var old_z_pos = int(stepify(old_pos.z, 0.1)/TILE_OFFSET)
 	map_grid[old_x_pos][old_z_pos] = '0'
 
-	for line in map_grid:
-		print(line)
-
 	return [new_x_pos, new_z_pos]
 
 func tile_available(x,z): # Is a tile 
 	if (x >= 0 && z >= 0 && x < map_grid.size()): # There's no try-except, so this has to be very explicit.
 		if z < map_grid[x].size():
-			if map_grid[x][z] == '0':
-				return true
+			if typeof(map_grid[x][z]) == 4: # '4' is the integer representation for a string.
+				if map_grid[x][z] == '0':
+					return true
 		
 	else : return false

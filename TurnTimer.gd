@@ -1,6 +1,7 @@
 extends Timer
 
 onready var player = get_node("/root/World/Player")
+onready var map = get_node("/root/World/Map")
 
 var turn_counter = 1
 
@@ -23,18 +24,25 @@ func process_turn():
 				wait_time = 0.35
 		else:
 			wait_time = 0.95
-			
+		
 	start() #This starts the timer.
 	
 	for actor in actors:
-		actor.process_turn()
+		if actor.proposed_action.split(" ")[0] == 'move':
+			if actor.check_move_action(actor.proposed_action) == true:
+				actor.process_turn()
+		else:
+			actor.process_turn()
 	
 func end_turn():
 	for actor in actors:
 		actor.end_turn()
 
 func _physics_process(_delta):
-	var all_ready = true
+	var all_ready = false
+	
+	if time_left == 0:
+		all_ready = true
 	
 	for actor in actors:
 		if actor.ready_status == false:

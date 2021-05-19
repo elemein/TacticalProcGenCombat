@@ -5,32 +5,140 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody
 
+const MOVE_SPEED = 2.2
+
 onready var model = $Graphics
+onready var anim = $Graphics/AnimationPlayer
+onready var gui = get_node(\"/root/World/GUI\")
+onready var turn_timer = get_node(\"/root/World/TurnTimer\")
 onready var map = get_node(\"/root/World/Map\")
 
-onready var ready_status = true
+var rng = RandomNumberGenerator.new()
 
 var MAX_HEALTH = 100
 var health
 
+var ready_status = false
+var in_turn = false
 var proposed_action = 'idle'
 
+var map_pos = []
+var direction_facing = ''
+
+var target_pos = Vector3()
+var saved_pos = Vector3()
+
 func _ready():
+	randomize()
 	health = MAX_HEALTH
 	#print(health)
-	
+
+func setup_actor():
+	turn_timer.add_to_timer_group(self)
+	map_pos = map.place_on_map(self, translation)
+	print(map_pos)
+
 func attacked_by_player():
 	health -= 10
 	#print(health)
 	
 func end_turn():
-	pass
+	target_pos = translation
+	saved_pos = translation
+	proposed_action = ''
+	in_turn = false
+	ready_status = false
 	
+func decide_next_action():
+	randomize()
+	match rng.randi_range(1,4):
+		1:
+			check_move_action('move up')
+		2:
+			check_move_action('move down')
+		3:
+			check_move_action('move left')
+		4:
+			check_move_action('move right')
+
 func process_turn():
-	pass
+	# Sets target positions for move and basic attack.
+	
+	print(translation)
+	
+	if proposed_action.split(\" \")[0] == 'move' || proposed_action == 'basic attack':
+		match direction_facing:
+			'up':
+				target_pos.x = translation.x + MOVE_SPEED
+				target_pos.z = translation.z
+			'down':
+				target_pos.x = translation.x + -MOVE_SPEED
+				target_pos.z = translation.z
+			'left':
+				target_pos.z = translation.z + -MOVE_SPEED
+				target_pos.x = translation.x
+			'right':
+				target_pos.z = translation.z + MOVE_SPEED
+				target_pos.x = translation.x
+
+	print(target_pos)
+
+	# If position will actually be changing, update to map.
+	if proposed_action.split(\" \")[0] == 'move':
+		map_pos = map.move_on_map(self, translation, target_pos)
+	
+	in_turn = true
 
 func _physics_process(_delta):
-	pass
+	if turn_timer.time_left == 0: # We don't wanna decide a turn if timer isn't 0.
+		if ready_status == false:
+			decide_next_action()
+	
+	if in_turn == true:
+		if proposed_action.split(\" \")[0] == 'move':
+			translation = translation.linear_interpolate(target_pos, (1-turn_timer.time_left)) 
+
+func check_move_action(move):
+	match move:
+		'move up':
+			if map.tile_available(map_pos[0] + 1, map_pos[1]) == true: 
+				set_direction('up')
+				proposed_action = 'move up'
+		'move down':
+			if map.tile_available(map_pos[0] - 1, map_pos[1]) == true: 
+				set_direction('down')
+				proposed_action = 'move down'
+		'move left':
+			if map.tile_available(map_pos[0], map_pos[1] - 1) == true: 
+				set_direction('left')
+				proposed_action = 'move left'
+		'move right':
+			if map.tile_available(map_pos[0], map_pos[1] + 1) == true: 
+				set_direction('right')
+				proposed_action = 'move right'
+				
+	if proposed_action != '':
+		ready_status = true
+		print(proposed_action)
+		return true
+	else:
+		return false
+
+				
+func set_direction(direction):
+	match direction:
+		'up':
+			direction_facing = \"up\"
+			model.rotation_degrees.y = 90
+		'down':
+			direction_facing = \"down\"
+			model.rotation_degrees.y = 90 + 180
+		'left':
+			direction_facing = \"left\"
+			model.rotation_degrees.y = 180
+		'right':
+			direction_facing = \"right\"
+			model.rotation_degrees.y = 180 + 180
 "
 
 [sub_resource type="ArrayMesh" id=2]
