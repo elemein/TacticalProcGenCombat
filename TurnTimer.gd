@@ -8,9 +8,11 @@ var turn_counter = 1
 # Use this to hold all of the actors in the world; players, enemies, etc.
 var actors = []
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	actors.append(player)
+	pass
+
+func add_to_timer_group(actor):
+	actors.append(actor)
 
 func process_turn():
 	turn_counter += 1
@@ -19,7 +21,7 @@ func process_turn():
 	
 	for actor in actors: # Checks if everyone is just moving to shorten the time.
 		if (actor.proposed_action.split(" ")[0] == 'move' 
-		or actor.proposed_action.split(" ")[0] == 'idle'):
+			or actor.proposed_action.split(" ")[0] == 'idle'):
 			if !(wait_time > 0.35) or wait_time == 0.1:
 				wait_time = 0.35
 		else:
@@ -52,9 +54,5 @@ func _physics_process(_delta):
 	if all_ready:
 		process_turn()
 
-
 func _on_TurnTimer_timeout():
 	end_turn()
-	
-func add_to_timer_group(actor):
-	actors.append(actor)
