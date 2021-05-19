@@ -6,6 +6,7 @@ const MAX_NUMBER_OF_ENEMIES = 2
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
+onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
 var map_x = 5
@@ -35,6 +36,7 @@ func _ready():
 			if z_coord == '1':
 				var enemy = base_enemy.instance()
 				add_child(enemy)
+				turn_timer.add_to_timer_group(enemy)
 				enemy.translation = Vector3(x_offset, Y_OFFSET+0.3, z_offset)
 				enemy.add_to_group('enemies')
 
@@ -69,7 +71,7 @@ func move_on_map(object, old_pos, new_pos):
 	# Place object at new location.
 	var new_x_pos = int(stepify(new_pos.x, 0.1)/TILE_OFFSET)
 	var new_z_pos = int(stepify(new_pos.z, 0.1)/TILE_OFFSET)
-	print ([int(new_pos.x/TILE_OFFSET), int(new_pos.z/TILE_OFFSET)])
+	print ([new_x_pos, new_z_pos])
 	map_grid[new_x_pos][new_z_pos] = object
 	# Clear old location.
 	var old_x_pos = int(stepify(old_pos.x, 0.1)/TILE_OFFSET)
@@ -80,3 +82,11 @@ func move_on_map(object, old_pos, new_pos):
 		print(line)
 
 	return [new_x_pos, new_z_pos]
+
+func tile_available(x,z): # Is a tile 
+	if (x >= 0 && z >= 0 && x < map_grid.size()): # There's no try-except, so this has to be very explicit.
+		if z < map_grid[x].size():
+			if map_grid[x][z] == '0':
+				return true
+		
+	else : return false

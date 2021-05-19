@@ -14,7 +14,17 @@ func _ready():
 func process_turn():
 	turn_counter += 1
 	
-	start() #This starts the timer on self.
+	wait_time = 0.1 # Reset this. 0 is NOT valid for some reason, so 0.1.
+	
+	for actor in actors: # Checks if everyone is just moving to shorten the time.
+		if (actor.proposed_action.split(" ")[0] == 'move' 
+		or actor.proposed_action.split(" ")[0] == 'idle'):
+			if !(wait_time > 0.35) or wait_time == 0.1:
+				wait_time = 0.35
+		else:
+			wait_time = 0.95
+			
+	start() #This starts the timer.
 	
 	for actor in actors:
 		actor.process_turn()
@@ -36,3 +46,6 @@ func _physics_process(_delta):
 
 func _on_TurnTimer_timeout():
 	end_turn()
+	
+func add_to_timer_group(actor):
+	actors.append(actor)
