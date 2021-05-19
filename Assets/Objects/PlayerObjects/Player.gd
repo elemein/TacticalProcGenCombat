@@ -1,13 +1,15 @@
 extends KinematicBody
 
 const MOVE_SPEED = 2.2
-const DIRECTION_SELECT_TIME = 0.25
+const DIRECTION_SELECT_TIME = 0.225
 
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI")
 onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var map = get_node("/root/World/Map")
+
+var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 
 var proposed_action = ""
 var ready_status = false
@@ -19,6 +21,8 @@ var anim_state = "idle"
 
 var saved_pos = Vector3()
 var target_pos = Vector3()
+
+var effect = null
 
 var map_pos = []
 
@@ -44,16 +48,17 @@ func get_input():
 	# As the move buttons are used to change direction, these need to abide
 	# to the directional timer.
 	if directional_timer.time_left == 0:
-		if Input.is_action_pressed("w"): set_action('move up')
-		if Input.is_action_pressed("s"): set_action('move down')
-		if Input.is_action_pressed("a"): set_action('move left')
-		if Input.is_action_pressed("d"): set_action('move right')
+		if Input.is_action_pressed("w"): check_move_action('move up')
+		if Input.is_action_pressed("s"): check_move_action('move down')
+		if Input.is_action_pressed("a"): check_move_action('move left')
+		if Input.is_action_pressed("d"): check_move_action('move right')
 	
 	# Basic attacks only need one press.
 	if Input.is_action_pressed("space"): set_action('basic attack')
 	
 	# Skills will need two presses to confirm.
-	pass
+	if Input.is_action_pressed("e"): set_action('fireball')
+	
 
 func set_direction(direction):
 	match direction:
@@ -72,6 +77,18 @@ func set_direction(direction):
 
 	directional_timer.start(DIRECTION_SELECT_TIME) 
 	
+
+func check_move_action(move):
+	match move:
+		'move up':
+			if map.tile_available(map_pos[0] + 1, map_pos[1]) == true: set_action('move up')
+		'move down':
+			if map.tile_available(map_pos[0] - 1, map_pos[1]) == true: set_action('move down')
+		'move left':
+			if map.tile_available(map_pos[0], map_pos[1] - 1) == true: set_action('move left')
+		'move right':
+			if map.tile_available(map_pos[0], map_pos[1] + 1) == true: set_action('move right')
+
 func set_action(action):
 	proposed_action = action
 	gui.set_action(proposed_action)
@@ -91,10 +108,13 @@ func process_turn():
 				target_pos.z = translation.z + -MOVE_SPEED
 			'right':
 				target_pos.z = translation.z + MOVE_SPEED
-		
+	elif proposed_action == 'fireball':
+		set_fireball_target_pos()
+
 	# If position will actually be changing, update to map.
 	if proposed_action.split(" ")[0] == 'move':
 		map_pos = map.move_on_map(self, translation, target_pos)
+		
 		
 func end_turn():
 	# Reset position and action vars.
@@ -115,6 +135,15 @@ func _physics_process(_delta):
 		else: # Move char back.
 			translation = translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
 	
+	if proposed_action == 'fireball':
+		if turn_timer.time_left > 0.1: # Move fireball towards attack cell.
+			effect.translation = effect.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.1))) 
+		else: # Delete fireball.
+			if effect != null:
+				remove_child(get_node("/root/World/Player/Fire"))
+				effect = null
+			
+		
 	if proposed_action != '':
 		anim_state = "walk"
 	else:
@@ -133,3 +162,26 @@ func play_anim(name):
 	if anim.current_animation == name:
 		return
 	anim.play(name)
+
+func set_fireball_target_pos():
+		effect = effects_fire.instance()
+		add_child(effect)
+		
+		match direction_facing:
+			
+			'up':
+				effect.rotation_degrees.y = 90
+				target_pos.x = effect.translation.x + (3*MOVE_SPEED)
+				target_pos.z = 0
+			'down':
+				effect.rotation_degrees.y = -90
+				target_pos.x = effect.translation.x - (3*MOVE_SPEED)
+				target_pos.z = 0
+			'left':
+				effect.rotation_degrees.y = 180
+				target_pos.z = effect.translation.x - (3*MOVE_SPEED)
+				target_pos.x = 0
+			'right':
+				effect.rotation_degrees.y = 0
+				target_pos.z = effect.translation.x + (3*MOVE_SPEED)
+				target_pos.x = 0
