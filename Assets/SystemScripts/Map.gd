@@ -2,58 +2,49 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const MAX_NUMBER_OF_ENEMIES = 3
+const MAX_NUMBER_OF_ENEMIES = 7
+
+const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 
 var rng = RandomNumberGenerator.new()
+var map_generator = MAP_GEN.new()
 
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
-var map_x = 5
-var map_z = 7
 var map_grid = []
-
-var no_of_rooms = 3
-var proc_gen_map_grid = []
-
-# wafewetest
+var catalog_of_ground_tiles = []
 
 var current_number_of_enemies = 0
 
 func _ready():
-	randomize()
-	create_empty_map()
+	rng.randomize()
+
+	map_grid = map_generator.generate()
+	populate_map_ground()
+	
+	catalog_ground_tiles()
+	
 	spawn_enemies()
 
-func create_proc_gen_map():
-	for room in no_of_rooms:
-		var room_x = rng.randi_range(2,8)
-		var room_y = rng.randi_range(2,8)
-
-func create_empty_map():
+func populate_map_ground():
 	# create the map based on the map_x and map_y variables
-	var map_width = []
-	for x in map_x:
-		map_width.append('0')
-
-	for z in map_z:
-		map_grid.append(map_width.duplicate())
-		
 	var x_offset = -TILE_OFFSET
 	var z_offset = -TILE_OFFSET
 		
-	for x_coord in map_grid:
+	for x in range(0, map_grid.size()-1):
 		x_offset += TILE_OFFSET
 		z_offset = -TILE_OFFSET # Reset
-		for z_coord in x_coord:
+		for z in range(0, map_grid[0].size()-1):
 			z_offset += TILE_OFFSET
 			
-			var block = base_block.instance()
-			add_child(block)
-			block.translation = Vector3(x_offset, Y_OFFSET, z_offset)
+			if map_grid[x][z] == '0':
+				var block = base_block.instance()
+				add_child(block)
+				block.translation = Vector3(x_offset, Y_OFFSET, z_offset)
 
 func spawn_enemies():
 	for enemy_cnt in MAX_NUMBER_OF_ENEMIES:
@@ -63,8 +54,9 @@ func spawn_enemies():
 		
 		# Prevent enemies from being spawned on the same tile.
 		while enemy_x == null && enemy_z == null:
-			enemy_x = randi() % map_grid.size()
-			enemy_z = randi() % map_grid[enemy_x].size()
+			var tile = choose_random_ground_tile()
+			enemy_x = tile[0]
+			enemy_z = tile[1]
 			if typeof(map_grid[enemy_x][enemy_z]) != TYPE_STRING:
 				enemy_x = null
 				enemy_z = null
@@ -77,12 +69,11 @@ func spawn_enemies():
 		
 		current_number_of_enemies += 1
 
-func place_on_map(object, curr_pos):
-	var x_pos = int(curr_pos.x/TILE_OFFSET)
-	var z_pos = int(curr_pos.z/TILE_OFFSET)
-	map_grid[x_pos][z_pos] = object
+func place_on_map(object):
+	var tile = choose_random_ground_tile()
+	map_grid[tile[0]][tile[1]] = object
 
-	return [x_pos, z_pos]
+	return tile
 
 func move_on_map(object, old_pos, new_pos):
 	# Clear old location.
@@ -100,10 +91,20 @@ func tile_available(x,z): # Is a tile
 		
 	return false
 
+func catalog_ground_tiles():
+	for x in range(0, map_grid.size()-1):
+		for z in range(0, map_grid[0].size()-1):
+			if map_grid[x][z] == '0':
+				catalog_of_ground_tiles.append([x,z])
+
+func choose_random_ground_tile():
+	return catalog_of_ground_tiles[rng.randi_range(0, catalog_of_ground_tiles.size()-1)]
+
+
 func print_map_grid():
+	print('-----') # Divider
 	var print_grid = map_grid.duplicate()
 	print_grid.invert()
-	print('---')
 	for line in print_grid:
 		var converted_row = []
 		for tile in line:
@@ -113,7 +114,6 @@ func print_map_grid():
 				TYPE_OBJECT:
 					converted_row.append(tile.get('object_type'))
 		print(converted_row)
-		# this is a test 2
 
 func get_tile_contents(x,z):
 	return map_grid[x][z]

@@ -67,6 +67,10 @@ e={
  ]
 }
 
+[network]
+
+limits/debugger_stdout/max_chars_per_second=10000000000000
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
