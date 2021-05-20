@@ -111,6 +111,7 @@ func print_map_grid():
 				TYPE_OBJECT:
 					converted_row.append(tile.get('object_type'))
 		print(converted_row)
+		# this is a test
 
 func get_tile_contents(x,z):
 	return map_grid[x][z]
