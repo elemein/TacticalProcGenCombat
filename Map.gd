@@ -103,7 +103,7 @@ func tile_available(x,z): # Is a tile
 func print_map_grid():
 	var print_grid = map_grid.duplicate()
 	print_grid.invert()
-	print('some random text')
+	print('other text')
 	for line in print_grid:
 		var converted_row = []
 		for tile in line:
