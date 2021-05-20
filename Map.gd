@@ -19,6 +19,8 @@ var map_grid = []
 var no_of_rooms = 3
 var proc_gen_map_grid = []
 
+# wafewetest
+
 var current_number_of_enemies = 0
 
 func _ready():
@@ -101,7 +103,7 @@ func tile_available(x,z): # Is a tile
 func print_map_grid():
 	var print_grid = map_grid.duplicate()
 	print_grid.invert()
-	print('---')
+	print('different text in it')
 	for line in print_grid:
 		var converted_row = []
 		for tile in line:
