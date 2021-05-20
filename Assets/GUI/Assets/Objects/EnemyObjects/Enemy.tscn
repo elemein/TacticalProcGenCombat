@@ -5,7 +5,7 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody
 
-const TILE_OFFSET = 2.2
+const MOVE_SPEED = 2.2
 
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
@@ -89,33 +89,30 @@ func set_action(action):
 	ready_status = true
 
 func process_turn():
-	
-	var target_tile
 	# Sets target positions for move and basic attack.
-	if proposed_action.split(\" \")[0] == 'move':
-		set_direction('%s' % proposed_action.split(\" \")[1])
+	if proposed_action.split(\" \")[0] == 'move' || proposed_action == 'basic attack':
 		match proposed_action.split(\" \")[1]:
 			'up':
-				target_tile = [map_pos[0] + 1, map_pos[1]]
-				target_pos.x = target_tile[0] * TILE_OFFSET
+				set_direction('up')
+				target_pos.x = translation.x + MOVE_SPEED
 				target_pos.z = translation.z
 			'down':
-				target_tile = [map_pos[0] - 1, map_pos[1]]
-				target_pos.x = target_tile[0] * TILE_OFFSET
+				set_direction('down')
+				target_pos.x = translation.x + -MOVE_SPEED
 				target_pos.z = translation.z
-				
 			'left':
-				target_tile = [map_pos[0], map_pos[1] - 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
+				set_direction('left')
+				target_pos.z = translation.z + -MOVE_SPEED
 				target_pos.x = translation.x
-				
 			'right':
-				target_tile = [map_pos[0], map_pos[1] + 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
+				set_direction('right')
+				target_pos.z = translation.z + MOVE_SPEED
 				target_pos.x = translation.x
-		
-		map_pos = map.move_on_map(self, map_pos, target_tile)
 
+	# If position will actually be changing, update to map.
+	if proposed_action.split(\" \")[0] == 'move':
+		map_pos = map.move_on_map(self, translation, target_pos)
+	
 	in_turn = true
 
 func end_turn():

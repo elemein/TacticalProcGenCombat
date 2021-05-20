@@ -1,6 +1,6 @@
 extends KinematicBody
 
-const TILE_OFFSET = 2.2
+const MOVE_SPEED = 2.2
 const DIRECTION_SELECT_TIME = 0.225
 
 onready var model = $Graphics
@@ -106,32 +106,23 @@ func set_action(action):
 	ready_status = true
 	
 func process_turn():	
-	var target_tile
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(" ")[0] == 'move' || proposed_action == 'basic attack':
 		match direction_facing:
 			'up':
-				target_tile = [map_pos[0] + 1, map_pos[1]]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				
+				target_pos.x = translation.x + MOVE_SPEED
 			'down':
-				target_tile = [map_pos[0] - 1, map_pos[1]]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				
+				target_pos.x = translation.x + -MOVE_SPEED
 			'left':
-				target_tile = [map_pos[0], map_pos[1] - 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
-				
+				target_pos.z = translation.z + -MOVE_SPEED
 			'right':
-				target_tile = [map_pos[0], map_pos[1] + 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
-				
+				target_pos.z = translation.z + MOVE_SPEED
 	elif proposed_action == 'fireball':
 		set_fireball_target_pos()
 
 	# If position will actually be changing, update to map.
 	if proposed_action.split(" ")[0] == 'move':
-		map_pos = map.move_on_map(self, map_pos, target_tile)
+		map_pos = map.move_on_map(self, translation, target_pos)
 	
 	in_turn = true
 
@@ -183,19 +174,19 @@ func set_fireball_target_pos():
 			
 			'up':
 				effect.rotation_degrees.y = 90
-				target_pos.x = effect.translation.x + (3*TILE_OFFSET)
+				target_pos.x = effect.translation.x + (3*MOVE_SPEED)
 				target_pos.z = 0
 			'down':
 				effect.rotation_degrees.y = -90
-				target_pos.x = effect.translation.x - (3*TILE_OFFSET)
+				target_pos.x = effect.translation.x - (3*MOVE_SPEED)
 				target_pos.z = 0
 			'left':
 				effect.rotation_degrees.y = 180
-				target_pos.z = effect.translation.x - (3*TILE_OFFSET)
+				target_pos.z = effect.translation.x - (3*MOVE_SPEED)
 				target_pos.x = 0
 			'right':
 				effect.rotation_degrees.y = 0
-				target_pos.z = effect.translation.x + (3*TILE_OFFSET)
+				target_pos.z = effect.translation.x + (3*MOVE_SPEED)
 				target_pos.x = 0
 
 # Animations related functions.
