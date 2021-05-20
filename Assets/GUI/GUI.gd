@@ -11,6 +11,7 @@ onready var timer_label = get_node("/root/World/TimerReadout")
 onready var player = get_node("/root/World/Player")
 
 func clear_action():
+	action_holder.rotation_degrees = 0
 	action_holder.set_texture(blank_action)
 
 func set_action(proposed_action):
