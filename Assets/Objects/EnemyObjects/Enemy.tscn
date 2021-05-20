@@ -15,38 +15,31 @@ onready var map = get_node(\"/root/World/Map\")
 
 var rng = RandomNumberGenerator.new()
 
-var MAX_HEALTH = 100
-var health
+# gameplay vars
+var object_type = 'Enemy'
+var hp = 100
+var mp = 100
+var attack_power = 10
 
+# vars to handle turn state
+var proposed_action = \"\"
 var ready_status = false
 var in_turn = false
-var proposed_action = 'idle'
 
-var map_pos = []
-var direction_facing = ''
-
-var target_pos = Vector3()
+# movement and positioning related vars
+var direction_facing = \"down\"
 var saved_pos = Vector3()
+var target_pos = Vector3()
+var map_pos = []
 
 # vars for animation
 var anim_state = \"idle\"
 var effect = null
 
-# Desired flow:
-# Turn starts:
-# decide_action()
-# AI will decide on an action, check if it is possible.
-# If it is: set_action()
-# ready_status = true
-# turn will start in TurnTimer
-# process_turn()
-# all turns are taken
-# end_turn()
 
 func _ready():
 	randomize()
-	health = MAX_HEALTH
-	#print(health)
+
 func setup_actor():
 	turn_timer.add_to_timer_group(self)
 	map_pos = map.place_on_map(self, translation)
@@ -85,7 +78,6 @@ func decide_next_action():
 
 func set_action(action):
 	proposed_action = action
-	gui.set_action(proposed_action)
 	ready_status = true
 
 func process_turn():
@@ -94,6 +86,7 @@ func process_turn():
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(\" \")[0] == 'move':
 		set_direction('%s' % proposed_action.split(\" \")[1])
+		
 		match proposed_action.split(\" \")[1]:
 			'up':
 				target_tile = [map_pos[0] + 1, map_pos[1]]
@@ -103,12 +96,10 @@ func process_turn():
 				target_tile = [map_pos[0] - 1, map_pos[1]]
 				target_pos.x = target_tile[0] * TILE_OFFSET
 				target_pos.z = translation.z
-				
 			'left':
 				target_tile = [map_pos[0], map_pos[1] - 1]
 				target_pos.z = target_tile[1] * TILE_OFFSET
 				target_pos.x = translation.x
-				
 			'right':
 				target_tile = [map_pos[0], map_pos[1] + 1]
 				target_pos.z = target_tile[1] * TILE_OFFSET
@@ -126,9 +117,9 @@ func end_turn():
 	ready_status = false
 	
 
-func attacked_by_player():
-	health -= 10
-	#print(health)
+func take_damage(damage):
+	hp -= damage
+	print(\"%s has %s HP\" % [self, hp])
 
 # Movement related functions.
 func check_move_action(move):
@@ -167,7 +158,6 @@ func set_direction(direction):
 			direction_facing = \"right\"
 			model.rotation_degrees.y = 180 + 180
 
-
 # Animations related functions.
 func handle_animations():
 	match anim_state:
@@ -181,6 +171,8 @@ func play_anim(name):
 		return
 	anim.play(name)
 
+func get_obj_type():
+	return object_type
 "
 
 [sub_resource type="ArrayMesh" id=2]

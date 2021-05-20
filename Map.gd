@@ -46,8 +46,17 @@ func create_empty_map():
 func spawn_enemies():
 	for enemy_cnt in MAX_NUMBER_OF_ENEMIES:
 		# Get random x/y coords to spawn enemy
-		var enemy_x = randi() % map_grid.size()
-		var enemy_z = randi() % map_grid[enemy_x].size()
+		var enemy_x = null
+		var enemy_z = null
+		
+		# Prevent enemies from being spawned on the same tile.
+		while enemy_x == null && enemy_z == null:
+			enemy_x = randi() % map_grid.size()
+			enemy_z = randi() % map_grid[enemy_x].size()
+			if typeof(map_grid[enemy_x][enemy_z]) != TYPE_STRING:
+				enemy_x = null
+				enemy_z = null
+		
 		var enemy = base_enemy.instance()
 		add_child(enemy)
 		enemy.translation = Vector3(enemy_x * TILE_OFFSET, Y_OFFSET+0.3, enemy_z * TILE_OFFSET)
@@ -72,7 +81,7 @@ func move_on_map(object, old_pos, new_pos):
 func tile_available(x,z): # Is a tile 
 	if (x >= 0 && z >= 0 && x < map_grid.size()): # There's no try-except, so this has to be very explicit.
 		if z < map_grid[x].size():
-			if typeof(map_grid[x][z]) == 4: # '4' is the integer representation for a string.
+			if typeof(map_grid[x][z]) == TYPE_STRING: # '4' is the integer representation for a string.
 				if map_grid[x][z] == '0':
 					return true
 		
@@ -84,3 +93,6 @@ func print_map_grid():
 	for line in map_grid:
 		print(line)
 	map_grid.invert()
+
+func get_tile_contents(x,z):
+	return map_grid[x][z]
