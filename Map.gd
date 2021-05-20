@@ -19,8 +19,6 @@ var map_grid = []
 var no_of_rooms = 3
 var proc_gen_map_grid = []
 
-# wafewetest
-
 var current_number_of_enemies = 0
 
 func _ready():
@@ -113,7 +111,7 @@ func print_map_grid():
 				TYPE_OBJECT:
 					converted_row.append(tile.get('object_type'))
 		print(converted_row)
-		# this is a test
+		# this is a test 2
 
 func get_tile_contents(x,z):
 	return map_grid[x][z]
