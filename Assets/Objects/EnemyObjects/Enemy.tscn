@@ -38,7 +38,7 @@ var effect = null
 
 
 func _ready():
-	randomize()
+	rng.randomize()
 
 func setup_actor():
 	turn_timer.add_to_timer_group(self)
