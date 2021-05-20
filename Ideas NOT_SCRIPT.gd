@@ -19,4 +19,13 @@ Inspirations: Zettai Hero Project, Pokemon Mystery Dungeon, Izuna: Unemployed Ni
 Possible Longterm Directions?:
 	- Single player story based, like ZHP and most existing Mystery Dungeon games.
 	- Multi player based? It doesnt look like theres very many games like this from my searches.
+
+
+playability things:
+allow diagonal
+move BEFORE act
+
+if attacking an enemy, adjust to movement, e.g. if you're attacking down and the opponent moves from down to down left, follow them
+
+do not allow cornering
 """
