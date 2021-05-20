@@ -17,19 +17,22 @@ var map_z = 7
 var map_grid = []
 
 var no_of_rooms = 3
+var rooms = []
 var proc_gen_map_grid = []
 
 var current_number_of_enemies = 0
 
 func _ready():
-	randomize()
+	rng.randomize()
+	create_proc_gen_map()
 	create_empty_map()
 	spawn_enemies()
 
 func create_proc_gen_map():
-	for room in no_of_rooms:
-		var room_x = rng.randi_range(2,8)
-		var room_y = rng.randi_range(2,8)
+	
+	pass
+
+
 
 func create_empty_map():
 	# create the map based on the map_x and map_y variables
@@ -101,7 +104,6 @@ func tile_available(x,z): # Is a tile
 func print_map_grid():
 	var print_grid = map_grid.duplicate()
 	print_grid.invert()
-	print('some okjhgfther text')
 	for line in print_grid:
 		var converted_row = []
 		for tile in line:
@@ -111,7 +113,6 @@ func print_map_grid():
 				TYPE_OBJECT:
 					converted_row.append(tile.get('object_type'))
 		print(converted_row)
-		# this is a test 2
 
 func get_tile_contents(x,z):
 	return map_grid[x][z]
