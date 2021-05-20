@@ -101,7 +101,7 @@ func tile_available(x,z): # Is a tile
 func print_map_grid():
 	var print_grid = map_grid.duplicate()
 	print_grid.invert()
-	print('other text')
+	print('other textadsfdsfdsa')
 	for line in print_grid:
 		var converted_row = []
 		for tile in line:
@@ -111,7 +111,7 @@ func print_map_grid():
 				TYPE_OBJECT:
 					converted_row.append(tile.get('object_type'))
 		print(converted_row)
-		# this is a test
+		# this is a test 2
 
 func get_tile_contents(x,z):
 	return map_grid[x][z]
