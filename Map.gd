@@ -99,11 +99,18 @@ func tile_available(x,z): # Is a tile
 	return false
 
 func print_map_grid():
-	map_grid.invert()
+	var print_grid = map_grid.duplicate()
+	print_grid.invert()
 	print('---')
-	for line in map_grid:
-		print(line)
-	map_grid.invert()
+	for line in print_grid:
+		var converted_row = []
+		for tile in line:
+			match typeof(tile):
+				TYPE_STRING:
+					converted_row.append(tile)
+				TYPE_OBJECT:
+					converted_row.append(tile.get('object_type'))
+		print(converted_row)
 
 func get_tile_contents(x,z):
 	return map_grid[x][z]
