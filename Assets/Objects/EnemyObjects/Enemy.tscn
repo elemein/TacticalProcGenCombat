@@ -42,7 +42,12 @@ func _ready():
 
 func setup_actor():
 	turn_timer.add_to_timer_group(self)
-	map_pos = map.place_on_map(self, translation)
+	map_pos = map.place_on_map(self)
+	translation.x = map_pos[0] * TILE_OFFSET
+	translation.z = map_pos[1] * TILE_OFFSET
+	
+	target_pos = translation
+	saved_pos = translation
 
 func _physics_process(_delta):
 	if turn_timer.time_left == 0: # We don't wanna decide a turn if timer isn't 0.
