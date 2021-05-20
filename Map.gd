@@ -7,6 +7,8 @@ const MAX_NUMBER_OF_ENEMIES = 3
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 
+var rng = RandomNumberGenerator.new()
+
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
@@ -14,12 +16,20 @@ var map_x = 5
 var map_z = 7
 var map_grid = []
 
+var no_of_rooms = 3
+var proc_gen_map_grid = []
+
 var current_number_of_enemies = 0
 
 func _ready():
 	randomize()
 	create_empty_map()
 	spawn_enemies()
+
+func create_proc_gen_map():
+	for room in no_of_rooms:
+		var room_x = rng.randi_range(2,8)
+		var room_y = rng.randi_range(2,8)
 
 func create_empty_map():
 	# create the map based on the map_x and map_y variables
@@ -89,18 +99,11 @@ func tile_available(x,z): # Is a tile
 	return false
 
 func print_map_grid():
-	var print_grid = map_grid.duplicate()
-	print_grid.invert()
+	map_grid.invert()
 	print('---')
-	for line in print_grid:
-		var converted_row = []
-		for tile in line:
-			match typeof(tile):
-				TYPE_STRING:
-					converted_row.append(tile)
-				TYPE_OBJECT:
-					converted_row.append(tile.get('object_type'))
-		print(converted_row)
+	for line in map_grid:
+		print(line)
+	map_grid.invert()
 
 func get_tile_contents(x,z):
 	return map_grid[x][z]
