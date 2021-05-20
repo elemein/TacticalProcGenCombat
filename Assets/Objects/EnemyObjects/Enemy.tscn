@@ -62,17 +62,30 @@ func _physics_process(_delta):
 
 func decide_next_action():
 	randomize()
-	match rng.randi_range(1,4):
+	match rng.randi_range(1,8):
 		1:
+			if check_move_action('move upleft'):
+				set_action('move upleft')
+		2:
+			if check_move_action('move upright'):
+				set_action('move upright')
+		3:
+			if check_move_action('move downleft'):
+				set_action('move downleft')
+		4:
+			if check_move_action('move downright'):
+				set_action('move downright')
+		
+		5:
 			if check_move_action('move up'):
 				set_action('move up')
-		2:
+		6:
 			if check_move_action('move down'):
 				set_action('move down')
-		3:
+		7:
 			if check_move_action('move left'):
 				set_action('move left')
-		4:
+		8:
 			if check_move_action('move right'):
 				set_action('move right')
 
@@ -88,6 +101,23 @@ func process_turn():
 		set_direction('%s' % proposed_action.split(\" \")[1])
 		
 		match proposed_action.split(\" \")[1]:
+			'upleft':
+				target_tile = [map_pos[0] + 1, map_pos[1] - 1]
+				target_pos.x = target_tile[0] * TILE_OFFSET
+				target_pos.z = target_tile[1] * TILE_OFFSET
+			'upright':
+				target_tile = [map_pos[0] + 1, map_pos[1] + 1]
+				target_pos.x = target_tile[0] * TILE_OFFSET
+				target_pos.z = target_tile[1] * TILE_OFFSET
+			'downleft':
+				target_tile = [map_pos[0] - 1, map_pos[1] - 1]
+				target_pos.x = target_tile[0] * TILE_OFFSET
+				target_pos.z = target_tile[1] * TILE_OFFSET
+			'downright':
+				target_tile = [map_pos[0] - 1, map_pos[1] + 1]
+				target_pos.x = target_tile[0] * TILE_OFFSET
+				target_pos.z = target_tile[1] * TILE_OFFSET
+			
 			'up':
 				target_tile = [map_pos[0] + 1, map_pos[1]]
 				target_pos.x = target_tile[0] * TILE_OFFSET
@@ -124,6 +154,15 @@ func take_damage(damage):
 # Movement related functions.
 func check_move_action(move):
 	match move:
+		'move upleft':
+			if map.tile_available(map_pos[0] + 1, map_pos[1] - 1) == true: return true
+		'move upright':
+			if map.tile_available(map_pos[0] + 1, map_pos[1] + 1) == true: return true
+		'move downleft':
+			if map.tile_available(map_pos[0] - 1, map_pos[1] - 1) == true: return true
+		'move downright':
+			if map.tile_available(map_pos[0] - 1, map_pos[1] + 1) == true: return true
+		
 		'move up':
 			if map.tile_available(map_pos[0] + 1, map_pos[1]) == true: 
 				proposed_action = 'move up'
@@ -145,6 +184,19 @@ func check_move_action(move):
 
 func set_direction(direction):
 	match direction:
+		'upleft':
+			direction_facing = \"upleft\"
+			model.rotation_degrees.y = 45 + 90
+		'upright':
+			direction_facing = \"upright\"
+			model.rotation_degrees.y = 45 
+		'downleft':
+			direction_facing = \"downleft\"
+			model.rotation_degrees.y = 45 + 180
+		'downright':
+			direction_facing = \"downright\"
+			model.rotation_degrees.y = 45 + 90 + 180
+		
 		'up':
 			direction_facing = \"up\"
 			model.rotation_degrees.y = 90

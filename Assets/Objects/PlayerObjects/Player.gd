@@ -45,10 +45,6 @@ func _ready():
 func _physics_process(_delta):
 	get_input()
 	
-	if Input.is_action_pressed("w"):
-		if Input.is_action_pressed("a") && direction_facing != 'upleft': 
-			print("true")
-	
 	if in_turn == true:
 		# Change position based on time tickdown.
 		if proposed_action.split(" ")[0] == 'move':
@@ -80,58 +76,69 @@ func get_input():
 	if turn_timer.time_left > 0: # We don't wanna collect input if turn in action.
 		return
 	
+	var no_of_inputs = 0
+	
+	for input in [Input.is_action_pressed("w"), 
+				Input.is_action_pressed("a"),
+				Input.is_action_pressed("s"), 
+				Input.is_action_pressed("d")]:
+					
+		if input == true: no_of_inputs += 1
+	
 	# Below sets direction. It checks for the directional key being used, AND
 	# if the char is not already facing that direction, and then starts the 
 	# timer to decide direction so that it doesnt just auto-move.
 	
-	
-	
-	if Input.is_action_pressed("w"):
-		if Input.is_action_pressed("a") && direction_facing != 'upleft': 
+	if no_of_inputs > 1:
+		if (Input.is_action_pressed("w") &&Input.is_action_pressed("a") 
+			&& direction_facing != 'upleft'):
 			set_direction('upleft')
-	if (Input.is_action_pressed("w") && Input.is_action_pressed("d") 
-		&& direction_facing != 'upright'): 
-		set_direction('upright')
-	if (Input.is_action_pressed("s") && Input.is_action_pressed("a") 
-		&& direction_facing != 'downleft'): 
-		set_direction('downleft')
-	if (Input.is_action_pressed("s") && Input.is_action_pressed("d") 
-		&& direction_facing != 'downright'): 
-		set_direction('downright')
+		if (Input.is_action_pressed("w") && Input.is_action_pressed("d") 
+			&& direction_facing != 'upright'): 
+			set_direction('upright')
+		if (Input.is_action_pressed("s") && Input.is_action_pressed("a") 
+			&& direction_facing != 'downleft'): 
+			set_direction('downleft')
+		if (Input.is_action_pressed("s") && Input.is_action_pressed("d") 
+			&& direction_facing != 'downright'): 
+			set_direction('downright')
 	
-	if Input.is_action_pressed("w") && direction_facing != 'up': set_direction('up')
-	if Input.is_action_pressed("s") && direction_facing != 'down': set_direction('down')
-	if Input.is_action_pressed("a") && direction_facing != 'left': set_direction('left')
-	if Input.is_action_pressed("d") && direction_facing != 'right': set_direction('right')
+	if no_of_inputs == 1:
+		if Input.is_action_pressed("w") && direction_facing != 'up': set_direction('up')
+		if Input.is_action_pressed("s") && direction_facing != 'down': set_direction('down')
+		if Input.is_action_pressed("a") && direction_facing != 'left': set_direction('left')
+		if Input.is_action_pressed("d") && direction_facing != 'right': set_direction('right')
 
 	# As the move buttons are used to change direction, these need to abide
 	# to the directional timer.
 	if directional_timer.time_left == 0:
-		if Input.is_action_pressed("w") && Input.is_action_pressed("a"): 
-			if check_move_action('move upleft'):
-				set_action('move upleft')
-		if Input.is_action_pressed("w") && Input.is_action_pressed("d"): 
-			if check_move_action('move upright'):
-				set_action('move upright')
-		if Input.is_action_pressed("s") && Input.is_action_pressed("a"): 
-			if check_move_action('move downleft'):
-				set_action('move downleft')
-		if Input.is_action_pressed("s") && Input.is_action_pressed("d"): 
-			if check_move_action('move downright'):
-				set_action('move downright')
+		if no_of_inputs > 1:
+			if Input.is_action_pressed("w") && Input.is_action_pressed("a"): 
+				if check_move_action('move upleft'):
+					set_action('move upleft')
+			if Input.is_action_pressed("w") && Input.is_action_pressed("d"): 
+				if check_move_action('move upright'):
+					set_action('move upright')
+			if Input.is_action_pressed("s") && Input.is_action_pressed("a"): 
+				if check_move_action('move downleft'):
+					set_action('move downleft')
+			if Input.is_action_pressed("s") && Input.is_action_pressed("d"): 
+				if check_move_action('move downright'):
+					set_action('move downright')
 		
-		if Input.is_action_pressed("w"): 
-			if check_move_action('move up'):
-				set_action('move up')
-		if Input.is_action_pressed("s"): 
-			if check_move_action('move down'):
-				set_action('move down')
-		if Input.is_action_pressed("a"):
-			if check_move_action('move left'):
-				set_action('move left')
-		if Input.is_action_pressed("d"): 
-			if check_move_action('move right'):
-				set_action('move right')
+		if no_of_inputs == 1:
+			if Input.is_action_pressed("w"): 
+				if check_move_action('move up'):
+					set_action('move up')
+			if Input.is_action_pressed("s"): 
+				if check_move_action('move down'):
+					set_action('move down')
+			if Input.is_action_pressed("a"):
+				if check_move_action('move left'):
+					set_action('move left')
+			if Input.is_action_pressed("d"): 
+				if check_move_action('move right'):
+					set_action('move right')
 	
 	# Basic attacks only need one press.
 	if Input.is_action_pressed("space"): set_action('basic attack')
@@ -152,14 +159,18 @@ func process_turn():
 			'upleft':
 				target_tile = [map_pos[0] + 1, map_pos[1] - 1]
 				target_pos.x = target_tile[0] * TILE_OFFSET
+				target_pos.z = target_tile[1] * TILE_OFFSET
 			'upright':
 				target_tile = [map_pos[0] + 1, map_pos[1] + 1]
 				target_pos.x = target_tile[0] * TILE_OFFSET
+				target_pos.z = target_tile[1] * TILE_OFFSET
 			'downleft':
 				target_tile = [map_pos[0] - 1, map_pos[1] - 1]
+				target_pos.x = target_tile[0] * TILE_OFFSET
 				target_pos.z = target_tile[1] * TILE_OFFSET
 			'downright':
 				target_tile = [map_pos[0] - 1, map_pos[1] + 1]
+				target_pos.x = target_tile[0] * TILE_OFFSET
 				target_pos.z = target_tile[1] * TILE_OFFSET
 			
 			'up':
@@ -253,16 +264,16 @@ func set_direction(direction):
 	match direction:
 		'upleft':
 			direction_facing = "upleft"
-			model.rotation_degrees.y = 45
+			model.rotation_degrees.y = 45 + 90
 		'upright':
 			direction_facing = "upright"
-			model.rotation_degrees.y = 90 + 45
+			model.rotation_degrees.y = 45 
 		'downleft':
 			direction_facing = "downleft"
-			model.rotation_degrees.y = 180 - 45
+			model.rotation_degrees.y = 45 + 180
 		'downright':
 			direction_facing = "downright"
-			model.rotation_degrees.y = 180 +45
+			model.rotation_degrees.y = 45 + 90 + 180
 		
 		'up':
 			direction_facing = "up"
