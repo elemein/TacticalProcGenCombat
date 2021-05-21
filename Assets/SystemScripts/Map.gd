@@ -2,7 +2,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const MAX_NUMBER_OF_ENEMIES = 7
+const NUMBER_OF_ENEMIES = 7
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 
@@ -47,23 +47,16 @@ func populate_map_ground():
 				block.translation = Vector3(x_offset, Y_OFFSET, z_offset)
 
 func spawn_enemies():
-	for enemy_cnt in MAX_NUMBER_OF_ENEMIES:
-		# Get random x/y coords to spawn enemy
-		var enemy_x = null
-		var enemy_z = null
+	for enemy_cnt in NUMBER_OF_ENEMIES:
+		var tile = null
 		
-		# Prevent enemies from being spawned on the same tile.
-		while enemy_x == null && enemy_z == null:
-			var tile = choose_random_ground_tile()
-			enemy_x = tile[0]
-			enemy_z = tile[1]
-			if typeof(map_grid[enemy_x][enemy_z]) != TYPE_STRING:
-				enemy_x = null
-				enemy_z = null
-		
+		while tile == null:
+			tile = choose_random_ground_tile()
+			if !tile_available(tile[0],tile[1]): tile = null
+
 		var enemy = base_enemy.instance()
 		add_child(enemy)
-		enemy.translation = Vector3(enemy_x * TILE_OFFSET, Y_OFFSET+0.3, enemy_z * TILE_OFFSET)
+		enemy.translation = Vector3(tile[0] * TILE_OFFSET, Y_OFFSET+0.3, tile[1] * TILE_OFFSET)
 		enemy.add_to_group('enemies')
 		enemy.setup_actor()
 		
@@ -72,34 +65,12 @@ func spawn_enemies():
 func place_on_map(object):
 	var tile = choose_random_ground_tile()
 	map_grid[tile[0]][tile[1]] = object
-
 	return tile
 
 func move_on_map(object, old_pos, new_pos):
-	# Clear old location.
 	map_grid[old_pos[0]][old_pos[1]] = '0'
 	map_grid[new_pos[0]][new_pos[1]] = object
-
 	return [new_pos[0], new_pos[1]]
-
-func tile_available(x,z): # Is a tile 
-	if (x >= 0 && z >= 0 && x < map_grid.size()): # There's no try-except, so this has to be very explicit.
-		if z < map_grid[x].size():
-			if typeof(map_grid[x][z]) == TYPE_STRING: # '4' is the integer representation for a string.
-				if map_grid[x][z] == '0':
-					return true
-		
-	return false
-
-func catalog_ground_tiles():
-	for x in range(0, map_grid.size()-1):
-		for z in range(0, map_grid[0].size()-1):
-			if map_grid[x][z] == '0':
-				catalog_of_ground_tiles.append([x,z])
-
-func choose_random_ground_tile():
-	return catalog_of_ground_tiles[rng.randi_range(0, catalog_of_ground_tiles.size()-1)]
-
 
 func print_map_grid():
 	print('-----') # Divider
@@ -115,5 +86,21 @@ func print_map_grid():
 					converted_row.append(tile.get('object_type'))
 		print(converted_row)
 
+func catalog_ground_tiles():
+	for x in range(0, map_grid.size()-1):
+		for z in range(0, map_grid[0].size()-1):
+			if map_grid[x][z] == '0':
+				catalog_of_ground_tiles.append([x,z])
+
+func choose_random_ground_tile():
+	return catalog_of_ground_tiles[rng.randi_range(0, catalog_of_ground_tiles.size()-1)]
+
 func get_tile_contents(x,z):
 	return map_grid[x][z]
+
+func tile_available(x,z): # Is a tile 
+	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
+		if typeof(map_grid[x][z]) == TYPE_STRING:
+			if map_grid[x][z] == '0':
+				return true
+	return false

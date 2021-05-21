@@ -62,4 +62,5 @@ unit_db = 40.0
 [connection signal="timeout" from="TurnTimer" to="TurnTimer" method="_on_TurnTimer_timeout"]
 
 [editable path="Player"]
+
 [editable path="Player/Graphics"]
