@@ -1,6 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Assets/Objects/EnemyObjects/polycat.dae" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Audio/EnemyAudio/hit_basic_attack_2.wav" type="AudioStream" id=2]
+[ext_resource path="res://Assets/Audio/EnemyAudio/hit_basic_attack_1.wav" type="AudioStream" id=3]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody
@@ -12,6 +14,9 @@ onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node(\"/root/World/GUI\")
 onready var turn_timer = get_node(\"/root/World/TurnTimer\")
 onready var map = get_node(\"/root/World/Map\")
+
+# Audio effects
+onready var audio_hit = $Audio/Hit
 
 var rng = RandomNumberGenerator.new()
 
@@ -155,6 +160,10 @@ func end_turn():
 func take_damage(damage):
 	hp -= damage
 	print(\"%s has %s HP\" % [self, hp])
+	
+	# Play a random audio effect upon getting hit
+	var num_audio_effects = audio_hit.get_children().size()
+	audio_hit.get_children()[randi() % num_audio_effects].play()
 
 # Movement related functions.
 func check_move_action(move):
@@ -409,5 +418,17 @@ anims/walk = SubResource( 6 )
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0.666457, 0 )
 shape = SubResource( 7 )
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="Hit" type="Node" parent="Audio"]
+
+[node name="basic_attack_1" type="AudioStreamPlayer3D" parent="Audio/Hit"]
+stream = ExtResource( 3 )
+unit_db = 80.0
+
+[node name="basic_attack_2" type="AudioStreamPlayer3D" parent="Audio/Hit"]
+stream = ExtResource( 2 )
+unit_db = 80.0
 
 [editable path="Graphics"]

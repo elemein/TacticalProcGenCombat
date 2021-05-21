@@ -9,6 +9,9 @@ onready var gui = get_node("/root/World/GUI")
 onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var map = get_node("/root/World/Map")
 
+# Sound effects
+onready var miss_basick_attack = $AudioStreamPlayer3D
+
 var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 
 # test
@@ -226,6 +229,8 @@ func process_turn():
 		if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
 			if attacked_obj.get_obj_type() == 'Enemy':
 				attacked_obj.take_damage(attack_power)
+		else:
+			miss_basick_attack.play()
 	
 	elif proposed_action == 'fireball':
 		set_fireball_target_pos()
