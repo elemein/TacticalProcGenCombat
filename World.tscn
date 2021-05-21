@@ -58,7 +58,6 @@ transform = Transform( -1.62921e-07, 0.939693, -0.34202, 0, 0.34202, 0.939693, 1
 visible = false
 stream = ExtResource( 6 )
 unit_db = 40.0
-
 [connection signal="timeout" from="TurnTimer" to="TurnTimer" method="_on_TurnTimer_timeout"]
 
 [editable path="Player"]
