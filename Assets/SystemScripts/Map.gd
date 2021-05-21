@@ -100,7 +100,6 @@ func catalog_ground_tiles():
 func choose_random_ground_tile():
 	return catalog_of_ground_tiles[rng.randi_range(0, catalog_of_ground_tiles.size()-1)]
 
-
 func print_map_grid():
 	print('-----') # Divider
 	var print_grid = map_grid.duplicate()

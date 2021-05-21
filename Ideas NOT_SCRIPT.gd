@@ -25,7 +25,8 @@ playability things:
 allow diagonal
 move BEFORE act
 
-if attacking an enemy, adjust to movement, e.g. if you're attacking down and the opponent moves from down to down left, follow them
+if attacking an enemy, adjust to movement, e.g. if you're attacking down and 
+the opponent moves from down to down left, follow them
 
 do not allow cornering
 """
