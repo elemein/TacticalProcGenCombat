@@ -150,13 +150,11 @@ func connect_leaves(leaf1, leaf2):
 	var w = 1
 	var h = 1
 	
-	# Vertical Corridor
-	if (leaf1.split == 'h'):
-		x -= floor(w/2)+1
+	if (leaf1.split == 'h'): # Vertical Corridor
+		x -= 1
 		h = abs(leaf1.center.y - leaf2.center.y)
-	else:
-		# Horizontal Corridor
-		y -=floor(h/2)+1
+	else:					 # Horizontal Corridor
+		y -= 1
 		w = abs(leaf1.center.x - leaf2.center.x)
 		
 	# Ensure within map
