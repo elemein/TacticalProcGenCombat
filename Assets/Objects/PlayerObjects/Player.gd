@@ -11,6 +11,8 @@ onready var map = get_node("/root/World/Map")
 
 var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 
+# test
+
 # gameplay vars
 var object_type = 'Player'
 var hp = 100
