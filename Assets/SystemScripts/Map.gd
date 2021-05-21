@@ -52,10 +52,7 @@ func spawn_enemies():
 		
 		while tile == null:
 			tile = choose_random_ground_tile()
-			if typeof(map_grid[tile[0]][tile[1]]) != TYPE_STRING:
-				tile = null
-			elif map_grid[tile[0]][tile[1]] != '0':
-				tile = null
+			if !tile_available(tile[0],tile[1]): tile = null
 
 		var enemy = base_enemy.instance()
 		add_child(enemy)
@@ -68,14 +65,11 @@ func spawn_enemies():
 func place_on_map(object):
 	var tile = choose_random_ground_tile()
 	map_grid[tile[0]][tile[1]] = object
-
 	return tile
 
 func move_on_map(object, old_pos, new_pos):
-	# Clear old location.
 	map_grid[old_pos[0]][old_pos[1]] = '0'
 	map_grid[new_pos[0]][new_pos[1]] = object
-
 	return [new_pos[0], new_pos[1]]
 
 func print_map_grid():
@@ -105,10 +99,8 @@ func get_tile_contents(x,z):
 	return map_grid[x][z]
 
 func tile_available(x,z): # Is a tile 
-	if (x >= 0 && z >= 0 && x < map_grid.size()): # There's no try-except, so this has to be very explicit.
-		if z < map_grid[x].size():
-			if typeof(map_grid[x][z]) == TYPE_STRING: # '4' is the integer representation for a string.
-				if map_grid[x][z] == '0':
-					return true
-		
+	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
+		if typeof(map_grid[x][z]) == TYPE_STRING:
+			if map_grid[x][z] == '0':
+				return true
 	return false
