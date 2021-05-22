@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/GUI/health.png" type="Texture" id=1]
+[ext_resource path="res://Assets/GUI/HealthBar2D.tscn" type="PackedScene" id=3]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Sprite3D
+
+onready var health_bar = $Viewport/HealthBar2D
+
+func _ready():
+	texture = $Viewport.get_texture()
+
+func update(value, full):
+	health_bar.update_bar(value, full)
+"
+
+[node name="HealthBar3D" type="Sprite3D"]
+billboard = 1
+texture = ExtResource( 1 )
+script = SubResource( 1 )
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 240, 60 )
+transparent_bg = true
+usage = 0
+render_target_v_flip = true
+
+[node name="HealthBar2D" parent="Viewport" instance=ExtResource( 3 )]
+
+[node name="HealthBar" parent="Viewport/HealthBar2D" index="0"]
+rect_scale = Vector2( 0.6, 0.6 )
+
+[editable path="Viewport/HealthBar2D"]
