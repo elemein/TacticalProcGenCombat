@@ -1,10 +1,9 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Assets/Objects/EnemyObjects/polycat.dae" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Audio/EnemyAudio/hit_basic_attack_2.wav" type="AudioStream" id=2]
 [ext_resource path="res://Assets/Audio/EnemyAudio/hit_basic_attack_1.wav" type="AudioStream" id=3]
 [ext_resource path="res://Assets/GUI/HealthBar3D.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Assets/GUI/HealthBar2D.gd" type="Script" id=5]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody
@@ -488,9 +487,6 @@ unit_db = 80.0
 [node name="HealthBar3D" parent="." instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80738, 0 )
 pixel_size = 0.003
-
-[node name="HealthBar2D" parent="HealthBar3D/Viewport" index="0"]
-script = ExtResource( 5 )
 
 [editable path="Graphics"]
 [editable path="HealthBar3D"]
