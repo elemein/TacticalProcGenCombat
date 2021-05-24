@@ -12,6 +12,7 @@ onready var map = get_node("/root/World/Map")
 # Sound effects
 onready var miss_basick_attack = $Audio/miss_basic_attack
 onready var fireball_throw = $Audio/fireball_throw
+onready var out_of_mana = $Audio/out_of_mana
 
 var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 
@@ -20,7 +21,9 @@ var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 # gameplay vars
 var object_type = 'Player'
 var hp = 100
+var max_hp = 100
 var mp = 100
+var max_mp = 100
 var attack_power = 10
 var spell_power = 20
 
@@ -156,7 +159,11 @@ func get_input():
 	if Input.is_action_pressed("space"): set_action('basic attack')
 	
 	# Skills will need two presses to confirm.
-	if Input.is_action_pressed("e"): set_action('fireball')
+	if Input.is_action_pressed("e"): 
+		if mp >= 20:
+			set_action('fireball')
+		else:
+			out_of_mana.play()
 	
 func set_action(action):
 	proposed_action = action
@@ -218,6 +225,8 @@ func process_turn():
 			if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
 				if attacked_obj.get_obj_type() == 'Enemy':
 					attacked_obj.take_damage(spell_power)
+		mp -= 20
+		$HealthManaBar3D.update_mana_bar(mp, max_mp)
 
 	in_turn = true
 

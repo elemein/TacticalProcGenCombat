@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Assets/GUI/HealthManaBar2D.gd" type="Script" id=1]
+[ext_resource path="res://Assets/GUI/progress_bar.png" type="Texture" id=2]
+[ext_resource path="res://Assets/GUI/health.png" type="Texture" id=3]
+[ext_resource path="res://Assets/GUI/mana_progress_bar.png" type="Texture" id=4]
+[ext_resource path="res://Assets/GUI/mana.png" type="Texture" id=5]
+
+[node name="HealthManaBar2D" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealthBar" type="TextureProgress" parent="."]
+margin_right = 400.0
+margin_bottom = 100.0
+rect_scale = Vector2( 0.5, 0.5 )
+value = 100.0
+texture_under = ExtResource( 2 )
+texture_progress = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ManaBar" type="TextureProgress" parent="."]
+margin_top = 50.0
+margin_right = 400.0
+margin_bottom = 84.0
+rect_scale = Vector2( 0.5, 0.5 )
+value = 100.0
+texture_under = ExtResource( 4 )
+texture_progress = ExtResource( 5 )
+__meta__ = {
+"_editor_description_": ""
+}
