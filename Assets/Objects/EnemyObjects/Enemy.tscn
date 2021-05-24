@@ -142,7 +142,7 @@ func get_map_pos():
 func get_action():
 	return proposed_action
 
-#Setters
+# Setters
 func set_model_rot(dir_facing, rotation_deg):
 	direction_facing = dir_facing
 	model.rotation_degrees.y = rotation_deg

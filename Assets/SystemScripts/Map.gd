@@ -5,12 +5,14 @@ const TILE_OFFSET = 2.2
 const NUMBER_OF_ENEMIES = 7
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
+const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 
 var rng = RandomNumberGenerator.new()
 var map_generator = MAP_GEN.new()
+var pathfinder = PATHFINDER.new()
 
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
@@ -29,6 +31,8 @@ func _ready():
 	catalog_ground_tiles()
 	
 	spawn_enemies()
+	
+	add_child(pathfinder)
 
 func populate_map_ground():
 	# create the map based on the map_x and map_y variables
@@ -107,3 +111,10 @@ func tile_available(x,z): # Is a tile
 			if map_grid[x][z] == '0':
 				return true
 	return false
+
+func get_map():
+	return map_grid
+
+func pathfind(searcher, start_pos, goal_pos):
+	pathfinder.solve(searcher, start_pos, goal_pos)
+	

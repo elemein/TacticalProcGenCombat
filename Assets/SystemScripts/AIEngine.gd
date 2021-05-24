@@ -11,6 +11,8 @@ var ai_state # [idle, active]
 
 var actor
 
+var detected_players = []
+
 func _ready():
 	rng.randomize()
 
@@ -26,6 +28,9 @@ func run_engine():
 	if ai_state == 'idle':
 		actor.set_action('idle')
 	elif ai_state == 'active':
+		
+		pathfind()
+		
 		match rng.randi_range(1,8):
 			1:
 				if actor.check_move_action('move upleft'):
@@ -61,4 +66,8 @@ func search_area():
 			var tile = map.get_tile_contents(actor.get_map_pos()[0] + x, actor.get_map_pos()[1] + z)
 			if typeof(tile) != TYPE_STRING:
 				if tile.get_obj_type() == 'Player':
+					detected_players.append([actor.get_map_pos()[0] + x, actor.get_map_pos()[1] + z])
 					ai_state = 'active'
+
+func pathfind():
+	map.pathfind(actor, actor.get_map_pos(), detected_players[0])
