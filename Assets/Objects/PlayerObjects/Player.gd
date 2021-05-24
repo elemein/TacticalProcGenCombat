@@ -2,6 +2,7 @@ extends KinematicBody
 
 const TILE_OFFSET = 2.2
 const DIRECTION_SELECT_TIME = 0.225
+const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
@@ -42,6 +43,9 @@ var map_pos = []
 # vars for animation
 var anim_state = "idle"
 var effect = null
+
+# object vars
+var mover = ACTOR_MOVER.new()
 
 func _ready():
 	directional_timer.set_one_shot(true)
