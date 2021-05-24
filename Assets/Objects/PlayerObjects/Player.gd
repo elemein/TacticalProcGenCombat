@@ -81,7 +81,10 @@ func _physics_process(_delta):
 			
 		
 	if proposed_action != '' && in_turn == true:
-		anim_state = "walk"
+		if proposed_action == 'idle':
+			anim_state = "idle"
+		else:
+			anim_state = "walk"
 	else:
 		anim_state = "idle"
 
@@ -155,6 +158,9 @@ func get_input():
 				if check_move_action('move right'):
 					set_action('move right')
 	
+	# X to skip your turn.
+	if Input.is_action_pressed("x"): set_action('idle')
+	
 	# Basic attacks only need one press.
 	if Input.is_action_pressed("space"): set_action('basic attack')
 	
@@ -203,6 +209,9 @@ func process_turn():
 		target_pos.x = target_tile[0] * TILE_OFFSET
 		target_pos.z = target_tile[1] * TILE_OFFSET
 		map_pos = map.move_on_map(self, map_pos, target_tile)
+	
+	elif proposed_action == 'idle':
+		target_pos = map_pos
 	
 	elif proposed_action == 'basic attack':
 		var target_tile = get_target_tiles(1)[0]

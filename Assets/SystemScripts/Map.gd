@@ -96,6 +96,9 @@ func choose_random_ground_tile():
 	return catalog_of_ground_tiles[rng.randi_range(0, catalog_of_ground_tiles.size()-1)]
 
 func get_tile_contents(x,z):
+	if !(x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
+		return 'Out of Bounds'
+	
 	return map_grid[x][z]
 
 func tile_available(x,z): # Is a tile 

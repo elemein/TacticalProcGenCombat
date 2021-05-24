@@ -10,6 +10,8 @@ script/source = "extends KinematicBody
 
 const TILE_OFFSET = 2.2
 
+const AI_ENGINE = preload(\"res://Assets/SystemScripts/AIEngine.gd\")
+
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node(\"/root/World/GUI\")
@@ -43,9 +45,14 @@ var map_pos = []
 var anim_state = \"idle\"
 var effect = null
 
+# ai vars
+var ai_engine = AI_ENGINE.new()
 
 func _ready():
 	rng.randomize()
+	ai_engine.set_actor(self)
+	add_child(ai_engine)
+	
 
 func setup_actor():
 	turn_timer.add_to_timer_group(self)
@@ -66,15 +73,20 @@ func _physics_process(_delta):
 			translation = translation.linear_interpolate(target_pos, (1-turn_timer.time_left)) 
 			
 	if proposed_action != '' && in_turn == true:
-		anim_state = \"walk\"
+		if proposed_action == 'idle':
+			anim_state = \"idle\"
+		else:
+			anim_state = \"walk\"
 	else:
 		anim_state = \"idle\"
 
 	handle_animations()
 
 func decide_next_action():
-	randomize()
-	match rng.randi_range(1,8):
+	
+	ai_engine.run_engine()
+	
+	match rng.randi_range(1,9):
 		1:
 			if check_move_action('move upleft'):
 				set_action('move upleft')
@@ -100,6 +112,8 @@ func decide_next_action():
 		8:
 			if check_move_action('move right'):
 				set_action('move right')
+		9:
+			set_action('idle')
 
 func set_action(action):
 	proposed_action = action
@@ -146,6 +160,9 @@ func process_turn():
 				target_tile = [map_pos[0], map_pos[1] + 1]
 				target_pos.z = target_tile[1] * TILE_OFFSET
 				target_pos.x = translation.x
+			
+			'idle':
+				target_pos = map_pos
 
 		map_pos = map.move_on_map(self, map_pos, target_tile)
 
@@ -292,6 +309,9 @@ func play_anim(name):
 
 func get_obj_type():
 	return object_type
+
+func get_map_pos():
+	return map_pos
 "
 
 [sub_resource type="ArrayMesh" id=2]
@@ -489,4 +509,5 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80738, 0 )
 pixel_size = 0.003
 
 [editable path="Graphics"]
+
 [editable path="HealthManaBar3D"]
