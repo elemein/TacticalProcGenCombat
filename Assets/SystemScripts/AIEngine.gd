@@ -60,6 +60,7 @@ func run_engine():
 
 func search_area():
 	ai_state = 'idle'
+	detected_players = []
 
 	for x in range(-VISION_RANGE,VISION_RANGE):
 		for z in range(-VISION_RANGE,VISION_RANGE):
