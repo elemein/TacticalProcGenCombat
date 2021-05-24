@@ -89,6 +89,8 @@ func explore_neighbors(pos):
 				
 		tile_contents = map.get_tile_contents(search_pos[0], search_pos[1])
 		
+		if search_pos == target_pos: break
+		
 		if search_pos in visited: continue
 		if typeof(tile_contents) == TYPE_STRING:
 			if tile_contents == 'Out of Bounds': continue
