@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/GUI/health.png" type="Texture" id=1]
+[ext_resource path="res://Assets/GUI/HealthManaBar3D.gd" type="Script" id=2]
+[ext_resource path="res://Assets/GUI/HealthManaBar2D.tscn" type="PackedScene" id=3]
+
+[node name="HealthBar3D" type="Sprite3D"]
+billboard = 1
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 240, 60 )
+transparent_bg = true
+usage = 0
+render_target_v_flip = true
+
+[node name="HealthManaBar2D" parent="Viewport" instance=ExtResource( 3 )]

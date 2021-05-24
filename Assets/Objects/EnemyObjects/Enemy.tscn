@@ -3,7 +3,7 @@
 [ext_resource path="res://Assets/Objects/EnemyObjects/polycat.dae" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Audio/EnemyAudio/hit_basic_attack_2.wav" type="AudioStream" id=2]
 [ext_resource path="res://Assets/Audio/EnemyAudio/hit_basic_attack_1.wav" type="AudioStream" id=3]
-[ext_resource path="res://Assets/GUI/HealthBar3D.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/GUI/HealthManaBar3D.tscn" type="PackedScene" id=4]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody
@@ -111,7 +111,7 @@ func process_turn():
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(\" \")[0] == 'move':
 		set_direction('%s' % proposed_action.split(\" \")[1])
-		
+
 		match proposed_action.split(\" \")[1]:
 			'upleft':
 				target_tile = [map_pos[0] + 1, map_pos[1] - 1]
@@ -129,7 +129,7 @@ func process_turn():
 				target_tile = [map_pos[0] - 1, map_pos[1] + 1]
 				target_pos.x = target_tile[0] * TILE_OFFSET
 				target_pos.z = target_tile[1] * TILE_OFFSET
-			
+
 			'up':
 				target_tile = [map_pos[0] + 1, map_pos[1]]
 				target_pos.x = target_tile[0] * TILE_OFFSET
@@ -146,7 +146,7 @@ func process_turn():
 				target_tile = [map_pos[0], map_pos[1] + 1]
 				target_pos.z = target_tile[1] * TILE_OFFSET
 				target_pos.x = translation.x
-		
+
 		map_pos = map.move_on_map(self, map_pos, target_tile)
 
 	in_turn = true
@@ -168,7 +168,7 @@ func take_damage(damage):
 	audio_hit.get_children()[randi() % num_audio_effects].play()
 	
 	# Update the health bar
-	$HealthBar3D.update(hp, max_hp)
+	$HealthManaBar3D.update_health_bar(hp, max_hp)
 
 # Movement related functions.
 func check_move_action(move):
@@ -484,10 +484,9 @@ unit_db = 80.0
 stream = ExtResource( 2 )
 unit_db = 80.0
 
-[node name="HealthBar3D" parent="." instance=ExtResource( 4 )]
+[node name="HealthManaBar3D" parent="." instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80738, 0 )
 pixel_size = 0.003
 
 [editable path="Graphics"]
-[editable path="HealthBar3D"]
-[editable path="HealthBar3D/Viewport/HealthBar2D"]
+[editable path="HealthManaBar3D"]
