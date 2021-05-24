@@ -2,6 +2,7 @@ extends KinematicBody
 
 const TILE_OFFSET = 2.2
 const DIRECTION_SELECT_TIME = 0.225
+
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 
 onready var model = $Graphics
@@ -60,6 +61,9 @@ func _ready():
 	
 	target_pos = translation
 	saved_pos = translation
+	
+	mover.set_actor(self)
+	add_child(mover)
 
 func _physics_process(_delta):
 	get_input()
@@ -67,7 +71,7 @@ func _physics_process(_delta):
 	if in_turn == true:
 		# Change position based on time tickdown.
 		if proposed_action.split(" ")[0] == 'move':
-			translation = translation.linear_interpolate(target_pos, (1-turn_timer.time_left)) 
+			mover.set_actor_translation()
 		
 		if proposed_action == "basic attack":
 			if turn_timer.time_left > 0.5: # Move char towards attack cell.
@@ -209,10 +213,7 @@ func get_target_tiles(num):
 func process_turn():	
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(" ")[0] == 'move':
-		var target_tile = get_target_tiles(1)[0]
-		target_pos.x = target_tile[0] * TILE_OFFSET
-		target_pos.z = target_tile[1] * TILE_OFFSET
-		map_pos = map.move_on_map(self, map_pos, target_tile)
+		mover.move_actor()
 	
 	elif proposed_action == 'idle':
 		target_pos = map_pos
@@ -252,31 +253,7 @@ func end_turn():
 
 # Movement related functions.
 func check_move_action(move):
-	match move:
-		'move upleft':
-			if map.tile_available(map_pos[0] + 1, map_pos[1] - 1) == true: 
-				if check_cornering('upleft'): return true
-		'move upright':
-			if map.tile_available(map_pos[0] + 1, map_pos[1] + 1) == true: 
-				if check_cornering('upright'): return true
-		'move downleft':
-			if map.tile_available(map_pos[0] - 1, map_pos[1] - 1) == true: 
-				if check_cornering('downleft'): return true
-		'move downright':
-			if map.tile_available(map_pos[0] - 1, map_pos[1] + 1) == true: 
-				if check_cornering('downright'): return true
-		
-		'move up':
-			if map.tile_available(map_pos[0] + 1, map_pos[1]) == true: return true
-		'move down':
-			if map.tile_available(map_pos[0] - 1, map_pos[1]) == true: return true
-		'move left':
-			if map.tile_available(map_pos[0], map_pos[1] - 1) == true: return true
-		'move right':
-			if map.tile_available(map_pos[0], map_pos[1] + 1) == true: return true
-
-	# if none of the above returned true
-	return false
+	return mover.check_move_action(move)
 
 func check_cornering(direction): # This can definitely be done better. - SS
 	match direction:
@@ -322,33 +299,7 @@ func check_cornering(direction): # This can definitely be done better. - SS
 	return true
 
 func set_direction(direction):
-	match direction:
-		'upleft':
-			direction_facing = "upleft"
-			model.rotation_degrees.y = 45 + 90
-		'upright':
-			direction_facing = "upright"
-			model.rotation_degrees.y = 45 
-		'downleft':
-			direction_facing = "downleft"
-			model.rotation_degrees.y = 45 + 180
-		'downright':
-			direction_facing = "downright"
-			model.rotation_degrees.y = 45 + 90 + 180
-		
-		'up':
-			direction_facing = "up"
-			model.rotation_degrees.y = 90
-		'down':
-			direction_facing = "down"
-			model.rotation_degrees.y = 90 + 180
-		'left':
-			direction_facing = "left"
-			model.rotation_degrees.y = 180
-		'right':
-			direction_facing = "right"
-			model.rotation_degrees.y = 180 + 180
-
+	mover.set_actor_direction(direction)
 	directional_timer.start(DIRECTION_SELECT_TIME) 
 
 # Ability related functions.
@@ -404,5 +355,28 @@ func play_anim(name):
 		return
 	anim.play(name)
 
+
+
+# Getters
+func get_translation():
+	return translation
+
 func get_obj_type():
 	return object_type
+
+func get_map_pos():
+	return map_pos
+
+func get_action():
+	return proposed_action
+
+#Setters
+func set_model_rot(dir_facing, rotation_deg):
+	direction_facing = dir_facing
+	model.rotation_degrees.y = rotation_deg
+
+func set_translation(new_translation):
+	translation = new_translation
+
+func set_map_pos(new_pos):
+	map_pos = new_pos

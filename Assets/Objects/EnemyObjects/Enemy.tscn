@@ -38,8 +38,6 @@ var in_turn = false
 
 # movement and positioning related vars
 var direction_facing = \"down\"
-var saved_pos = Vector3()
-var target_pos = Vector3()
 var map_pos = []
 
 # vars for animation
@@ -58,9 +56,6 @@ func setup_actor():
 	map_pos = map.place_on_map(self)
 	translation.x = map_pos[0] * TILE_OFFSET
 	translation.z = map_pos[1] * TILE_OFFSET
-	
-	target_pos = translation
-	saved_pos = translation
 	
 	ai_engine.set_actor(self)
 	add_child(ai_engine)
@@ -95,9 +90,6 @@ func set_action(action):
 	ready_status = true
 
 func process_turn():
-	
-	var target_tile
-	# Sets target positions for move and basic attack.
 	if proposed_action.split(\" \")[0] == 'move':
 		mover.move_actor()
 
@@ -122,9 +114,7 @@ func take_damage(damage):
 
 # Movement related functions.
 func check_move_action(move):
-	if mover.check_move_action(move):
-		return true
-	return false
+	return mover.check_move_action(move)
 
 # Animations related functions.
 func handle_animations():
@@ -159,6 +149,9 @@ func set_model_rot(dir_facing, rotation_deg):
 
 func set_translation(new_translation):
 	translation = new_translation
+
+func set_map_pos(new_pos):
+	map_pos = new_pos
 "
 
 [sub_resource type="ArrayMesh" id=2]
