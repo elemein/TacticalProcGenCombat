@@ -10,7 +10,9 @@ onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var map = get_node("/root/World/Map")
 
 # Sound effects
-onready var miss_basick_attack = $AudioStreamPlayer3D
+onready var miss_basick_attack = $Audio/miss_basic_attack
+onready var fireball_throw = $Audio/fireball_throw
+onready var out_of_mana = $Audio/out_of_mana
 
 var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 
@@ -19,8 +21,11 @@ var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 # gameplay vars
 var object_type = 'Player'
 var hp = 100
+var max_hp = 100
 var mp = 100
+var max_mp = 100
 var attack_power = 10
+var spell_power = 20
 
 # vars to handle turn state
 var proposed_action = ""
@@ -154,75 +159,55 @@ func get_input():
 	if Input.is_action_pressed("space"): set_action('basic attack')
 	
 	# Skills will need two presses to confirm.
-	if Input.is_action_pressed("e"): set_action('fireball')
+	if Input.is_action_pressed("e"): 
+		if mp >= 20:
+			set_action('fireball')
+		else:
+			out_of_mana.play()
 	
 func set_action(action):
 	proposed_action = action
 	gui.set_action(proposed_action)
 	ready_status = true
 	
+func get_target_tiles(num):
+	# Get the contents for the number of tiles desired
+	
+	var target_tiles = []
+	
+	for tile_num in num:
+		match direction_facing:
+			'upleft':
+				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] - 1 - tile_num])
+			'upright':
+				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] + 1 + tile_num])
+			'downleft':
+				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] - 1 - tile_num])
+			'downright':
+				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] + 1 + tile_num])
+			
+			'up':
+				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1]])
+			'down':
+				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1]])
+			'left':
+				target_tiles.append([map_pos[0], map_pos[1] - 1 - tile_num])
+			'right':
+				target_tiles.append([map_pos[0], map_pos[1] + 1 + tile_num])
+	return target_tiles
+	
 func process_turn():	
-	var target_tile
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(" ")[0] == 'move':
-		match direction_facing:
-			'upleft':
-				target_tile = [map_pos[0] + 1, map_pos[1] - 1]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				target_pos.z = target_tile[1] * TILE_OFFSET
-			'upright':
-				target_tile = [map_pos[0] + 1, map_pos[1] + 1]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				target_pos.z = target_tile[1] * TILE_OFFSET
-			'downleft':
-				target_tile = [map_pos[0] - 1, map_pos[1] - 1]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				target_pos.z = target_tile[1] * TILE_OFFSET
-			'downright':
-				target_tile = [map_pos[0] - 1, map_pos[1] + 1]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				target_pos.z = target_tile[1] * TILE_OFFSET
-			
-			'up':
-				target_tile = [map_pos[0] + 1, map_pos[1]]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-			'down':
-				target_tile = [map_pos[0] - 1, map_pos[1]]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-			'left':
-				target_tile = [map_pos[0], map_pos[1] - 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
-			'right':
-				target_tile = [map_pos[0], map_pos[1] + 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
+		var target_tile = get_target_tiles(1)[0]
+		target_pos.x = target_tile[0] * TILE_OFFSET
+		target_pos.z = target_tile[1] * TILE_OFFSET
+		map_pos = map.move_on_map(self, map_pos, target_tile)
 	
 	elif proposed_action == 'basic attack':
-		match direction_facing:
-			'upleft':
-				target_tile = [map_pos[0] + 1, map_pos[1] - 1]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-			'upright':
-				target_tile = [map_pos[0] + 1, map_pos[1] + 1]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-			'downleft':
-				target_tile = [map_pos[0] - 1, map_pos[1] - 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
-			'downright':
-				target_tile = [map_pos[0] - 1, map_pos[1] + 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
-			
-			'up':
-				target_tile = [map_pos[0] + 1, map_pos[1]]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-			'down':
-				target_tile = [map_pos[0] - 1, map_pos[1]]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-			'left':
-				target_tile = [map_pos[0], map_pos[1] - 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
-			'right':
-				target_tile = [map_pos[0], map_pos[1] + 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
+		var target_tile = get_target_tiles(1)[0]
+		target_pos.x = target_tile[0] * TILE_OFFSET
+		target_pos.z = target_tile[1] * TILE_OFFSET
 		
 		var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
 		
@@ -234,11 +219,15 @@ func process_turn():
 	
 	elif proposed_action == 'fireball':
 		set_fireball_target_pos()
+		fireball_throw.play()
+		for target_tile in get_target_tiles(3):
+			var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
+			if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
+				if attacked_obj.get_obj_type() == 'Enemy':
+					attacked_obj.take_damage(spell_power)
+		mp -= 20
+		$HealthManaBar3D.update_mana_bar(mp, max_mp)
 
-	# If position will actually be changing, update to map.
-	if proposed_action.split(" ")[0] == 'move':
-		map_pos = map.move_on_map(self, map_pos, target_tile)
-	
 	in_turn = true
 
 func end_turn():
@@ -356,29 +345,28 @@ func set_fireball_target_pos():
 		
 		match direction_facing:
 			'upleft':
+				effect.rotation_degrees.y = 90 + 45
+				target_pos.x = effect.translation.x + (3*TILE_OFFSET)
+				target_pos.z = effect.translation.z - (3*TILE_OFFSET)
+			'upright':
 				effect.rotation_degrees.y = 45
 				target_pos.x = effect.translation.x + (3*TILE_OFFSET)
-				target_pos.z = 0
-			'upright':
-				effect.rotation_degrees.y = 90 + 45
-				target_pos.x = effect.translation.x - (3*TILE_OFFSET)
-				target_pos.z = 0
+				target_pos.z = effect.translation.z + (3*TILE_OFFSET)
 			'downleft':
-				effect.rotation_degrees.y = 180 - 45
-				target_pos.z = effect.translation.x - (3*TILE_OFFSET)
-				target_pos.x = 0
-			'downright':
 				effect.rotation_degrees.y = 180 + 45
+				target_pos.x = effect.translation.z - (3*TILE_OFFSET)
+				target_pos.z = effect.translation.x - (3*TILE_OFFSET)
+			'downright':
+				effect.rotation_degrees.y = 270 + 45
+				target_pos.x = effect.translation.z - (3*TILE_OFFSET)
 				target_pos.z = effect.translation.x + (3*TILE_OFFSET)
-				target_pos.x = 0
-			
 			
 			'up':
 				effect.rotation_degrees.y = 90
 				target_pos.x = effect.translation.x + (3*TILE_OFFSET)
 				target_pos.z = 0
 			'down':
-				effect.rotation_degrees.y = -90
+				effect.rotation_degrees.y = 270
 				target_pos.x = effect.translation.x - (3*TILE_OFFSET)
 				target_pos.z = 0
 			'left':
