@@ -67,7 +67,7 @@ x={
 
 [network]
 
-limits/debugger_stdout/max_chars_per_second=10000000000000
+limits/debugger_stdout/max_chars_per_second=100000000000000000
 
 [rendering]
 
