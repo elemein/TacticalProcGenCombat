@@ -13,6 +13,11 @@ var actor
 
 var detected_players = []
 
+var dist_from_player = 0
+var path = []
+
+var pathfinder_direction
+
 func _ready():
 	rng.randomize()
 
@@ -29,34 +34,44 @@ func run_engine():
 		actor.set_action('idle')
 	elif ai_state == 'active':
 		
-		pathfind()
+		pathfinder_direction = 'idle'
 		
-		match rng.randi_range(1,8):
-			1:
+		#find path to player
+		pathfind()
+		determine_direction_of_path()
+		
+		match pathfinder_direction:
+			'up':
+				if actor.check_move_action('move up'):
+					actor.set_action('move up')
+			'down':
+				if actor.check_move_action('move down'):
+					actor.set_action('move down')
+			'left':
+				if actor.check_move_action('move left'):
+					actor.set_action('move left')
+			'right':
+				if actor.check_move_action('move right'):
+					actor.set_action('move right')
+					
+			'upleft':
 				if actor.check_move_action('move upleft'):
 					actor.set_action('move upleft')
-			2:
+			'upright':
 				if actor.check_move_action('move upright'):
 					actor.set_action('move upright')
-			3:
+			'downleft':
 				if actor.check_move_action('move downleft'):
 					actor.set_action('move downleft')
-			4:
+			'downright':
 				if actor.check_move_action('move downright'):
 					actor.set_action('move downright')
 			
-			5:
-				if actor.check_move_action('move up'):
-					actor.set_action('move up')
-			6:
-				if actor.check_move_action('move down'):
-					actor.set_action('move down')
-			7:
-				if actor.check_move_action('move left'):
-					actor.set_action('move left')
-			8:
-				if actor.check_move_action('move right'):
-					actor.set_action('move right')
+			'idle':
+				actor.set_action('idle')
+				
+			
+
 
 func search_area():
 	ai_state = 'idle'
@@ -70,5 +85,24 @@ func search_area():
 					detected_players.append([actor.get_map_pos()[0] + x, actor.get_map_pos()[1] + z])
 					ai_state = 'active'
 
-func pathfind():
-	map.pathfind(actor, actor.get_map_pos(), detected_players[0])
+func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
+	var path_info = map.pathfind(actor, actor.get_map_pos(), detected_players[0])
+	dist_from_player = path_info[0]
+	path = path_info[1]
+	
+	if dist_from_player != 1:
+		path.pop_front()
+	
+	
+func determine_direction_of_path():
+	var curr_pos = actor.get_map_pos()
+	
+	if path[0] == [curr_pos[0] + 1, curr_pos[1]]: pathfinder_direction = 'up'
+	if path[0] == [curr_pos[0] - 1, curr_pos[1]]: pathfinder_direction = 'down'
+	if path[0] == [curr_pos[0], curr_pos[1] - 1]: pathfinder_direction = 'left'
+	if path[0] == [curr_pos[0], curr_pos[1] + 1]: pathfinder_direction = 'right'
+	
+	if path[0] == [curr_pos[0] + 1, curr_pos[1] - 1]: pathfinder_direction = 'upleft'
+	if path[0] == [curr_pos[0] + 1, curr_pos[1] + 1]: pathfinder_direction = 'upright'
+	if path[0] == [curr_pos[0] - 1, curr_pos[1] - 1]: pathfinder_direction = 'downleft'
+	if path[0] == [curr_pos[0] - 1, curr_pos[1] + 1]: pathfinder_direction = 'downright'

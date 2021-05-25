@@ -116,5 +116,5 @@ func get_map():
 	return map_grid
 
 func pathfind(searcher, start_pos, goal_pos):
-	pathfinder.solve(searcher, start_pos, goal_pos)
+	return pathfinder.solve(searcher, start_pos, goal_pos)
 	
