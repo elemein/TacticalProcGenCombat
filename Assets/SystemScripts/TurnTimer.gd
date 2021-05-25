@@ -15,6 +15,9 @@ var actors = []
 func add_to_timer_group(actor):
 	actors.append(actor)
 
+func remove_from_timer_group(actor):
+	actors.erase(actor)
+
 func process_turn():
 	wait_time = RESET_TIME # Reset this. 0 is NOT valid for some reason, so 0.1.
 	

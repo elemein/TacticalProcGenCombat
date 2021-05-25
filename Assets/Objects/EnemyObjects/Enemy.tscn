@@ -10,6 +10,8 @@ script/source = "extends KinematicBody
 
 const TILE_OFFSET = 2.2
 
+const DEATH_ANIM_TIME = 1
+
 const AI_ENGINE = preload(\"res://Assets/SystemScripts/AIEngine.gd\")
 const ACTOR_MOVER = preload(\"res://Assets/SystemScripts/ActorMover.gd\")
 
@@ -44,6 +46,11 @@ var map_pos = []
 var anim_state = \"idle\"
 var effect = null
 
+#death vars
+var is_dead = false
+var death_anim_timer = Timer.new()
+var death_anim_info = []
+
 # object vars
 var ai_engine = AI_ENGINE.new()
 var mover = ACTOR_MOVER.new()
@@ -64,6 +71,19 @@ func setup_actor():
 	add_child(mover)
 
 func _physics_process(_delta):
+	if is_dead:
+		print(model.translation)
+		print(death_anim_timer.time_left)
+		if death_anim_timer.time_left > 0.75:
+			print('yes')
+			model.translation = (model.translation.linear_interpolate(death_anim_info[0], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+		if death_anim_timer.time_left < 0.75 && death_anim_timer.time_left != 0:
+			print('no')
+			model.translation = (model.translation.linear_interpolate(death_anim_info[1], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+			model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+		if death_anim_timer.time_left == 0:
+			return 'dead'
+	
 	if turn_timer.time_left == 0: # We don't wanna decide a turn if timer isn't 0.
 		if ready_status == false:
 			decide_next_action()
@@ -111,6 +131,28 @@ func take_damage(damage):
 	
 	# Update the health bar
 	$HealthManaBar3D.update_health_bar(hp, max_hp)
+	
+	if hp <= 0:
+		die()
+
+func die():
+	death_anim_timer.set_one_shot(true)
+	death_anim_timer.set_wait_time(DEATH_ANIM_TIME)
+	add_child(death_anim_timer)
+	is_dead = true
+	turn_timer.remove_from_timer_group(self)
+
+	remove_child(mover)
+	remove_child(ai_engine)
+	proposed_action = 'idle'
+	
+	var rise = Vector3(model.translation.x, 2, model.translation.z)
+	var fall = Vector3(model.translation.x, 0.2, model.translation.z)
+	var fall_rot = Vector3(-90, model.rotation_degrees.y, model.rotation_degrees.z)
+	
+	death_anim_info = [rise, fall, fall_rot]
+	
+	death_anim_timer.start()
 
 # Movement related functions.
 func check_move_action(move):
