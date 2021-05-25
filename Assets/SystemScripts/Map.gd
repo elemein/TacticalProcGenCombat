@@ -112,6 +112,13 @@ func tile_available(x,z): # Is a tile
 				return true
 	return false
 
+func is_tile_wall(x,z):
+	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
+		if typeof(map_grid[x][z]) == TYPE_STRING:
+			if map_grid[x][z] == '.':
+				return true
+	return false
+
 func get_map():
 	return map_grid
 

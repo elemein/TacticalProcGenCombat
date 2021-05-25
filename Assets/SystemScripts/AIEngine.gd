@@ -1,6 +1,6 @@
 extends Node
 
-const VISION_RANGE = 5
+const VISION_RANGE = 15
 
 onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var map = get_node("/root/World/Map")
@@ -44,28 +44,36 @@ func run_engine():
 			'up':
 				if actor.check_move_action('move up'):
 					actor.set_action('move up')
+				else: actor.set_action('idle')
 			'down':
 				if actor.check_move_action('move down'):
 					actor.set_action('move down')
+				else: actor.set_action('idle')
 			'left':
 				if actor.check_move_action('move left'):
 					actor.set_action('move left')
+				else: actor.set_action('idle')
 			'right':
 				if actor.check_move_action('move right'):
 					actor.set_action('move right')
+				else: actor.set_action('idle')
 					
 			'upleft':
 				if actor.check_move_action('move upleft'):
 					actor.set_action('move upleft')
+				else: actor.set_action('idle')
 			'upright':
 				if actor.check_move_action('move upright'):
 					actor.set_action('move upright')
+				else: actor.set_action('idle')
 			'downleft':
 				if actor.check_move_action('move downleft'):
 					actor.set_action('move downleft')
+				else: actor.set_action('idle')
 			'downright':
 				if actor.check_move_action('move downright'):
 					actor.set_action('move downright')
+				else: actor.set_action('idle')
 			'idle':
 				actor.set_action('idle')
 				

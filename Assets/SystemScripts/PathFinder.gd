@@ -17,6 +17,7 @@ var reached_end = false
 var path_holder = {}
 
 var pos_queue = []
+var direction_list = ['up', 'down', 'left', 'right']
 
 var move_count = 0
 var nodes_left_in_layer = 0
@@ -39,6 +40,8 @@ func reset_vars():
 	curr_pos = []
 	end_pos = []
 	
+	direction_list = ['up', 'down', 'left', 'right']
+	
 func solve(searcher, start, end):
 	reset_vars()
 	start_pos = start
@@ -46,6 +49,8 @@ func solve(searcher, start, end):
 	
 	pos_queue.push_front(start_pos)
 	visited.append(start_pos)
+	
+	check_available_directions()
 	
 	# Solving ------------------------------------
 	while pos_queue.size() > 0:
@@ -56,6 +61,7 @@ func solve(searcher, start, end):
 			break
 		
 		explore_neighbors(curr_pos)
+		
 		nodes_left_in_layer -= 1
 		
 		if nodes_left_in_layer == 0:
@@ -70,8 +76,8 @@ func solve(searcher, start, end):
 			
 func explore_neighbors(pos): # this function basically just adds adjacent tiles to queue if its valid
 	path_holder[pos] = []
-	for direction in ['up', 'down', 'left','right', 
-						'upleft', 'upright', 'downleft', 'downright']:
+	
+	for direction in direction_list:
 				
 		var search_pos
 		var tile_contents
@@ -88,22 +94,6 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 			'downright': search_pos = [pos[0] - 1, pos[1] + 1]
 				
 		tile_contents = map.get_tile_contents(search_pos[0], search_pos[1])
-		
-		# check cornering
-		if direction in ['upleft', 'upright', 'downleft', 'downright']:
-			match direction:
-				'upleft': # check both tiles up and left to check for walls
-					if !map.tile_available(search_pos[0]+1,search_pos[1]): continue
-					if !map.tile_available(search_pos[0],search_pos[1]-1): continue
-				'upright': # check both tiles up and left to check for walls
-					if !map.tile_available(search_pos[0]+1,search_pos[1]): continue
-					if !map.tile_available(search_pos[0],search_pos[1]+1): continue
-				'downleft': # check both tiles up and left to check for walls
-					if !map.tile_available(search_pos[0]-1,search_pos[1]): continue
-					if !map.tile_available(search_pos[0],search_pos[1]-1): continue
-				'downright': # check both tiles up and left to check for walls
-					if !map.tile_available(search_pos[0]+1,search_pos[1]): continue
-					if !map.tile_available(search_pos[0],search_pos[1]+1): continue
 		
 		if search_pos in visited: continue
 		if typeof(tile_contents) == TYPE_STRING:
@@ -130,3 +120,24 @@ func retrace_path():
 				curr_pos = key
 	taken_path.invert()
 	return taken_path
+
+func check_available_directions():
+	# check cornering
+	for direction in ['upleft', 'upright', 'downleft', 'downright']:
+		match direction:
+			'upleft': # check both tiles up and left to check for walls
+				if map.is_tile_wall(start_pos[0]+1,start_pos[1]): continue
+				if map.is_tile_wall(start_pos[0],start_pos[1]-1): continue
+				direction_list.append(direction)
+			'upright': # check both tiles up and left to check for walls
+				if map.is_tile_wall(start_pos[0]+1,start_pos[1]): continue
+				if map.is_tile_wall(start_pos[0],start_pos[1]+1): continue
+				direction_list.append(direction)
+			'downleft': # check both tiles up and left to check for walls
+				if map.is_tile_wall(start_pos[0]-1,start_pos[1]): continue
+				if map.is_tile_wall(start_pos[0],start_pos[1]-1): continue
+				direction_list.append(direction)
+			'downright': # check both tiles up and left to check for walls
+				if map.is_tile_wall(start_pos[0]+1,start_pos[1]): continue
+				if map.is_tile_wall(start_pos[0],start_pos[1]+1): continue
+				direction_list.append(direction)
