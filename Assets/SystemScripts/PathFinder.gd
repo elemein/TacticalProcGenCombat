@@ -89,6 +89,22 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 				
 		tile_contents = map.get_tile_contents(search_pos[0], search_pos[1])
 		
+		# check cornering
+		if direction in ['upleft', 'upright', 'downleft', 'downright']:
+			match direction:
+				'upleft': # check both tiles up and left to check for walls
+					if !map.tile_available(search_pos[0]+1,search_pos[1]): continue
+					if !map.tile_available(search_pos[0],search_pos[1]-1): continue
+				'upright': # check both tiles up and left to check for walls
+					if !map.tile_available(search_pos[0]+1,search_pos[1]): continue
+					if !map.tile_available(search_pos[0],search_pos[1]+1): continue
+				'downleft': # check both tiles up and left to check for walls
+					if !map.tile_available(search_pos[0]-1,search_pos[1]): continue
+					if !map.tile_available(search_pos[0],search_pos[1]-1): continue
+				'downright': # check both tiles up and left to check for walls
+					if !map.tile_available(search_pos[0]+1,search_pos[1]): continue
+					if !map.tile_available(search_pos[0],search_pos[1]+1): continue
+		
 		if search_pos in visited: continue
 		if typeof(tile_contents) == TYPE_STRING:
 			if tile_contents == 'Out of Bounds': continue

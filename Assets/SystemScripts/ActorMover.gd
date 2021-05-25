@@ -24,44 +24,17 @@ func set_actor_translation():
 func check_cornering(direction): # This can definitely be done better. - SS
 	match direction:
 		'upleft': # check both tiles up and left to check for walls
-			var adjacent_tile = map.get_tile_contents(map_pos[0]+1,map_pos[1])
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
-			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]-1)
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
-			
-		'upright': # check both tiles up and right to check for walls
-			var adjacent_tile = map.get_tile_contents(map_pos[0]+1,map_pos[1])
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
-			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]+1)
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
-			
-		'downleft': # check both tiles down and left to check for walls
-			var adjacent_tile = map.get_tile_contents(map_pos[0]-1,map_pos[1])
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
-			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]-1)
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
-			
-		'downright': # check both tiles down and right to check for walls
-			var adjacent_tile = map.get_tile_contents(map_pos[0]-1,map_pos[1])
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
-			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]+1)
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
+			if !map.tile_available(map_pos[0]+1,map_pos[1]): return false
+			if !map.tile_available(map_pos[0],map_pos[1]-1): return false
+		'upright': 
+			if !map.tile_available(map_pos[0]+1,map_pos[1]): return false
+			if !map.tile_available(map_pos[0],map_pos[1]+1): return false
+		'downleft': 
+			if !map.tile_available(map_pos[0]-1,map_pos[1]): return false
+			if !map.tile_available(map_pos[0],map_pos[1]-1): return false	
+		'downright': 
+			if !map.tile_available(map_pos[0]-1,map_pos[1]): return false
+			if !map.tile_available(map_pos[0],map_pos[1]+1): return false
 	return true
 
 func check_move_action(move):
