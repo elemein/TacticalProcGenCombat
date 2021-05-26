@@ -46,7 +46,7 @@ func run_engine():
 		
 		if dist_from_player == 1: 
 			actor.mover.set_actor_direction(pathfinder_direction)
-			actor.set_action('idle')
+			actor.set_action('basic attack')
 		
 		elif dist_from_player > 1:
 			var move_command = 'move %s' % [pathfinder_direction]
@@ -58,8 +58,6 @@ func run_engine():
 		else:
 			actor.set_action('idle')
 				
-			
-
 func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
 	var path_info = map.pathfind(actor, actor.get_map_pos(), players[0])
 	

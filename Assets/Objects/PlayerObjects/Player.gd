@@ -3,6 +3,8 @@ extends KinematicBody
 const TILE_OFFSET = 2.2
 const DIRECTION_SELECT_TIME = 0.225
 
+const DEATH_ANIM_TIME = 1
+
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 
 onready var model = $Graphics
@@ -45,6 +47,11 @@ var map_pos = []
 var anim_state = "idle"
 var effect = null
 
+#death vars
+var is_dead = false
+var death_anim_timer = Timer.new()
+var death_anim_info = []
+
 # object vars
 var mover = ACTOR_MOVER.new()
 
@@ -66,35 +73,45 @@ func _ready():
 	add_child(mover)
 
 func _physics_process(_delta):
-	get_input()
+	if is_dead:
+		if death_anim_timer.time_left > 0.75:
+			model.translation = (model.translation.linear_interpolate(death_anim_info[0], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+		if death_anim_timer.time_left < 0.75 && death_anim_timer.time_left != 0:
+			model.translation = (model.translation.linear_interpolate(death_anim_info[1], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+			model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+		if death_anim_timer.time_left == 0:
+			return 'dead'
 	
-	if in_turn == true:
-		# Change position based on time tickdown.
-		if proposed_action.split(" ")[0] == 'move':
-			mover.set_actor_translation()
+	if is_dead == false:
+		get_input()
 		
-		if proposed_action == "basic attack":
-			if turn_timer.time_left > 0.5: # Move char towards attack cell.
-				translation = translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5))) 
-			else: # Move char back.
-				translation = translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
-		
-		if proposed_action == 'fireball':
-			if turn_timer.time_left > 0.1: # Move fireball towards attack cell.
-				effect.translation = effect.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.1))) 
-			else: # Delete fireball.
-				if effect != null:
-					remove_child(get_node("/root/World/Player/Fire"))
-					effect = null
+		if in_turn == true:
+			# Change position based on time tickdown.
+			if proposed_action.split(" ")[0] == 'move':
+				mover.set_actor_translation()
 			
-		
-	if proposed_action != '' && in_turn == true:
-		if proposed_action == 'idle':
-			anim_state = "idle"
+			if proposed_action == "basic attack":
+				if turn_timer.time_left > 0.5: # Move char towards attack cell.
+					translation = translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5))) 
+				else: # Move char back.
+					translation = translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
+			
+			if proposed_action == 'fireball':
+				if turn_timer.time_left > 0.1: # Move fireball towards attack cell.
+					effect.translation = effect.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.1))) 
+				else: # Delete fireball.
+					if effect != null:
+						remove_child(get_node("/root/World/Player/Fire"))
+						effect = null
+				
+			
+		if proposed_action != '' && in_turn == true:
+			if proposed_action == 'idle':
+				anim_state = "idle"
+			else:
+				anim_state = "walk"
 		else:
-			anim_state = "walk"
-	else:
-		anim_state = "idle"
+			anim_state = "idle"
 
 	handle_animations()
 
@@ -226,7 +243,7 @@ func process_turn():
 		var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
 		
 		if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
-			if attacked_obj.get_obj_type() == 'Enemy':
+			if attacked_obj.get_obj_type() == 'E':
 				attacked_obj.take_damage(attack_power)
 		else:
 			miss_basick_attack.play()
@@ -237,7 +254,7 @@ func process_turn():
 		for target_tile in get_target_tiles(3):
 			var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
 			if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
-				if attacked_obj.get_obj_type() == 'Enemy':
+				if attacked_obj.get_obj_type() == 'E':
 					attacked_obj.take_damage(spell_power)
 		mp -= 20
 		$HealthManaBar3D.update_mana_bar(mp, max_mp)
@@ -347,12 +364,35 @@ func take_damage(damage):
 	hp -= damage
 	print("%s has %s HP" % [self, hp])
 	
+	# Player audio node is empty, so this doesnt work.
 	# Play a random audio effect upon getting hit
-	var num_audio_effects = audio_hit.get_children().size()
-	audio_hit.get_children()[randi() % num_audio_effects].play()
+#	var num_audio_effects = audio_hit.get_children().size()
+#	audio_hit.get_children()[randi() % num_audio_effects].play()
 	
 	# Update the health bar
 	$HealthManaBar3D.update_health_bar(hp, max_hp)
+
+	if hp <= 0:
+		die()
+
+func die():
+	death_anim_timer.set_one_shot(true)
+	death_anim_timer.set_wait_time(DEATH_ANIM_TIME)
+	add_child(death_anim_timer)
+	is_dead = true
+	turn_timer.remove_from_timer_group(self)
+
+	remove_child(mover)
+	proposed_action = 'idle'
+	
+	var rise = Vector3(model.translation.x, 2, model.translation.z)
+	var fall = Vector3(model.translation.x, 0.2, model.translation.z)
+	var fall_rot = Vector3(-90, model.rotation_degrees.y, model.rotation_degrees.z)
+	
+	death_anim_info = [rise, fall, fall_rot]
+	
+	death_anim_timer.start()
+
 
 # Animations related functions.
 func handle_animations():

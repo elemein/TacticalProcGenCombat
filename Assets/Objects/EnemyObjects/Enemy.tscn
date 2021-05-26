@@ -22,6 +22,7 @@ onready var turn_timer = get_node(\"/root/World/TurnTimer\")
 onready var map = get_node(\"/root/World/Map\")
 
 # Audio effects
+onready var miss_basick_attack = $Audio/miss_basic_attack
 onready var audio_hit = $Audio/Hit
 
 var rng = RandomNumberGenerator.new()
@@ -41,6 +42,9 @@ var in_turn = false
 # movement and positioning related vars
 var direction_facing = \"down\"
 var map_pos = []
+
+var target_pos = Vector3()
+var saved_pos = Vector3()
 
 # vars for animation
 var anim_state = \"idle\"
@@ -87,6 +91,12 @@ func _physics_process(_delta):
 	if in_turn == true:
 		if proposed_action.split(\" \")[0] == 'move':
 			mover.set_actor_translation()
+
+	if proposed_action == \"basic attack\":
+		if turn_timer.time_left > 0.5: # Move char towards attack cell.
+			translation = translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5))) 
+		else: # Move char back.
+			translation = translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
 			
 	if proposed_action != '' && in_turn == true:
 		if proposed_action == 'idle':
@@ -109,10 +119,25 @@ func process_turn():
 	if proposed_action.split(\" \")[0] == 'move':
 		mover.move_actor()
 
+	elif proposed_action == 'basic attack':
+		var target_tile = get_target_tiles(1)[0]
+		target_pos.x = target_tile[0] * TILE_OFFSET
+		target_pos.z = target_tile[1] * TILE_OFFSET
+		
+		var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
+		
+		if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
+			if attacked_obj.get_obj_type() == 'Player':
+				attacked_obj.take_damage(attack_power)
+		else:
+			miss_basick_attack.play()
+
 	in_turn = true
 
 func end_turn():
 	mover.reset_pos_vars()
+	target_pos = translation
+	saved_pos = translation
 	proposed_action = ''
 	in_turn = false
 	ready_status = false
@@ -149,6 +174,33 @@ func die():
 	death_anim_info = [rise, fall, fall_rot]
 	
 	death_anim_timer.start()
+
+func get_target_tiles(num):
+	# Get the contents for the number of tiles desired
+	
+	var target_tiles = []
+	
+	for tile_num in num:
+		match direction_facing:
+			'upleft':
+				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] - 1 - tile_num])
+			'upright':
+				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] + 1 + tile_num])
+			'downleft':
+				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] - 1 - tile_num])
+			'downright':
+				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] + 1 + tile_num])
+			
+			'up':
+				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1]])
+			'down':
+				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1]])
+			'left':
+				target_tiles.append([map_pos[0], map_pos[1] - 1 - tile_num])
+			'right':
+				target_tiles.append([map_pos[0], map_pos[1] + 1 + tile_num])
+	return target_tiles
+	
 
 # Movement related functions.
 func check_move_action(move):
