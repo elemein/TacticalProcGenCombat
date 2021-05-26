@@ -11,6 +11,8 @@ var map_h = 30
 var min_room_size = 4 # -1 = Min room dimension.
 var min_room_factor = 0.4
 
+var room_density = 75 # 0-100. 100 being most dense.
+
 var rng = RandomNumberGenerator.new()
 
 var tree = {}
@@ -115,7 +117,7 @@ func create_rooms():
 		var leaf = tree[leaf_id]
 		if leaf.has("l"): continue # if node has children, don't build rooms
 	
-		if (rng.randi_range(0,100) < 75):
+		if (rng.randi_range(0,100) < room_density):
 			var room = {}
 			room.id = leaf_id
 			room.w = rng.randi_range(min_room_size, leaf.w) - 1
