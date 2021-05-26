@@ -8,7 +8,7 @@ extends Node
 
 var map_w = 30
 var map_h = 30
-var min_room_size = 4
+var min_room_size = 4 # -1 = Min room dimension.
 var min_room_factor = 0.4
 
 var rng = RandomNumberGenerator.new()

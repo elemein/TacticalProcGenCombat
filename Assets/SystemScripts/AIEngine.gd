@@ -91,9 +91,6 @@ func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
 	dist_from_player = path_info[0]
 	path = path_info[1]
 	
-	print(dist_from_player)
-	print(path)
-	
 	if dist_from_player == 1:
 		path.append([actor.get_map_pos()]) 
 	
