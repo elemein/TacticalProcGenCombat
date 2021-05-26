@@ -46,44 +46,17 @@ func run_engine():
 		
 		if dist_from_player == 1: 
 			actor.mover.set_actor_direction(pathfinder_direction)
-			pathfinder_direction = 'idle'
+			actor.set_action('idle')
 		
-		match pathfinder_direction:
-			'up':
-				if actor.check_move_action('move up'):
-					actor.set_action('move up')
-				else: actor.set_action('idle')
-			'down':
-				if actor.check_move_action('move down'):
-					actor.set_action('move down')
-				else: actor.set_action('idle')
-			'left':
-				if actor.check_move_action('move left'):
-					actor.set_action('move left')
-				else: actor.set_action('idle')
-			'right':
-				if actor.check_move_action('move right'):
-					actor.set_action('move right')
-				else: actor.set_action('idle')
-					
-			'upleft':
-				if actor.check_move_action('move upleft'):
-					actor.set_action('move upleft')
-				else: actor.set_action('idle')
-			'upright':
-				if actor.check_move_action('move upright'):
-					actor.set_action('move upright')
-				else: actor.set_action('idle')
-			'downleft':
-				if actor.check_move_action('move downleft'):
-					actor.set_action('move downleft')
-				else: actor.set_action('idle')
-			'downright':
-				if actor.check_move_action('move downright'):
-					actor.set_action('move downright')
-				else: actor.set_action('idle')
-			'idle':
-				actor.set_action('idle')
+		elif dist_from_player > 1:
+			var move_command = 'move %s' % [pathfinder_direction]
+			
+			if actor.check_move_action(move_command):
+				actor.set_action(move_command)
+			else: actor.set_action('idle')
+			
+		else:
+			actor.set_action('idle')
 				
 			
 
@@ -114,23 +87,3 @@ func determine_direction_of_path():
 	else: return 'idle'
 
 	return direction
-
-func check_if_adjacent_to_player():
-	for direction in ['up', 'down', 'left', 'right', 'upleft', 'upright', 'downleft', 'downright']:
-		var tile
-		match direction:
-			'up': tile = map.get_tile_contents(actor.get_map_pos()[0] + 1, actor.get_map_pos()[1])
-			'down': tile = map.get_tile_contents(actor.get_map_pos()[0] - 1, actor.get_map_pos()[1])
-			'left': tile = map.get_tile_contents(actor.get_map_pos()[0], actor.get_map_pos()[1] - 1)
-			'right': tile = map.get_tile_contents(actor.get_map_pos()[0], actor.get_map_pos()[1] + 1)
-			'upleft': tile = map.get_tile_contents(actor.get_map_pos()[0] + 1, actor.get_map_pos()[1] - 1)
-			'upright': tile = map.get_tile_contents(actor.get_map_pos()[0] + 1, actor.get_map_pos()[1] + 1)
-			'downleft': tile = map.get_tile_contents(actor.get_map_pos()[0] - 1, actor.get_map_pos()[1] - 1)
-			'downright': tile = map.get_tile_contents(actor.get_map_pos()[0] - 1, actor.get_map_pos()[1] + 1)
-				
-		if typeof(tile) == TYPE_OBJECT:
-			if tile.get_obj_type() == 'Player':
-				
-				return true
-				
-	return false

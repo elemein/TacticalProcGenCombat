@@ -15,10 +15,10 @@ onready var map = get_node("/root/World/Map")
 onready var miss_basick_attack = $Audio/miss_basic_attack
 onready var fireball_throw = $Audio/fireball_throw
 onready var out_of_mana = $Audio/out_of_mana
+onready var audio_hit = $Audio/Hit
 
 var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 
-# test
 
 # gameplay vars
 var object_type = 'Player'
@@ -341,6 +341,18 @@ func set_fireball_target_pos():
 				effect.rotation_degrees.y = 0
 				target_pos.z = effect.translation.x + (3*TILE_OFFSET)
 				target_pos.x = 0
+
+
+func take_damage(damage):
+	hp -= damage
+	print("%s has %s HP" % [self, hp])
+	
+	# Play a random audio effect upon getting hit
+	var num_audio_effects = audio_hit.get_children().size()
+	audio_hit.get_children()[randi() % num_audio_effects].play()
+	
+	# Update the health bar
+	$HealthManaBar3D.update_health_bar(hp, max_hp)
 
 # Animations related functions.
 func handle_animations():
