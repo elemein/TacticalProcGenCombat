@@ -72,13 +72,9 @@ func setup_actor():
 
 func _physics_process(_delta):
 	if is_dead:
-		print(model.translation)
-		print(death_anim_timer.time_left)
 		if death_anim_timer.time_left > 0.75:
-			print('yes')
 			model.translation = (model.translation.linear_interpolate(death_anim_info[0], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
 		if death_anim_timer.time_left < 0.75 && death_anim_timer.time_left != 0:
-			print('no')
 			model.translation = (model.translation.linear_interpolate(death_anim_info[1], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
 			model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
 		if death_anim_timer.time_left == 0:
