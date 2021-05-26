@@ -2,7 +2,6 @@
 # this video: https://www.youtube.com/watch?v=KiCBXu4P-2Y&ab_channel=WilliamFiset
 # with some modifications to suit our usecase.
 
-
 #Current Bugs:
 #	- Enemies do not make room for eachother around a player. e.g.:
 #		E-0-0-0-.
@@ -113,15 +112,15 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 		if invalid_cornering: continue
 		
 		match direction:
-			'upleft': search_pos = [pos[0] + 1, pos[1] - 1]
-			'upright': search_pos = [pos[0] + 1, pos[1] + 1]
-			'downleft': search_pos = [pos[0] - 1, pos[1] - 1]
-			'downright': search_pos = [pos[0] - 1, pos[1] + 1]
-			
 			'up': search_pos = [pos[0] + 1, pos[1]]
 			'down': search_pos = [pos[0] - 1, pos[1]]
 			'left': search_pos = [pos[0], pos[1] - 1]
 			'right': search_pos = [pos[0], pos[1] + 1]
+			
+			'upleft': search_pos = [pos[0] + 1, pos[1] - 1]
+			'upright': search_pos = [pos[0] + 1, pos[1] + 1]
+			'downleft': search_pos = [pos[0] - 1, pos[1] - 1]
+			'downright': search_pos = [pos[0] - 1, pos[1] + 1]
 			
 		tile_contents = map.get_tile_contents(search_pos[0], search_pos[1])
 		
@@ -131,7 +130,6 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 			if tile_contents == 'Out of Bounds': continue
 
 		if typeof(tile_contents) == TYPE_OBJECT:
-			# we only want this to be relevant if searcher is not adjacent to target
 			if tile_contents.get_obj_type() == 'E': continue
 			
 		pos_queue.push_front(search_pos)

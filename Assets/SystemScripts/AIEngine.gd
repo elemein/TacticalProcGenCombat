@@ -42,9 +42,11 @@ func run_engine():
 		#find path to player
 		
 		pathfind()
-		determine_direction_of_path()
+		pathfinder_direction = determine_direction_of_path()
 		
-		if dist_from_player == 1: pathfinder_direction = 'idle'
+		if dist_from_player == 1: 
+			actor.mover.set_actor_direction(pathfinder_direction)
+			pathfinder_direction = 'idle'
 		
 		match pathfinder_direction:
 			'up':
@@ -97,16 +99,21 @@ func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
 	
 func determine_direction_of_path():
 	var curr_pos = actor.get_map_pos()
+	var direction
 	
-	if path[0] == [curr_pos[0] + 1, curr_pos[1]]: pathfinder_direction = 'up'
-	elif path[0] == [curr_pos[0] - 1, curr_pos[1]]: pathfinder_direction = 'down'
-	elif path[0] == [curr_pos[0], curr_pos[1] - 1]: pathfinder_direction = 'left'
-	elif path[0] == [curr_pos[0], curr_pos[1] + 1]: pathfinder_direction = 'right'
+	if path[0] == [curr_pos[0] + 1, curr_pos[1]]: direction = 'up'
+	elif path[0] == [curr_pos[0] - 1, curr_pos[1]]: direction = 'down'
+	elif path[0] == [curr_pos[0], curr_pos[1] - 1]: direction = 'left'
+	elif path[0] == [curr_pos[0], curr_pos[1] + 1]: direction = 'right'
 	
-	elif path[0] == [curr_pos[0] + 1, curr_pos[1] - 1]: pathfinder_direction = 'upleft'
-	elif path[0] == [curr_pos[0] + 1, curr_pos[1] + 1]: pathfinder_direction = 'upright'
-	elif path[0] == [curr_pos[0] - 1, curr_pos[1] - 1]: pathfinder_direction = 'downleft'
-	elif path[0] == [curr_pos[0] - 1, curr_pos[1] + 1]: pathfinder_direction = 'downright'
+	elif path[0] == [curr_pos[0] + 1, curr_pos[1] - 1]: direction = 'upleft'
+	elif path[0] == [curr_pos[0] + 1, curr_pos[1] + 1]: direction = 'upright'
+	elif path[0] == [curr_pos[0] - 1, curr_pos[1] - 1]: direction = 'downleft'
+	elif path[0] == [curr_pos[0] - 1, curr_pos[1] + 1]: direction = 'downright'
+
+	else: return 'idle'
+
+	return direction
 
 func check_if_adjacent_to_player():
 	for direction in ['up', 'down', 'left', 'right', 'upleft', 'upright', 'downleft', 'downright']:
