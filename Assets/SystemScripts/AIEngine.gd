@@ -4,14 +4,15 @@ const VISION_RANGE = 15
 
 onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var map = get_node("/root/World/Map")
+onready var player = get_node("/root/World/Player")
 
 var rng = RandomNumberGenerator.new()
 
-var ai_state # [idle, active]
+var ai_state = 'active' # [idle, active]
 
 var actor
 
-var detected_players = []
+var players = []
 
 var dist_from_player = 0
 var path = []
@@ -24,21 +25,26 @@ func _ready():
 func set_actor(setter):
 	actor = setter
 	
+func reset_vars():
+	players = []
+	dist_from_player = 0
+
 func run_engine():
+	reset_vars()
 	# first, we must see where PCs are, as the AI only responds to PCs.
-	
+	players.append(player.get_map_pos())
 	# if a PC is not within VISION_RANGE tiles, the AI can idle.
-	search_area()
 	
 	if ai_state == 'idle':
 		actor.set_action('idle')
 	elif ai_state == 'active':
-		
 		pathfinder_direction = 'idle'
-		
 		#find path to player
+		
 		pathfind()
 		determine_direction_of_path()
+		
+		if dist_from_player == 1: pathfinder_direction = 'idle'
 		
 		match pathfinder_direction:
 			'up':
@@ -79,37 +85,48 @@ func run_engine():
 				
 			
 
-
-func search_area():
-	ai_state = 'idle'
-	detected_players = []
-
-	for x in range(-VISION_RANGE,VISION_RANGE):
-		for z in range(-VISION_RANGE,VISION_RANGE):
-			var tile = map.get_tile_contents(actor.get_map_pos()[0] + x, actor.get_map_pos()[1] + z)
-			if typeof(tile) != TYPE_STRING:
-				if tile.get_obj_type() == 'Player':
-					detected_players.append([actor.get_map_pos()[0] + x, actor.get_map_pos()[1] + z])
-					ai_state = 'active'
-
 func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
-	var path_info = map.pathfind(actor, actor.get_map_pos(), detected_players[0])
+	var path_info = map.pathfind(actor, actor.get_map_pos(), players[0])
+	
 	dist_from_player = path_info[0]
 	path = path_info[1]
 	
-	if dist_from_player != 1:
-		path.pop_front()
+	print(dist_from_player)
+	print(path)
+	
+	if dist_from_player == 1:
+		path.append([actor.get_map_pos()]) 
 	
 	
 func determine_direction_of_path():
 	var curr_pos = actor.get_map_pos()
 	
 	if path[0] == [curr_pos[0] + 1, curr_pos[1]]: pathfinder_direction = 'up'
-	if path[0] == [curr_pos[0] - 1, curr_pos[1]]: pathfinder_direction = 'down'
-	if path[0] == [curr_pos[0], curr_pos[1] - 1]: pathfinder_direction = 'left'
-	if path[0] == [curr_pos[0], curr_pos[1] + 1]: pathfinder_direction = 'right'
+	elif path[0] == [curr_pos[0] - 1, curr_pos[1]]: pathfinder_direction = 'down'
+	elif path[0] == [curr_pos[0], curr_pos[1] - 1]: pathfinder_direction = 'left'
+	elif path[0] == [curr_pos[0], curr_pos[1] + 1]: pathfinder_direction = 'right'
 	
-	if path[0] == [curr_pos[0] + 1, curr_pos[1] - 1]: pathfinder_direction = 'upleft'
-	if path[0] == [curr_pos[0] + 1, curr_pos[1] + 1]: pathfinder_direction = 'upright'
-	if path[0] == [curr_pos[0] - 1, curr_pos[1] - 1]: pathfinder_direction = 'downleft'
-	if path[0] == [curr_pos[0] - 1, curr_pos[1] + 1]: pathfinder_direction = 'downright'
+	elif path[0] == [curr_pos[0] + 1, curr_pos[1] - 1]: pathfinder_direction = 'upleft'
+	elif path[0] == [curr_pos[0] + 1, curr_pos[1] + 1]: pathfinder_direction = 'upright'
+	elif path[0] == [curr_pos[0] - 1, curr_pos[1] - 1]: pathfinder_direction = 'downleft'
+	elif path[0] == [curr_pos[0] - 1, curr_pos[1] + 1]: pathfinder_direction = 'downright'
+
+func check_if_adjacent_to_player():
+	for direction in ['up', 'down', 'left', 'right', 'upleft', 'upright', 'downleft', 'downright']:
+		var tile
+		match direction:
+			'up': tile = map.get_tile_contents(actor.get_map_pos()[0] + 1, actor.get_map_pos()[1])
+			'down': tile = map.get_tile_contents(actor.get_map_pos()[0] - 1, actor.get_map_pos()[1])
+			'left': tile = map.get_tile_contents(actor.get_map_pos()[0], actor.get_map_pos()[1] - 1)
+			'right': tile = map.get_tile_contents(actor.get_map_pos()[0], actor.get_map_pos()[1] + 1)
+			'upleft': tile = map.get_tile_contents(actor.get_map_pos()[0] + 1, actor.get_map_pos()[1] - 1)
+			'upright': tile = map.get_tile_contents(actor.get_map_pos()[0] + 1, actor.get_map_pos()[1] + 1)
+			'downleft': tile = map.get_tile_contents(actor.get_map_pos()[0] - 1, actor.get_map_pos()[1] - 1)
+			'downright': tile = map.get_tile_contents(actor.get_map_pos()[0] - 1, actor.get_map_pos()[1] + 1)
+				
+		if typeof(tile) == TYPE_OBJECT:
+			if tile.get_obj_type() == 'Player':
+				
+				return true
+				
+	return false

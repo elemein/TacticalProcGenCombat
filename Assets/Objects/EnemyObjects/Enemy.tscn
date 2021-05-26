@@ -27,7 +27,7 @@ onready var audio_hit = $Audio/Hit
 var rng = RandomNumberGenerator.new()
 
 # gameplay vars
-var object_type = 'Enemy'
+var object_type = 'E'
 var hp = 100
 var max_hp = 100
 var mp = 100

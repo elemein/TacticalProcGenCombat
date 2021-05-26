@@ -2,6 +2,8 @@
 # this video: https://www.youtube.com/watch?v=KiCBXu4P-2Y&ab_channel=WilliamFiset
 # with some modifications to suit our usecase.
 
+# THEY CANT PATH AROUND OTHERS
+
 extends Node
 
 onready var map = get_node("/root/World/Map")
@@ -72,7 +74,7 @@ func solve(searcher, start, end):
 	if reached_end:
 		return [move_count, retrace_path()]
 		
-	return -1
+	return [-1,[[-1, -1]]]
 			
 func explore_neighbors(pos): # this function basically just adds adjacent tiles to queue if its valid
 	path_holder[pos] = []
@@ -97,9 +99,12 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 		
 		if search_pos in visited: continue
 		if typeof(tile_contents) == TYPE_STRING:
+			if tile_contents == '.': continue
 			if tile_contents == 'Out of Bounds': continue
-			if tile_contents != '0': continue
-			
+
+		if typeof(tile_contents) == TYPE_OBJECT:
+			if tile_contents.get_obj_type() == 'E': continue
+
 		pos_queue.push_front(search_pos)
 		
 		visited.append(search_pos)
@@ -118,7 +123,11 @@ func retrace_path():
 			if curr_pos in path_holder[key]:
 				taken_path.append(key)
 				curr_pos = key
+
 	taken_path.invert()
+	taken_path.pop_front()
+	taken_path.append(end_pos)
+
 	return taken_path
 
 func check_available_directions():
@@ -138,6 +147,6 @@ func check_available_directions():
 				if map.is_tile_wall(start_pos[0],start_pos[1]-1): continue
 				direction_list.append(direction)
 			'downright': # check both tiles up and left to check for walls
-				if map.is_tile_wall(start_pos[0]+1,start_pos[1]): continue
+				if map.is_tile_wall(start_pos[0]-1,start_pos[1]): continue
 				if map.is_tile_wall(start_pos[0],start_pos[1]+1): continue
 				direction_list.append(direction)
