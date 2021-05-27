@@ -5,29 +5,33 @@ const DIRECTION_SELECT_TIME = 0.225
 
 const DEATH_ANIM_TIME = 1
 
-const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
-
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI")
 onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var map = get_node("/root/World/Map")
 
+# Spell signals
+signal spell_cast_fireball
+signal spell_cast_basic_attack
+
+# Mover signals
+signal mover_check_move_action(move)
+signal mover_move_actor
+signal mover_set_actor(actor)
+signal mover_set_actor_direction(direction)
+signal mover_set_actor_translation
+
 # Sound effects
-onready var miss_basick_attack = $Audio/miss_basic_attack
-onready var fireball_throw = $Audio/fireball_throw
-onready var out_of_mana = $Audio/out_of_mana
 onready var audio_hit = $Audio/Hit
-
-var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
-
 
 # gameplay vars
 var object_type = 'Player'
 var hp = 100
-var max_hp = 100
 var mp = 100
+var max_hp = 100
 var max_mp = 100
+var regen_mp = 10
 var attack_power = 10
 var spell_power = 20
 
@@ -37,10 +41,8 @@ var ready_status = false
 var in_turn = false
 
 # movement and positioning related vars
-var direction_facing = "down"
+var direction_facing = "up"
 var directional_timer = Timer.new()
-var saved_pos = Vector3()
-var target_pos = Vector3()
 var map_pos = []
 
 # vars for animation
@@ -52,9 +54,6 @@ var is_dead = false
 var death_anim_timer = Timer.new()
 var death_anim_info = []
 
-# object vars
-var mover = ACTOR_MOVER.new()
-
 func _ready():
 	directional_timer.set_one_shot(true)
 	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
@@ -65,12 +64,10 @@ func _ready():
 	map_pos = map.place_on_map(self)
 	translation.x = map_pos[0] * TILE_OFFSET
 	translation.z = map_pos[1] * TILE_OFFSET
-	
-	target_pos = translation
-	saved_pos = translation
-	
-	mover.set_actor(self)
-	add_child(mover)
+
+	emit_signal('mover_set_actor', self)
+#	mover.set_actor(self)
+#	add_child(mover)
 
 func _physics_process(_delta):
 	if is_dead:
@@ -82,28 +79,15 @@ func _physics_process(_delta):
 		if death_anim_timer.time_left == 0:
 			return 'dead'
 	
-	if is_dead == false:
+	else:
 		get_input()
 		
 		if in_turn == true:
 			# Change position based on time tickdown.
 			if proposed_action.split(" ")[0] == 'move':
-				mover.set_actor_translation()
-			
-			if proposed_action == "basic attack":
-				if turn_timer.time_left > 0.5: # Move char towards attack cell.
-					translation = translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5))) 
-				else: # Move char back.
-					translation = translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
-			
-			if proposed_action == 'fireball':
-				if turn_timer.time_left > 0.1: # Move fireball towards attack cell.
-					effect.translation = effect.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.1))) 
-				else: # Delete fireball.
-					if effect != null:
-						remove_child(get_node("/root/World/Player/Fire"))
-						effect = null
-				
+#				mover.set_actor_translation()
+				emit_signal("mover_set_actor_translation")
+				pass
 			
 		if proposed_action != '' && in_turn == true:
 			if proposed_action == 'idle':
@@ -190,87 +174,44 @@ func get_input():
 	if Input.is_action_pressed("space"): set_action('basic attack')
 	
 	# Skills will need two presses to confirm.
-	if Input.is_action_pressed("e"): 
-		if mp >= 20:
-			set_action('fireball')
-		else:
-			out_of_mana.play()
+	if Input.is_action_pressed("e"): set_action('fireball')
 	
 func set_action(action):
 	proposed_action = action
 	gui.set_action(proposed_action)
 	ready_status = true
-	
-func get_target_tiles(num):
-	# Get the contents for the number of tiles desired
-	
-	var target_tiles = []
-	
-	for tile_num in num:
-		match direction_facing:
-			'upleft':
-				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] - 1 - tile_num])
-			'upright':
-				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] + 1 + tile_num])
-			'downleft':
-				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] - 1 - tile_num])
-			'downright':
-				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] + 1 + tile_num])
-			
-			'up':
-				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1]])
-			'down':
-				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1]])
-			'left':
-				target_tiles.append([map_pos[0], map_pos[1] - 1 - tile_num])
-			'right':
-				target_tiles.append([map_pos[0], map_pos[1] + 1 + tile_num])
-	return target_tiles
-	
+
 func process_turn():	
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(" ")[0] == 'move':
-		mover.move_actor()
+#		mover.move_actor()
+		emit_signal('mover_move_actor')
+		pass
 	
 	elif proposed_action == 'idle':
-		target_pos = map_pos
+		pass
 	
 	elif proposed_action == 'basic attack':
-		var target_tile = get_target_tiles(1)[0]
-		target_pos.x = target_tile[0] * TILE_OFFSET
-		target_pos.z = target_tile[1] * TILE_OFFSET
-		
-		var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
-		
-		if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
-			if attacked_obj.get_obj_type() == 'E':
-				attacked_obj.take_damage(attack_power)
-		else:
-			miss_basick_attack.play()
+		emit_signal("spell_cast_basic_attack")
 	
 	elif proposed_action == 'fireball':
-		set_fireball_target_pos()
-		fireball_throw.play()
-		for target_tile in get_target_tiles(3):
-			var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
-			if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
-				if attacked_obj.get_obj_type() == 'E':
-					attacked_obj.take_damage(spell_power)
-		mp -= 20
-		$HealthManaBar3D.update_mana_bar(mp, max_mp)
+		emit_signal("spell_cast_fireball")
 
 	in_turn = true
 
+	mp += regen_mp
+	$HealthManaBar3D/Viewport/HealthManaBar2D.update_mana_bar(mp, max_mp)
+
 func end_turn():
-	target_pos = translation
-	saved_pos = translation
 	proposed_action = ''
 	in_turn = false
 	ready_status = false
 
 # Movement related functions.
 func check_move_action(move):
-	return mover.check_move_action(move)
+#	return mover.check_move_action(move)
+	emit_signal('mover_check_move_action', move)
+	pass
 
 func check_cornering(direction): # This can definitely be done better. - SS
 	match direction:
@@ -316,49 +257,9 @@ func check_cornering(direction): # This can definitely be done better. - SS
 	return true
 
 func set_direction(direction):
-	mover.set_actor_direction(direction)
+#	mover.set_actor_direction(direction)
+	emit_signal("mover_set_actor_direction", direction)
 	directional_timer.start(DIRECTION_SELECT_TIME) 
-
-# Ability related functions.
-func set_fireball_target_pos():
-		effect = effects_fire.instance()
-		add_child(effect)
-		
-		match direction_facing:
-			'upleft':
-				effect.rotation_degrees.y = 90 + 45
-				target_pos.x = effect.translation.x + (3*TILE_OFFSET)
-				target_pos.z = effect.translation.z - (3*TILE_OFFSET)
-			'upright':
-				effect.rotation_degrees.y = 45
-				target_pos.x = effect.translation.x + (3*TILE_OFFSET)
-				target_pos.z = effect.translation.z + (3*TILE_OFFSET)
-			'downleft':
-				effect.rotation_degrees.y = 180 + 45
-				target_pos.x = effect.translation.z - (3*TILE_OFFSET)
-				target_pos.z = effect.translation.x - (3*TILE_OFFSET)
-			'downright':
-				effect.rotation_degrees.y = 270 + 45
-				target_pos.x = effect.translation.z - (3*TILE_OFFSET)
-				target_pos.z = effect.translation.x + (3*TILE_OFFSET)
-			
-			'up':
-				effect.rotation_degrees.y = 90
-				target_pos.x = effect.translation.x + (3*TILE_OFFSET)
-				target_pos.z = 0
-			'down':
-				effect.rotation_degrees.y = 270
-				target_pos.x = effect.translation.x - (3*TILE_OFFSET)
-				target_pos.z = 0
-			'left':
-				effect.rotation_degrees.y = 180
-				target_pos.z = effect.translation.x - (3*TILE_OFFSET)
-				target_pos.x = 0
-			'right':
-				effect.rotation_degrees.y = 0
-				target_pos.z = effect.translation.x + (3*TILE_OFFSET)
-				target_pos.x = 0
-
 
 func take_damage(damage):
 	hp -= damage
@@ -382,7 +283,7 @@ func die():
 	is_dead = true
 	turn_timer.remove_from_timer_group(self)
 
-	remove_child(mover)
+#	remove_child(mover)
 	proposed_action = 'idle'
 	
 	var rise = Vector3(model.translation.x, 2, model.translation.z)
@@ -422,6 +323,28 @@ func get_map_pos():
 func get_action():
 	return proposed_action
 
+func get_hp():
+	return hp
+
+func get_mp():
+	return mp
+
+func get_max_hp():
+	return max_hp
+
+func get_max_mp():
+	return max_mp
+
+func get_regen_mp():
+	return regen_mp
+
+func get_attack_power():
+	return attack_power
+
+func get_spell_power():
+	return spell_power
+
+
 #Setters
 func set_model_rot(dir_facing, rotation_deg):
 	direction_facing = dir_facing
@@ -432,3 +355,24 @@ func set_translation(new_translation):
 
 func set_map_pos(new_pos):
 	map_pos = new_pos
+
+func set_hp(new_hp):
+	hp = new_hp
+
+func set_mp(new_mp):
+	mp = new_mp
+
+func set_max_hp(new_max_hp):
+	max_hp = new_max_hp
+
+func set_max_mp(new_max_mp):
+	max_mp = new_max_mp
+
+func set_regen_mp(new_regen_mp):
+	regen_mp = new_regen_mp
+
+func set_attack_power(new_attack_power):
+	attack_power = new_attack_power
+
+func set_spell_power(new_spell_power):
+	spell_power = new_spell_power
