@@ -45,7 +45,7 @@ func run_engine():
 		pathfinder_direction = determine_direction_of_path()
 		
 		if dist_from_player == 1: 
-			actor.mover.set_actor_direction(pathfinder_direction)
+#			actor.mover.set_actor_direction(pathfinder_direction)
 			actor.set_action('basic attack')
 		
 		elif dist_from_player > 1:

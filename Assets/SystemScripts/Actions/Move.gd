@@ -145,3 +145,6 @@ func _on_Actions_mover_set_actor(actor):
 
 func _on_Actions_mover_set_actor_direction(direction):
 	set_actor_direction(direction)
+	
+func _on_Actions_mover_set_actor_translation():
+	set_actor_translation()

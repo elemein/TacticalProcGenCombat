@@ -44,6 +44,7 @@ var in_turn = false
 var direction_facing = "up"
 var directional_timer = Timer.new()
 var map_pos = []
+var target = Vector3()
 
 # vars for animation
 var anim_state = "idle"
@@ -87,7 +88,6 @@ func _physics_process(_delta):
 			if proposed_action.split(" ")[0] == 'move':
 #				mover.set_actor_translation()
 				emit_signal("mover_set_actor_translation")
-				pass
 			
 		if proposed_action != '' && in_turn == true:
 			if proposed_action == 'idle':
@@ -120,21 +120,21 @@ func get_input():
 		if (Input.is_action_pressed("w") &&Input.is_action_pressed("a") 
 			&& direction_facing != 'upleft'):
 			set_direction('upleft')
-		if (Input.is_action_pressed("w") && Input.is_action_pressed("d") 
+		elif (Input.is_action_pressed("w") && Input.is_action_pressed("d") 
 			&& direction_facing != 'upright'): 
 			set_direction('upright')
-		if (Input.is_action_pressed("s") && Input.is_action_pressed("a") 
+		elif (Input.is_action_pressed("s") && Input.is_action_pressed("a") 
 			&& direction_facing != 'downleft'): 
 			set_direction('downleft')
-		if (Input.is_action_pressed("s") && Input.is_action_pressed("d") 
+		elif (Input.is_action_pressed("s") && Input.is_action_pressed("d") 
 			&& direction_facing != 'downright'): 
 			set_direction('downright')
 	
 	if no_of_inputs == 1:
 		if Input.is_action_pressed("w") && direction_facing != 'up': set_direction('up')
-		if Input.is_action_pressed("s") && direction_facing != 'down': set_direction('down')
-		if Input.is_action_pressed("a") && direction_facing != 'left': set_direction('left')
-		if Input.is_action_pressed("d") && direction_facing != 'right': set_direction('right')
+		elif Input.is_action_pressed("s") && direction_facing != 'down': set_direction('down')
+		elif Input.is_action_pressed("a") && direction_facing != 'left': set_direction('left')
+		elif Input.is_action_pressed("d") && direction_facing != 'right': set_direction('right')
 
 	# As the move buttons are used to change direction, these need to abide
 	# to the directional timer.
@@ -143,13 +143,13 @@ func get_input():
 			if Input.is_action_pressed("w") && Input.is_action_pressed("a"): 
 				if check_move_action('move upleft'):
 					set_action('move upleft')
-			if Input.is_action_pressed("w") && Input.is_action_pressed("d"): 
+			elif Input.is_action_pressed("w") && Input.is_action_pressed("d"): 
 				if check_move_action('move upright'):
 					set_action('move upright')
-			if Input.is_action_pressed("s") && Input.is_action_pressed("a"): 
+			elif Input.is_action_pressed("s") && Input.is_action_pressed("a"): 
 				if check_move_action('move downleft'):
 					set_action('move downleft')
-			if Input.is_action_pressed("s") && Input.is_action_pressed("d"): 
+			elif Input.is_action_pressed("s") && Input.is_action_pressed("d"): 
 				if check_move_action('move downright'):
 					set_action('move downright')
 		
@@ -157,13 +157,13 @@ func get_input():
 			if Input.is_action_pressed("w"): 
 				if check_move_action('move up'):
 					set_action('move up')
-			if Input.is_action_pressed("s"): 
+			elif Input.is_action_pressed("s"): 
 				if check_move_action('move down'):
 					set_action('move down')
-			if Input.is_action_pressed("a"):
+			elif Input.is_action_pressed("a"):
 				if check_move_action('move left'):
 					set_action('move left')
-			if Input.is_action_pressed("d"): 
+			elif Input.is_action_pressed("d"): 
 				if check_move_action('move right'):
 					set_action('move right')
 	
@@ -209,9 +209,36 @@ func end_turn():
 
 # Movement related functions.
 func check_move_action(move):
-#	return mover.check_move_action(move)
-	emit_signal('mover_check_move_action', move)
-	pass
+	# Get the target tile
+	target.x = map_pos[0]
+	target.z = map_pos[1]
+	target = get_target_tile(target, move)
+	if check_cornering(move): 
+		return true
+	else:
+		return false
+	
+func checker_cornering(move):
+	if 'up' in move:
+		if map.is_tile_wall(map_pos[0]+1,map_pos[1]): return false
+	if 'down' in move:
+		if map.is_tile_wall(map_pos[0]-1,map_pos[1]): return false
+	if 'right' in move:
+		if map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
+	if 'left' in move:
+		if map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
+	return true
+	
+func get_target_tile(target, move):
+	if 'up' in move:
+		target.x += 1
+	if 'down' in move:
+		target.x -= 1
+	if 'right' in move:
+		target.z += 1
+	if 'left' in move:
+		target.z -= 1
+	return target
 
 func check_cornering(direction): # This can definitely be done better. - SS
 	match direction:
