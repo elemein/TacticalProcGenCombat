@@ -2,7 +2,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 3
+const NUMBER_OF_ENEMIES = 8
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
@@ -113,7 +113,7 @@ func tile_available(x,z): # Is a tile
 func is_tile_wall(x,z):
 	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
 		if map_grid[x][z].get_obj_type() == 'Wall':
-				return true
+			return true
 	return false
 
 func get_map():

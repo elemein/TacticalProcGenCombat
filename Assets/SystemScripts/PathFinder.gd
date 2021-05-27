@@ -82,14 +82,12 @@ func solve(searcher, start, end):
 			move_count += 1
 	
 	if reached_end:
-		print ([move_count, retrace_path()])
 		return [move_count, retrace_path()]
 		
 	return [-1,[[-1, -1]]]
 			
 func explore_neighbors(pos): # this function basically just adds adjacent tiles to queue if its valid
 	path_holder[pos] = []
-	
 	for direction in direction_list: # diagonals must be processed first
 				
 		var search_pos
@@ -126,11 +124,12 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 		tile_contents = map.get_tile_contents(search_pos[0], search_pos[1])
 		
 		if search_pos in visited: continue
+		
 		if typeof(tile_contents) == TYPE_STRING:
 			if tile_contents == 'Out of Bounds': continue
 
 		if typeof(tile_contents) == TYPE_OBJECT:
-			if tile_contents.get_obj_type() == 'Ground': continue
+			if tile_contents.get_obj_type() == 'Wall': continue
 			if tile_contents.get_obj_type() == 'Enemy': continue
 			
 		pos_queue.push_front(search_pos)
