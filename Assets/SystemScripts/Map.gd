@@ -2,7 +2,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 8
+const NUMBER_OF_ENEMIES = 10
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
@@ -26,8 +26,8 @@ func _ready():
 	rng.randomize()
 
 	map_grid = map_generator.generate()
-	print_map_grid()
-	populate_map_ground()
+	
+	add_map_objects_to_tree()
 	
 	catalog_ground_tiles()
 	
@@ -35,7 +35,7 @@ func _ready():
 	
 	add_child(pathfinder)
 
-func populate_map_ground():
+func add_map_objects_to_tree():
 	for line in map_grid.size():
 		for column in map_grid[0].size():
 			add_child(map_grid[line][column])
@@ -56,8 +56,15 @@ func spawn_enemies():
 		
 		current_number_of_enemies += 1
 
-func place_on_map(object):
-	var tile = choose_random_ground_tile()
+func place_on_random_avail_tile(object):
+	var avail = false
+	var tile
+	
+	while avail == false:
+		tile = choose_random_ground_tile()
+		if tile_available(tile[0], tile[1]) == true:
+			avail = true
+	
 	map_grid[tile[0]][tile[1]] = object
 	return tile
 
@@ -121,4 +128,3 @@ func get_map():
 
 func pathfind(searcher, start_pos, goal_pos):
 	return pathfinder.solve(searcher, start_pos, goal_pos)
-	

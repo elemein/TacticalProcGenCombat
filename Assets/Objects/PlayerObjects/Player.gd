@@ -63,7 +63,7 @@ func _ready():
 	
 	turn_timer.add_to_timer_group(self)
 	
-	map_pos = map.place_on_map(self)
+	map_pos = map.place_on_random_avail_tile(self)
 	translation.x = map_pos[0] * TILE_OFFSET
 	translation.z = map_pos[1] * TILE_OFFSET
 	
@@ -72,6 +72,8 @@ func _ready():
 	
 	mover.set_actor(self)
 	add_child(mover)
+	
+	map.print_map_grid()
 
 func _physics_process(_delta):
 	if is_dead:

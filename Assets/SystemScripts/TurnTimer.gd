@@ -30,17 +30,10 @@ func process_turn():
 	while done_sorting == false:
 		enumeration = 0
 		no_sorted = 0
-		print('---')
-		
 		for actor in actors:
-			print(actor)
-			
-			print(actor.get_speed())
-			
 			if enumeration > 0:
 			
 				if actor.get_speed() > actors[enumeration-1].get_speed():
-				
 					actors.remove(enumeration)
 					actors.insert(enumeration-1, actor)
 					break

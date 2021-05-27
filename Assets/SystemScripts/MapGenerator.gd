@@ -212,16 +212,3 @@ func check_nearby(x,y):
 	if total_map[x+1][y].get_obj_type() == 'Wall' : count += 1
 			
 	return count
-			
-func print_total_map():
-	total_map.invert()
-	for line in total_map:
-		print(line)
-	total_map.invert()
-			
-			
-			
-			
-	
-	
-	
