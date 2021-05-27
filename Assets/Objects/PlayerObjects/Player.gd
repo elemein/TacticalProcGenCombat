@@ -21,7 +21,6 @@ onready var audio_hit = $Audio/Hit
 
 var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 
-
 # gameplay vars
 var object_type = 'Player'
 var max_hp = 100
