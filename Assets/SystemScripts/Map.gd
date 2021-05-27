@@ -26,6 +26,7 @@ func _ready():
 	rng.randomize()
 
 	map_grid = map_generator.generate()
+	print_map_grid()
 	populate_map_ground()
 	
 	catalog_ground_tiles()
@@ -35,20 +36,9 @@ func _ready():
 	add_child(pathfinder)
 
 func populate_map_ground():
-	# create the map based on the map_x and map_y variables
-	var x_offset = -TILE_OFFSET
-	var z_offset = -TILE_OFFSET
-		
-	for x in range(0, map_grid.size()-1):
-		x_offset += TILE_OFFSET
-		z_offset = -TILE_OFFSET # Reset
-		for z in range(0, map_grid[0].size()-1):
-			z_offset += TILE_OFFSET
-			
-			if map_grid[x][z] == '0':
-				var block = base_block.instance()
-				add_child(block)
-				block.translation = Vector3(x_offset, Y_OFFSET, z_offset)
+	for line in map_grid.size():
+		for column in map_grid[0].size():
+			add_child(map_grid[line][column])
 
 func spawn_enemies():
 	for enemy_cnt in NUMBER_OF_ENEMIES:
@@ -72,8 +62,10 @@ func place_on_map(object):
 	return tile
 
 func move_on_map(object, old_pos, new_pos):
-	map_grid[old_pos[0]][old_pos[1]] = '0'
+	var valueholder = map_grid[new_pos[0]][new_pos[1]]
 	map_grid[new_pos[0]][new_pos[1]] = object
+	map_grid[old_pos[0]][old_pos[1]] = valueholder
+	
 	return [new_pos[0], new_pos[1]]
 
 func print_map_grid():
@@ -87,13 +79,20 @@ func print_map_grid():
 				TYPE_STRING:
 					converted_row.append(tile)
 				TYPE_OBJECT:
-					converted_row.append(tile.get('object_type'))
+					if tile.get_obj_type() == 'Wall':
+						converted_row.append('.')
+					if tile.get_obj_type() == 'Ground':
+						converted_row.append('0')
+					if tile.get_obj_type() == 'Player':
+						converted_row.append('X')
+					if tile.get_obj_type() == 'Enemy':
+						converted_row.append('E')
 		print(converted_row)
 
 func catalog_ground_tiles():
 	for x in range(0, map_grid.size()-1):
 		for z in range(0, map_grid[0].size()-1):
-			if map_grid[x][z] == '0':
+			if map_grid[x][z].get_obj_type() == 'Ground':
 				catalog_of_ground_tiles.append([x,z])
 
 func choose_random_ground_tile():
@@ -107,15 +106,13 @@ func get_tile_contents(x,z):
 
 func tile_available(x,z): # Is a tile 
 	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
-		if typeof(map_grid[x][z]) == TYPE_STRING:
-			if map_grid[x][z] == '0':
-				return true
+		if map_grid[x][z].get_obj_type() == 'Ground':
+			return true
 	return false
 
 func is_tile_wall(x,z):
 	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
-		if typeof(map_grid[x][z]) == TYPE_STRING:
-			if map_grid[x][z] == '.':
+		if map_grid[x][z].get_obj_type() == 'Wall':
 				return true
 	return false
 

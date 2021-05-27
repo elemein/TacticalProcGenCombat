@@ -126,11 +126,11 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 		
 		if search_pos in visited: continue
 		if typeof(tile_contents) == TYPE_STRING:
-			if tile_contents == '.': continue
 			if tile_contents == 'Out of Bounds': continue
 
 		if typeof(tile_contents) == TYPE_OBJECT:
-			if tile_contents.get_obj_type() == 'E': continue
+			if tile_contents.get_obj_type() == 'Ground': continue
+			if tile_contents.get_obj_type() == 'Enemy': continue
 			
 		pos_queue.push_front(search_pos)
 		
