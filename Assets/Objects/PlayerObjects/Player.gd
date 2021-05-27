@@ -24,10 +24,11 @@ var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 
 # gameplay vars
 var object_type = 'Player'
-var hp = 100
 var max_hp = 100
+var hp = 100
 var mp = 100
 var max_mp = 100
+var speed = 15
 var attack_power = 10
 var spell_power = 20
 
@@ -421,6 +422,9 @@ func get_map_pos():
 
 func get_action():
 	return proposed_action
+	
+func get_speed():
+	return speed
 
 #Setters
 func set_model_rot(dir_facing, rotation_deg):
