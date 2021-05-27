@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Assets/Objects/EnemyObjects/polycat.dae" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Audio/EnemyAudio/hit_basic_attack_2.wav" type="AudioStream" id=2]
 [ext_resource path="res://Assets/Audio/EnemyAudio/hit_basic_attack_1.wav" type="AudioStream" id=3]
 [ext_resource path="res://Assets/GUI/HealthManaBar3D.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Assets/SystemScripts/AIEngine.gd" type="Script" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody
@@ -14,7 +15,6 @@ const TILE_OFFSET = 2.2
 const DEATH_ANIM_TIME = 1
 
 const AI_ENGINE = preload(\"res://Assets/SystemScripts/AIEngine.gd\")
-#const ACTOR_MOVER = preload(\"res://Assets/SystemScripts/ActorMover.gd\")
 
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
@@ -27,6 +27,18 @@ onready var miss_basick_attack = $Audio/miss_basic_attack
 onready var audio_hit = $Audio/Hit
 
 var rng = RandomNumberGenerator.new()
+
+# Spell signals
+signal spell_cast_fireball
+signal spell_cast_basic_attack
+
+# Mover signals
+signal mover_check_move_action(move)
+signal mover_move_actor
+signal mover_set_actor(actor)
+signal mover_set_actor_direction(direction)
+signal mover_set_actor_translation
+signal mover_reset_pos_vars
 
 # gameplay vars
 var object_type = 'E'
@@ -58,7 +70,6 @@ var death_anim_info = []
 
 # object vars
 var ai_engine = AI_ENGINE.new()
-#var mover = ACTOR_MOVER.new()
 
 func _ready():
 	rng.randomize()
@@ -72,8 +83,7 @@ func setup_actor():
 	ai_engine.set_actor(self)
 	add_child(ai_engine)
 	
-#	mover.set_actor(self)
-#	add_child(mover)
+	emit_signal('mover_set_actor', self)
 
 func _physics_process(_delta):
 	if is_dead:
@@ -91,8 +101,7 @@ func _physics_process(_delta):
 	
 	if in_turn == true:
 		if proposed_action.split(\" \")[0] == 'move':
-#			mover.set_actor_translation()
-			pass
+			emit_signal(\"mover_set_actor_translation\")
 
 	if proposed_action == \"basic attack\":
 		if turn_timer.time_left > 0.5: # Move char towards attack cell.
@@ -119,26 +128,15 @@ func set_action(action):
 
 func process_turn():
 	if proposed_action.split(\" \")[0] == 'move':
-#		mover.move_actor()
-		pass
+		emit_signal(\"mover_move_actor\")
 
 	elif proposed_action == 'basic attack':
-		var target_tile = get_target_tiles(1)[0]
-		target_pos.x = target_tile[0] * TILE_OFFSET
-		target_pos.z = target_tile[1] * TILE_OFFSET
-		
-		var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
-		
-		if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
-			if attacked_obj.get_obj_type() == 'Player':
-				attacked_obj.take_damage(attack_power)
-		else:
-			miss_basick_attack.play()
+		emit_signal(\"spell_cast_basic_attack\")
 
 	in_turn = true
 
 func end_turn():
-#	mover.reset_pos_vars()
+	emit_signal(\"mover_reset_pos_vars\")
 	target_pos = translation
 	saved_pos = translation
 	proposed_action = ''
@@ -166,7 +164,6 @@ func die():
 	is_dead = true
 	turn_timer.remove_from_timer_group(self)
 
-#	remove_child(mover)
 	remove_child(ai_engine)
 	proposed_action = 'idle'
 	
@@ -207,8 +204,10 @@ func get_target_tiles(num):
 
 # Movement related functions.
 func check_move_action(move):
-#	return mover.check_move_action(move)
-	pass
+	emit_signal(\"mover_check_move_action\", move)
+	
+func set_actor_direction(pathfinder_direction):
+	emit_signal(\"mover_set_actor_direction\", pathfinder_direction)
 
 # Animations related functions.
 func handle_animations():
@@ -279,3 +278,15 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80738, 0 )
 pixel_size = 0.003
 
 [node name="Actions" parent="." instance=ExtResource( 5 )]
+
+[node name="AIEngine" type="Node" parent="."]
+script = ExtResource( 6 )
+
+[connection signal="mover_check_move_action" from="." to="Actions" method="_on_mover_check_move_action"]
+[connection signal="mover_move_actor" from="." to="Actions" method="_on_mover_move_actor"]
+[connection signal="mover_reset_pos_vars" from="." to="Actions" method="_on_mover_reset_pos_vars"]
+[connection signal="mover_set_actor" from="." to="Actions" method="_on_mover_set_actor"]
+[connection signal="mover_set_actor_direction" from="." to="Actions" method="_on_mover_set_actor_direction"]
+[connection signal="mover_set_actor_translation" from="." to="Actions" method="_on_mover_set_actor_translation"]
+[connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
+[connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]

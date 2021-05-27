@@ -134,7 +134,6 @@ func reset_pos_vars():
 func _on_Actions_mover_check_move_action(move):
 	check_move_action(move)
 
-
 func _on_Actions_mover_move_actor():
 	move_actor()
 
@@ -148,3 +147,7 @@ func _on_Actions_mover_set_actor_direction(direction):
 	
 func _on_Actions_mover_set_actor_translation():
 	set_actor_translation()
+
+
+func _on_Actions_mover_reset_pos_vars():
+	reset_pos_vars()

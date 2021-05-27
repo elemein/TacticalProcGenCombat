@@ -67,8 +67,6 @@ func _ready():
 	translation.z = map_pos[1] * TILE_OFFSET
 
 	emit_signal('mover_set_actor', self)
-#	mover.set_actor(self)
-#	add_child(mover)
 
 func _physics_process(_delta):
 	if is_dead:

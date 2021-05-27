@@ -55,10 +55,10 @@ pixel_size = 0.003
 
 [node name="Actions" parent="." instance=ExtResource( 7 )]
 
-[connection signal="mover_check_move_action" from="." to="Actions" method="_on_Player_mover_check_move_action"]
-[connection signal="mover_move_actor" from="." to="Actions" method="_on_Player_mover_move_actor"]
-[connection signal="mover_set_actor" from="." to="Actions" method="_on_Player_mover_set_actor"]
-[connection signal="mover_set_actor_direction" from="." to="Actions" method="_on_Player_mover_set_actor_direction"]
-[connection signal="mover_set_actor_translation" from="." to="Actions" method="_on_Player_mover_set_actor_translation"]
-[connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_Player_basic_attack_spell_cast"]
-[connection signal="spell_cast_fireball" from="." to="Actions" method="_on_Player_fireball_spell_cast"]
+[connection signal="mover_check_move_action" from="." to="Actions" method="_on_mover_check_move_action"]
+[connection signal="mover_move_actor" from="." to="Actions" method="_on_mover_move_actor"]
+[connection signal="mover_set_actor" from="." to="Actions" method="_on_mover_set_actor"]
+[connection signal="mover_set_actor_direction" from="." to="Actions" method="_on_mover_set_actor_direction"]
+[connection signal="mover_set_actor_translation" from="." to="Actions" method="_on_mover_set_actor_translation"]
+[connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
+[connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]

@@ -45,6 +45,7 @@ script = ExtResource( 7 )
 
 [connection signal="mover_check_move_action" from="." to="Movement/Move" method="_on_Actions_mover_check_move_action"]
 [connection signal="mover_move_actor" from="." to="Movement/Move" method="_on_Actions_mover_move_actor"]
+[connection signal="mover_reset_pos_vars" from="." to="Movement/Move" method="_on_Actions_mover_reset_pos_vars"]
 [connection signal="mover_set_actor" from="." to="Movement/Move" method="_on_Actions_mover_set_actor"]
 [connection signal="mover_set_actor_direction" from="." to="Movement/Move" method="_on_Actions_mover_set_actor_direction"]
 [connection signal="mover_set_actor_translation" from="." to="Movement/Move" method="_on_Actions_mover_set_actor_translation"]
