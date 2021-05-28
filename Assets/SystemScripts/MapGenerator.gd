@@ -44,7 +44,7 @@ func fill_roof(): # This varies as we don't use a TileMap
 		for z in range(0, map_h):
 			var wall = base_wall.instance()
 			wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
-			print(wall.translation)
+			wall.visible = false
 			
 			total_map[x].append(wall)
 
@@ -148,6 +148,7 @@ func create_rooms():
 			for y in range(room.y, (room.y + room.h)):
 				var ground = base_block.instance()
 				ground.translation = Vector3((x-1) * TILE_OFFSET, Y_OFFSET+0.3, (y-1) * TILE_OFFSET)
+				ground.visible = false
 				
 				total_map[x-1][y-1] = ground
 			
@@ -181,6 +182,7 @@ func connect_leaves(leaf1, leaf2):
 			if (total_map[i-1][j-1].get_obj_type() == 'Wall'):
 				var ground = base_block.instance()
 				ground.translation = Vector3((i-1) * TILE_OFFSET, Y_OFFSET+0.3, (j-1) * TILE_OFFSET)
+				ground.visible = false
 				total_map[i-1][j-1] = ground 
 	
 	
@@ -198,6 +200,7 @@ func clear_deadends():
 				if roof_count == 3:
 					var wall = base_wall.instance()
 					wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, y * TILE_OFFSET)
+					wall.visible = false
 					
 					total_map[x][y] = wall
 

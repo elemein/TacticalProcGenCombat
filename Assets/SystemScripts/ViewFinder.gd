@@ -4,7 +4,7 @@
 # If there is a collision with a wall, we stop and don't include that point.
 extends Node
 
-const VIEW_RANGE = 3
+const VIEW_RANGE = 2
 
 onready var map = get_node("/root/World/Map")
 
@@ -62,7 +62,6 @@ func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - S
 		if e2 <= delta_x:
 			err += delta_x
 			p0[1] += sy
-	print(points)
 	return points
 
 

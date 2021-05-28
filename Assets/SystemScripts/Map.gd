@@ -2,7 +2,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 2
+const NUMBER_OF_ENEMIES = 1
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
@@ -13,6 +13,8 @@ var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 var rng = RandomNumberGenerator.new()
 var map_generator = MAP_GEN.new()
 var pathfinder = PATHFINDER.new()
+
+var in_view = []
 
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
@@ -137,20 +139,18 @@ func hide_non_visible_from_player():
 	var player
 	var viewfield
 	
+	# Find player
 	for actor in actors:
 		if actor.get_obj_type() == 'Player':
 			player = actor
 	
+	# Get their view
 	viewfield = player.get_viewfield()
-
-	for x in range(map_grid.size()):
-		for z in range(map_grid[0].size()):
+	
+	for tile in viewfield: get_tile_contents(tile[0], tile[1]).visible = true
+	
+	for tile in in_view:
+		if (tile in viewfield) == false:
+			get_tile_contents(tile[0], tile[1]).visible = false
 			
-			var tile = get_tile_contents(x,z)
-			if typeof(tile) == TYPE_STRING:
-				if tile == 'Out of Bounds': continue
-			
-			if ([x,z] in viewfield) == true:
-				get_tile_contents(x,z).visible = true
-			else:
-				get_tile_contents(x,z).visible = false
+	in_view = viewfield
