@@ -111,7 +111,7 @@ func get_tile_contents(x,z):
 	
 	return map_grid[x][z]
 
-func tile_available(x,z): # Is a tile 
+func tile_available(x,z):
 	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
 		if map_grid[x][z].get_obj_type() == 'Ground':
 			return true

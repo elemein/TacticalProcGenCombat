@@ -124,13 +124,17 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 		tile_contents = map.get_tile_contents(search_pos[0], search_pos[1])
 		
 		if search_pos in visited: continue
+
+#		no idea why, but the below doesnt work despite it doing the same thing as everything below
+#		if map.tile_available(search_pos[0], search_pos[1]) == false: continue
 		
 		if typeof(tile_contents) == TYPE_STRING:
 			if tile_contents == 'Out of Bounds': continue
 
 		if typeof(tile_contents) == TYPE_OBJECT:
 			if tile_contents.get_obj_type() == 'Wall': continue
-			if tile_contents.get_obj_type() == 'Enemy': continue
+			if tile_contents.get_obj_type() == 'Enemy': 
+				if tile_contents.get_is_dead() == false: continue
 			
 		pos_queue.push_front(search_pos)
 		
