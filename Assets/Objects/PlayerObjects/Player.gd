@@ -318,6 +318,8 @@ func set_fireball_target_pos():
 		effect = effects_fire.instance()
 		add_child(effect)
 		
+		target_pos.y = 0.3
+		
 		match direction_facing:
 			'upleft':
 				effect.rotation_degrees.y = 90 + 45
