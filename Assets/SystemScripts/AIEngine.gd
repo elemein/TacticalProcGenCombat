@@ -18,6 +18,7 @@ var dist_from_player = 0
 var path = []
 
 var pathfinder_direction
+var target = Vector3()
 
 func _ready():
 	rng.randomize()
@@ -45,15 +46,16 @@ func run_engine():
 		pathfinder_direction = determine_direction_of_path()
 		
 		if dist_from_player == 1: 
-			actor.mover.set_actor_direction(pathfinder_direction)
+			actor.set_actor_direction(pathfinder_direction)
 			actor.set_action('basic attack')
 		
 		elif dist_from_player > 1:
 			var move_command = 'move %s' % [pathfinder_direction]
 			
-			if actor.check_move_action(move_command):
+			if check_move_action(move_command):
 				actor.set_action(move_command)
-			else: actor.set_action('idle')
+			else: 
+				actor.set_action('idle')
 			
 		else:
 			actor.set_action('idle')
@@ -85,3 +87,38 @@ func determine_direction_of_path():
 	else: return 'idle'
 
 	return direction
+	
+# Movement related functions.
+func check_move_action(move):
+	# Get the target tile
+	var map_pos = actor.map_pos
+	target.x = map_pos[0]
+	target.z = map_pos[1]
+	target = get_target_tile(target, move)
+	if check_cornering(move): 
+		return true
+	else:
+		return false
+	
+func check_cornering(move):
+	var map_pos = actor.map_pos
+	if 'up' in move:
+		if map.is_tile_wall(map_pos[0]+1,map_pos[1]): return false
+	if 'down' in move:
+		if map.is_tile_wall(map_pos[0]-1,map_pos[1]): return false
+	if 'right' in move:
+		if map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
+	if 'left' in move:
+		if map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
+	return true
+
+func get_target_tile(target, move):
+	if 'up' in move:
+		target.x += 1
+	if 'down' in move:
+		target.x -= 1
+	if 'right' in move:
+		target.z += 1
+	if 'left' in move:
+		target.z -= 1
+	return target
