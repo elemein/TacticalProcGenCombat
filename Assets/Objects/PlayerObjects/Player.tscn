@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Assets/Objects/PlayerObjects/polycat.dae" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Objects/PlayerObjects/Player.gd" type="Script" id=2]
@@ -6,7 +6,6 @@
 [ext_resource path="res://Assets/Audio/PlayerAudio/fireball_throw.wav" type="AudioStream" id=4]
 [ext_resource path="res://Assets/GUI/HealthManaBar3D.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/Audio/PlayerAudio/out_of_mana.wav" type="AudioStream" id=6]
-[ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=7]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.419898
@@ -19,7 +18,7 @@ ambient_light_color = Color( 1, 1, 1, 1 )
 script = ExtResource( 2 )
 
 [node name="Graphics" parent="." instance=ExtResource( 1 )]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0 )
+transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 0, 0, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0.666457, 0 )
@@ -28,7 +27,7 @@ shape = SubResource( 1 )
 [node name="CamBase" type="Spatial" parent="."]
 
 [node name="Camera" type="Camera" parent="CamBase"]
-transform = Transform( -4.37114e-08, 0.939693, -0.34202, 0, 0.34202, 0.939693, 1, 4.10753e-08, -1.49502e-08, -6, 10, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
 environment = SubResource( 2 )
 current = true
 
@@ -53,14 +52,4 @@ unit_db = 80.0
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80738, 0 )
 pixel_size = 0.003
 
-[node name="Actions" parent="." instance=ExtResource( 7 )]
-
-[connection signal="mover_check_move_action" from="." to="Actions" method="_on_mover_check_move_action"]
-[connection signal="mover_move_actor" from="." to="Actions" method="_on_mover_move_actor"]
-[connection signal="mover_set_actor" from="." to="Actions" method="_on_mover_set_actor"]
-[connection signal="mover_set_actor_direction" from="." to="Actions" method="_on_mover_set_actor_direction"]
-[connection signal="mover_set_actor_translation" from="." to="Actions" method="_on_mover_set_actor_translation"]
-[connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
-[connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]
-[connection signal="status_bar_hp" from="." to="HealthManaBar3D" method="_on_status_bar_hp"]
-[connection signal="status_bar_mp" from="." to="HealthManaBar3D" method="_on_status_bar_mp"]
+[editable path="Graphics"]
