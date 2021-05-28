@@ -135,6 +135,7 @@ func pathfind(searcher, start_pos, goal_pos):
 	return pathfinder.solve(searcher, start_pos, goal_pos)
 
 func hide_non_visible_from_player():
+	
 	var actors = turn_timer.get_actors()
 	var player
 	var viewfield

@@ -27,21 +27,22 @@ func process_turn():
 	var previous_actor = ['NA', 0]
 	var enumeration = 0
 	
-	while done_sorting == false:
-		enumeration = 0
-		no_sorted = 0
-		for actor in actors:
-			if enumeration > 0:
-			
-				if actor.get_speed() > actors[enumeration-1].get_speed():
-					actors.remove(enumeration)
-					actors.insert(enumeration-1, actor)
-					break
-					
-				if enumeration + 1 == actors.size():
-					done_sorting = true
+	if actors.size() > 1:
+		while done_sorting == false:
+			enumeration = 0
+			no_sorted = 0
+			for actor in actors:
+				if enumeration > 0:
 				
-			enumeration += 1
+					if actor.get_speed() > actors[enumeration-1].get_speed():
+						actors.remove(enumeration)
+						actors.insert(enumeration-1, actor)
+						break
+						
+					if enumeration + 1 == actors.size():
+						done_sorting = true
+					
+				enumeration += 1
 
 	
 	for actor in actors: # Checks if everyone is just moving to shorten the time.
