@@ -2,7 +2,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 10
+const NUMBER_OF_ENEMIES = 2
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
@@ -131,3 +131,26 @@ func get_map():
 
 func pathfind(searcher, start_pos, goal_pos):
 	return pathfinder.solve(searcher, start_pos, goal_pos)
+
+func hide_non_visible_from_player():
+	var actors = turn_timer.get_actors()
+	var player
+	var viewfield
+	
+	for actor in actors:
+		if actor.get_obj_type() == 'Player':
+			player = actor
+	
+	viewfield = player.get_viewfield()
+
+	for x in range(map_grid.size()):
+		for z in range(map_grid[0].size()):
+			
+			var tile = get_tile_contents(x,z)
+			if typeof(tile) == TYPE_STRING:
+				if tile == 'Out of Bounds': continue
+			
+			if ([x,z] in viewfield) == true:
+				get_tile_contents(x,z).visible = true
+			else:
+				get_tile_contents(x,z).visible = false

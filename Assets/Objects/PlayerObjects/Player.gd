@@ -6,6 +6,7 @@ const DIRECTION_SELECT_TIME = 0.225
 const DEATH_ANIM_TIME = 1
 
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
+const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
@@ -47,6 +48,9 @@ var map_pos = []
 var anim_state = "idle"
 var effect = null
 
+# view var
+var viewfield = []
+
 #death vars
 var is_dead = false
 var death_anim_timer = Timer.new()
@@ -54,6 +58,7 @@ var death_anim_info = []
 
 # object vars
 var mover = ACTOR_MOVER.new()
+var view_finder = VIEW_FINDER.new()
 
 func _ready():
 	directional_timer.set_one_shot(true)
@@ -71,8 +76,12 @@ func _ready():
 	
 	mover.set_actor(self)
 	add_child(mover)
+	add_child(view_finder)
 	
 	map.print_map_grid()
+	
+	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
+	map.hide_non_visible_from_player()
 
 func _physics_process(_delta):
 	if is_dead:
@@ -269,6 +278,8 @@ func end_turn():
 	proposed_action = ''
 	in_turn = false
 	ready_status = false
+	
+	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
 
 # Movement related functions.
 func check_move_action(move):
@@ -426,6 +437,9 @@ func get_is_dead():
 
 func get_speed():
 	return speed
+
+func get_viewfield():
+	return viewfield
 
 #Setters
 func set_model_rot(dir_facing, rotation_deg):

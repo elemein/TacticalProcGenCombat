@@ -69,6 +69,8 @@ func end_turn():
 		actor.end_turn()
 	turn_counter += 1
 	map.print_map_grid()
+	
+	map.hide_non_visible_from_player()
 
 func _physics_process(_delta):
 	var all_ready = false
@@ -82,3 +84,6 @@ func _physics_process(_delta):
 
 func _on_TurnTimer_timeout():
 	end_turn()
+
+func get_actors():
+	return actors
