@@ -50,12 +50,10 @@ func mana_check() -> bool:
 		out_of_mana.play()
 		return false
 		
-	# Update mana and mana bar
+	# Update mana
 	elif parent.get('mp'):
 		parent.mp -= spell_cost
-		if parent.get_node('HealthManaBar3D'):
-			var health_bar = parent.get_node('HealthManaBar3D')
-			health_bar.update_mana_bar(parent.mp, parent.max_mp)
+
 	return true
 
 # Set the destination tile
@@ -123,8 +121,7 @@ func do_damage():
 	for target_tile in get_target_tiles():
 		var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
 		if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
-			if attacked_obj.get_obj_type() == 'Enemy':
-				attacked_obj.take_damage(spell_power)
+			attacked_obj.take_damage(spell_power)
 
 func _on_Actions_spell_cast_basic_attack():
 	use()

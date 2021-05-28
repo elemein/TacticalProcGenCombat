@@ -40,11 +40,16 @@ signal mover_set_actor_direction(direction)
 signal mover_set_actor_translation
 signal mover_reset_pos_vars
 
+# Status bar signals
+signal status_bar_hp(hp, max_hp)
+signal status_bar_mp(mp, max_mp)
+
 # gameplay vars
 var object_type = 'E'
-var hp = 100
+var hp = 100 setget set_hp, get_hp
+var mp = 100 setget set_mp, get_mp
 var max_hp = 100
-var mp = 100
+var max_mp = 100
 var attack_power = 10
 
 # vars to handle turn state
@@ -152,7 +157,7 @@ func take_damage(damage):
 	audio_hit.get_children()[randi() % num_audio_effects].play()
 	
 	# Update the health bar
-	$HealthManaBar3D.update_health_bar(hp, max_hp)
+	emit_signal(\"status_bar_hp\", hp, max_hp)
 	
 	if hp <= 0:
 		die()
@@ -201,11 +206,40 @@ func get_target_tiles(num):
 				target_tiles.append([map_pos[0], map_pos[1] + 1 + tile_num])
 	return target_tiles
 	
-
-# Movement related functions.
 func check_move_action(move):
-	emit_signal(\"mover_check_move_action\", move)
+	# Get the target tile
+	target_pos.x = map_pos[0]
+	target_pos.z = map_pos[1]
+	target_pos = get_target_tile(target_pos, move)
 	
+	if not map.tile_available(target_pos.x, target_pos.z): return false
+	if not check_cornering(move): return false
+	
+	return true
+
+func check_cornering(move):
+	if 'up' in move:
+		if map.is_tile_wall(map_pos[0]+1,map_pos[1]): return false
+	if 'down' in move:
+		if map.is_tile_wall(map_pos[0]-1,map_pos[1]): return false
+	if 'right' in move:
+		if map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
+	if 'left' in move:
+		if map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
+	return true
+
+func get_target_tile(target, move):
+	if 'up' in move:
+		target.x += 1
+	if 'down' in move:
+		target.x -= 1
+	if 'right' in move:
+		target.z += 1
+	if 'left' in move:
+		target.z -= 1
+	return target
+
+# Movement related functions.	
 func set_actor_direction(pathfinder_direction):
 	emit_signal(\"mover_set_actor_direction\", pathfinder_direction)
 
@@ -223,6 +257,12 @@ func play_anim(name):
 	anim.play(name)
 
 # Getters
+func get_hp():
+	return hp
+
+func get_mp():
+	return mp
+
 func get_translation():
 	return translation
 
@@ -236,6 +276,14 @@ func get_action():
 	return proposed_action
 
 # Setters
+func set_hp(new_hp):
+	hp = new_hp
+	emit_signal(\"status_bar_hp\", hp, max_hp)
+
+func set_mp(new_mp):
+	mp = new_mp
+	emit_signal(\"status_bar_mp\", mp, max_mp)
+
 func set_model_rot(dir_facing, rotation_deg):
 	direction_facing = dir_facing
 	model.rotation_degrees.y = rotation_deg
@@ -290,3 +338,5 @@ script = ExtResource( 6 )
 [connection signal="mover_set_actor_translation" from="." to="Actions" method="_on_mover_set_actor_translation"]
 [connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
 [connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]
+[connection signal="status_bar_hp" from="." to="HealthManaBar3D" method="_on_status_bar_hp"]
+[connection signal="status_bar_mp" from="." to="HealthManaBar3D" method="_on_status_bar_mp"]

@@ -22,13 +22,17 @@ signal mover_set_actor(actor)
 signal mover_set_actor_direction(direction)
 signal mover_set_actor_translation
 
+# Status bar signals
+signal status_bar_hp(hp, max_hp)
+signal status_bar_mp(mp, max_mp)
+
 # Sound effects
 onready var audio_hit = $Audio/Hit
 
 # gameplay vars
 var object_type = 'Player'
-var hp = 100
-var mp = 100
+var hp = 100 setget set_hp, get_hp
+var mp = 100 setget set_mp, get_mp
 var max_hp = 100
 var max_mp = 100
 var regen_mp = 10
@@ -41,7 +45,7 @@ var ready_status = false
 var in_turn = false
 
 # movement and positioning related vars
-var direction_facing = "up"
+var direction_facing = "left"
 var directional_timer = Timer.new()
 var map_pos = []
 var target = Vector3()
@@ -196,14 +200,14 @@ func process_turn():
 		emit_signal("spell_cast_fireball")
 
 	in_turn = true
-
-	mp += regen_mp
-	$HealthManaBar3D/Viewport/HealthManaBar2D.update_mana_bar(mp, max_mp)
+	
 
 func end_turn():
 	proposed_action = ''
 	in_turn = false
 	ready_status = false
+	var tmp_mp = mp + regen_mp
+	self.set_mp(tmp_mp)
 
 # Movement related functions.
 func check_move_action(move):
@@ -211,10 +215,11 @@ func check_move_action(move):
 	target.x = map_pos[0]
 	target.z = map_pos[1]
 	target = get_target_tile(target, move)
-	if check_cornering(move): 
-		return true
-	else:
-		return false
+	
+	if not map.tile_available(target.x, target.z): return false
+	if not check_cornering(move): return false
+	
+	return true
 	
 func checker_cornering(move):
 	if 'up' in move:
@@ -296,7 +301,7 @@ func take_damage(damage):
 #	audio_hit.get_children()[randi() % num_audio_effects].play()
 	
 	# Update the health bar
-	$HealthManaBar3D.update_health_bar(hp, max_hp)
+	emit_signal("status_bar_hp", hp, max_hp)
 
 	if hp <= 0:
 		die()
@@ -383,9 +388,11 @@ func set_map_pos(new_pos):
 
 func set_hp(new_hp):
 	hp = new_hp
+	emit_signal("status_bar_hp", hp, max_hp)
 
 func set_mp(new_mp):
 	mp = new_mp
+	emit_signal("status_bar_mp", mp, max_mp)
 
 func set_max_hp(new_max_hp):
 	max_hp = new_max_hp

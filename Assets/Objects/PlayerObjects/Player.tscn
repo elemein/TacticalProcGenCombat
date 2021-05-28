@@ -19,7 +19,7 @@ ambient_light_color = Color( 1, 1, 1, 1 )
 script = ExtResource( 2 )
 
 [node name="Graphics" parent="." instance=ExtResource( 1 )]
-transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 0, 0, 0 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0.666457, 0 )
@@ -62,3 +62,5 @@ pixel_size = 0.003
 [connection signal="mover_set_actor_translation" from="." to="Actions" method="_on_mover_set_actor_translation"]
 [connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
 [connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]
+[connection signal="status_bar_hp" from="." to="HealthManaBar3D" method="_on_status_bar_hp"]
+[connection signal="status_bar_mp" from="." to="HealthManaBar3D" method="_on_status_bar_mp"]
