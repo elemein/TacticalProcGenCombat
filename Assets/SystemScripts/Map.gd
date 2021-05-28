@@ -115,6 +115,9 @@ func tile_available(x,z): # Is a tile
 	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
 		if map_grid[x][z].get_obj_type() == 'Ground':
 			return true
+		elif map_grid[x][z].get_obj_type() in ['Enemy', 'Player']:
+			if map_grid[x][z].get_is_dead() == true:
+				return true
 	return false
 
 func is_tile_wall(x,z):

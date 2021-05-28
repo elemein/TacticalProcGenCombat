@@ -233,7 +233,13 @@ func get_map_pos():
 
 func get_action():
 	return proposed_action
+
+func get_hp():
+	return hp
 	
+func get_is_dead():
+	return is_dead
+
 func get_speed():
 	return speed
 
