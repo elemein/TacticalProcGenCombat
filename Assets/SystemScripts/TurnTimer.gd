@@ -21,6 +21,29 @@ func remove_from_timer_group(actor):
 func process_turn():
 	wait_time = RESET_TIME # Reset this. 0 is NOT valid for some reason, so 0.1.
 	
+	var sorted_actors
+	var done_sorting = false
+	var no_sorted = 0
+	var previous_actor = ['NA', 0]
+	var enumeration = 0
+	
+	while done_sorting == false:
+		enumeration = 0
+		no_sorted = 0
+		for actor in actors:
+			if enumeration > 0:
+			
+				if actor.get_speed() > actors[enumeration-1].get_speed():
+					actors.remove(enumeration)
+					actors.insert(enumeration-1, actor)
+					break
+					
+				if enumeration + 1 == actors.size():
+					done_sorting = true
+				
+			enumeration += 1
+
+	
 	for actor in actors: # Checks if everyone is just moving to shorten the time.
 		if (actor.proposed_action.split(" ")[0] == 'move' 
 			or actor.proposed_action.split(" ")[0] == 'idle'):
@@ -37,7 +60,10 @@ func process_turn():
 				actor.process_turn()
 		else:
 			actor.process_turn()
-	
+
+func sort_actors_by_speed(a, b):
+	return a < b
+
 func end_turn():
 	for actor in actors:
 		actor.end_turn()

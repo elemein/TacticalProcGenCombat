@@ -36,6 +36,8 @@ var mp = 100 setget set_mp, get_mp
 var max_hp = 100
 var max_mp = 100
 var regen_mp = 10
+var speed = 15
+
 var attack_power = 10
 var spell_power = 20
 
@@ -66,7 +68,7 @@ func _ready():
 	
 	turn_timer.add_to_timer_group(self)
 	
-	map_pos = map.place_on_map(self)
+	map_pos = map.place_on_random_avail_tile(self)
 	translation.x = map_pos[0] * TILE_OFFSET
 	translation.z = map_pos[1] * TILE_OFFSET
 
@@ -247,43 +249,35 @@ func check_cornering(direction): # This can definitely be done better. - SS
 	match direction:
 		'upleft': # check both tiles up and left to check for walls
 			var adjacent_tile = map.get_tile_contents(map_pos[0]+1,map_pos[1])
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
+			if adjacent_tile.get_obj_type() == 'Wall':
+				return false
 			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]-1)
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
+			if adjacent_tile.get_obj_type() == 'Wall':
+				return false
 			
 		'upright': # check both tiles up and right to check for walls
 			var adjacent_tile = map.get_tile_contents(map_pos[0]+1,map_pos[1])
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
+			if adjacent_tile.get_obj_type() == 'Wall':
+				return false
 			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]+1)
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
+			if adjacent_tile.get_obj_type() == 'Wall':
+				return false
 			
 		'downleft': # check both tiles down and left to check for walls
 			var adjacent_tile = map.get_tile_contents(map_pos[0]-1,map_pos[1])
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
+			if adjacent_tile.get_obj_type() == 'Wall':
+				return false
 			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]-1)
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
+			if adjacent_tile.get_obj_type() == 'Wall':
+				return false
 			
 		'downright': # check both tiles down and right to check for walls
 			var adjacent_tile = map.get_tile_contents(map_pos[0]-1,map_pos[1])
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
+			if adjacent_tile.get_obj_type() == 'Wall':
+				return false
 			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]+1)
-			if typeof(adjacent_tile) == TYPE_STRING:
-				if adjacent_tile == '.':
-					return false
+			if adjacent_tile.get_obj_type() == 'Wall':
+				return false
 	return true
 
 func set_direction(direction):
@@ -352,6 +346,9 @@ func get_map_pos():
 
 func get_action():
 	return proposed_action
+	
+func get_speed():
+	return speed
 
 func get_hp():
 	return hp

@@ -2,7 +2,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 8
+const NUMBER_OF_ENEMIES = 10
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
@@ -26,7 +26,8 @@ func _ready():
 	rng.randomize()
 
 	map_grid = map_generator.generate()
-	populate_map_ground()
+	
+	add_map_objects_to_tree()
 	
 	catalog_ground_tiles()
 	
@@ -34,21 +35,10 @@ func _ready():
 	
 	add_child(pathfinder)
 
-func populate_map_ground():
-	# create the map based on the map_x and map_y variables
-	var x_offset = -TILE_OFFSET
-	var z_offset = -TILE_OFFSET
-		
-	for x in range(0, map_grid.size()-1):
-		x_offset += TILE_OFFSET
-		z_offset = -TILE_OFFSET # Reset
-		for z in range(0, map_grid[0].size()-1):
-			z_offset += TILE_OFFSET
-			
-			if map_grid[x][z] == '0':
-				var block = base_block.instance()
-				add_child(block)
-				block.translation = Vector3(x_offset, Y_OFFSET, z_offset)
+func add_map_objects_to_tree():
+	for line in map_grid.size():
+		for column in map_grid[0].size():
+			add_child(map_grid[line][column])
 
 func spawn_enemies():
 	for enemy_cnt in NUMBER_OF_ENEMIES:
@@ -66,14 +56,23 @@ func spawn_enemies():
 		
 		current_number_of_enemies += 1
 
-func place_on_map(object):
-	var tile = choose_random_ground_tile()
+func place_on_random_avail_tile(object):
+	var avail = false
+	var tile
+	
+	while avail == false:
+		tile = choose_random_ground_tile()
+		if tile_available(tile[0], tile[1]) == true:
+			avail = true
+	
 	map_grid[tile[0]][tile[1]] = object
 	return tile
 
 func move_on_map(object, old_pos, new_pos):
-	map_grid[old_pos[0]][old_pos[1]] = '0'
+	var valueholder = map_grid[new_pos[0]][new_pos[1]]
 	map_grid[new_pos[0]][new_pos[1]] = object
+	map_grid[old_pos[0]][old_pos[1]] = valueholder
+	
 	return [new_pos[0], new_pos[1]]
 
 func print_map_grid():
@@ -87,13 +86,20 @@ func print_map_grid():
 				TYPE_STRING:
 					converted_row.append(tile)
 				TYPE_OBJECT:
-					converted_row.append(tile.get('object_type'))
+					if tile.get_obj_type() == 'Wall':
+						converted_row.append('.')
+					if tile.get_obj_type() == 'Ground':
+						converted_row.append('0')
+					if tile.get_obj_type() == 'Player':
+						converted_row.append('X')
+					if tile.get_obj_type() == 'Enemy':
+						converted_row.append('E')
 		print(converted_row)
 
 func catalog_ground_tiles():
 	for x in range(0, map_grid.size()-1):
 		for z in range(0, map_grid[0].size()-1):
-			if map_grid[x][z] == '0':
+			if map_grid[x][z].get_obj_type() == 'Ground':
 				catalog_of_ground_tiles.append([x,z])
 
 func choose_random_ground_tile():
@@ -107,16 +113,14 @@ func get_tile_contents(x,z):
 
 func tile_available(x,z): # Is a tile 
 	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
-		if typeof(map_grid[x][z]) == TYPE_STRING:
-			if map_grid[x][z] == '0':
-				return true
+		if map_grid[x][z].get_obj_type() == 'Ground':
+			return true
 	return false
 
 func is_tile_wall(x,z):
 	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
-		if typeof(map_grid[x][z]) == TYPE_STRING:
-			if map_grid[x][z] == '.':
-				return true
+		if map_grid[x][z].get_obj_type() == 'Wall':
+			return true
 	return false
 
 func get_map():
@@ -124,4 +128,3 @@ func get_map():
 
 func pathfind(searcher, start_pos, goal_pos):
 	return pathfinder.solve(searcher, start_pos, goal_pos)
-	

@@ -23,8 +23,8 @@ onready var turn_timer = get_node(\"/root/World/TurnTimer\")
 onready var map = get_node(\"/root/World/Map\")
 
 # Audio effects
-onready var miss_basick_attack = $Audio/miss_basic_attack
-onready var audio_hit = $Audio/Hit
+onready var miss_basick_attack = $Audio/Hit/basic_attack_2
+onready var audio_hit = $Audio/Hit/basic_attack_2
 
 var rng = RandomNumberGenerator.new()
 
@@ -50,6 +50,8 @@ var hp = 100 setget set_hp, get_hp
 var mp = 100 setget set_mp, get_mp
 var max_hp = 100
 var max_mp = 100
+var speed = 5
+
 var attack_power = 10
 
 # vars to handle turn state
@@ -78,10 +80,11 @@ var ai_engine = AI_ENGINE.new()
 
 func _ready():
 	rng.randomize()
+	speed = rng.randi_range(5,15)
 
 func setup_actor():
 	turn_timer.add_to_timer_group(self)
-	map_pos = map.place_on_map(self)
+	map_pos = map.place_on_random_avail_tile(self)
 	translation.x = map_pos[0] * TILE_OFFSET
 	translation.z = map_pos[1] * TILE_OFFSET
 	
@@ -154,7 +157,7 @@ func take_damage(damage):
 	
 	# Play a random audio effect upon getting hit
 	var num_audio_effects = audio_hit.get_children().size()
-	audio_hit.get_children()[randi() % num_audio_effects].play()
+	audio_hit.play()
 	
 	# Update the health bar
 	emit_signal(\"status_bar_hp\", hp, max_hp)
@@ -274,6 +277,9 @@ func get_map_pos():
 
 func get_action():
 	return proposed_action
+	
+func get_speed():
+	return speed
 
 # Setters
 func set_hp(new_hp):

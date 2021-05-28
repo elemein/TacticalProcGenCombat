@@ -6,6 +6,12 @@ extends Node
 # I followed this link: https://abitawake.com/news/articles/procedural-generation-with-godot-create-dungeons-using-a-bsp-tree
 # I had to do some modification to it as the link uses a TileMap, whereas we use a 2D Array. 
 
+const Y_OFFSET = -0.3
+const TILE_OFFSET = 2.2
+
+var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
+var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
+
 var map_w = 30
 var map_h = 30
 var min_room_size = 4 # -1 = Min room dimension.
@@ -36,7 +42,11 @@ func fill_roof(): # This varies as we don't use a TileMap
 	for x in range(0, map_w):
 		total_map.append([])
 		for z in range(0, map_h):
-			total_map[x].append('.')
+			var wall = base_wall.instance()
+			wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
+			print(wall.translation)
+			
+			total_map[x].append(wall)
 
 func start_tree():
 	# Reset variables.
@@ -136,7 +146,10 @@ func create_rooms():
 		
 		for x in range(room.x, (room.x + room.w)):
 			for y in range(room.y, (room.y + room.h)):
-				total_map[x-1][y-1] = '0'
+				var ground = base_block.instance()
+				ground.translation = Vector3((x-1) * TILE_OFFSET, Y_OFFSET+0.3, (y-1) * TILE_OFFSET)
+				
+				total_map[x-1][y-1] = ground
 			
 			
 func join_rooms():
@@ -165,7 +178,10 @@ func connect_leaves(leaf1, leaf2):
 			
 	for i in range(x, x+w):
 		for j in range(y, y+h):
-			if (total_map[i-1][j-1] == '.'): total_map[i-1][j-1] = '0' 
+			if (total_map[i-1][j-1].get_obj_type() == 'Wall'):
+				var ground = base_block.instance()
+				ground.translation = Vector3((i-1) * TILE_OFFSET, Y_OFFSET+0.3, (j-1) * TILE_OFFSET)
+				total_map[i-1][j-1] = ground 
 	
 	
 func clear_deadends():
@@ -176,32 +192,23 @@ func clear_deadends():
 	
 		for x in range(0, total_map.size()-1):
 			for y in range(0, total_map[0].size()-1):
-				if total_map[x][y] != '0' : continue
+				if total_map[x][y].get_obj_type() != 'Ground' : continue
 				
 				var roof_count = check_nearby(x,y)
 				if roof_count == 3:
-					total_map[x][y] = '.'
+					var wall = base_wall.instance()
+					wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, y * TILE_OFFSET)
+					
+					total_map[x][y] = wall
+
 					done = false
 			
 
 func check_nearby(x,y):
 	var count = 0
-	if total_map[x][y-1] == '.' : count += 1
-	if total_map[x][y+1] == '.' : count += 1
-	if total_map[x-1][y] == '.' : count += 1
-	if total_map[x+1][y] == '.' : count += 1
+	if total_map[x][y-1].get_obj_type() == 'Wall' : count += 1
+	if total_map[x][y+1].get_obj_type() == 'Wall' : count += 1
+	if total_map[x-1][y].get_obj_type() == 'Wall' : count += 1
+	if total_map[x+1][y].get_obj_type() == 'Wall' : count += 1
 			
 	return count
-			
-func print_total_map():
-	total_map.invert()
-	for line in total_map:
-		print(line)
-	total_map.invert()
-			
-			
-			
-			
-	
-	
-	
