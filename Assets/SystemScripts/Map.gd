@@ -150,6 +150,13 @@ func hide_non_visible_from_player():
 	
 	print('- to add')
 	print(viewfield)
-	for tile in viewfield: get_tile_contents(tile[0], tile[1]).visible = true
+	for tile in viewfield: 
+		print("---")
+		print(tile[0], tile[1])
+		print(get_tile_contents(tile[0], tile[1]))
+		print(get_tile_contents(tile[0], tile[1]).visible)
+		get_tile_contents(tile[0], tile[1]).visible = true
+		print(get_tile_contents(tile[0], tile[1]).visible)
+		
 			
 	in_view = viewfield

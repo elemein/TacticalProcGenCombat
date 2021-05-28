@@ -4,7 +4,7 @@
 # If there is a collision with a wall, we stop and don't include that point.
 extends Node
 
-const VIEW_RANGE = 3
+const VIEW_RANGE = 4
 
 onready var map = get_node("/root/World/Map")
 
