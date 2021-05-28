@@ -4,33 +4,31 @@
 # If there is a collision with a wall, we stop and don't include that point.
 extends Node
 
-const VIEW_RANGE = 2
+const VIEW_RANGE = 3
 
 onready var map = get_node("/root/World/Map")
 
 var pos_x = 0
 var pos_z = 0
+var pos = [0,0]
 
 var vision_boundaries = []
+var visible_tiles = []
 
 func reset_vars():
-	var pos_x = 0
-	var pos_z = 0
-
-	var vision_boundaries = []
+	vision_boundaries = []
+	visible_tiles = []
 
 func find_view_field(x, z):
 	reset_vars()
 	
 	pos_x = x
 	pos_z = z
-	var pos = [x, z]
+	pos = [x, z]
 	print(pos)
 	
 	form_vision_boundaries()
-	
-	var visible_tiles = []
-	
+
 	for endpoint in vision_boundaries:
 		var tiles_to_add = draw_line([pos_x, pos_z], endpoint)
 		
@@ -38,6 +36,8 @@ func find_view_field(x, z):
 			if (tile in visible_tiles) == false:
 				visible_tiles.append(tile)
 
+	print('visible tiles')
+	print(visible_tiles)
 	return visible_tiles
 
 func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - SS

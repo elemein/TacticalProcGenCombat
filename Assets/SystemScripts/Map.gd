@@ -15,6 +15,7 @@ var map_generator = MAP_GEN.new()
 var pathfinder = PATHFINDER.new()
 
 var in_view = []
+var player
 
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
@@ -59,6 +60,8 @@ func spawn_enemies():
 		current_number_of_enemies += 1
 
 func place_on_random_avail_tile(object):
+	if object.get_obj_type() == 'Player': player = object
+	
 	var avail = false
 	var tile
 	
@@ -135,23 +138,18 @@ func pathfind(searcher, start_pos, goal_pos):
 	return pathfinder.solve(searcher, start_pos, goal_pos)
 
 func hide_non_visible_from_player():
-	
 	var actors = turn_timer.get_actors()
-	var player
 	var viewfield
-	
-	# Find player
-	for actor in actors:
-		if actor.get_obj_type() == 'Player':
-			player = actor
 	
 	# Get their view
 	viewfield = player.get_viewfield()
 	
-	for tile in viewfield: get_tile_contents(tile[0], tile[1]).visible = true
+	print('- to remove')
+	print(in_view)
+	for tile in in_view: get_tile_contents(tile[0], tile[1]).visible = false
 	
-	for tile in in_view:
-		if (tile in viewfield) == false:
-			get_tile_contents(tile[0], tile[1]).visible = false
+	print('- to add')
+	print(viewfield)
+	for tile in viewfield: get_tile_contents(tile[0], tile[1]).visible = true
 			
 	in_view = viewfield
