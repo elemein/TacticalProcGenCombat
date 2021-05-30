@@ -71,6 +71,8 @@ func set_target_pos():
 
 	direction_facing = parent.direction_facing
 
+	target_pos = Vector3(0, 0.3, 0)
+
 	match direction_facing:
 		'upleft':
 			effect.rotation_degrees.y = 90 + 45
