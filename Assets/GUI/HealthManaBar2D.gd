@@ -19,3 +19,11 @@ func update_health_bar(amount, full):
 func update_mana_bar(amount, full):
 	mana_bar.value = amount
 	mana_bar.max_value = full
+
+
+func _on_HealthBar3D_status_bar_hp(hp, max_hp):
+	update_health_bar(hp, max_hp)
+
+
+func _on_HealthBar3D_status_bar_mp(mp, max_mp):
+	update_mana_bar(mp, max_mp)
