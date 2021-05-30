@@ -16,3 +16,6 @@ usage = 0
 render_target_v_flip = true
 
 [node name="HealthManaBar2D" parent="Viewport" instance=ExtResource( 3 )]
+
+[connection signal="status_bar_hp" from="." to="Viewport/HealthManaBar2D" method="_on_HealthBar3D_status_bar_hp"]
+[connection signal="status_bar_mp" from="." to="Viewport/HealthManaBar2D" method="_on_HealthBar3D_status_bar_mp"]

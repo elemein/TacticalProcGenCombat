@@ -22,12 +22,22 @@ onready var audio_hit = $Audio/Hit
 
 var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 
+# Spell signals
+signal spell_cast_fireball
+signal spell_cast_basic_attack
+
+# Status bar signals
+signal status_bar_hp(hp, max_hp)
+signal status_bar_mp(mp, max_mp)
+
 # gameplay vars
 var object_type = 'Player'
+var hp = 100 setget set_hp
+var mp = 100 setget set_mp
 var max_hp = 100
-var hp = 100
-var mp = 100
 var max_mp = 100
+var regen_hp = 2
+var regen_mp = 10
 var speed = 15
 var attack_power = 10
 var spell_power = 20
@@ -100,21 +110,6 @@ func _physics_process(_delta):
 			# Change position based on time tickdown.
 			if proposed_action.split(" ")[0] == 'move':
 				mover.set_actor_translation()
-			
-			if proposed_action == "basic attack":
-				if turn_timer.time_left > 0.5: # Move char towards attack cell.
-					translation = translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5))) 
-				else: # Move char back.
-					translation = translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
-			
-			if proposed_action == 'fireball':
-				if turn_timer.time_left > 0.1: # Move fireball towards attack cell.
-					effect.translation = effect.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.1))) 
-				else: # Delete fireball.
-					if effect != null:
-						remove_child(get_node("/root/World/Player/Fire"))
-						effect = null
-				
 			
 		if proposed_action != '' && in_turn == true:
 			if proposed_action == 'idle':
@@ -201,11 +196,7 @@ func get_input():
 	if Input.is_action_pressed("space"): set_action('basic attack')
 	
 	# Skills will need two presses to confirm.
-	if Input.is_action_pressed("e"): 
-		if mp >= 20:
-			set_action('fireball')
-		else:
-			out_of_mana.play()
+	if Input.is_action_pressed("e"): set_action('fireball')
 	
 func set_action(action):
 	proposed_action = action
@@ -247,28 +238,14 @@ func process_turn():
 		target_pos = map_pos
 	
 	elif proposed_action == 'basic attack':
-		var target_tile = get_target_tiles(1)[0]
-		target_pos.x = target_tile[0] * TILE_OFFSET
-		target_pos.z = target_tile[1] * TILE_OFFSET
-		
-		var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
-		
-		if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
-			if attacked_obj.get_obj_type() == 'Enemy':
-				attacked_obj.take_damage(attack_power)
-		else:
-			miss_basick_attack.play()
+		emit_signal("spell_cast_basic_attack")
 	
 	elif proposed_action == 'fireball':
-		set_fireball_target_pos()
-		fireball_throw.play()
-		for target_tile in get_target_tiles(3):
-			var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
-			if typeof(attacked_obj) != TYPE_STRING: #If not attacking a blank space.
-				if attacked_obj.get_obj_type() == 'Enemy':
-					attacked_obj.take_damage(spell_power)
-		mp -= 20
-		$HealthManaBar3D.update_mana_bar(mp, max_mp)
+		emit_signal("spell_cast_fireball")
+		
+	# Apply any regen effects
+	self.hp += regen_hp
+	self.mp += regen_mp
 
 	in_turn = true
 
@@ -368,19 +345,20 @@ func set_fireball_target_pos():
 
 
 func take_damage(damage):
-	hp -= damage
-	print("%s has %s HP" % [self, hp])
-	
-	# Player audio node is empty, so this doesnt work.
-	# Play a random audio effect upon getting hit
-#	var num_audio_effects = audio_hit.get_children().size()
-#	audio_hit.get_children()[randi() % num_audio_effects].play()
-	
-	# Update the health bar
-	$HealthManaBar3D.update_health_bar(hp, max_hp)
+	if not is_dead:
+		hp -= damage
+		print("%s has %s HP" % [self, hp])
+		
+		# Player audio node is empty, so this doesnt work.
+		# Play a random audio effect upon getting hit
+	#	var num_audio_effects = audio_hit.get_children().size()
+	#	audio_hit.get_children()[randi() % num_audio_effects].play()
+		
+		# Update the health bar
+		emit_signal("status_bar_hp", hp, max_hp)
 
-	if hp <= 0:
-		die()
+		if hp <= 0:
+			die()
 
 func die():
 	death_anim_timer.set_one_shot(true)
@@ -399,7 +377,7 @@ func die():
 	death_anim_info = [rise, fall, fall_rot]
 	
 	death_anim_timer.start()
-
+	$HealthManaBar3D.visible = false
 
 # Animations related functions.
 func handle_animations():
@@ -451,3 +429,15 @@ func set_translation(new_translation):
 
 func set_map_pos(new_pos):
 	map_pos = new_pos
+
+func set_hp(new_hp):
+	hp = new_hp
+	if hp > max_hp:
+		hp = max_hp
+	emit_signal("status_bar_hp", hp, max_hp)
+	
+func set_mp(new_mp):
+	mp = new_mp
+	if mp > max_mp:
+		mp = max_mp
+	emit_signal("status_bar_mp", mp, max_mp)
