@@ -119,9 +119,11 @@ func get_target_tiles() -> Array:
 # Actually inflict damage on the target tiles
 func do_damage():
 	for target_tile in get_target_tiles():
-		var attacked_obj = map.get_tile_contents(target_tile[0], target_tile[1])
-		if not attacked_obj.get('object_type') in ['Ground', 'Wall']:
-			attacked_obj.take_damage(spell_power)
+		var objects_on_tile = map.get_tile_contents(target_tile[0], target_tile[1])
+
+		for object in objects_on_tile:
+			if object.get_obj_type() in ['Enemy', 'Player']:
+				object.take_damage(spell_power)
 
 func _on_Actions_spell_cast_basic_attack():
 	use()

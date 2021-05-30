@@ -46,7 +46,7 @@ func fill_roof(): # This varies as we don't use a TileMap
 			wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
 			wall.visible = false
 			
-			total_map[x].append(wall)
+			total_map[x].append([wall])
 
 func start_tree():
 	# Reset variables.
@@ -150,7 +150,7 @@ func create_rooms():
 				ground.translation = Vector3((x-1) * TILE_OFFSET, Y_OFFSET+0.3, (y-1) * TILE_OFFSET)
 				ground.visible = false
 				
-				total_map[x-1][y-1] = ground
+				total_map[x-1][y-1][0] = ground
 			
 			
 func join_rooms():
@@ -179,11 +179,11 @@ func connect_leaves(leaf1, leaf2):
 			
 	for i in range(x, x+w):
 		for j in range(y, y+h):
-			if (total_map[i-1][j-1].get_obj_type() == 'Wall'):
+			if (total_map[i-1][j-1][0].get_obj_type() == 'Wall'):
 				var ground = base_block.instance()
 				ground.translation = Vector3((i-1) * TILE_OFFSET, Y_OFFSET+0.3, (j-1) * TILE_OFFSET)
 				ground.visible = false
-				total_map[i-1][j-1] = ground 
+				total_map[i-1][j-1][0] = ground 
 	
 	
 func clear_deadends():
@@ -194,7 +194,7 @@ func clear_deadends():
 	
 		for x in range(0, total_map.size()-1):
 			for y in range(0, total_map[0].size()-1):
-				if total_map[x][y].get_obj_type() != 'Ground' : continue
+				if total_map[x][y][0].get_obj_type() != 'Ground' : continue
 				
 				var roof_count = check_nearby(x,y)
 				if roof_count == 3:
@@ -202,16 +202,16 @@ func clear_deadends():
 					wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, y * TILE_OFFSET)
 					wall.visible = false
 					
-					total_map[x][y] = wall
+					total_map[x][y][0] = wall
 
 					done = false
 			
 
 func check_nearby(x,y):
 	var count = 0
-	if total_map[x][y-1].get_obj_type() == 'Wall' : count += 1
-	if total_map[x][y+1].get_obj_type() == 'Wall' : count += 1
-	if total_map[x-1][y].get_obj_type() == 'Wall' : count += 1
-	if total_map[x+1][y].get_obj_type() == 'Wall' : count += 1
+	if total_map[x][y-1][0].get_obj_type() == 'Wall' : count += 1
+	if total_map[x][y+1][0].get_obj_type() == 'Wall' : count += 1
+	if total_map[x-1][y][0].get_obj_type() == 'Wall' : count += 1
+	if total_map[x+1][y][0].get_obj_type() == 'Wall' : count += 1
 			
 	return count
