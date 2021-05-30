@@ -2,7 +2,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 0
+const NUMBER_OF_ENEMIES = 4
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
@@ -137,6 +137,7 @@ func tile_available(x,z):
 			if object.get_obj_type() != 'Ground':
 				if object.get_obj_type() in ['Enemy', 'Player']:
 					if object.get_is_dead() == true: continue
+					else: only_empty_ground_in_tile = false
 				else: only_empty_ground_in_tile = false
 				
 		if only_empty_ground_in_tile: return true

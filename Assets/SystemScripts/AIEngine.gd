@@ -8,14 +8,15 @@ onready var player = get_node("/root/World/Player")
 
 var rng = RandomNumberGenerator.new()
 
-var ai_state = 'active' # [idle, active]
+var ai_state = 'idle' # [idle, active]
 
 var actor
 
-var players = []
+var player_pos = []
 
 var dist_from_player = 0
 var path = []
+var viewfield = []
 
 var pathfinder_direction
 
@@ -26,13 +27,22 @@ func set_actor(setter):
 	actor = setter
 	
 func reset_vars():
-	players = []
+	player_pos = []
 	dist_from_player = 0
+	ai_state = 'idle'
 
 func run_engine():
 	reset_vars()
-	# first, we must see where PCs are, as the AI only responds to PCs.
-	players.append(player.get_map_pos())
+	
+	viewfield = actor.get_viewfield()
+	
+	for tile in viewfield:
+		var tile_objects = map.get_tile_contents(tile[0], tile[1])
+		for object in tile_objects:
+			if object.get_obj_type() == 'Player': player_pos.append(tile)
+	
+	if player_pos.size() > 0: ai_state = 'active'
+	
 	# if a PC is not within VISION_RANGE tiles, the AI can idle.
 	
 	if ai_state == 'idle':
@@ -59,7 +69,7 @@ func run_engine():
 			actor.set_action('idle')
 				
 func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
-	var path_info = map.pathfind(actor, actor.get_map_pos(), players[0])
+	var path_info = map.pathfind(actor, actor.get_map_pos(), player_pos[0])
 	
 	dist_from_player = path_info[0]
 	path = path_info[1]
