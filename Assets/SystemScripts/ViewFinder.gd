@@ -25,7 +25,7 @@ func find_view_field(x, z):
 	pos_x = x
 	pos_z = z
 	pos = [x, z]
-	print(pos)
+#	print(pos)
 	
 	form_vision_boundaries()
 

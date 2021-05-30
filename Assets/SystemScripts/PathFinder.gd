@@ -130,12 +130,13 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 		
 		if typeof(tile_contents) == TYPE_STRING:
 			if tile_contents == 'Out of Bounds': continue
-
+	
+		var skip_tile = false
 		for object in tile_contents:
-			if typeof(object) == TYPE_OBJECT:
-				if object.get_obj_type() == 'Wall': continue
-				if object.get_obj_type() == 'Enemy': 
-					if object.get_is_dead() == false: continue
+			if object.get_obj_type() == 'Wall': skip_tile = true
+			if object.get_obj_type() == 'Enemy': 
+				if object.get_is_dead() == false: skip_tile = true
+		if skip_tile: continue
 			
 		pos_queue.push_front(search_pos)
 		
