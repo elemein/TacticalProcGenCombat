@@ -8,7 +8,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 20
+const NUMBER_OF_ENEMIES = 10
 const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
@@ -17,10 +17,10 @@ var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 
 var map_w = 30
 var map_h = 30
-var min_room_size = 4 # -1 = Min room dimension.
+var min_room_size = 3
 var min_room_factor = 0.4
 
-var room_density = 75 # 0-100. 100 being most dense.
+var room_density = 70 # 0-100. 100 being most dense.
 
 var rng = RandomNumberGenerator.new()
 
@@ -60,6 +60,10 @@ func start_tree():
 	leaf_id = 0
 	
 	# Set basis for first tree node.
+	# x and y are both 1, not 0, as we dont want the algo to have access to the
+	# very bottom or left edge, where a wall should be.
+	# map_w and map_h are -2 for the same reason; not -1 because the indexing
+	# would make that have access to the top and right edge.
 	tree[leaf_id] = {"x": 1, "y": 1, "w": map_w - 2, "h": map_h - 2}
 	leaf_id += 1
 
@@ -133,10 +137,10 @@ func create_rooms():
 		if (rng.randi_range(0,100) < room_density):
 			var room = {}
 			room.id = leaf_id
-			room.w = rng.randi_range(min_room_size, leaf.w) - 1
-			room.h = rng.randi_range(min_room_size, leaf.h) - 1
-			room.x = leaf.x + floor((leaf.w-room.w)/2) + 1
-			room.y = leaf.y + floor((leaf.h-room.h)/2) + 1
+			room.w = rng.randi_range(min_room_size, leaf.w)
+			room.h = rng.randi_range(min_room_size, leaf.h)
+			room.x = leaf.x + floor((leaf.w-room.w)/2)
+			room.y = leaf.y + floor((leaf.h-room.h)/2)
 			
 			room.split = leaf.split
 			
@@ -151,10 +155,10 @@ func create_rooms():
 		for x in range(room.x, (room.x + room.w)):
 			for y in range(room.y, (room.y + room.h)):
 				var ground = base_block.instance()
-				ground.translation = Vector3((x-1) * TILE_OFFSET, Y_OFFSET+0.3, (y-1) * TILE_OFFSET)
+				ground.translation = Vector3((x) * TILE_OFFSET, Y_OFFSET+0.3, (y) * TILE_OFFSET)
 				ground.visible = false
 				
-				total_map[x-1][y-1][0] = ground
+				total_map[x][y][0] = ground
 			
 func join_rooms():
 	for sister in leaves:
@@ -182,11 +186,11 @@ func connect_leaves(leaf1, leaf2):
 			
 	for i in range(x, x+w):
 		for j in range(y, y+h):
-			if (total_map[i-1][j-1][0].get_obj_type() == 'Wall'):
+			if (total_map[i][j][0].get_obj_type() == 'Wall'):
 				var ground = base_block.instance()
-				ground.translation = Vector3((i-1) * TILE_OFFSET, Y_OFFSET+0.3, (j-1) * TILE_OFFSET)
+				ground.translation = Vector3((i) * TILE_OFFSET, Y_OFFSET+0.3, (j) * TILE_OFFSET)
 				ground.visible = false
-				total_map[i-1][j-1][0] = ground 
+				total_map[i][j][0] = ground 
 
 func clear_deadends():
 	var done = false
@@ -195,7 +199,8 @@ func clear_deadends():
 		done = true
 	
 		for x in range(0, total_map.size()-1):
-			for y in range(0, total_map[0].size()-1):
+			for y in range(0, total_map[0].size()-1): 
+				# using 0th entry v here, is okay at this stage.
 				if total_map[x][y][0].get_obj_type() != 'Ground' : continue
 				
 				var roof_count = check_nearby(x,y)
@@ -225,8 +230,10 @@ func spawn_enemies():
 
 		var tile_clear = false
 		while tile_clear == false:
-			x = rng.randi_range(room.x, (room.x + room.w))-2
-			z = rng.randi_range(room.y, (room.y + room.h))-2
+			# room.x/y + room.w/h gives you the right/top border tile 
+			# encirling the room, so we do -1 to ensure being in the room.
+			x = rng.randi_range(room.x, (room.x + room.w)-1)
+			z = rng.randi_range(room.y, (room.y + room.h)-1)
 			
 			var all_clear = true
 			
