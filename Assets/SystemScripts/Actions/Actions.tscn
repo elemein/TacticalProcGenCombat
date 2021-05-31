@@ -3,9 +3,9 @@
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.gd" type="Script" id=1]
 [ext_resource path="res://Assets/SystemScripts/Actions/Fireball.gd" type="Script" id=2]
 [ext_resource path="res://Assets/SystemScripts/Actions/BasicAttack.gd" type="Script" id=3]
-[ext_resource path="res://Assets/Audio/PlayerAudio/miss_basic_attack.wav" type="AudioStream" id=4]
-[ext_resource path="res://Assets/Audio/PlayerAudio/fireball_throw.wav" type="AudioStream" id=5]
-[ext_resource path="res://Assets/Audio/PlayerAudio/out_of_mana.wav" type="AudioStream" id=6]
+[ext_resource path="res://Assets/Audio/SpellAudio/miss_basic_attack.wav" type="AudioStream" id=4]
+[ext_resource path="res://Assets/Audio/SpellAudio/fireball_throw.wav" type="AudioStream" id=5]
+[ext_resource path="res://Assets/Audio/SpellAudio/out_of_mana.wav" type="AudioStream" id=6]
 
 [node name="Actions" type="Node"]
 script = ExtResource( 1 )
@@ -34,5 +34,6 @@ unit_db = 80.0
 [node name="out_of_mana" type="AudioStreamPlayer3D" parent="Attacks/BasicAttack"]
 stream = ExtResource( 6 )
 unit_db = 80.0
+
 [connection signal="spell_cast_basic_attack" from="." to="Attacks/BasicAttack" method="_on_Actions_spell_cast_basic_attack"]
 [connection signal="spell_cast_fireball" from="." to="Attacks/Fireball" method="_on_Actions_spell_cast_fireball"]
