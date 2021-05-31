@@ -9,6 +9,7 @@ extends Node
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
 const NUMBER_OF_ENEMIES = 20
+const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
@@ -125,7 +126,6 @@ func create_leaf(parent_id):
 		create_leaf(tree[parent_id].r)
 	
 func create_rooms():
-	
 	for leaf_id in tree:
 		var leaf = tree[leaf_id]
 		if leaf.has("l"): continue # if node has children, don't build rooms
@@ -134,9 +134,10 @@ func create_rooms():
 			var room = {}
 			room.id = leaf_id
 			room.w = rng.randi_range(min_room_size, leaf.w) - 1
-			room.h = rng.randi_range(min_room_size, leaf.h) - 1			
+			room.h = rng.randi_range(min_room_size, leaf.h) - 1
 			room.x = leaf.x + floor((leaf.w-room.w)/2) + 1
 			room.y = leaf.y + floor((leaf.h-room.h)/2) + 1
+			
 			room.split = leaf.split
 			
 			room.center = Vector2()
@@ -154,7 +155,6 @@ func create_rooms():
 				ground.visible = false
 				
 				total_map[x-1][y-1][0] = ground
-			
 			
 func join_rooms():
 	for sister in leaves:
@@ -187,8 +187,7 @@ func connect_leaves(leaf1, leaf2):
 				ground.translation = Vector3((i-1) * TILE_OFFSET, Y_OFFSET+0.3, (j-1) * TILE_OFFSET)
 				ground.visible = false
 				total_map[i-1][j-1][0] = ground 
-	
-	
+
 func clear_deadends():
 	var done = false
 	
@@ -208,7 +207,6 @@ func clear_deadends():
 					total_map[x][y][0] = wall
 
 					done = false
-			
 
 func check_nearby(x,y):
 	var count = 0
@@ -219,23 +217,23 @@ func check_nearby(x,y):
 			
 	return count
 
-
 func spawn_enemies():
 	for enemy_cnt in range(NUMBER_OF_ENEMIES):
-		var chosen_room = rng.randi_range(0, rooms.size()-1)
-		
+		var room = rooms[rng.randi_range(0, rooms.size()-1)]
 		var x
 		var z
 
 		var tile_clear = false
 		while tile_clear == false:
-			x = rng.randi_range(rooms[chosen_room].x , rooms[chosen_room].x + rooms[chosen_room].w)
-			z = rng.randi_range(rooms[chosen_room].y , rooms[chosen_room].y + rooms[chosen_room].h)
+			x = rng.randi_range(room.x, (room.x + room.w))-2
+			z = rng.randi_range(room.y, (room.y + room.h))-2
 			
 			var all_clear = true
 			
 			for object in total_map[x][z]:
-				if object.get_obj_type() != 'Ground': all_clear = false
+				if object.get_obj_type() != 'Ground': 
+					print("Tripped on a %s" % [object.get_obj_type()])
+					all_clear = false
 			
 			if all_clear == true: tile_clear = true
 				
