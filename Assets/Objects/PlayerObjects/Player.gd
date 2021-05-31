@@ -351,8 +351,8 @@ func take_damage(damage):
 		
 		# Player audio node is empty, so this doesnt work.
 		# Play a random audio effect upon getting hit
-	#	var num_audio_effects = audio_hit.get_children().size()
-	#	audio_hit.get_children()[randi() % num_audio_effects].play()
+		var num_audio_effects = audio_hit.get_children().size()
+		audio_hit.get_children()[randi() % num_audio_effects].play()
 		
 		# Update the health bar
 		emit_signal("status_bar_hp", hp, max_hp)

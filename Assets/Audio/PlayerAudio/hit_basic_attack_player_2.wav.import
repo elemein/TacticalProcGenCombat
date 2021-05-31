@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/hit_basic_attack_player_2.wav-9229e9a2193599f6908cf9ae3bbb4478.sample"
+
+[deps]
+
+source_file="res://Assets/Audio/PlayerAudio/hit_basic_attack_player_2.wav"
+dest_files=[ "res://.import/hit_basic_attack_player_2.wav-9229e9a2193599f6908cf9ae3bbb4478.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
