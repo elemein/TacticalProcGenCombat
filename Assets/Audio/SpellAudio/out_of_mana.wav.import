@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/out_of_mana.wav-ecc416576f8bdd85abc41df1d9b08d4e.sample"
+
+[deps]
+
+source_file="res://Assets/Audio/SpellAudio/out_of_mana.wav"
+dest_files=[ "res://.import/out_of_mana.wav-ecc416576f8bdd85abc41df1d9b08d4e.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

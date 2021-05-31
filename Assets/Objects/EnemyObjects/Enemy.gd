@@ -97,29 +97,24 @@ func _physics_process(_delta):
 		if death_anim_timer.time_left == 0:
 			return 'dead'
 	
-	if turn_timer.time_left == 0: # We don't wanna decide a turn if timer isn't 0.
-		if ready_status == false:
-			decide_next_action()
-	
-	if in_turn == true:
-		if proposed_action.split(" ")[0] == 'move':
-			mover.set_actor_translation()
-
-	if proposed_action == "basic attack":
-		if turn_timer.time_left > 0.5: # Move char towards attack cell.
-			translation = translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5))) 
-		else: # Move char back.
-			translation = translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
-			
-	if proposed_action != '' && in_turn == true:
-		if proposed_action == 'idle':
-			anim_state = "idle"
-		else:
-			anim_state = "walk"
 	else:
-		anim_state = "idle"
+		if turn_timer.time_left == 0: # We don't wanna decide a turn if timer isn't 0.
+			if ready_status == false:
+				decide_next_action()
+		
+		if in_turn == true:
+			if proposed_action.split(" ")[0] == 'move':
+				mover.set_actor_translation()
+				
+		if proposed_action != '' && in_turn == true:
+			if proposed_action == 'idle':
+				anim_state = "idle"
+			else:
+				anim_state = "walk"
+		else:
+			anim_state = "idle"
 
-	handle_animations()
+		handle_animations()
 
 func decide_next_action():
 	ai_engine.run_engine()
