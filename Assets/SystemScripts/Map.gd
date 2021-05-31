@@ -34,7 +34,7 @@ func _ready():
 	
 	catalog_ground_tiles()
 	
-	spawn_enemies()
+#	spawn_enemies()
 	
 	add_child(pathfinder)
 
@@ -43,6 +43,9 @@ func add_map_objects_to_tree():
 		for column in map_grid[0].size():
 			for object in map_grid[line][column]:
 				add_child(object)
+				if object.get_obj_type() == 'Enemy':
+					object.setup_actor()
+					current_number_of_enemies += 1
 
 func spawn_enemies():
 	for enemy_cnt in NUMBER_OF_ENEMIES:
@@ -164,25 +167,16 @@ func hide_non_visible_from_player():
 	# Get their view
 	viewfield = player.get_viewfield()
 	
-#	print('- to remove')
-#	print(in_view)
 	for tile in in_view: 
 		var objects_on_tile = get_tile_contents(tile[0], tile[1])
 		for object in objects_on_tile:
 			object.visible = false
 	
-#	print('- to add')
-#	print(viewfield)
 	for tile in viewfield: 
 		var objects_on_tile = get_tile_contents(tile[0], tile[1])
 		
 		for object in objects_on_tile:
-#			print("---")
-#			print(tile[0], tile[1])
-#			print(object)
-#			print(object.visible)
 			object.visible = true
-#			print(object.visible)
 		
 			
 	in_view = viewfield

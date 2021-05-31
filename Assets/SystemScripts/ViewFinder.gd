@@ -47,21 +47,21 @@ func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - S
 	var delta_y = -abs(p1[1] - p0[1])
 	var err = delta_x + delta_y
 	var e2 = 2 * err
-	var sx = 1 if p0[0] < p1[0] else -1
-	var sy = 1 if p0[1] < p1[1] else -1
+	var next_x = 1 if p0[0] < p1[0] else -1
+	var next_y = 1 if p0[1] < p1[1] else -1
 	while true:
 		points.append([p0[0], p0[1]]) # Adds tile to line.
 		
 		if map.is_tile_wall(p0[0], p0[1]) == true: break # Checks collision with wall
-		if p0[0] == p1[0] and p0[1] == p1[1]: # If at end point, break.
-			break
+		if p0[0] == p1[0] and p0[1] == p1[1]: break # If at endpoint, stop.
+			
 		e2 = 2 * err
 		if e2 >= delta_y:
 			err += delta_y
-			p0[0] += sx
+			p0[0] += next_x
 		if e2 <= delta_x:
 			err += delta_x
-			p0[1] += sy
+			p0[1] += next_y
 	return points
 
 

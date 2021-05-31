@@ -8,9 +8,11 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
+const NUMBER_OF_ENEMIES = 20
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
+var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 
 var map_w = 30
 var map_h = 30
@@ -30,15 +32,16 @@ var total_map = []
 	
 func generate():
 	rng.randomize()
-	fill_roof()
+	create_floor()
 	start_tree()
 	create_leaf(0)
 	create_rooms()
 	join_rooms()
 	clear_deadends()
+	spawn_enemies()
 	return total_map
 
-func fill_roof(): # This varies as we don't use a TileMap
+func create_floor():
 	for x in range(0, map_w):
 		total_map.append([])
 		for z in range(0, map_h):
@@ -215,3 +218,31 @@ func check_nearby(x,y):
 	if total_map[x+1][y][0].get_obj_type() == 'Wall' : count += 1
 			
 	return count
+
+
+func spawn_enemies():
+	for enemy_cnt in range(NUMBER_OF_ENEMIES):
+		var chosen_room = rng.randi_range(0, rooms.size()-1)
+		
+		var x
+		var z
+
+		var tile_clear = false
+		while tile_clear == false:
+			x = rng.randi_range(rooms[chosen_room].x , rooms[chosen_room].x + rooms[chosen_room].w)
+			z = rng.randi_range(rooms[chosen_room].y , rooms[chosen_room].y + rooms[chosen_room].h)
+			
+			var all_clear = true
+			
+			for object in total_map[x][z]:
+				if object.get_obj_type() != 'Ground': all_clear = false
+			
+			if all_clear == true: tile_clear = true
+				
+		var enemy = base_enemy.instance()
+		enemy.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
+		enemy.visible = false
+		enemy.set_map_pos([x,z])
+		enemy.add_to_group('enemies')
+
+		total_map[x][z].append(enemy)

@@ -75,7 +75,6 @@ func _ready():
 
 func setup_actor():
 	turn_timer.add_to_timer_group(self)
-	map_pos = map.place_on_random_avail_tile(self)
 	translation.x = map_pos[0] * TILE_OFFSET
 	translation.z = map_pos[1] * TILE_OFFSET
 	
