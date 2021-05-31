@@ -4,20 +4,26 @@
 # If there is a collision with a wall, we stop and don't include that point.
 extends Node
 
-const VIEW_RANGE = 4
-
 onready var map = get_node("/root/World/Map")
+
+var view_range
 
 var pos_x = 0
 var pos_z = 0
 var pos = [0,0]
 
+var actor
+
 var vision_boundaries = []
 var visible_tiles = []
+
+func set_actor(setter):
+	actor = setter
 
 func reset_vars():
 	vision_boundaries = []
 	visible_tiles = []
+	view_range = actor.get_viewrange()
 
 func find_view_field(x, z):
 	reset_vars()
@@ -67,12 +73,12 @@ func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - S
 
 func form_vision_boundaries():
 	# top and bottom
-	for x in [-VIEW_RANGE, VIEW_RANGE]:
-		for z in range(-VIEW_RANGE, VIEW_RANGE +1):
+	for x in [-view_range, view_range]:
+		for z in range(-view_range, view_range +1):
 			vision_boundaries.append([pos_x + x, pos_z + z])
 	
 	# left and right
-	for z in [-VIEW_RANGE, VIEW_RANGE]:
-		for x in range(-VIEW_RANGE, VIEW_RANGE +1):
+	for z in [-view_range, view_range]:
+		for x in range(-view_range, view_range +1):
 			if ([pos_x + x, pos_z + z] in vision_boundaries) == false :
 				vision_boundaries.append([pos_x + x, pos_z + z])

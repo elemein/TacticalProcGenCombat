@@ -39,6 +39,7 @@ var regen_mp = 10
 var speed = 15
 var attack_power = 10
 var spell_power = 20
+var view_range = 4
 
 # vars to handle turn state
 var proposed_action = ""
@@ -83,6 +84,7 @@ func setup_actor():
 	
 	mover.set_actor(self)
 	add_child(mover)
+	view_finder.set_actor(self)
 	add_child(view_finder)
 	
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
@@ -246,6 +248,9 @@ func get_hp():
 	
 func get_is_dead():
 	return is_dead
+
+func get_viewrange():
+	return view_range
 
 func get_speed():
 	return speed
