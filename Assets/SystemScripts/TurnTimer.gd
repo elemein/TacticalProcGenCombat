@@ -7,10 +7,15 @@ const ACTION_TIME = 0.95
 onready var player = get_node("/root/World/Player")
 onready var map = get_node("/root/World/Map")
 
+var rng = RandomNumberGenerator.new()
+
 var turn_counter = 1
 
 # Use this to hold all of the actors in the world; players, enemies, etc.
 var actors = []
+
+func _ready():
+	rng.randomize()
 
 func add_to_timer_group(actor):
 	actors.append(actor)
@@ -21,29 +26,7 @@ func remove_from_timer_group(actor):
 func process_turn():
 	wait_time = RESET_TIME # Reset this. 0 is NOT valid for some reason, so 0.1.
 	
-	var sorted_actors
-	var done_sorting = false
-	var no_sorted = 0
-	var previous_actor = ['NA', 0]
-	var enumeration = 0
-	
-	if actors.size() > 1:
-		while done_sorting == false:
-			enumeration = 0
-			no_sorted = 0
-			for actor in actors:
-				if enumeration > 0:
-				
-					if actor.get_speed() > actors[enumeration-1].get_speed():
-						actors.remove(enumeration)
-						actors.insert(enumeration-1, actor)
-						break
-						
-					if enumeration + 1 == actors.size():
-						done_sorting = true
-					
-				enumeration += 1
-
+	sort_actors_by_speed()
 	
 	for actor in actors: # Checks if everyone is just moving to shorten the time.
 		if (actor.proposed_action.split(" ")[0] == 'move' 
@@ -62,9 +45,39 @@ func process_turn():
 		else:
 			actor.process_turn()
 
-func sort_actors_by_speed(a, b):
-	return a < b
-
+func sort_actors_by_speed():
+	# randomize order of those with same speed stat
+	var speed_entries = {}
+	var highest_speed = 0
+	
+	# make a dict of the actors by their speed in the speed_entries dict
+	for actor in actors:
+		if actor.get_speed() > highest_speed: highest_speed = actor.get_speed()
+		
+		if speed_entries.has(actor.get_speed()):
+			speed_entries[actor.get_speed()].append(actor)
+		else: speed_entries[actor.get_speed()] = [actor]
+	
+	actors = [] # reset
+	
+	# descend down the keys by highest speed, take a random actor from that group,
+	# insert into actors, remove it from highest speed.
+	while highest_speed > 0:
+		if speed_entries.has(highest_speed):
+			var group_size = speed_entries[highest_speed].size()
+			if group_size > 0:
+				rng.randomize()
+				var random_index = rng.randi_range(0, group_size-1)
+				var actor = speed_entries[highest_speed][random_index]
+				actors.append(actor)
+				speed_entries[highest_speed].erase(actor)
+			elif group_size == 0:
+				highest_speed -= 1
+				
+		else:
+			highest_speed -= 1
+		
+		
 func end_turn():
 	for actor in actors:
 		actor.end_turn()
