@@ -97,6 +97,7 @@ func _ready():
 
 func _physics_process(_delta):
 	if is_dead:
+		mover.set_actor_translation()
 		if death_anim_timer.time_left > 0.75:
 			model.translation = (model.translation.linear_interpolate(death_anim_info[0], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
 		if death_anim_timer.time_left < 0.75 && death_anim_timer.time_left != 0:

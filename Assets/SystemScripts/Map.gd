@@ -2,7 +2,6 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 4
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
@@ -47,23 +46,6 @@ func add_map_objects_to_tree():
 					object.setup_actor()
 					current_number_of_enemies += 1
 
-func spawn_enemies():
-	for enemy_cnt in NUMBER_OF_ENEMIES:
-		var tile = null
-		
-		while tile == null:
-			tile = choose_random_ground_tile()
-			if !tile_available(tile[0],tile[1]): tile = null
-
-		var enemy = base_enemy.instance()
-		add_child(enemy)
-		enemy.translation = Vector3(tile[0] * TILE_OFFSET, Y_OFFSET+0.3, tile[1] * TILE_OFFSET)
-		enemy.visible = false
-		enemy.add_to_group('enemies')
-		enemy.setup_actor()
-		
-		current_number_of_enemies += 1
-
 func place_on_random_avail_tile(object):
 	if object.get_obj_type() == 'Player': player = object # caches player for future funcs
 	
@@ -81,6 +63,8 @@ func place_on_random_avail_tile(object):
 func move_on_map(object, old_pos, new_pos):
 	map_grid[new_pos[0]][new_pos[1]].append(object)
 	map_grid[old_pos[0]][old_pos[1]].erase(object)
+	
+	check_traps(new_pos[0], new_pos[1])
 	
 	return [new_pos[0], new_pos[1]]
 
@@ -108,6 +92,8 @@ func print_map_grid():
 							to_append = 'X'
 						if object.get_obj_type() == 'Enemy':
 							to_append = 'E'
+						if object.get_obj_type() == 'Spike Trap':
+							to_append = 's'
 			
 			converted_row.append(to_append)
 		print(converted_row)
@@ -115,13 +101,7 @@ func print_map_grid():
 func catalog_ground_tiles():
 	for x in range(0, map_grid.size()-1):
 		for z in range(0, map_grid[0].size()-1):
-			var only_empty_ground_in_tile = true
-
-			for object in map_grid[x][z]:
-				if object.get_obj_type() != 'Ground':
-					only_empty_ground_in_tile = false
-			
-			if only_empty_ground_in_tile: catalog_of_ground_tiles.append([x,z])
+			if tile_available(x,z): catalog_of_ground_tiles.append([x,z])
 
 func choose_random_ground_tile():
 	return catalog_of_ground_tiles[rng.randi_range(0, catalog_of_ground_tiles.size()-1)]
@@ -137,7 +117,7 @@ func tile_available(x,z):
 		var only_empty_ground_in_tile = true
 		
 		for object in map_grid[x][z]:
-			if object.get_obj_type() != 'Ground':
+			if (object.get_obj_type() in ['Ground', 'Spike Trap']) == false:
 				if object.get_obj_type() in ['Enemy', 'Player']:
 					if object.get_is_dead() == true: continue
 					else: only_empty_ground_in_tile = false
@@ -176,7 +156,19 @@ func hide_non_visible_from_player():
 		var objects_on_tile = get_tile_contents(tile[0], tile[1])
 		
 		for object in objects_on_tile:
-			object.visible = true
+			if object.get_obj_type() != 'Spike Trap': # dont reveal traps
+				object.visible = true
 		
-			
 	in_view = viewfield
+
+func check_traps(x,z):
+	var tile_objects = get_tile_contents(x,z)
+	
+	for object in tile_objects:
+		if object.get_obj_type() == 'Spike Trap':
+			object.activate_trap(tile_objects) # pass the relevant objects to affect
+
+func remove_map_object(object):
+	var tile = object.get_map_pos()
+	
+	map_grid[tile[0]][tile[1]].erase(object)
