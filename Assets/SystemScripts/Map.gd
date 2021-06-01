@@ -172,3 +172,4 @@ func remove_map_object(object):
 	var tile = object.get_map_pos()
 	
 	map_grid[tile[0]][tile[1]].erase(object)
+	remove_child(object)

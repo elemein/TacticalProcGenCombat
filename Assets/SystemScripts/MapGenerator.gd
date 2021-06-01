@@ -10,7 +10,7 @@ const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
 const NUMBER_OF_ENEMIES = 0
 const AVG_NO_OF_ENEMIES_PER_ROOM = 2
-const NUMBER_OF_TRAPS = 10
+const NUMBER_OF_TRAPS = 1
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
