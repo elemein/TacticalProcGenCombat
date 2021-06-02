@@ -84,7 +84,7 @@ func set_target_pos():
 			target_pos.x = effect.translation.x - (spell_length*tile_offset)
 			target_pos.z = effect.translation.z - (spell_length*tile_offset)
 		'downright':
-			effect.rotation_degrees.y = 180 - 45
+			effect.rotation_degrees.y = 315
 			target_pos.x = effect.translation.x - (spell_length*tile_offset)
 			target_pos.z = effect.translation.z + (spell_length*tile_offset)
 		
