@@ -1,18 +1,8 @@
-extends KinematicBody
-
-const TILE_OFFSET = 2.2
+extends ActorMaster
 
 const DEATH_ANIM_TIME = 1
 
 const AI_ENGINE = preload("res://Assets/SystemScripts/AIEngine.gd")
-const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
-const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
-
-onready var model = $Graphics
-onready var anim = $Graphics/AnimationPlayer
-onready var gui = get_node("/root/World/GUI")
-onready var turn_timer = get_node("/root/World/TurnTimer")
-onready var map = get_node("/root/World/Map")
 
 # Audio effects
 onready var miss_basick_attack = $Audio/Hit/basic_attack_2

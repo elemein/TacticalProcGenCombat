@@ -37,8 +37,6 @@ func run_engine():
 	
 	if player_pos.size() > 0: ai_state = 'active'
 	
-	# if a PC is not within VISION_RANGE tiles, the AI can idle.
-	
 	if ai_state == 'idle':
 		actor.set_action('idle')
 	elif ai_state == 'active':
