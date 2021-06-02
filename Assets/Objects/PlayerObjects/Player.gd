@@ -2,10 +2,8 @@ extends ActorMaster
 
 const DIRECTION_SELECT_TIME = 0.225
 
-const DEATH_ANIM_TIME = 1
-
 # Sound effects
-onready var miss_basick_attack = $Audio/miss_basic_attack
+onready var miss_basic_attack = $Audio/miss_basic_attack
 onready var fireball_throw = $Audio/fireball_throw
 onready var out_of_mana = $Audio/out_of_mana
 onready var audio_hit = $Audio/Hit

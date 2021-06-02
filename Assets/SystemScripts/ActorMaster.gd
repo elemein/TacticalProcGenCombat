@@ -1,6 +1,8 @@
 extends KinematicBody
 class_name ActorMaster
 
+const DEATH_ANIM_TIME = 1
+
 const TILE_OFFSET = 2.2
 
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")

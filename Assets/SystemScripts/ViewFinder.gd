@@ -58,6 +58,10 @@ func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - S
 	while true:
 		points.append([p0[0], p0[1]]) # Adds tile to line.
 		
+		if next_x != 0 and next_y != 0:
+			if map.is_tile_wall(p0[0] + next_x, p0[1]) and map.is_tile_wall(p0[0], p0[1] + next_y): 
+				if !(map.is_tile_wall(p0[0] + next_x, p0[1] + next_y)): break 
+
 		if map.is_tile_wall(p0[0], p0[1]) == true: break # Checks collision with wall
 		if p0[0] == p1[0] and p0[1] == p1[1]: break # If at endpoint, stop.
 			

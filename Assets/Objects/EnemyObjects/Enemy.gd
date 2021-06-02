@@ -1,7 +1,5 @@
 extends ActorMaster
 
-const DEATH_ANIM_TIME = 1
-
 const AI_ENGINE = preload("res://Assets/SystemScripts/AIEngine.gd")
 
 # Audio effects
