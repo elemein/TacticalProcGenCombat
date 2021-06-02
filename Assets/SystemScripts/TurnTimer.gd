@@ -68,7 +68,7 @@ func sort_actors_by_speed():
 				highest_speed -= 1
 		else:
 			highest_speed -= 1
-		
+
 func end_turn():
 	for actor in actors:
 		actor.end_turn()
@@ -79,10 +79,19 @@ func end_turn():
 	wait_time = RESET_TIME # Reset this. 0 is NOT valid for some reason, so 0.1.
 
 func _physics_process(_delta):
-	var all_ready = false if (time_left != 0) else true
+	var all_ready = false
+	var players_alive = 0
 
+	if time_left == 0: all_ready = true
+	
 	for actor in actors:
 		if actor.ready_status == false: all_ready = false
+
+	for actor in actors:
+		if actor.object_type == 'Player':
+			if actor.is_dead == false: players_alive += 1
+	if players_alive == 0:
+		all_ready = false
 
 	if all_ready: process_turn()
 
