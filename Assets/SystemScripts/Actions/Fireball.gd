@@ -29,12 +29,10 @@ func _ready():
 	
 # Move the parent every frame
 func _physics_process(_delta):
-	if effect != null and turn_timer.time_left > 0.1:
-		effect.translation = effect.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.1))) 
-	else:
-		if effect != null:
-			
-			# Remove the parent so it disappears
+	if effect != null:
+		if turn_timer.time_left > 0.1:
+			effect.translation = effect.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.1))) 
+		else:
 			remove_child(get_node('Fire'))
 			effect = null
 
@@ -68,7 +66,6 @@ func create_spell_instance():
 
 # Set the destination tile
 func set_target_pos():
-
 	direction_facing = parent.direction_facing
 
 	target_pos = Vector3(0, 0.3, 0)
@@ -110,29 +107,36 @@ func set_target_pos():
 
 # Get information for all of the tiles that will get hit by the spell
 func get_target_tiles() -> Array:
-
 	var target_tiles = []
 	map_pos = parent.map_pos
 
 	for tile_num in spell_length:
 		match direction_facing:
 			'upleft':
-				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] - 1 - tile_num])
+				if typeof(map.get_tile_contents(map_pos[0] + 1 + tile_num, map_pos[1] - 1 - tile_num)) != TYPE_STRING:
+					target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] - 1 - tile_num])
 			'upright':
-				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] + 1 + tile_num])
+				if typeof(map.get_tile_contents(map_pos[0] + 1 + tile_num, map_pos[1] + 1 + tile_num)) != TYPE_STRING:
+					target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] + 1 + tile_num])
 			'downleft':
-				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] - 1 - tile_num])
+				if typeof(map.get_tile_contents(map_pos[0] - 1 - tile_num, map_pos[1] - 1 - tile_num)) != TYPE_STRING:
+					target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] - 1 - tile_num])
 			'downright':
-				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] + 1 + tile_num])
+				if typeof(map.get_tile_contents(map_pos[0] - 1 - tile_num, map_pos[1] + 1 + tile_num)) != TYPE_STRING:
+					target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] + 1 + tile_num])
 			
 			'up':
-				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1]])
+				if typeof(map.get_tile_contents(map_pos[0] + 1 + tile_num, map_pos[1])) != TYPE_STRING:
+					target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1]])
 			'down':
-				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1]])
+				if typeof(map.get_tile_contents(map_pos[0] - 1 - tile_num, map_pos[1])) != TYPE_STRING:
+					target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1]])
 			'left':
-				target_tiles.append([map_pos[0], map_pos[1] - 1 - tile_num])
+				if typeof(map.get_tile_contents(map_pos[0], map_pos[1] - 1 - tile_num)) != TYPE_STRING:
+					target_tiles.append([map_pos[0], map_pos[1] - 1 - tile_num])
 			'right':
-				target_tiles.append([map_pos[0], map_pos[1] + 1 + tile_num])
+				if typeof(map.get_tile_contents(map_pos[0], map_pos[1] + 1 + tile_num)) != TYPE_STRING:
+					target_tiles.append([map_pos[0], map_pos[1] + 1 + tile_num])
 	return target_tiles
 
 # Actually inflict damage on the target tiles

@@ -10,7 +10,7 @@ const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
 const NUMBER_OF_ENEMIES = 20
 const AVG_NO_OF_ENEMIES_PER_ROOM = 2
-const NUMBER_OF_TRAPS = 1
+const NUMBER_OF_TRAPS = 5
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
@@ -22,7 +22,7 @@ var map_h = 30
 var min_room_size = 3
 var min_room_factor = 0.4
 
-var room_density = 70 # 0-100. 100 being most dense.
+var room_density = 100 # 0-100. 100 being most dense.
 
 var rng = RandomNumberGenerator.new()
 

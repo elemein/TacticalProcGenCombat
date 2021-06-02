@@ -70,7 +70,6 @@ func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - S
 			p0[1] += next_y
 	return points
 
-
 func form_vision_boundaries():
 	# top and bottom
 	for x in [-view_range, view_range]:

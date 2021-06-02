@@ -16,6 +16,7 @@ var actors = []
 
 func _ready():
 	rng.randomize()
+	wait_time = RESET_TIME
 
 func add_to_timer_group(actor):
 	actors.append(actor)
@@ -24,26 +25,18 @@ func remove_from_timer_group(actor):
 	actors.erase(actor)
 
 func process_turn():
-	wait_time = RESET_TIME # Reset this. 0 is NOT valid for some reason, so 0.1.
-	
 	sort_actors_by_speed()
 	
 	for actor in actors: # Checks if everyone is just moving to shorten the time.
-		if (actor.proposed_action.split(" ")[0] == 'move' 
-			or actor.proposed_action.split(" ")[0] == 'idle'):
-			if !(wait_time > MOVING_TIME) or wait_time == RESET_TIME:
-				wait_time = MOVING_TIME
+		if actor.proposed_action.split(" ")[0] in ['move', 'idle']:
+			if wait_time < MOVING_TIME: wait_time = MOVING_TIME
 		else:
 			wait_time = ACTION_TIME
 		
 	start() #This starts the timer.
 	
 	for actor in actors:
-		if actor.proposed_action.split(" ")[0] == 'move':
-			if actor.check_move_action(actor.proposed_action) == true:
-				actor.process_turn()
-		else:
-			actor.process_turn()
+		actor.process_turn()
 
 func sort_actors_by_speed():
 	# randomize order of those with same speed stat
@@ -73,10 +66,8 @@ func sort_actors_by_speed():
 				speed_entries[highest_speed].erase(actor)
 			elif group_size == 0:
 				highest_speed -= 1
-				
 		else:
 			highest_speed -= 1
-		
 		
 func end_turn():
 	for actor in actors:
@@ -85,12 +76,11 @@ func end_turn():
 	map.print_map_grid()
 	
 	map.hide_non_visible_from_player()
+	wait_time = RESET_TIME # Reset this. 0 is NOT valid for some reason, so 0.1.
 
 func _physics_process(_delta):
-	var all_ready = false
-	
-	if time_left == 0: all_ready = true
-	
+	var all_ready = false if (time_left != 0) else true
+
 	for actor in actors:
 		if actor.ready_status == false: all_ready = false
 

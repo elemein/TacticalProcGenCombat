@@ -128,7 +128,8 @@ func set_action(action):
 
 func process_turn():
 	if proposed_action.split(" ")[0] == 'move':
-		mover.move_actor()
+		if check_move_action(proposed_action) == true:
+			mover.move_actor()
 
 	elif proposed_action == 'basic attack':
 		emit_signal("spell_cast_basic_attack")
@@ -271,13 +272,9 @@ func set_map_pos(new_pos):
 	map_pos = new_pos
 
 func set_hp(new_hp):
-	hp = new_hp
-	if hp > max_hp:
-		hp = max_hp
+	hp = max_hp if (new_hp > max_hp) else new_hp
 	emit_signal("status_bar_hp", hp, max_hp)
 	
 func set_mp(new_mp):
-	mp = new_mp
-	if mp > max_mp:
-		mp = max_mp
+	mp = max_mp if (new_mp > max_mp) else new_mp
 	emit_signal("status_bar_mp", mp, max_mp)

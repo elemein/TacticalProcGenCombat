@@ -33,13 +33,7 @@ func reset_vars():
 
 func run_engine():
 	reset_vars()
-	
-	viewfield = actor.get_viewfield()
-	
-	for tile in viewfield:
-		var tile_objects = map.get_tile_contents(tile[0], tile[1])
-		for object in tile_objects:
-			if object.get_obj_type() == 'Player': player_pos.append(tile)
+	find_players_in_viewfield()
 	
 	if player_pos.size() > 0: ai_state = 'active'
 	
@@ -49,8 +43,7 @@ func run_engine():
 		actor.set_action('idle')
 	elif ai_state == 'active':
 		pathfinder_direction = 'idle'
-		#find path to player
-		
+
 		pathfind()
 		pathfinder_direction = determine_direction_of_path()
 		
@@ -75,11 +68,7 @@ func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
 	
 	dist_from_player = path_info[0]
 	path = path_info[1]
-	
-	if dist_from_player == 1:
-		path.append([actor.get_map_pos()]) 
-	
-	
+
 func determine_direction_of_path():
 	var curr_pos = actor.get_map_pos()
 	var direction
@@ -97,3 +86,10 @@ func determine_direction_of_path():
 	else: return 'idle'
 
 	return direction
+
+func find_players_in_viewfield():
+	viewfield = actor.get_viewfield()
+	for tile in viewfield:
+		var tile_objects = map.get_tile_contents(tile[0], tile[1])
+		for object in tile_objects:
+			if object.get_obj_type() == 'Player': player_pos.append(tile)

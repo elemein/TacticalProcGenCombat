@@ -17,13 +17,12 @@ func set_actor(setter):
 	map_pos = actor.get_map_pos()
 	target_pos = actor.get_translation()
 
-# Move actor
 func set_actor_translation():
 	actor.set_translation(actor.get_translation().linear_interpolate(target_pos, (1-turn_timer.time_left))) 
 
-func check_cornering(direction): # This can definitely be done better. - SS
+func check_cornering(direction):
 	match direction:
-		'upleft': # check both tiles up and left to check for walls
+		'upleft':
 			if map.is_tile_wall(map_pos[0]+1,map_pos[1]): return false
 			if map.is_tile_wall(map_pos[0],map_pos[1]-1): return false
 		'upright': 
@@ -65,65 +64,60 @@ func check_move_action(move):
 
 func set_actor_direction(direction):
 	match direction:
-		'upleft': actor.set_model_rot("upleft", (45 + 90))
+		'upleft': actor.set_model_rot("upleft", (135))
 		'upright': actor.set_model_rot("upright", (45))
-		'downleft': actor.set_model_rot("downleft", (45 + 180))
-		'downright': actor.set_model_rot("downright", (45 + 90 + 180))
+		'downleft': actor.set_model_rot("downleft", (225))
+		'downright': actor.set_model_rot("downright", (315))
 		
 		'up': actor.set_model_rot("up", (90))
-		'down': actor.set_model_rot("down", (90 + 180))
+		'down': actor.set_model_rot("down", (270))
 		'left': actor.set_model_rot("left", (180))
-		'right': actor.set_model_rot("right", (180 + 180))
+		'right': actor.set_model_rot("right", (0))
 
 	direction_facing = direction
 
 func move_actor():
 	var target_tile
-	var proposed_action = actor.get_action()
-	# Sets target positions for move and basic attack.
-	if proposed_action.split(" ")[0] == 'move':
-		set_actor_direction(proposed_action.split(" ")[1])
+	var direction = actor.get_action().split(" ")[1]
+	set_actor_direction(direction)
 
-		match proposed_action.split(" ")[1]:
-			'upleft':
-				target_tile = [map_pos[0] + 1, map_pos[1] - 1]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				target_pos.z = target_tile[1] * TILE_OFFSET
-			'upright':
-				target_tile = [map_pos[0] + 1, map_pos[1] + 1]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				target_pos.z = target_tile[1] * TILE_OFFSET
-			'downleft':
-				target_tile = [map_pos[0] - 1, map_pos[1] - 1]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				target_pos.z = target_tile[1] * TILE_OFFSET
-			'downright':
-				target_tile = [map_pos[0] - 1, map_pos[1] + 1]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				target_pos.z = target_tile[1] * TILE_OFFSET
+	match direction:
+		'upleft':
+			target_tile = [map_pos[0] + 1, map_pos[1] - 1]
+			target_pos.x = target_tile[0] * TILE_OFFSET
+			target_pos.z = target_tile[1] * TILE_OFFSET
+		'upright':
+			target_tile = [map_pos[0] + 1, map_pos[1] + 1]
+			target_pos.x = target_tile[0] * TILE_OFFSET
+			target_pos.z = target_tile[1] * TILE_OFFSET
+		'downleft':
+			target_tile = [map_pos[0] - 1, map_pos[1] - 1]
+			target_pos.x = target_tile[0] * TILE_OFFSET
+			target_pos.z = target_tile[1] * TILE_OFFSET
+		'downright':
+			target_tile = [map_pos[0] - 1, map_pos[1] + 1]
+			target_pos.x = target_tile[0] * TILE_OFFSET
+			target_pos.z = target_tile[1] * TILE_OFFSET
 
-			'up':
-				target_tile = [map_pos[0] + 1, map_pos[1]]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				target_pos.z = actor.get_translation().z
-			'down':
-				target_tile = [map_pos[0] - 1, map_pos[1]]
-				target_pos.x = target_tile[0] * TILE_OFFSET
-				target_pos.z = actor.get_translation().z
-			'left':
-				target_tile = [map_pos[0], map_pos[1] - 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
-				target_pos.x = actor.get_translation().x
-			'right':
-				target_tile = [map_pos[0], map_pos[1] + 1]
-				target_pos.z = target_tile[1] * TILE_OFFSET
-				target_pos.x = actor.get_translation().x
-			
-			'idle':
-				target_pos = map_pos
+		'up':
+			target_tile = [map_pos[0] + 1, map_pos[1]]
+			target_pos.x = target_tile[0] * TILE_OFFSET
+			target_pos.z = actor.get_translation().z
+		'down':
+			target_tile = [map_pos[0] - 1, map_pos[1]]
+			target_pos.x = target_tile[0] * TILE_OFFSET
+			target_pos.z = actor.get_translation().z
+		'left':
+			target_tile = [map_pos[0], map_pos[1] - 1]
+			target_pos.z = target_tile[1] * TILE_OFFSET
+			target_pos.x = actor.get_translation().x
+		'right':
+			target_tile = [map_pos[0], map_pos[1] + 1]
+			target_pos.z = target_tile[1] * TILE_OFFSET
+			target_pos.x = actor.get_translation().x
 
-		map_pos = map.move_on_map(actor, map_pos, target_tile)
-		actor.set_map_pos(map_pos)
+	map_pos = map.move_on_map(actor, map_pos, target_tile)
+	actor.set_map_pos(map_pos)
 
 func reset_pos_vars():
 	target_pos = actor.get_translation()

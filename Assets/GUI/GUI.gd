@@ -10,50 +10,34 @@ onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var timer_label = get_node("/root/World/TimerReadout")
 onready var player = get_node("/root/World/Player")
 
-func clear_action():
-	action_holder.rotation_degrees = 0
-	action_holder.set_texture(blank_action)
+func _ready():
+	clear_action()
 
 func set_action(proposed_action):
+	var direction = proposed_action.split(" ")[1] if proposed_action.split(" ")[0] == 'move' else ''
+	if proposed_action.split(" ")[0] == 'move': proposed_action = 'move'
+	
 	match proposed_action:
-		'move upleft':
+		'move':
 			action_holder.set_texture(movement_arrow)
-			action_holder.rotation_degrees = 180 + 45
-		'move upright':
-			action_holder.set_texture(movement_arrow)
-			action_holder.rotation_degrees = 180 + 90 + 45
-		'move downleft':
-			action_holder.set_texture(movement_arrow)
-			action_holder.rotation_degrees = 90 + 45
-		'move downright':
-			action_holder.set_texture(movement_arrow)
-			action_holder.rotation_degrees = 45	
-		
-		'move up':
-			action_holder.set_texture(movement_arrow)
-			action_holder.rotation_degrees = -90
-		'move down':
-			action_holder.set_texture(movement_arrow)
-			action_holder.rotation_degrees = 90
-		'move left':
-			action_holder.set_texture(movement_arrow)
-			action_holder.rotation_degrees = 180
-		'move right':
-			action_holder.set_texture(movement_arrow)
-			action_holder.rotation_degrees = 0
-			
-		'basic attack':
-			action_holder.set_texture(basic_attack)
-			action_holder.rotation_degrees = 0
-		'fireball':
-			action_holder.set_texture(fireball)
-			action_holder.rotation_degrees = 0
-
-
+			match direction:
+				'upleft': action_holder.rotation_degrees = 180 + 45
+				'upright': action_holder.rotation_degrees = 180 + 90 + 45
+				'downleft': action_holder.rotation_degrees = 90 + 45
+				'downright': action_holder.rotation_degrees = 45	
+				
+				'up': action_holder.rotation_degrees = -90
+				'down': action_holder.rotation_degrees = 90
+				'left': action_holder.rotation_degrees = 180
+				'right': action_holder.rotation_degrees = 0
+	
+		'basic attack': action_holder.set_texture(basic_attack)
+		'fireball': action_holder.set_texture(fireball)
 
 func _physics_process(_delta):
 	# We want to continuously display the time left on the turn timer.
 	timer_label.text = str(turn_timer.time_left)
-	
-	if turn_timer.time_left == 0 and player.ready_status == false:
-		clear_action()
+
+func clear_action():
+	action_holder.rotation_degrees = 0
+	action_holder.set_texture(blank_action)

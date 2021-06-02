@@ -13,7 +13,7 @@ var rng = RandomNumberGenerator.new()
 var map_generator = MAP_GEN.new()
 var pathfinder = PATHFINDER.new()
 
-var in_view = []
+var in_view_objects = []
 var player
 
 onready var turn_timer = get_node("/root/World/TurnTimer")
@@ -32,9 +32,7 @@ func _ready():
 	add_map_objects_to_tree()
 	
 	catalog_ground_tiles()
-	
-#	spawn_enemies()
-	
+
 	add_child(pathfinder)
 
 func add_map_objects_to_tree():
@@ -78,22 +76,18 @@ func print_map_grid():
 			var to_append = ''
 			
 			for object in tile:
-				match typeof(object):
-					TYPE_STRING:
-						converted_row.append(object)
-					TYPE_OBJECT:
-						if object.get_obj_type() == 'Wall':
-							if (to_append in ['X', 'E']) == false: 
-								to_append = '.'
-						if object.get_obj_type() == 'Ground':
-							if (to_append in ['X', 'E']) == false: 
-								to_append = '0'
-						if object.get_obj_type() == 'Player':
-							to_append = 'X'
-						if object.get_obj_type() == 'Enemy':
-							to_append = 'E'
-						if object.get_obj_type() == 'Spike Trap':
-							to_append = 's'
+				if object.get_obj_type() == 'Wall':
+					if (to_append in ['X', 'E', 's']) == false: 
+						to_append = '.'
+				if object.get_obj_type() == 'Ground':
+					if (to_append in ['X', 'E', 's']) == false: 
+						to_append = '0'
+				if object.get_obj_type() == 'Player':
+					to_append = 'X'
+				if object.get_obj_type() == 'Enemy':
+					to_append = 'E'
+				if object.get_obj_type() == 'Spike Trap':
+					to_append = 's'
 			
 			converted_row.append(to_append)
 		print(converted_row)
@@ -107,31 +101,29 @@ func choose_random_ground_tile():
 	return catalog_of_ground_tiles[rng.randi_range(0, catalog_of_ground_tiles.size()-1)]
 
 func get_tile_contents(x,z):
-	if !(x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
+	if !tile_in_bounds(x,z): 
 		return 'Out of Bounds'
 	
 	return map_grid[x][z]
 
+func tile_in_bounds(x,z):
+	return (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size())
+
 func tile_available(x,z):
-	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
-		var only_empty_ground_in_tile = true
-		
+	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
-			if (object.get_obj_type() in ['Ground', 'Spike Trap']) == false:
-				if object.get_obj_type() in ['Enemy', 'Player']:
-					if object.get_is_dead() == true: continue
-					else: only_empty_ground_in_tile = false
-				else: only_empty_ground_in_tile = false
-				
-		if only_empty_ground_in_tile: return true
-		
+			if object.get_obj_type() == 'Wall': return false
+			
+			if object.get_obj_type() in ['Enemy', 'Player']:
+				if object.get_is_dead() == true: continue
+				else: return false
+		return true
 	return false
 
 func is_tile_wall(x,z):
-	if (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size()): 
+	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
-			if object.get_obj_type() == 'Wall':
-				return true
+			if object.get_obj_type() == 'Wall': return true
 	return false
 
 func get_map():
@@ -141,13 +133,9 @@ func pathfind(searcher, start_pos, goal_pos):
 	return pathfinder.solve(searcher, start_pos, goal_pos)
 
 func hide_non_visible_from_player():
-	var actors = turn_timer.get_actors()
-	var viewfield
+	var viewfield = player.get_viewfield()
 	
-	# Get their view
-	viewfield = player.get_viewfield()
-	
-	for tile in in_view: 
+	for tile in in_view_objects: 
 		var objects_on_tile = get_tile_contents(tile[0], tile[1])
 		for object in objects_on_tile:
 			object.visible = false
@@ -159,7 +147,7 @@ func hide_non_visible_from_player():
 			if object.get_obj_type() != 'Spike Trap': # dont reveal traps
 				object.visible = true
 		
-	in_view = viewfield
+	in_view_objects = viewfield
 
 func check_traps(x,z):
 	var tile_objects = get_tile_contents(x,z)

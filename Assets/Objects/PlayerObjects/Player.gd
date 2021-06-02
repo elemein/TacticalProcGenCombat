@@ -235,7 +235,8 @@ func get_target_tiles(num):
 func process_turn():	
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(" ")[0] == 'move':
-		mover.move_actor()
+		if check_move_action(proposed_action):
+			mover.move_actor()
 	
 	elif proposed_action == 'idle':
 		target_pos = map_pos
@@ -258,6 +259,7 @@ func end_turn():
 	proposed_action = ''
 	in_turn = false
 	ready_status = false
+	gui.clear_action()
 	
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
 
@@ -437,13 +439,9 @@ func set_map_pos(new_pos):
 	map_pos = new_pos
 
 func set_hp(new_hp):
-	hp = new_hp
-	if hp > max_hp:
-		hp = max_hp
+	hp = max_hp if (new_hp > max_hp) else new_hp
 	emit_signal("status_bar_hp", hp, max_hp)
 	
 func set_mp(new_mp):
-	mp = new_mp
-	if mp > max_mp:
-		mp = max_mp
+	mp = max_mp if (new_mp > max_mp) else new_mp
 	emit_signal("status_bar_mp", mp, max_mp)
