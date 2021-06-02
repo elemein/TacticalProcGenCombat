@@ -88,11 +88,18 @@ func end_turn():
 
 func _physics_process(_delta):
 	var all_ready = false
+	var players_alive = 0
 	
 	if time_left == 0: all_ready = true
 	
 	for actor in actors:
 		if actor.ready_status == false: all_ready = false
+		
+	for actor in actors:
+		if actor.object_type == 'Player':
+			if actor.is_dead == false: players_alive += 1
+	if players_alive == 0:
+		all_ready = false
 
 	if all_ready: process_turn()
 
