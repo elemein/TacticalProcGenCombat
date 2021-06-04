@@ -58,14 +58,15 @@ func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - S
 	while true:
 		points.append([p0[0], p0[1]]) # Adds tile to line.
 		
+		if map.is_tile_wall(p0[0], p0[1]) == true: break
+		if p0[0] == p1[0] and p0[1] == p1[1]: break
+		
+		# Seeing through corner wall fix
 		if map.is_tile_wall(p0[0] + next_x, p0[1]) and map.is_tile_wall(p0[0], p0[1] + next_y): 
 			if !(map.is_tile_wall(p0[0] + next_x, p0[1] + next_y)): 
 				points.append([p0[0] + next_x, p0[1]]) # Without manually adding
 				points.append([p0[0], p0[1] + next_y]) # they sometimes dont show
 				break 
-
-		if map.is_tile_wall(p0[0], p0[1]) == true: break
-		if p0[0] == p1[0] and p0[1] == p1[1]: break
 			
 		e2 = 2 * err
 		if e2 >= delta_y:
