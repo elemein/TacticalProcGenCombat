@@ -41,9 +41,10 @@ func generate():
 	create_rooms()
 	join_rooms()
 	clear_deadends()
+	catalog_rooms()
 	spawn_enemies()
 	spawn_traps()
-	return total_map
+	return [total_map, rooms]
 
 func create_floor():
 	for x in range(0, map_w):
@@ -224,6 +225,14 @@ func check_nearby(x,y):
 	if total_map[x+1][y][0].get_obj_type() == 'Wall' : count += 1
 			
 	return count
+
+func catalog_rooms():
+	for room in rooms:
+		room['bottomleft'] = [room.x, room.y]
+		room['bottomright'] = [room.x, (room.y + room.h)-1]
+		room['topleft'] = [(room.x + room.w) - 1, room.y]
+		room['topright'] = [(room.x + room.w) - 1, (room.y + room.h)-1]
+		print(room)
 
 func spawn_enemies():
 	for enemy_cnt in range(NUMBER_OF_ENEMIES):

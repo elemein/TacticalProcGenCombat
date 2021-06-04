@@ -20,6 +20,7 @@ onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
 var map_grid = []
+var map_dict
 var catalog_of_ground_tiles = []
 
 var current_number_of_enemies = 0
@@ -27,7 +28,10 @@ var current_number_of_enemies = 0
 func _ready():
 	rng.randomize()
 
-	map_grid = map_generator.generate()
+	var generated_map = map_generator.generate()
+	
+	map_grid = generated_map[0]
+	map_dict = generated_map[1]
 	
 	add_map_objects_to_tree()
 	
