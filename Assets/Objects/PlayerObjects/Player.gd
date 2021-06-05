@@ -78,7 +78,7 @@ func _ready():
 	
 	turn_timer.add_to_timer_group(self)
 	
-	map_pos = map.place_on_random_avail_tile(self)
+	map_pos = map.place_player_on_map(self)
 	translation.x = map_pos[0] * TILE_OFFSET
 	translation.z = map_pos[1] * TILE_OFFSET
 	

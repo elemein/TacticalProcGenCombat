@@ -232,11 +232,21 @@ func catalog_rooms():
 		room['bottomright'] = [room.x, (room.y + room.h)-1]
 		room['topleft'] = [(room.x + room.w) - 1, room.y]
 		room['topright'] = [(room.x + room.w) - 1, (room.y + room.h)-1]
-		print(room)
+		room['type'] = 'Enemy'
+	
+	rooms[rng.randi_range(0, rooms.size()-1)]['type'] = 'Player Spawn'
+	
+	for room in rooms: print(room)
 
 func spawn_enemies():
 	for enemy_cnt in range(NUMBER_OF_ENEMIES):
-		var room = rooms[rng.randi_range(0, rooms.size()-1)]
+		var room = null
+		
+		while room == null:
+			room = rooms[rng.randi_range(0, rooms.size()-1)]
+			if room['type'] == 'Player Spawn':
+				room = null
+			
 		var x
 		var z
 

@@ -48,19 +48,14 @@ func add_map_objects_to_tree():
 					object.setup_actor()
 					current_number_of_enemies += 1
 
-func place_on_random_avail_tile(object):
-	if object.get_obj_type() == 'Player': player = object # caches player for future funcs
+func place_player_on_map(object):
+	player = object # caches player for future funcs
 	
-	var avail = false
-	var tile
-	
-	while avail == false:
-		tile = choose_random_ground_tile()
-		if tile_available(tile[0], tile[1]) == true:
-			avail = true
-	
-	map_grid[tile[0]][tile[1]].append(object)
-	return tile
+	for room in map_dict:
+		if room['type'] == 'Player Spawn':
+			var tile = room['center']
+			map_grid[tile[0]][tile[1]].append(object)
+			return tile
 
 func move_on_map(object, old_pos, new_pos):
 	map_grid[new_pos[0]][new_pos[1]].append(object)
