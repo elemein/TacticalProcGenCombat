@@ -4,14 +4,12 @@ const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
-const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 
 var rng = RandomNumberGenerator.new()
 var map_generator = MAP_GEN.new()
-var pathfinder = PATHFINDER.new()
 
 var in_view_objects = []
 var player
@@ -36,8 +34,6 @@ func _ready():
 	add_map_objects_to_tree()
 	
 	catalog_ground_tiles()
-
-	add_child(pathfinder)
 
 func add_map_objects_to_tree():
 	for line in map_grid.size():
@@ -75,18 +71,16 @@ func print_map_grid():
 			var to_append = ''
 			
 			for object in tile:
-				if object.get_obj_type() == 'Wall':
-					if (to_append in ['X', 'E', 's']) == false: 
-						to_append = '.'
-				if object.get_obj_type() == 'Ground':
-					if (to_append in ['X', 'E', 's']) == false: 
-						to_append = '0'
-				if object.get_obj_type() == 'Player':
-					to_append = 'X'
-				if object.get_obj_type() == 'Enemy':
-					to_append = 'E'
-				if object.get_obj_type() == 'Spike Trap':
-					to_append = 's'
+				match object.get_obj_type():
+					'Wall':
+						if (to_append in ['X', 'E', 's']) == false: 
+							to_append = '.'
+					'Ground':
+						if (to_append in ['X', 'E', 's']) == false: 
+							to_append = '0'
+					'Player': to_append = 'X'
+					'Enemy': to_append = 'E'
+					'Spike Trap': to_append = 's'
 			
 			converted_row.append(to_append)
 		print(converted_row)
@@ -127,9 +121,6 @@ func is_tile_wall(x,z):
 
 func get_map():
 	return map_grid
-
-func pathfind(searcher, start_pos, goal_pos):
-	return pathfinder.solve(searcher, start_pos, goal_pos)
 
 func hide_non_visible_from_player():
 	var viewfield = player.get_viewfield()
