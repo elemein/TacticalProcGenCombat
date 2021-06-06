@@ -1,7 +1,10 @@
 extends Node
 
+const INVENTORY_OBJECT = preload("res://Assets/Objects/UIObjects/InventoryUIObject.tscn")
+
 onready var inventory_ui = $InventoryUI
 onready var inventory_ui_slots = $InventoryUI/InventoryPanels/InventorySlots
+onready var inventory_ui_gold = $InventoryUI/InventoryPanels/Gold/GoldContainer/GoldValue
 
 var inventory_objects = []
 var equipped_weapon
@@ -29,9 +32,11 @@ func add_to_inventory(object):
 	if object.get_inventory_item_type() == 'Weapon':
 		equip_item(inventory_objects.size()-1)
 	
-	var new_label = Label.new()
-	new_label.text = object.get_obj_type()
-	inventory_ui_slots.add_child(new_label)
+	var new_object = INVENTORY_OBJECT.instance()
+	inventory_ui_slots.add_child(new_object)
+	new_object.set_object_text(object.get_obj_type())
+	new_object.set_object_type(object.get_inventory_item_type())
+	
 
 func remove_from_inventory():
 	pass
@@ -43,8 +48,11 @@ func add_to_gold(currency):
 		TYPE_INT: # If just adding gold manually.
 			gold += currency
 	
+	inventory_ui_gold.text = str(gold)
+	
 func subtract_from_gold(currency):
 	gold -= currency
+	inventory_ui_gold.text = str(gold)
 
 func equip_item(index):
 	if inventory_objects[index].get_inventory_item_type() == 'Weapon':

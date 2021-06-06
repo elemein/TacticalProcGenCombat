@@ -30,7 +30,30 @@ margin_bottom = 14.0
 text = "Inventory"
 align = 1
 
-[node name="InventorySlots" type="VBoxContainer" parent="InventoryUI/InventoryPanels"]
+[node name="Gold" type="MarginContainer" parent="InventoryUI/InventoryPanels"]
 margin_top = 18.0
 margin_right = 300.0
-margin_bottom = 18.0
+margin_bottom = 32.0
+
+[node name="GoldContainer" type="HBoxContainer" parent="InventoryUI/InventoryPanels/Gold"]
+margin_right = 300.0
+margin_bottom = 14.0
+alignment = 1
+
+[node name="GoldLabel" type="Label" parent="InventoryUI/InventoryPanels/Gold/GoldContainer"]
+margin_left = 125.0
+margin_right = 163.0
+margin_bottom = 14.0
+text = "Gold: "
+
+[node name="GoldValue" type="Label" parent="InventoryUI/InventoryPanels/Gold/GoldContainer"]
+margin_left = 167.0
+margin_right = 175.0
+margin_bottom = 14.0
+text = "0"
+align = 1
+
+[node name="InventorySlots" type="VBoxContainer" parent="InventoryUI/InventoryPanels"]
+margin_top = 36.0
+margin_right = 300.0
+margin_bottom = 36.0

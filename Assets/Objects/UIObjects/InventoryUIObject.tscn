@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Assets/Objects/UIObjects/InventoryUIObject.gd" type="Script" id=1]
+
+[node name="InventoryUIObject" type="MarginContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ObjectInfo" type="HBoxContainer" parent="."]
+margin_right = 169.0
+margin_bottom = 40.0
+
+[node name="ObjectName" type="Label" parent="ObjectInfo"]
+margin_top = 13.0
+margin_right = 87.0
+margin_bottom = 27.0
+text = "OBJECT NAME"
+
+[node name="ObjectType" type="Label" parent="ObjectInfo"]
+margin_left = 91.0
+margin_top = 13.0
+margin_right = 169.0
+margin_bottom = 27.0
+text = "OBJECT TYPE"
