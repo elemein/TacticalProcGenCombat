@@ -42,7 +42,11 @@ func use():
 		if mana_check():
 			UseSpell.play()
 			set_target_pos()
+			set_power()
 			do_damage()
+
+func set_power():
+	spell_power = parent.get_attack_power()
 
 # Check if out of mana
 func mana_check() -> bool:

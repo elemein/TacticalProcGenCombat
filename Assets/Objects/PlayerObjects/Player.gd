@@ -428,6 +428,9 @@ func get_viewrange():
 func get_viewfield():
 	return viewfield
 
+func get_attack_power() -> int:
+	return attack_power
+
 #Setters
 func set_model_rot(dir_facing, rotation_deg):
 	direction_facing = dir_facing
@@ -446,3 +449,6 @@ func set_hp(new_hp):
 func set_mp(new_mp):
 	mp = max_mp if (new_mp > max_mp) else new_mp
 	emit_signal("status_bar_mp", mp, max_mp)
+	
+func set_attack_power(new_value):
+	attack_power = new_value

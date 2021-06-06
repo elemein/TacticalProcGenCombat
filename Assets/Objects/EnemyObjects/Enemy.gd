@@ -286,6 +286,9 @@ func get_speed():
 func get_viewfield():
 	return viewfield
 
+func get_attack_power() -> int:
+	return attack_power
+
 # Setters
 func set_model_rot(dir_facing, rotation_deg):
 	direction_facing = dir_facing
