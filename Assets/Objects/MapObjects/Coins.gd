@@ -17,6 +17,9 @@ func get_map_pos():
 func set_map_pos(new_pos):
 	map_pos = new_pos
 
+func set_gold_value(new_value):
+	value = new_value
+
 func get_gold_value():
 	return value
 

@@ -8,6 +8,7 @@ const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 const AI_ENGINE = preload("res://Assets/SystemScripts/AIEngine.gd")
 
+onready var inventory = $Inventory
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI")
@@ -17,6 +18,8 @@ onready var map = get_node("/root/World/Map")
 # Audio effects
 onready var miss_basick_attack = $Audio/Hit/basic_attack_2
 onready var audio_hit = $Audio/Hit/basic_attack_2
+
+var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
 
 var rng = RandomNumberGenerator.new()
 
@@ -62,6 +65,7 @@ var viewfield = []
 
 #death vars
 var is_dead = false
+var loot_dropped = false
 var death_anim_timer = Timer.new()
 var death_anim_info = []
 
@@ -88,6 +92,8 @@ func setup_actor():
 	add_child(view_finder)
 	
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
+	
+	add_loot_to_inventory()
 
 func _physics_process(_delta):
 	if is_dead:
@@ -98,6 +104,7 @@ func _physics_process(_delta):
 			model.translation = (model.translation.linear_interpolate(death_anim_info[1], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
 			model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
 		if death_anim_timer.time_left == 0:
+			if loot_dropped == false: drop_loot()
 			return 'dead'
 	
 	else:
@@ -231,6 +238,25 @@ func play_anim(name):
 	if anim.current_animation == name:
 		return
 	anim.play(name)
+
+func add_loot_to_inventory():
+	inventory.add_to_gold(rng.randi_range(1,50))
+	
+func drop_loot():
+	# drop gold
+	var coins = base_coins.instance()
+	coins.translation = Vector3(map_pos[0] * TILE_OFFSET, 0.6, map_pos[1] * TILE_OFFSET)
+	coins.visible = true
+	coins.set_map_pos([map_pos[0],map_pos[1]])
+	coins.add_to_group('loot')
+	coins.set_gold_value(inventory.get_gold_total())
+	map.add_map_object(coins)
+	
+	inventory.subtract_from_gold(inventory.get_gold_total())
+	
+	# drop items
+	
+	loot_dropped = true
 
 # Getters
 func get_translation():

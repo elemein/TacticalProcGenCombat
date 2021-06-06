@@ -148,6 +148,12 @@ func check_tile_for_steppable_objects(x,z):
 			'Spike Trap': object.activate_trap(tile_objects)
 			'Coins': object.collect_item(tile_objects)
 
+func add_map_object(object):
+	var tile = object.get_map_pos()
+	
+	map_grid[tile[0]][tile[1]].append(object)
+	add_child(object)
+
 func remove_map_object(object):
 	var tile = object.get_map_pos()
 	

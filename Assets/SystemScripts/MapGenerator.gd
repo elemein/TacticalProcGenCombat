@@ -8,10 +8,10 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 2
+const NUMBER_OF_ENEMIES = 4
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 10
-const NUMBER_OF_LOOT = 20
+const NUMBER_OF_LOOT = 0
 
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
@@ -301,7 +301,7 @@ func spawn_traps():
 		total_map[x][z].append(trap)
 
 func spawn_loot():
-	for loot_cnt in range(NUMBER_OF_TRAPS):
+	for loot_cnt in range(NUMBER_OF_LOOT):
 		var room = rooms[rng.randi_range(0, rooms.size()-1)]
 		
 		var rand_tile = get_random_available_tile_in_room(room)
