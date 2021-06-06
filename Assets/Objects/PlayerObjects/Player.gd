@@ -63,6 +63,9 @@ var effect = null
 # view var
 var viewfield = []
 
+# inventory vars
+var inventory_open = false
+
 #death vars
 var is_dead = false
 var death_anim_timer = Timer.new()
@@ -132,7 +135,12 @@ func _physics_process(_delta):
 	handle_animations()
 
 func get_input():
-	if turn_timer.time_left > 0: # We don't wanna collect input if turn in action.
+	if Input.is_action_just_pressed('tab'): 
+		if inventory_open: inventory_open = false
+		elif !inventory_open: inventory_open = true
+	
+	if turn_timer.time_left > 0 or inventory_open: 
+		# We don't wanna collect input if turn in action or in inventory.
 		return
 	
 	var no_of_inputs = 0

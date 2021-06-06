@@ -53,7 +53,13 @@ margin_bottom = 14.0
 text = "0"
 align = 1
 
-[node name="InventorySlots" type="VBoxContainer" parent="InventoryUI/InventoryPanels"]
+[node name="Selector" type="ColorRect" parent="InventoryUI/InventoryPanels"]
 margin_top = 36.0
 margin_right = 300.0
 margin_bottom = 36.0
+color = Color( 0.317647, 0.721569, 0.862745, 0.686275 )
+
+[node name="InventorySlots" type="VBoxContainer" parent="InventoryUI/InventoryPanels"]
+margin_top = 40.0
+margin_right = 300.0
+margin_bottom = 40.0

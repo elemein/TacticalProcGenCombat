@@ -3,16 +3,22 @@ extends Node
 const INVENTORY_OBJECT = preload("res://Assets/Objects/UIObjects/InventoryUIObject.tscn")
 
 onready var inventory_ui = $InventoryUI
+onready var inventory_panels = $InventoryUI/InventoryPanels
 onready var inventory_ui_slots = $InventoryUI/InventoryPanels/InventorySlots
+onready var inv_title_holder = $InventoryUI/InventoryPanels/Title
+onready var inv_gold_holder = $InventoryUI/InventoryPanels/Gold
 onready var inventory_ui_gold = $InventoryUI/InventoryPanels/Gold/GoldContainer/GoldValue
+onready var selector = $InventoryUI/InventoryPanels/Selector
 
 var inventory_objects = []
+var ui_objects = []
 var equipped_weapon
 var equipped_armour
 var equipped_accessory
 var gold = 0
 var inventory_owner
 var owner_type
+var selector_index = 0
 
 func setup_inventory(owner):
 	inventory_owner = owner
@@ -24,8 +30,23 @@ func _physics_process(delta):
 		if Input.is_action_just_pressed("tab"):
 			if inventory_ui.visible == false: 
 				inventory_ui.visible = true
+				selector_index = 0
 			else: 
 				inventory_ui.visible = false
+		
+		if inventory_ui.visible == true:
+			if Input.is_action_just_pressed("w"):
+				if selector_index != 0:
+					selector_index -= 1
+			if Input.is_action_just_pressed("s"):
+				if selector_index != ui_objects.size()-1:
+					selector_index += 1
+		
+		if inventory_objects.size() > 0:
+			selector.rect_position = Vector2(0, (inventory_ui_slots.rect_position.y + (ui_objects[selector_index].rect_position.y)))
+			selector.rect_size = ui_objects[0].rect_size
+		
+
 
 func add_to_inventory(object):
 	inventory_objects.append(object)
@@ -34,6 +55,7 @@ func add_to_inventory(object):
 	
 	var new_object = INVENTORY_OBJECT.instance()
 	inventory_ui_slots.add_child(new_object)
+	ui_objects.append(new_object)
 	new_object.set_object_text(object.get_obj_type())
 	new_object.set_object_type(object.get_inventory_item_type())
 	
