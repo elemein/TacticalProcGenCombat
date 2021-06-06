@@ -57,7 +57,7 @@ func move_on_map(object, old_pos, new_pos):
 	map_grid[new_pos[0]][new_pos[1]].append(object)
 	map_grid[old_pos[0]][old_pos[1]].erase(object)
 	
-	check_traps(new_pos[0], new_pos[1])
+	check_tile_for_steppable_objects(new_pos[0], new_pos[1])
 	
 	return [new_pos[0], new_pos[1]]
 
@@ -73,14 +73,15 @@ func print_map_grid():
 			for object in tile:
 				match object.get_obj_type():
 					'Wall':
-						if (to_append in ['X', 'E', 's']) == false: 
+						if (to_append in ['X', 'E', 's','c']) == false: 
 							to_append = '.'
 					'Ground':
-						if (to_append in ['X', 'E', 's']) == false: 
+						if (to_append in ['X', 'E', 's','c']) == false: 
 							to_append = '0'
 					'Player': to_append = 'X'
 					'Enemy': to_append = 'E'
 					'Spike Trap': to_append = 's'
+					'Coins': to_append = 'c'
 			
 			converted_row.append(to_append)
 		print(converted_row)
@@ -139,12 +140,13 @@ func hide_non_visible_from_player():
 		
 	in_view_objects = viewfield
 
-func check_traps(x,z):
+func check_tile_for_steppable_objects(x,z):
 	var tile_objects = get_tile_contents(x,z)
 	
 	for object in tile_objects:
-		if object.get_obj_type() == 'Spike Trap':
-			object.activate_trap(tile_objects) # pass the relevant objects to affect
+		match object.get_obj_type():
+			'Spike Trap': object.activate_trap(tile_objects)
+			'Coins': object.collect_item(tile_objects)
 
 func remove_map_object(object):
 	var tile = object.get_map_pos()
