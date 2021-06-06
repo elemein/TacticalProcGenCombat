@@ -1,16 +1,37 @@
 extends Node
 
+onready var inventory_ui = $InventoryUI
+onready var inventory_ui_slots = $InventoryUI/InventoryPanels/InventorySlots
+
 var inventory_objects = []
 var equipped_weapon
 var equipped_armour
 var equipped_accessory
 var gold = 0
 var inventory_owner
+var owner_type
+
+func setup_inventory(owner):
+	inventory_owner = owner
+	owner_type = owner.get_obj_type()
+	inventory_ui.visible = false
+
+func _physics_process(delta):
+	if owner_type == 'Player':
+		if Input.is_action_just_pressed("tab"):
+			if inventory_ui.visible == false: 
+				inventory_ui.visible = true
+			else: 
+				inventory_ui.visible = false
 
 func add_to_inventory(object):
 	inventory_objects.append(object)
 	if object.get_inventory_item_type() == 'Weapon':
 		equip_item(inventory_objects.size()-1)
+	
+	var new_label = Label.new()
+	new_label.text = object.get_obj_type()
+	inventory_ui_slots.add_child(new_label)
 
 func remove_from_inventory():
 	pass

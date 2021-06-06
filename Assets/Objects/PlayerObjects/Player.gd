@@ -7,10 +7,10 @@ const TILE_OFFSET = 2.2
 
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
+const INVENTORY = preload("res://Assets/Objects/UIObjects/Inventory.tscn")
 
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
-onready var inventory = $Inventory
 onready var gui = get_node("/root/World/GUI")
 onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var map = get_node("/root/World/Map")
@@ -71,6 +71,7 @@ var death_anim_info = []
 # object vars
 var mover = ACTOR_MOVER.new()
 var view_finder = VIEW_FINDER.new()
+var inventory = INVENTORY.instance()
 
 func _ready():
 	directional_timer.set_one_shot(true)
@@ -86,10 +87,15 @@ func _ready():
 	target_pos = translation
 	saved_pos = translation
 	
-	mover.set_actor(self)
 	add_child(mover)
-	view_finder.set_actor(self)
+	mover.set_actor(self)
+	
 	add_child(view_finder)
+	view_finder.set_actor(self)
+	
+	add_child(inventory)
+	inventory.setup_inventory(self)
+	
 	
 	map.print_map_grid()
 	
