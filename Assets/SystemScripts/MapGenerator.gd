@@ -8,16 +8,18 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 4
+const NUMBER_OF_ENEMIES = 1
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 10
-const NUMBER_OF_LOOT = 0
+const NUMBER_OF_COINS = 10
+const NUMBER_OF_SWORDS = 1
 
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
 var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
 var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
+var base_sword = preload("res://Assets/Objects/MapObjects/Sword.tscn")
 
 var map_w = 30
 var map_h = 30
@@ -301,7 +303,7 @@ func spawn_traps():
 		total_map[x][z].append(trap)
 
 func spawn_loot():
-	for loot_cnt in range(NUMBER_OF_LOOT):
+	for coin_cnt in range(NUMBER_OF_COINS):
 		var room = rooms[rng.randi_range(0, rooms.size()-1)]
 		
 		var rand_tile = get_random_available_tile_in_room(room)
@@ -315,3 +317,18 @@ func spawn_loot():
 		coins.add_to_group('loot')
 
 		total_map[x][z].append(coins)
+
+	for sword_cnt in range(NUMBER_OF_SWORDS):
+		var room = rooms[rng.randi_range(0, rooms.size()-1)]
+		
+		var rand_tile = get_random_available_tile_in_room(room)
+		var x = rand_tile[0]
+		var z = rand_tile[1]
+				
+		var sword = base_sword.instance()
+		sword.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
+		sword.visible = false
+		sword.set_map_pos([x,z])
+		sword.add_to_group('loot')
+
+		total_map[x][z].append(sword)

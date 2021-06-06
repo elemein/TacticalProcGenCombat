@@ -6,8 +6,8 @@ var equipped_armour
 var equipped_accessory
 var gold = 0
 
-func add_to_inventory():
-	pass
+func add_to_inventory(object):
+	inventory_objects.append(object)
 
 func remove_from_inventory():
 	pass

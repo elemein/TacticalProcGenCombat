@@ -73,15 +73,16 @@ func print_map_grid():
 			for object in tile:
 				match object.get_obj_type():
 					'Wall':
-						if (to_append in ['X', 'E', 's','c']) == false: 
+						if (to_append in ['X', 'E', 't','c','s']) == false: 
 							to_append = '.'
 					'Ground':
-						if (to_append in ['X', 'E', 's','c']) == false: 
+						if (to_append in ['X', 'E', 't','c','s']) == false: 
 							to_append = '0'
 					'Player': to_append = 'X'
 					'Enemy': to_append = 'E'
-					'Spike Trap': to_append = 's'
+					'Spike Trap': to_append = 't'
 					'Coins': to_append = 'c'
+					'Sword': to_append = 's'
 			
 			converted_row.append(to_append)
 		print(converted_row)
@@ -147,6 +148,7 @@ func check_tile_for_steppable_objects(x,z):
 		match object.get_obj_type():
 			'Spike Trap': object.activate_trap(tile_objects)
 			'Coins': object.collect_item(tile_objects)
+			'Sword': object.collect_item(tile_objects)
 
 func add_map_object(object):
 	var tile = object.get_map_pos()
