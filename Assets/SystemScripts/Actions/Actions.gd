@@ -4,6 +4,9 @@ extends Node
 signal spell_cast_basic_attack
 signal spell_cast_fireball
 
+# Inventory Actions
+signal action_drop_item
+
 # Movement
 #signal mover_check_move_action(move)
 #signal mover_move_actor
@@ -20,6 +23,9 @@ func _on_spell_cast_basic_attack():
 func _on_spell_cast_fireball():
 	emit_signal("spell_cast_fireball")
 
+# Inventory Actions
+func _on_action_drop_item():
+	emit_signal("action_drop_item")
 
 # Movement
 #func _on_mover_check_move_action(move):

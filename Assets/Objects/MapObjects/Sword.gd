@@ -1,5 +1,7 @@
 extends MeshInstance
 
+const TILE_OFFSET = 2.2
+
 onready var map = get_node("/root/World/Map")
 
 var inventory_item_type = 'Weapon'
@@ -26,6 +28,7 @@ func get_map_pos():
 
 func set_map_pos(new_pos):
 	map_pos = new_pos
+	translation = Vector3(new_pos[0] * TILE_OFFSET, 0.3, new_pos[1] * TILE_OFFSET)
 
 func get_gold_value():
 	return value

@@ -8,7 +8,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 2
+const NUMBER_OF_ENEMIES = 0
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 10
 const NUMBER_OF_COINS = 8

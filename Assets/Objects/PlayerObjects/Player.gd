@@ -26,6 +26,7 @@ var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 # Spell signals
 signal spell_cast_fireball
 signal spell_cast_basic_attack
+signal action_drop_item
 
 # Status bar signals
 signal status_bar_hp(hp, max_hp)
@@ -262,6 +263,9 @@ func process_turn():
 	elif proposed_action == 'fireball':
 		emit_signal("spell_cast_fireball")
 		
+	elif proposed_action == 'drop item':
+		emit_signal("action_drop_item")
+		
 	# Apply any regen effects
 	self.hp += regen_hp
 	self.mp += regen_mp
@@ -445,6 +449,15 @@ func get_viewfield():
 func get_attack_power() -> int:
 	return attack_power
 
+func get_inventory_open() -> bool:
+	return inventory_open
+
+func get_inventory_object() -> Object:
+	return inventory
+
+func get_item_to_drop() -> Object:
+	return inventory.get_item_to_drop()
+
 #Setters
 func set_model_rot(dir_facing, rotation_deg):
 	direction_facing = dir_facing
@@ -466,3 +479,6 @@ func set_mp(new_mp):
 	
 func set_attack_power(new_value):
 	attack_power = new_value
+
+func set_inventory_open(state):
+	inventory_open = state

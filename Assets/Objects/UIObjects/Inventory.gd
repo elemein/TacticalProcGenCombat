@@ -3,6 +3,8 @@ extends Node
 const INVENTORY_OBJECT = preload("res://Assets/Objects/UIObjects/InventoryUIObject.tscn")
 const OBJECT_ACTION_MENU = preload("res://Assets/Objects/UIObjects/ObjectActionMenu.tscn")
 
+onready var map = get_node("/root/World/Map")
+
 onready var inventory_ui = $InventoryUI
 onready var inventory_panels = $InventoryUI/InventoryPanels
 onready var inventory_ui_slots = $InventoryUI/InventoryPanels/InventorySlots
@@ -14,6 +16,9 @@ onready var actmenu_selector = $ActionMenuSelector
 
 #unsorted vars
 var gold = 0
+var item_to_drop
+
+# selector indexes
 var actmenu_selector_index = 0
 var inv_selector_index = 0
 
@@ -68,7 +73,7 @@ func _physics_process(delta):
 
 func handle_action_menu():
 	if object_action_menu.get_node("MenuHolder").get_children()[actmenu_selector_index].text == 'Drop':
-		print('drop')
+		set_drop_item_action()
 
 func open_inv_ui():
 	inventory_ui.visible = true
@@ -81,6 +86,7 @@ func close_inv_ui():
 	hide_actmenu_selector()
 	object_action_menu.visible = false
 	object_action_menu_open = false
+	inventory_owner.set_inventory_open(false)
 
 func show_inv_selector():
 	var dflt_x = inventory_ui.rect_position.x
@@ -191,8 +197,17 @@ func add_to_inventory(object):
 	if object.get_inventory_item_type() == 'Weapon':
 		equip_item(inventory_objects.size()-1)
 
-func remove_from_inventory():
-	pass
+func remove_from_inventory(object):
+	
+	var idx = -1
+	
+	for item in inventory_objects:
+		idx += 1
+		if item == object: break
+	
+	inventory_ui_slots.remove_child(ui_objects[idx])
+	ui_objects.remove(idx)
+	inventory_objects.erase(object)
 
 func add_to_gold(currency):
 	match typeof(currency):
@@ -226,12 +241,28 @@ func unequip_item(type):
 			
 	ui_objects[idx].set_equipped(false)
 	inventory_objects[idx].unequip_object()
-	
-func drop_item():
-	pass
 
-func get_gold_total():
+func set_drop_item_action():
+	item_to_drop = inventory_objects[inv_selector_index]
+	
+	inventory_owner.set_action("drop item")
+
+func drop_item():
+	if item_to_drop in [equipped_weapon, equipped_armour, equipped_accessory]:
+		unequip_item(item_to_drop.get_inventory_item_type())
+	
+	item_to_drop.set_map_pos(inventory_owner.get_map_pos())
+	map.add_map_object(item_to_drop)
+
+	remove_from_inventory(item_to_drop)
+	
+	close_inv_ui()
+
+func get_gold_total() -> int:
 	return gold
 
 func get_inventory_objects() -> Array:
 	return inventory_objects
+
+func get_item_to_drop() -> Object:
+	return item_to_drop
