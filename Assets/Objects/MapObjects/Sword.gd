@@ -30,6 +30,10 @@ func set_map_pos(new_pos):
 func get_gold_value():
 	return value
 
+func get_usable(): return false
+
+func get_equippable(): return true
+
 func collect_item(tile_objects):
 	for object in tile_objects:
 		if object.get_obj_type() == 'Player':
