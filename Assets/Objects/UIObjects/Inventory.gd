@@ -9,7 +9,7 @@ onready var inventory_ui_slots = $InventoryUI/InventoryPanels/InventorySlots
 onready var inv_title_holder = $InventoryUI/InventoryPanels/Title
 onready var inv_gold_holder = $InventoryUI/InventoryPanels/Gold
 onready var inventory_ui_gold = $InventoryUI/InventoryPanels/Gold/GoldContainer/GoldValue
-onready var selector = $InventoryUI/InventoryPanels/Selector
+onready var selector = $Selector
 
 var inventory_objects = []
 var ui_objects = []
@@ -25,7 +25,8 @@ var object_action_menu_open = false
 var object_action_menu = OBJECT_ACTION_MENU.instance()
 
 func setup_inventory(owner):
-	inventory_ui.add_child(object_action_menu)
+	selector.visible = false
+	add_child(object_action_menu)
 	object_action_menu.visible = false
 	inventory_owner = owner
 	owner_type = owner.get_obj_type()
@@ -34,43 +35,68 @@ func setup_inventory(owner):
 func _physics_process(delta):
 	if owner_type == 'Player':
 		if Input.is_action_just_pressed("tab"):
-			if inventory_ui.visible == false: 
-				inventory_ui.visible = true
-				selector_index = 0
-			else: 
-				inventory_ui.visible = false
-				object_action_menu.visible = false
-				object_action_menu_open = false
+			if inventory_ui.visible == false: open_inv_ui()
+			else: close_inv_ui()
 		
 		if inventory_ui.visible == true:
-			if Input.is_action_just_pressed("w"):
-				if selector_index != 0:
-					selector_index -= 1
-			if Input.is_action_just_pressed("s"):
-				if selector_index != ui_objects.size()-1:
-					selector_index += 1
-			if Input.is_action_just_pressed("e"):
-				open_object_action_menu()
+			if inventory_objects.size() > 0:
+				if Input.is_action_just_pressed("w"):
+					if selector_index != 0:
+						selector_index -= 1
+						move_selector()
+				if Input.is_action_just_pressed("s"):
+					if selector_index != ui_objects.size()-1:
+						selector_index += 1
+						move_selector()
+				if Input.is_action_just_pressed("e"):
+					open_object_action_menu()
 						
-		if inventory_objects.size() > 0:
-			selector.rect_position = Vector2(0, (inventory_ui_slots.rect_position.y + (ui_objects[selector_index].rect_position.y)))
-			selector.rect_size = ui_objects[0].rect_size
-		
+
+func open_inv_ui():
+	inventory_ui.visible = true
+	show_selector()
+	selector_index = 0
+
+func close_inv_ui():
+	inventory_ui.visible = false
+	hide_selector()
+	object_action_menu.visible = false
+	object_action_menu_open = false
+
+func show_selector():
+	var dflt_x = inventory_ui.rect_position.x
+	var dflt_y = inventory_ui.rect_position.y + inventory_ui_slots.rect_position.y
+	
+	selector.visible = true
+	selector.rect_position = Vector2(dflt_x, dflt_y)
+	selector.rect_size = ui_objects[0].rect_size
+	
+func hide_selector():
+	selector.visible = false
+
+func move_selector():
+	var dflt_x = inventory_ui.rect_position.x
+	var dflt_y = inventory_ui.rect_position.y + inventory_ui_slots.rect_position.y
+	
+	selector.rect_position = Vector2(dflt_x, dflt_y + ui_objects[selector_index].rect_position.y)
+
 
 func open_object_action_menu():
 	if !object_action_menu_open:
-		if inventory_objects.size() > 0:
-			object_action_menu_open = true
-			object_action_menu.visible = true
-			object_action_menu.rect_position = Vector2(300, selector.rect_position.y)
-			
-			for option in object_action_menu.get_node("MenuHolder").get_children():
-				option.queue_free()
-			
-			for option in ['Use', 'Equip', 'Unequip', 'Drop']:
-				var option_label = Label.new()
-				option_label.text = option
-				object_action_menu.get_node('MenuHolder').add_child(option_label)
+		object_action_menu_open = true
+		object_action_menu.visible = true
+		var x = inventory_ui.rect_position.x + ((ui_objects[selector_index].rect_size.x) * 0.75)
+		var y = selector.rect_position.y
+		
+		object_action_menu.rect_position = Vector2(x, y)
+		
+		for option in object_action_menu.get_node("MenuHolder").get_children():
+			option.queue_free()
+		
+		for option in ['Use', 'Equip', 'Unequip', 'Drop']:
+			var option_label = Label.new()
+			option_label.text = option
+			object_action_menu.get_node('MenuHolder').add_child(option_label)
 
 func add_to_inventory(object):
 	inventory_objects.append(object)
