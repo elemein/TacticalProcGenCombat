@@ -15,13 +15,24 @@ __meta__ = {
 margin_right = 300.0
 margin_bottom = 14.0
 
-[node name="ObjectName" type="Label" parent="ObjectInfo"]
-margin_right = 87.0
+[node name="Equipped" type="Label" parent="ObjectInfo"]
+margin_right = 15.0
 margin_bottom = 14.0
-text = "OBJECT NAME"
+rect_min_size = Vector2( 15, 0 )
+align = 1
 
 [node name="ObjectType" type="Label" parent="ObjectInfo"]
-margin_left = 91.0
-margin_right = 169.0
+margin_left = 19.0
+margin_right = 119.0
 margin_bottom = 14.0
+rect_min_size = Vector2( 100, 0 )
 text = "OBJECT TYPE"
+align = 1
+
+[node name="ObjectName" type="Label" parent="ObjectInfo"]
+margin_left = 123.0
+margin_right = 223.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 100, 0 )
+text = "OBJECT NAME"
+align = 1

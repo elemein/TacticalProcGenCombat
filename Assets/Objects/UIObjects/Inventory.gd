@@ -149,14 +149,16 @@ func make_action_option_list() -> Array:
 
 func add_to_inventory(object):
 	inventory_objects.append(object)
-	if object.get_inventory_item_type() == 'Weapon':
-		equip_item(inventory_objects.size()-1)
 	
 	var new_object = INVENTORY_OBJECT.instance()
 	inventory_ui_slots.add_child(new_object)
 	ui_objects.append(new_object)
 	new_object.set_object_text(object.get_obj_type())
 	new_object.set_object_type(object.get_inventory_item_type())
+	new_object.set_equipped(false)
+	
+	if object.get_inventory_item_type() == 'Weapon':
+		equip_item(inventory_objects.size()-1)
 
 func remove_from_inventory():
 	pass
@@ -177,13 +179,23 @@ func subtract_from_gold(currency):
 func equip_item(index):
 	if inventory_objects[index].get_inventory_item_type() == 'Weapon':
 		if equipped_weapon != null:
-			inventory_objects[index].unequip_object()
-		
+			unequip_item('Weapon')
+
 		equipped_weapon = inventory_objects[index]
+		ui_objects[index].set_equipped(true)
 		inventory_objects[index].equip_object()
 
-func unequip_item(index):
-	pass
+func unequip_item(type):
+	var idx = -1
+	
+	if type == 'Weapon':
+		for object in inventory_objects:
+			idx += 1
+			if equipped_weapon == object: break
+			
+	
+	ui_objects[idx].set_equipped(false)
+	inventory_objects[idx].unequip_object()
 	
 func drop_item():
 	pass
