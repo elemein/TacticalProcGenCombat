@@ -67,7 +67,8 @@ func _physics_process(delta):
 						
 
 func handle_action_menu():
-	pass
+	if object_action_menu.get_node("MenuHolder").get_children()[actmenu_selector_index].text == 'Drop':
+		print('drop')
 
 func open_inv_ui():
 	inventory_ui.visible = true
