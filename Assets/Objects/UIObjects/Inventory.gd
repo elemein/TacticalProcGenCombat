@@ -62,6 +62,8 @@ func _physics_process(delta):
 				if Input.is_action_just_pressed("e"):
 					if !object_action_menu_open: open_object_action_menu()
 					elif object_action_menu_open: handle_action_menu()
+				if Input.is_action_just_pressed("q"):
+					if object_action_menu_open: close_object_action_menu()
 						
 
 func handle_action_menu():
@@ -156,7 +158,11 @@ func open_object_action_menu():
 	show_actmenu_selector()
 	actmenu_selector.rect_size = action_menu_options[actmenu_selector_index].rect_size
 	actmenu_selector.rect_position = Vector2(x, y + action_menu_options[actmenu_selector_index].rect_position.y)
-		
+
+func close_object_action_menu():
+	hide_actmenu_selector()
+	object_action_menu.visible = false
+	object_action_menu_open = false
 
 func make_action_option_list() -> Array:
 	var optionlist = []
