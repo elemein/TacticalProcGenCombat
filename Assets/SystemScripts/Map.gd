@@ -161,3 +161,4 @@ func remove_map_object(object):
 	
 	map_grid[tile[0]][tile[1]].erase(object)
 	remove_child(object)
+	

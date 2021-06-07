@@ -16,7 +16,7 @@ onready var actmenu_selector = $ActionMenuSelector
 
 #unsorted vars
 var gold = 0
-var item_to_drop
+var item_to_act_on
 
 # selector indexes
 var actmenu_selector_index = 0
@@ -72,8 +72,10 @@ func _physics_process(delta):
 						
 
 func handle_action_menu():
-	if object_action_menu.get_node("MenuHolder").get_children()[actmenu_selector_index].text == 'Drop':
-		set_drop_item_action()
+	match object_action_menu.get_node("MenuHolder").get_children()[actmenu_selector_index].text:
+		'Drop': set_drop_item_action()
+		'Equip': set_equip_item_action()
+		'Unequip': set_unequip_item_action()
 
 func open_inv_ui():
 	inventory_ui.visible = true
@@ -151,7 +153,9 @@ func open_object_action_menu():
 	object_action_menu.rect_position = Vector2(x, y)
 	
 	for option in object_action_menu.get_node("MenuHolder").get_children():
+		option.queue_free()
 		object_action_menu.get_node("MenuHolder").remove_child(option)
+		
 	
 	var optionlist = make_action_option_list()
 	for option in optionlist:
@@ -193,9 +197,6 @@ func add_to_inventory(object):
 	new_object.set_object_text(object.get_obj_type())
 	new_object.set_object_type(object.get_inventory_item_type())
 	new_object.set_equipped(false)
-	
-	if object.get_inventory_item_type() == 'Weapon':
-		equip_item(inventory_objects.size()-1)
 
 func remove_from_inventory(object):
 	
@@ -205,7 +206,9 @@ func remove_from_inventory(object):
 		idx += 1
 		if item == object: break
 	
+	ui_objects[idx].queue_free()
 	inventory_ui_slots.remove_child(ui_objects[idx])
+	
 	ui_objects.remove(idx)
 	inventory_objects.erase(object)
 
@@ -222,39 +225,61 @@ func subtract_from_gold(currency):
 	gold -= currency
 	inventory_ui_gold.text = str(gold)
 
-func equip_item(index):
-	if inventory_objects[index].get_inventory_item_type() == 'Weapon':
+func equip_item():
+	var idx = -1
+	
+	for object in inventory_objects:
+		idx += 1
+		if item_to_act_on == object: break
+	
+	if item_to_act_on.get_inventory_item_type() == 'Weapon':
 		if equipped_weapon != null:
 			unequip_item('Weapon')
 
-		equipped_weapon = inventory_objects[index]
-		ui_objects[index].set_equipped(true)
-		inventory_objects[index].equip_object()
+		equipped_weapon = item_to_act_on
+		
+	ui_objects[idx].set_equipped(true)
+	inventory_objects[idx].equip_object()
+	close_inv_ui()
 
 func unequip_item(type):
 	var idx = -1
 	
-	if type == 'Weapon':
+	if item_to_act_on.get_inventory_item_type() == 'Weapon':
 		for object in inventory_objects:
 			idx += 1
 			if equipped_weapon == object: break
-			
+		
+		equipped_weapon = null
+		
 	ui_objects[idx].set_equipped(false)
 	inventory_objects[idx].unequip_object()
+	
+	close_inv_ui()
 
 func set_drop_item_action():
-	item_to_drop = inventory_objects[inv_selector_index]
+	item_to_act_on = inventory_objects[inv_selector_index]
 	
 	inventory_owner.set_action("drop item")
 
-func drop_item():
-	if item_to_drop in [equipped_weapon, equipped_armour, equipped_accessory]:
-		unequip_item(item_to_drop.get_inventory_item_type())
+func set_equip_item_action():
+	item_to_act_on = inventory_objects[inv_selector_index]
 	
-	item_to_drop.set_map_pos(inventory_owner.get_map_pos())
-	map.add_map_object(item_to_drop)
+	inventory_owner.set_action("equip item")
 
-	remove_from_inventory(item_to_drop)
+func set_unequip_item_action():
+	item_to_act_on = inventory_objects[inv_selector_index]
+	
+	inventory_owner.set_action("unequip item")
+
+func drop_item():
+	if item_to_act_on in [equipped_weapon, equipped_armour, equipped_accessory]:
+		unequip_item(item_to_act_on.get_inventory_item_type())
+	
+	item_to_act_on.set_map_pos(inventory_owner.get_map_pos())
+	map.add_map_object(item_to_act_on)
+
+	remove_from_inventory(item_to_act_on)
 	
 	close_inv_ui()
 
@@ -264,5 +289,5 @@ func get_gold_total() -> int:
 func get_inventory_objects() -> Array:
 	return inventory_objects
 
-func get_item_to_drop() -> Object:
-	return item_to_drop
+func get_item_to_act_on() -> Object:
+	return item_to_act_on

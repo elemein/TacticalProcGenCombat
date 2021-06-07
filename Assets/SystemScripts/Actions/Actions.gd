@@ -6,6 +6,8 @@ signal spell_cast_fireball
 
 # Inventory Actions
 signal action_drop_item
+signal action_equip_item
+signal action_unequip_item
 
 # Movement
 #signal mover_check_move_action(move)
@@ -27,6 +29,12 @@ func _on_spell_cast_fireball():
 func _on_action_drop_item():
 	emit_signal("action_drop_item")
 
+func _on_action_equip_item():
+	emit_signal("action_equip_item")
+	
+func _on_action_unequip_item():
+	emit_signal("action_unequip_item")
+
 # Movement
 #func _on_mover_check_move_action(move):
 #	emit_signal("mover_check_move_action", move)
@@ -45,3 +53,6 @@ func _on_action_drop_item():
 #
 #func _on_mover_reset_pos_vars():
 #	emit_signal("mover_reset_pos_vars")
+
+
+

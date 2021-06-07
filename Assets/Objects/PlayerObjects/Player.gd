@@ -27,6 +27,8 @@ var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 signal spell_cast_fireball
 signal spell_cast_basic_attack
 signal action_drop_item
+signal action_equip_item
+signal action_unequip_item
 
 # Status bar signals
 signal status_bar_hp(hp, max_hp)
@@ -265,6 +267,10 @@ func process_turn():
 		
 	elif proposed_action == 'drop item':
 		emit_signal("action_drop_item")
+	elif proposed_action == 'equip item':
+		emit_signal("action_equip_item")
+	elif proposed_action == 'unequip item':
+		emit_signal("action_unequip_item")
 		
 	# Apply any regen effects
 	self.hp += regen_hp
@@ -390,8 +396,7 @@ func die():
 	add_child(death_anim_timer)
 	is_dead = true
 	turn_timer.remove_from_timer_group(self)
-
-	remove_child(mover)
+	
 	proposed_action = 'idle'
 	
 	var rise = Vector3(model.translation.x, 2, model.translation.z)

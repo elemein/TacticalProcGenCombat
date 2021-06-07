@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.gd" type="Script" id=1]
 [ext_resource path="res://Assets/SystemScripts/Actions/Fireball.gd" type="Script" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://Assets/Audio/SpellAudio/fireball_throw.wav" type="AudioStream" id=5]
 [ext_resource path="res://Assets/Audio/SpellAudio/out_of_mana.wav" type="AudioStream" id=6]
 [ext_resource path="res://Assets/SystemScripts/Actions/DropItem.gd" type="Script" id=7]
+[ext_resource path="res://Assets/SystemScripts/Actions/EquipItem.gd" type="Script" id=8]
+[ext_resource path="res://Assets/SystemScripts/Actions/UnequipItem.gd" type="Script" id=9]
 
 [node name="Actions" type="Node"]
 script = ExtResource( 1 )
@@ -36,8 +38,16 @@ unit_db = 80.0
 stream = ExtResource( 6 )
 unit_db = 80.0
 
-[node name="DropItem" type="Node" parent="Attacks"]
+[node name="DropItem" type="Node" parent="."]
 script = ExtResource( 7 )
-[connection signal="action_drop_item" from="." to="Attacks/DropItem" method="_on_Actions_action_drop_item"]
+
+[node name="EquipItem" type="Node" parent="."]
+script = ExtResource( 8 )
+
+[node name="UnequipItem" type="Node" parent="."]
+script = ExtResource( 9 )
+[connection signal="action_drop_item" from="." to="DropItem" method="_on_Actions_action_drop_item"]
+[connection signal="action_equip_item" from="." to="EquipItem" method="_on_Actions_action_equip_item"]
+[connection signal="action_unequip_item" from="." to="UnequipItem" method="_on_Actions_action_unequip_item"]
 [connection signal="spell_cast_basic_attack" from="." to="Attacks/BasicAttack" method="_on_Actions_spell_cast_basic_attack"]
 [connection signal="spell_cast_fireball" from="." to="Attacks/Fireball" method="_on_Actions_spell_cast_fireball"]

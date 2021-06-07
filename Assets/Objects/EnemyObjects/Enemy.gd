@@ -187,9 +187,7 @@ func die():
 	add_child(death_anim_timer)
 	is_dead = true
 	turn_timer.remove_from_timer_group(self)
-
-	remove_child(mover)
-	remove_child(ai_engine)
+	
 	proposed_action = 'idle'
 	
 	var rise = Vector3(model.translation.x, 2, model.translation.z)

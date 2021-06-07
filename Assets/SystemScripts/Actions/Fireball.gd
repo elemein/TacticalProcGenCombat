@@ -33,6 +33,7 @@ func _physics_process(_delta):
 		if turn_timer.time_left > 0.1:
 			effect.translation = effect.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.1))) 
 		else:
+			get_node('Fire').queue_free()
 			remove_child(get_node('Fire'))
 			effect = null
 
