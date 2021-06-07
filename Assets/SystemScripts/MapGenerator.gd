@@ -12,7 +12,7 @@ const NUMBER_OF_ENEMIES = 0
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 10
 const NUMBER_OF_COINS = 8
-const NUMBER_OF_SWORDS = 15
+const NUMBER_OF_SWORDS = 25
 
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")

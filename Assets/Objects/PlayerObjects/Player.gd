@@ -138,13 +138,14 @@ func _physics_process(_delta):
 	handle_animations()
 
 func get_input():
-	if Input.is_action_just_pressed('tab'): 
-		if inventory_open: inventory_open = false
-		elif !inventory_open: inventory_open = true
 	
 	if turn_timer.time_left > 0 or inventory_open: 
 		# We don't wanna collect input if turn in action or in inventory.
 		return
+	
+	if Input.is_action_just_pressed('tab'): 
+		if inventory_open: inventory_open = false
+		elif !inventory_open: inventory_open = true
 	
 	var no_of_inputs = 0
 	

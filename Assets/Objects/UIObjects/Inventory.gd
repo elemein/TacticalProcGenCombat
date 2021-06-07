@@ -1,9 +1,12 @@
+# THE CODE IN HERE WILL NOT SCALE WELL TO RESOLUTION, DEF FIX THIS.
+
 extends Node
 
 const INVENTORY_OBJECT = preload("res://Assets/Objects/UIObjects/InventoryUIObject.tscn")
 const OBJECT_ACTION_MENU = preload("res://Assets/Objects/UIObjects/ObjectActionMenu.tscn")
 
 onready var map = get_node("/root/World/Map")
+onready var turn_timer = get_node("/root/World/TurnTimer")
 
 onready var inventory_ui = $InventoryUI
 onready var inventory_panels = $InventoryUI/InventoryPanels
@@ -40,7 +43,6 @@ var object_action_menu = OBJECT_ACTION_MENU.instance()
 var object_action_menu_open = false
 var action_menu_options = []
 
-
 func setup_inventory(owner):
 	inv_selector.visible = false
 	actmenu_selector.visible = false
@@ -52,6 +54,9 @@ func setup_inventory(owner):
 
 func _physics_process(delta):
 	if owner_type == 'Player':
+		
+		if turn_timer.time_left > 0: return # lock out while in turn
+		
 		if Input.is_action_just_pressed("tab"):
 			if inventory_ui.visible == false: open_inv_ui()
 			else: close_inv_ui()
@@ -68,8 +73,8 @@ func _physics_process(delta):
 					if !object_action_menu_open: open_object_action_menu()
 					elif object_action_menu_open: handle_action_menu()
 				if Input.is_action_just_pressed("q"):
-					if object_action_menu_open: close_object_action_menu()
-						
+					if !object_action_menu_open: close_inv_ui()
+					elif object_action_menu_open: close_object_action_menu()
 
 func handle_action_menu():
 	match object_action_menu.get_node("MenuHolder").get_children()[actmenu_selector_index].text:
@@ -85,9 +90,7 @@ func open_inv_ui():
 func close_inv_ui():
 	inventory_ui.visible = false
 	hide_inv_selector()
-	hide_actmenu_selector()
-	object_action_menu.visible = false
-	object_action_menu_open = false
+	close_object_action_menu()
 	inventory_owner.set_inventory_open(false)
 
 func show_inv_selector():
@@ -227,7 +230,6 @@ func subtract_from_gold(currency):
 
 func equip_item():
 	var idx = -1
-	
 	for object in inventory_objects:
 		idx += 1
 		if item_to_act_on == object: break
@@ -244,12 +246,10 @@ func equip_item():
 
 func unequip_item(type):
 	var idx = -1
-	
 	if item_to_act_on.get_inventory_item_type() == 'Weapon':
 		for object in inventory_objects:
 			idx += 1
 			if equipped_weapon == object: break
-		
 		equipped_weapon = null
 		
 	ui_objects[idx].set_equipped(false)
@@ -259,17 +259,14 @@ func unequip_item(type):
 
 func set_drop_item_action():
 	item_to_act_on = inventory_objects[inv_selector_index]
-	
 	inventory_owner.set_action("drop item")
 
 func set_equip_item_action():
 	item_to_act_on = inventory_objects[inv_selector_index]
-	
 	inventory_owner.set_action("equip item")
 
 func set_unequip_item_action():
 	item_to_act_on = inventory_objects[inv_selector_index]
-	
 	inventory_owner.set_action("unequip item")
 
 func drop_item():
