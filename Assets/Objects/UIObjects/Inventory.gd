@@ -1,6 +1,7 @@
 extends Node
 
 const INVENTORY_OBJECT = preload("res://Assets/Objects/UIObjects/InventoryUIObject.tscn")
+const OBJECT_ACTION_MENU = preload("res://Assets/Objects/UIObjects/ObjectActionMenu.tscn")
 
 onready var inventory_ui = $InventoryUI
 onready var inventory_panels = $InventoryUI/InventoryPanels
@@ -19,8 +20,13 @@ var gold = 0
 var inventory_owner
 var owner_type
 var selector_index = 0
+var object_action_menu_open = false
+
+var object_action_menu = OBJECT_ACTION_MENU.instance()
 
 func setup_inventory(owner):
+	inventory_ui.add_child(object_action_menu)
+	object_action_menu.visible = false
 	inventory_owner = owner
 	owner_type = owner.get_obj_type()
 	inventory_ui.visible = false
@@ -33,6 +39,8 @@ func _physics_process(delta):
 				selector_index = 0
 			else: 
 				inventory_ui.visible = false
+				object_action_menu.visible = false
+				object_action_menu_open = false
 		
 		if inventory_ui.visible == true:
 			if Input.is_action_just_pressed("w"):
@@ -41,12 +49,28 @@ func _physics_process(delta):
 			if Input.is_action_just_pressed("s"):
 				if selector_index != ui_objects.size()-1:
 					selector_index += 1
-		
+			if Input.is_action_just_pressed("e"):
+				open_object_action_menu()
+						
 		if inventory_objects.size() > 0:
 			selector.rect_position = Vector2(0, (inventory_ui_slots.rect_position.y + (ui_objects[selector_index].rect_position.y)))
 			selector.rect_size = ui_objects[0].rect_size
 		
 
+func open_object_action_menu():
+	if !object_action_menu_open:
+		if inventory_objects.size() > 0:
+			object_action_menu_open = true
+			object_action_menu.visible = true
+			object_action_menu.rect_position = Vector2(300, selector.rect_position.y)
+			
+			for option in object_action_menu.get_node("MenuHolder").get_children():
+				option.queue_free()
+			
+			for option in ['Use', 'Equip', 'Unequip', 'Drop']:
+				var option_label = Label.new()
+				option_label.text = option
+				object_action_menu.get_node('MenuHolder').add_child(option_label)
 
 func add_to_inventory(object):
 	inventory_objects.append(object)
