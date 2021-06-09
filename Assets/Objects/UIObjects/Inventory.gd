@@ -55,7 +55,7 @@ func setup_inventory(owner):
 func _physics_process(delta):
 	if owner_type == 'Player':
 		
-		if turn_timer.time_left > 0: return # lock out while in turn
+		if turn_timer.get_turn_in_process() == true: return # lock out while in turn
 		
 		if Input.is_action_just_pressed("tab"):
 			if inventory_ui.visible == false: open_inv_ui()

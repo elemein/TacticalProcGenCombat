@@ -34,6 +34,10 @@ signal action_unequip_item
 signal status_bar_hp(hp, max_hp)
 signal status_bar_mp(mp, max_mp)
 
+# unsorted vars
+var turn_anim_timer = Timer.new()
+var anim_timer_waittime = 1
+
 # gameplay vars
 var object_type = 'Player'
 var hp = 100 setget set_hp
@@ -84,6 +88,10 @@ func _ready():
 	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
 	add_child(directional_timer)
 	
+	turn_anim_timer.set_one_shot(true)
+	turn_anim_timer.set_wait_time(DIRECTION_SELECT_TIME)
+	add_child(turn_anim_timer)
+	
 	turn_timer.add_to_timer_group(self)
 	
 	map_pos = map.place_player_on_map(self)
@@ -93,6 +101,14 @@ func _ready():
 	target_pos = translation
 	saved_pos = translation
 	
+	add_sub_nodes_as_children()
+	
+	map.print_map_grid()
+	
+	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
+	map.hide_non_visible_from_player()
+
+func add_sub_nodes_as_children():
 	add_child(mover)
 	mover.set_actor(self)
 	
@@ -101,24 +117,10 @@ func _ready():
 	
 	add_child(inventory)
 	inventory.setup_inventory(self)
-	
-	
-	map.print_map_grid()
-	
-	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
-	map.hide_non_visible_from_player()
 
 func _physics_process(_delta):
-	if is_dead:
-		mover.set_actor_translation()
-		if death_anim_timer.time_left > 0.75:
-			model.translation = (model.translation.linear_interpolate(death_anim_info[0], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
-		if death_anim_timer.time_left < 0.75 && death_anim_timer.time_left != 0:
-			model.translation = (model.translation.linear_interpolate(death_anim_info[1], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
-			model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
-		if death_anim_timer.time_left == 0:
-			return 'dead'
-	
+	if is_dead: play_death_anim()
+		
 	if is_dead == false:
 		get_input()
 		
@@ -137,9 +139,19 @@ func _physics_process(_delta):
 
 	handle_animations()
 
-func get_input():
+func play_death_anim():
+	mover.set_actor_translation()
+	if death_anim_timer.time_left > 0.75:
+		model.translation = (model.translation.linear_interpolate(death_anim_info[0], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+	if death_anim_timer.time_left < 0.75 && death_anim_timer.time_left != 0:
+		model.translation = (model.translation.linear_interpolate(death_anim_info[1], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+		model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+	if death_anim_timer.time_left == 0:
+		return 'dead'
+			
 	
-	if turn_timer.time_left > 0 or inventory_open: 
+func get_input():
+	if turn_timer.get_turn_in_process() == true or inventory_open: 
 		# We don't wanna collect input if turn in action or in inventory.
 		return
 	
@@ -252,6 +264,15 @@ func get_target_tiles(num):
 	return target_tiles
 	
 func process_turn():	
+	
+	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
+	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
+	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action in ['drop item', 'equip item', 'unequip item']: turn_anim_timer.set_wait_time(0.5)
+
+	turn_anim_timer.start()
+
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(" ")[0] == 'move':
 		if check_move_action(proposed_action):
@@ -422,8 +443,6 @@ func play_anim(name):
 		return
 	anim.play(name)
 
-
-
 # Getters
 func get_translation():
 	return translation
@@ -463,6 +482,9 @@ func get_inventory_object() -> Object:
 
 func get_item_to_drop() -> Object:
 	return inventory.get_item_to_drop()
+
+func get_turn_anim_timer() -> Object:
+	return turn_anim_timer
 
 #Setters
 func set_model_rot(dir_facing, rotation_deg):

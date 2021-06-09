@@ -69,6 +69,10 @@ var loot_dropped = false
 var death_anim_timer = Timer.new()
 var death_anim_info = []
 
+# unsorted vars
+var turn_anim_timer = Timer.new()
+var anim_timer_waittime = 1
+
 # object vars
 var ai_engine = AI_ENGINE.new()
 var mover = ACTOR_MOVER.new()
@@ -83,6 +87,10 @@ func setup_actor():
 	turn_timer.add_to_timer_group(self)
 	translation.x = map_pos[0] * TILE_OFFSET
 	translation.z = map_pos[1] * TILE_OFFSET
+	
+	turn_anim_timer.set_one_shot(true)
+	turn_anim_timer.set_wait_time(1)
+	add_child(turn_anim_timer)
 	
 	ai_engine.set_actor(self)
 	add_child(ai_engine)
@@ -114,7 +122,7 @@ func _physics_process(_delta):
 			return 'dead'
 	
 	else:
-		if turn_timer.time_left == 0: # We don't wanna decide a turn if timer isn't 0.
+		if turn_timer.get_turn_in_process() == false: # We don't wanna decide a turn if timer isn't 0.
 			if ready_status == false:
 				decide_next_action()
 		
@@ -140,6 +148,15 @@ func set_action(action):
 	ready_status = true
 
 func process_turn():
+	
+	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
+	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
+	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action in ['drop item', 'equip item', 'unequip item']: turn_anim_timer.set_wait_time(0.5)
+
+	turn_anim_timer.start()
+
 	if proposed_action.split(" ")[0] == 'move':
 		if check_move_action(proposed_action) == true:
 			mover.move_actor()
@@ -292,6 +309,9 @@ func get_viewfield():
 
 func get_attack_power() -> int:
 	return attack_power
+
+func get_turn_anim_timer() -> Object:
+	return turn_anim_timer
 
 # Setters
 func set_model_rot(dir_facing, rotation_deg):

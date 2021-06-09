@@ -18,7 +18,8 @@ func set_actor(setter):
 	target_pos = actor.get_translation()
 
 func set_actor_translation():
-	actor.set_translation(actor.get_translation().linear_interpolate(target_pos, (1-turn_timer.time_left))) 
+	var interp_mod = actor.get_turn_anim_timer().time_left / actor.get_turn_anim_timer().get_wait_time()
+	actor.set_translation(actor.get_translation().linear_interpolate(target_pos, 1-interp_mod))
 
 func check_cornering(direction):
 	match direction:

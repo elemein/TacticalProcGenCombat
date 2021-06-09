@@ -6,10 +6,14 @@ const ACTION_TIME = 0.95
 
 onready var player = get_node("/root/World/Player")
 onready var map = get_node("/root/World/Map")
+onready var turn_delay_timer = $TurnDelayTimer
 
 var rng = RandomNumberGenerator.new()
 
+var turn_in_process = false
+var in_delay = false
 var turn_counter = 1
+var actor_idx = 0
 
 # Use this to hold all of the actors in the world; players, enemies, etc.
 var actors = []
@@ -27,17 +31,35 @@ func remove_from_timer_group(actor):
 func process_turn():
 	sort_actors_by_speed()
 	
-	for actor in actors: # Checks if everyone is just moving to shorten the time.
-		if actor.proposed_action.split(" ")[0] in ['move', 'idle']:
-			if wait_time < MOVING_TIME: wait_time = MOVING_TIME
-		else:
-			wait_time = ACTION_TIME
+	actor_idx = 0
+	turn_delay_timer.start(0.0001)
+
+func _on_Turn_Delay_Timer_timeout():
+	if actor_idx <= actors.size()-1 and turn_delay_timer.time_left == 0:
+		var actor = actors[actor_idx]
 		
-	start() #This starts the timer.
+		if actor.get_action().split(" ")[0] == 'move': turn_delay_timer.set_wait_time(0.15)
+		elif actor.get_action() == 'idle': turn_delay_timer.set_wait_time(0.000001)
+		elif actor.get_action() == 'basic attack': turn_delay_timer.set_wait_time(0.2)
+		elif actor.get_action() == 'fireball': turn_delay_timer.set_wait_time(0.3)
+		elif actor.get_action() in ['drop item', 'equip item', 'unequip item']: turn_delay_timer.set_wait_time(0.2)
+			
+		actor.process_turn()
+		
+		actor_idx += 1
+		turn_delay_timer.start()
+
+func wait_for_actor_anims_and_delay_timer_to_end():
+	var all_done = true
 	
 	for actor in actors:
-		actor.process_turn()
-
+		if actor.get_turn_anim_timer().time_left != 0:
+			all_done = false
+			
+	if turn_delay_timer.time_left > 0: all_done = false
+	
+	if all_done == true: end_turn()
+	
 func sort_actors_by_speed():
 	# randomize order of those with same speed stat
 	var speed_entries = {}
@@ -72,18 +94,25 @@ func sort_actors_by_speed():
 func end_turn():
 	for actor in actors:
 		actor.end_turn()
+	turn_in_process = false
 	turn_counter += 1
 	map.print_map_grid()
 	
 	map.hide_non_visible_from_player()
-	wait_time = RESET_TIME # Reset this. 0 is NOT valid for some reason, so 0.1.
 
 func _physics_process(_delta):
-	var all_ready = false
+	if turn_in_process:
+		wait_for_actor_anims_and_delay_timer_to_end()
+	
+	if !turn_in_process:
+		if check_if_actors_ready(): 
+			turn_in_process = true
+			process_turn()
+
+func check_if_actors_ready() -> bool:
+	var all_ready = true
 	var players_alive = 0
 
-	if time_left == 0: all_ready = true
-	
 	for actor in actors:
 		if actor.ready_status == false: all_ready = false
 
@@ -92,11 +121,11 @@ func _physics_process(_delta):
 			if actor.is_dead == false: players_alive += 1
 	if players_alive == 0:
 		all_ready = false
-
-	if all_ready: process_turn()
-
-func _on_TurnTimer_timeout():
-	end_turn()
+	
+	return all_ready
 
 func get_actors():
 	return actors
+
+func get_turn_in_process() -> bool:
+	return turn_in_process
