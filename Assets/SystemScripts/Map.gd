@@ -57,8 +57,6 @@ func move_on_map(object, old_pos, new_pos):
 	map_grid[new_pos[0]][new_pos[1]].append(object)
 	map_grid[old_pos[0]][old_pos[1]].erase(object)
 	
-	check_tile_for_steppable_objects(new_pos[0], new_pos[1])
-	
 	return [new_pos[0], new_pos[1]]
 
 func print_map_grid():
@@ -140,16 +138,6 @@ func hide_non_visible_from_player():
 				object.visible = true
 		
 	in_view_objects = viewfield
-
-func check_tile_for_steppable_objects(x,z):
-	var tile_objects = get_tile_contents(x,z)
-	
-	for object in tile_objects:
-		match object.get_obj_type():
-			'Spike Trap': object.activate_trap(tile_objects)
-			'Coins': object.collect_item(tile_objects)
-			'Sword': object.collect_item(tile_objects)
-			'Magic Staff': object.collect_item(tile_objects)
 
 func add_map_object(object):
 	var tile = object.get_map_pos()
