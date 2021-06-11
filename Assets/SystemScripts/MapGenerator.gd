@@ -305,47 +305,23 @@ func spawn_traps():
 		total_map[x][z].append(trap)
 
 func spawn_loot():
-	for coin_cnt in range(NUMBER_OF_COINS):
+	spawn_inv_items(base_coins, NUMBER_OF_COINS)
+	spawn_inv_items(base_sword, NUMBER_OF_SWORDS)
+	spawn_inv_items(base_staff, NUMBER_OF_STAFFS)
+
+func spawn_inv_items(item_scene, no_of_items):
+	for obj_cnt in range(no_of_items):
 		var room = rooms[rng.randi_range(0, rooms.size()-1)]
 		
 		var rand_tile = get_random_available_tile_in_room(room)
 		var x = rand_tile[0]
 		var z = rand_tile[1]
 				
-		var coins = base_coins.instance()
-		coins.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
-		coins.visible = false
-		coins.set_map_pos([x,z])
-		coins.add_to_group('loot')
+		var item = item_scene.instance()
+		item.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
+		item.visible = false
+		item.set_map_pos([x,z])
+		item.add_to_group('loot')
 
-		total_map[x][z].append(coins)
-
-	for sword_cnt in range(NUMBER_OF_SWORDS):
-		var room = rooms[rng.randi_range(0, rooms.size()-1)]
-		
-		var rand_tile = get_random_available_tile_in_room(room)
-		var x = rand_tile[0]
-		var z = rand_tile[1]
-				
-		var sword = base_sword.instance()
-		sword.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
-		sword.visible = false
-		sword.set_map_pos([x,z])
-		sword.add_to_group('loot')
-
-		total_map[x][z].append(sword)
+		total_map[x][z].append(item)
 	
-	for stave_cnt in range(NUMBER_OF_STAFFS):
-		var room = rooms[rng.randi_range(0, rooms.size()-1)]
-		
-		var rand_tile = get_random_available_tile_in_room(room)
-		var x = rand_tile[0]
-		var z = rand_tile[1]
-				
-		var staff = base_staff.instance()
-		staff.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
-		staff.visible = false
-		staff.set_map_pos([x,z])
-		staff.add_to_group('loot')
-
-		total_map[x][z].append(staff)
