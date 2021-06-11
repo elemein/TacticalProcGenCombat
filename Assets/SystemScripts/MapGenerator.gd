@@ -8,18 +8,20 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 10
+const NUMBER_OF_ENEMIES = 5
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 10
 const NUMBER_OF_COINS = 8
-const NUMBER_OF_SWORDS = 25
+const NUMBER_OF_SWORDS = 5
+const NUMBER_OF_STAFFS = 5
 
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
 var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
 var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
-var base_sword = preload("res://Assets/Objects/MapObjects/Sword.tscn")
+var base_sword = preload("res://Assets/Objects/MapObjects/InventoryObjects/Sword.tscn")
+var base_staff = preload("res://Assets/Objects/MapObjects/InventoryObjects/MagicStaff.tscn")
 
 var map_w = 30
 var map_h = 30
@@ -332,3 +334,18 @@ func spawn_loot():
 		sword.add_to_group('loot')
 
 		total_map[x][z].append(sword)
+	
+	for stave_cnt in range(NUMBER_OF_STAFFS):
+		var room = rooms[rng.randi_range(0, rooms.size()-1)]
+		
+		var rand_tile = get_random_available_tile_in_room(room)
+		var x = rand_tile[0]
+		var z = rand_tile[1]
+				
+		var staff = base_staff.instance()
+		staff.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
+		staff.visible = false
+		staff.set_map_pos([x,z])
+		staff.add_to_group('loot')
+
+		total_map[x][z].append(staff)

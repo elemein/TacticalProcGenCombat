@@ -474,6 +474,9 @@ func get_viewfield():
 func get_attack_power() -> int:
 	return attack_power
 
+func get_spell_power() -> int:
+	return spell_power
+
 func get_inventory_open() -> bool:
 	return inventory_open
 
@@ -507,6 +510,9 @@ func set_mp(new_mp):
 	
 func set_attack_power(new_value):
 	attack_power = new_value
+
+func set_spell_power(new_value):
+	spell_power = new_value
 
 func set_inventory_open(state):
 	inventory_open = state

@@ -310,6 +310,9 @@ func get_viewfield():
 func get_attack_power() -> int:
 	return attack_power
 
+func get_spell_power() -> int:
+	return spell_power
+
 func get_turn_anim_timer() -> Object:
 	return turn_anim_timer
 

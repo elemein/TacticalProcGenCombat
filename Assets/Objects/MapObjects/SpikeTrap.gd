@@ -13,7 +13,8 @@ var trap_anim_timer = Timer.new()
 
 func _physics_process(_delta):
 	if sprung:
-		translation = translation.linear_interpolate(sprung_pos, (1-trap_anim_timer.time_left))
+		var intrp_mod = trap_anim_timer.time_left / trap_anim_timer.get_wait_time()
+		translation = translation.linear_interpolate(sprung_pos, (1-intrp_mod))
 		
 		if trap_anim_timer.time_left == 0:
 			map.remove_map_object(self)
@@ -29,7 +30,7 @@ func set_map_pos(new_pos):
 	
 	# Also set up the timer.
 	trap_anim_timer.set_one_shot(true)
-	trap_anim_timer.set_wait_time(1)
+	trap_anim_timer.set_wait_time(1.5)
 	add_child(trap_anim_timer)
 	sprung_pos = Vector3(translation.x, translation.y + 1.5, translation.z)
 
