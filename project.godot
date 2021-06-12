@@ -10,14 +10,17 @@ config_version=4
 
 _global_script_classes=[  ]
 _global_script_class_icons={
-
 }
 
 [application]
 
 config/name="RyanSebProj"
-run/main_scene="res://World.tscn"
+run/main_scene="res://Assets/GUI/TitleScreen/MainTitleScreen.tscn"
 config/icon="res://icon.png"
+
+[debug]
+
+gdscript/completion/autocomplete_setters_and_getters=true
 
 [editor_plugins]
 
