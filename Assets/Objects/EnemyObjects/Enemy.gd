@@ -316,6 +316,9 @@ func get_spell_power() -> int:
 func get_turn_anim_timer() -> Object:
 	return turn_anim_timer
 
+func get_direction_facing() -> String:
+	return direction_facing
+
 # Setters
 func set_model_rot(dir_facing, rotation_deg):
 	direction_facing = dir_facing

@@ -26,6 +26,7 @@ var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 # Spell signals
 signal spell_cast_fireball
 signal spell_cast_basic_attack
+signal spell_cast_dash
 signal action_drop_item
 signal action_equip_item
 signal action_unequip_item
@@ -230,7 +231,7 @@ func get_input():
 	if Input.is_action_pressed("space"): set_action('basic attack')
 	
 	# Skills will need two presses to confirm.
-	if Input.is_action_pressed("e"): set_action('fireball')
+	if Input.is_action_pressed("e"): set_action('dash')
 	
 func set_action(action):
 	proposed_action = action
@@ -269,6 +270,7 @@ func process_turn():
 	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
 	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
 	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.8)
 	elif proposed_action in ['drop item', 'equip item', 'unequip item']: turn_anim_timer.set_wait_time(0.5)
 
 	turn_anim_timer.start()
@@ -286,6 +288,8 @@ func process_turn():
 	
 	elif proposed_action == 'fireball':
 		emit_signal("spell_cast_fireball")
+	elif proposed_action == 'dash':
+		emit_signal("spell_cast_dash")
 		
 	elif proposed_action == 'drop item':
 		emit_signal("action_drop_item")
@@ -488,6 +492,9 @@ func get_item_to_drop() -> Object:
 
 func get_turn_anim_timer() -> Object:
 	return turn_anim_timer
+
+func get_direction_facing() -> String:
+	return direction_facing
 
 #Setters
 func set_model_rot(dir_facing, rotation_deg):

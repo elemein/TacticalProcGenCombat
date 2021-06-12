@@ -4,6 +4,8 @@ extends Node
 signal spell_cast_basic_attack
 signal spell_cast_fireball
 
+signal spell_cast_dash
+
 # Inventory Actions
 signal action_drop_item
 signal action_equip_item
@@ -36,6 +38,9 @@ func _on_action_unequip_item():
 	emit_signal("action_unequip_item")
 
 # Movement
+func _on_spell_cast_dash():
+	emit_signal("spell_cast_dash")
+
 #func _on_mover_check_move_action(move):
 #	emit_signal("mover_check_move_action", move)
 #
