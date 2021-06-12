@@ -18,7 +18,8 @@ func set_actor(setter):
 	target_pos = actor.get_translation()
 
 func set_actor_translation():
-	actor.set_translation(actor.get_translation().linear_interpolate(target_pos, (1-turn_timer.time_left))) 
+	var interp_mod = actor.get_turn_anim_timer().time_left / actor.get_turn_anim_timer().get_wait_time()
+	actor.set_translation(actor.get_translation().linear_interpolate(target_pos, 1-interp_mod))
 
 func check_cornering(direction):
 	match direction:
@@ -76,48 +77,59 @@ func set_actor_direction(direction):
 
 	direction_facing = direction
 
-func move_actor():
+func move_actor(amount):
 	var target_tile
-	var direction = actor.get_action().split(" ")[1]
+	var direction = actor.get_direction_facing()
 	set_actor_direction(direction)
 
 	match direction:
 		'upleft':
-			target_tile = [map_pos[0] + 1, map_pos[1] - 1]
+			target_tile = [map_pos[0] + amount, map_pos[1] - amount]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = target_tile[1] * TILE_OFFSET
 		'upright':
-			target_tile = [map_pos[0] + 1, map_pos[1] + 1]
+			target_tile = [map_pos[0] + amount, map_pos[1] + amount]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = target_tile[1] * TILE_OFFSET
 		'downleft':
-			target_tile = [map_pos[0] - 1, map_pos[1] - 1]
+			target_tile = [map_pos[0] - amount, map_pos[1] - amount]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = target_tile[1] * TILE_OFFSET
 		'downright':
-			target_tile = [map_pos[0] - 1, map_pos[1] + 1]
+			target_tile = [map_pos[0] - amount, map_pos[1] + amount]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = target_tile[1] * TILE_OFFSET
 
 		'up':
-			target_tile = [map_pos[0] + 1, map_pos[1]]
+			target_tile = [map_pos[0] + amount, map_pos[1]]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = actor.get_translation().z
 		'down':
-			target_tile = [map_pos[0] - 1, map_pos[1]]
+			target_tile = [map_pos[0] - amount, map_pos[1]]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = actor.get_translation().z
 		'left':
-			target_tile = [map_pos[0], map_pos[1] - 1]
+			target_tile = [map_pos[0], map_pos[1] - amount]
 			target_pos.z = target_tile[1] * TILE_OFFSET
 			target_pos.x = actor.get_translation().x
 		'right':
-			target_tile = [map_pos[0], map_pos[1] + 1]
+			target_tile = [map_pos[0], map_pos[1] + amount]
 			target_pos.z = target_tile[1] * TILE_OFFSET
 			target_pos.x = actor.get_translation().x
 
 	map_pos = map.move_on_map(actor, map_pos, target_tile)
+	check_tile_for_steppable_objects(map_pos[0], map_pos[1])
 	actor.set_map_pos(map_pos)
+
+func check_tile_for_steppable_objects(x,z):
+	var tile_objects = map.get_tile_contents(x,z)
+	
+	for object in tile_objects:
+		match object.get_obj_type():
+			'Spike Trap': object.activate_trap(tile_objects)
+			'Coins': object.collect_item(tile_objects)
+			'Sword': object.collect_item(tile_objects)
+			'Magic Staff': object.collect_item(tile_objects)
 
 func reset_pos_vars():
 	target_pos = actor.get_translation()

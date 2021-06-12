@@ -1,12 +1,13 @@
 extends KinematicBody
 
 const DEATH_ANIM_TIME = 1
-const DIRECTION_SELECT_TIME = 0.225
+const DIRECTION_SELECT_TIME = 0.27
 
 const TILE_OFFSET = 2.2
 
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
+const INVENTORY = preload("res://Assets/Objects/UIObjects/Inventory.tscn")
 
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
@@ -25,10 +26,18 @@ var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 # Spell signals
 signal spell_cast_fireball
 signal spell_cast_basic_attack
+signal spell_cast_dash
+signal action_drop_item
+signal action_equip_item
+signal action_unequip_item
 
 # Status bar signals
 signal status_bar_hp(hp, max_hp)
 signal status_bar_mp(mp, max_mp)
+
+# unsorted vars
+var turn_anim_timer = Timer.new()
+var anim_timer_waittime = 1
 
 # gameplay vars
 var object_type = 'Player'
@@ -62,6 +71,9 @@ var effect = null
 # view var
 var viewfield = []
 
+# inventory vars
+var inventory_open = false
+
 #death vars
 var is_dead = false
 var death_anim_timer = Timer.new()
@@ -70,48 +82,52 @@ var death_anim_info = []
 # object vars
 var mover = ACTOR_MOVER.new()
 var view_finder = VIEW_FINDER.new()
+var inventory = INVENTORY.instance()
 
 func _ready():
 	directional_timer.set_one_shot(true)
 	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
 	add_child(directional_timer)
 	
+	turn_anim_timer.set_one_shot(true)
+	turn_anim_timer.set_wait_time(DIRECTION_SELECT_TIME)
+	add_child(turn_anim_timer)
+	
 	turn_timer.add_to_timer_group(self)
 	
-	map_pos = map.place_on_random_avail_tile(self)
+	map_pos = map.place_player_on_map(self)
 	translation.x = map_pos[0] * TILE_OFFSET
 	translation.z = map_pos[1] * TILE_OFFSET
 	
 	target_pos = translation
 	saved_pos = translation
 	
-	mover.set_actor(self)
-	add_child(mover)
-	view_finder.set_actor(self)
-	add_child(view_finder)
+	add_sub_nodes_as_children()
 	
 	map.print_map_grid()
 	
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
 	map.hide_non_visible_from_player()
 
-func _physics_process(_delta):
-	if is_dead:
-		mover.set_actor_translation()
-		if death_anim_timer.time_left > 0.75:
-			model.translation = (model.translation.linear_interpolate(death_anim_info[0], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
-		if death_anim_timer.time_left < 0.75 && death_anim_timer.time_left != 0:
-			model.translation = (model.translation.linear_interpolate(death_anim_info[1], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
-			model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
-		if death_anim_timer.time_left == 0:
-			return 'dead'
+func add_sub_nodes_as_children():
+	add_child(mover)
+	mover.set_actor(self)
 	
+	add_child(view_finder)
+	view_finder.set_actor(self)
+	
+	add_child(inventory)
+	inventory.setup_inventory(self)
+
+func _physics_process(_delta):
+	if is_dead: play_death_anim()
+		
 	if is_dead == false:
 		get_input()
 		
 		if in_turn == true:
 			# Change position based on time tickdown.
-			if proposed_action.split(" ")[0] == 'move':
+			if proposed_action.split(" ")[0] == 'move' or proposed_action == 'dash':
 				mover.set_actor_translation()
 			
 		if proposed_action != '' && in_turn == true:
@@ -124,9 +140,25 @@ func _physics_process(_delta):
 
 	handle_animations()
 
+func play_death_anim():
+	mover.set_actor_translation()
+	if death_anim_timer.time_left > 0.75:
+		model.translation = (model.translation.linear_interpolate(death_anim_info[0], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+	if death_anim_timer.time_left < 0.75 && death_anim_timer.time_left != 0:
+		model.translation = (model.translation.linear_interpolate(death_anim_info[1], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+		model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+	if death_anim_timer.time_left == 0:
+		return 'dead'
+			
+	
 func get_input():
-	if turn_timer.time_left > 0: # We don't wanna collect input if turn in action.
+	if turn_timer.get_turn_in_process() == true or inventory_open: 
+		# We don't wanna collect input if turn in action or in inventory.
 		return
+	
+	if Input.is_action_just_pressed('tab'): 
+		if inventory_open: inventory_open = false
+		elif !inventory_open: inventory_open = true
 	
 	var no_of_inputs = 0
 	
@@ -200,6 +232,7 @@ func get_input():
 	
 	# Skills will need two presses to confirm.
 	if Input.is_action_pressed("e"): set_action('fireball')
+	if Input.is_action_pressed("r"): set_action('dash')
 	
 func set_action(action):
 	proposed_action = action
@@ -233,10 +266,20 @@ func get_target_tiles(num):
 	return target_tiles
 	
 func process_turn():	
+	
+	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
+	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
+	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time(0.5)
+	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action in ['drop item', 'equip item', 'unequip item']: turn_anim_timer.set_wait_time(0.5)
+
+	turn_anim_timer.start()
+
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(" ")[0] == 'move':
 		if check_move_action(proposed_action):
-			mover.move_actor()
+			mover.move_actor(1)
 	
 	elif proposed_action == 'idle':
 		target_pos = map_pos
@@ -246,6 +289,15 @@ func process_turn():
 	
 	elif proposed_action == 'fireball':
 		emit_signal("spell_cast_fireball")
+	elif proposed_action == 'dash':
+		emit_signal("spell_cast_dash")
+		
+	elif proposed_action == 'drop item':
+		emit_signal("action_drop_item")
+	elif proposed_action == 'equip item':
+		emit_signal("action_equip_item")
+	elif proposed_action == 'unequip item':
+		emit_signal("action_unequip_item")
 		
 	# Apply any regen effects
 	self.hp += regen_hp
@@ -371,8 +423,7 @@ func die():
 	add_child(death_anim_timer)
 	is_dead = true
 	turn_timer.remove_from_timer_group(self)
-
-	remove_child(mover)
+	
 	proposed_action = 'idle'
 	
 	var rise = Vector3(model.translation.x, 2, model.translation.z)
@@ -397,7 +448,8 @@ func play_anim(name):
 		return
 	anim.play(name)
 
-
+func manual_move_char(amount):
+	mover.move_actor(amount)
 
 # Getters
 func get_translation():
@@ -427,6 +479,27 @@ func get_viewrange():
 func get_viewfield():
 	return viewfield
 
+func get_attack_power() -> int:
+	return attack_power
+
+func get_spell_power() -> int:
+	return spell_power
+
+func get_inventory_open() -> bool:
+	return inventory_open
+
+func get_inventory_object() -> Object:
+	return inventory
+
+func get_item_to_drop() -> Object:
+	return inventory.get_item_to_drop()
+
+func get_turn_anim_timer() -> Object:
+	return turn_anim_timer
+
+func get_direction_facing() -> String:
+	return direction_facing
+
 #Setters
 func set_model_rot(dir_facing, rotation_deg):
 	direction_facing = dir_facing
@@ -445,3 +518,12 @@ func set_hp(new_hp):
 func set_mp(new_mp):
 	mp = max_mp if (new_mp > max_mp) else new_mp
 	emit_signal("status_bar_mp", mp, max_mp)
+	
+func set_attack_power(new_value):
+	attack_power = new_value
+
+func set_spell_power(new_value):
+	spell_power = new_value
+
+func set_inventory_open(state):
+	inventory_open = state

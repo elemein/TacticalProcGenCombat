@@ -1,0 +1,18 @@
+[gd_scene format=2]
+
+[node name="ObjectActionMenu" type="MarginContainer"]
+margin_right = 70.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 70, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ObjectActionMenuBack" type="ColorRect" parent="."]
+margin_right = 70.0
+margin_bottom = 15.0
+color = Color( 0.12549, 0.12549, 0.109804, 0.941176 )
+
+[node name="MenuHolder" type="VBoxContainer" parent="."]
+margin_right = 70.0
+margin_bottom = 15.0

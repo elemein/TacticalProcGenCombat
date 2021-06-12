@@ -2,6 +2,8 @@ extends Node
 
 const VISION_RANGE = 15
 
+const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
+
 onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var map = get_node("/root/World/Map")
 onready var player = get_node("/root/World/Player")
@@ -18,10 +20,12 @@ var dist_from_player = 0
 var path = []
 var viewfield = []
 
+var pathfinder = PATHFINDER.new()
 var pathfinder_direction
 
 func _ready():
 	rng.randomize()
+	add_child(pathfinder)
 
 func set_actor(setter):
 	actor = setter
@@ -62,7 +66,7 @@ func run_engine():
 			actor.set_action('idle')
 				
 func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
-	var path_info = map.pathfind(actor, actor.get_map_pos(), player_pos[0])
+	var path_info = pathfinder.solve(actor, actor.get_map_pos(), player_pos[0])
 	
 	dist_from_player = path_info[0]
 	path = path_info[1]

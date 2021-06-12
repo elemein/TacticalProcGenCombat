@@ -39,6 +39,9 @@ script = ExtResource( 2 )
 one_shot = true
 script = ExtResource( 5 )
 
+[node name="TurnDelayTimer" type="Timer" parent="TurnTimer"]
+one_shot = true
+
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 0.531987, -0.248753, 0.80939, 0.0458215, 0.962932, 0.265824, -0.845512, -0.104328, 0.523665, 5.14202, 4.6998, 0 )
 light_color = Color( 0.933333, 0.901961, 0.54902, 1 )
@@ -50,7 +53,8 @@ shadow_enabled = true
 [node name="Camera" parent="Player/CamBase" index="0"]
 transform = Transform( -1.62921e-07, 0.984808, -0.173648, 0, 0.173648, 0.984808, 1, 1.60446e-07, -2.82909e-08, -3.45, 14, 0 )
 
-[connection signal="timeout" from="TurnTimer" to="TurnTimer" method="_on_TurnTimer_timeout"]
+[connection signal="timeout" from="TurnTimer/TurnDelayTimer" to="TurnTimer" method="_on_Turn_Delay_Timer_timeout"]
 
 [editable path="Player"]
+
 [editable path="Player/Graphics"]

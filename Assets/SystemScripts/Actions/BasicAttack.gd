@@ -28,10 +28,11 @@ func _ready():
 # Move the parent every frame
 func _physics_process(_delta):
 	if parent:
-		if turn_timer.time_left > 0.5:
-			parent.translation = parent.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.5))) 
+		var interp_mod = parent.get_turn_anim_timer().time_left / parent.get_turn_anim_timer().get_wait_time()
+		if interp_mod > 0.5:
+			parent.translation = parent.translation.linear_interpolate(target_pos, 1-interp_mod)
 		elif parent.in_turn:
-			parent.translation = parent.translation.linear_interpolate(saved_pos, (0.5-turn_timer.time_left))
+			parent.translation = parent.translation.linear_interpolate(saved_pos, 1-interp_mod)
 		else:
 			parent = null
 
@@ -42,7 +43,11 @@ func use():
 		if mana_check():
 			UseSpell.play()
 			set_target_pos()
+			set_power()
 			do_damage()
+
+func set_power():
+	spell_power = parent.get_attack_power()
 
 # Check if out of mana
 func mana_check() -> bool:

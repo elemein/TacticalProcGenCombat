@@ -4,14 +4,12 @@ const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
-const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 
 var rng = RandomNumberGenerator.new()
 var map_generator = MAP_GEN.new()
-var pathfinder = PATHFINDER.new()
 
 var in_view_objects = []
 var player
@@ -37,8 +35,6 @@ func _ready():
 	
 	catalog_ground_tiles()
 
-	add_child(pathfinder)
-
 func add_map_objects_to_tree():
 	for line in map_grid.size():
 		for column in map_grid[0].size():
@@ -48,25 +44,20 @@ func add_map_objects_to_tree():
 					object.setup_actor()
 					current_number_of_enemies += 1
 
-func place_on_random_avail_tile(object):
-	if object.get_obj_type() == 'Player': player = object # caches player for future funcs
+func place_player_on_map(object):
+	player = object # caches player for future funcs
 	
-	var avail = false
-	var tile
-	
-	while avail == false:
-		tile = choose_random_ground_tile()
-		if tile_available(tile[0], tile[1]) == true:
-			avail = true
-	
-	map_grid[tile[0]][tile[1]].append(object)
-	return tile
+	for room in map_dict:
+		if room['type'] == 'Player Spawn':
+			var tile = []
+			tile.append(room['center'].x)
+			tile.append(room['center'].y)
+			map_grid[tile[0]][tile[1]].append(object)
+			return tile
 
 func move_on_map(object, old_pos, new_pos):
 	map_grid[new_pos[0]][new_pos[1]].append(object)
 	map_grid[old_pos[0]][old_pos[1]].erase(object)
-	
-	check_traps(new_pos[0], new_pos[1])
 	
 	return [new_pos[0], new_pos[1]]
 
@@ -80,18 +71,18 @@ func print_map_grid():
 			var to_append = ''
 			
 			for object in tile:
-				if object.get_obj_type() == 'Wall':
-					if (to_append in ['X', 'E', 's']) == false: 
-						to_append = '.'
-				if object.get_obj_type() == 'Ground':
-					if (to_append in ['X', 'E', 's']) == false: 
-						to_append = '0'
-				if object.get_obj_type() == 'Player':
-					to_append = 'X'
-				if object.get_obj_type() == 'Enemy':
-					to_append = 'E'
-				if object.get_obj_type() == 'Spike Trap':
-					to_append = 's'
+				match object.get_obj_type():
+					'Wall':
+						if (to_append in ['X', 'E', 't','c','s']) == false: 
+							to_append = '.'
+					'Ground':
+						if (to_append in ['X', 'E', 't','c','s']) == false: 
+							to_append = '0'
+					'Player': to_append = 'X'
+					'Enemy': to_append = 'E'
+					'Spike Trap': to_append = 't'
+					'Coins': to_append = 'c'
+					'Sword': to_append = 's'
 			
 			converted_row.append(to_append)
 		print(converted_row)
@@ -133,9 +124,6 @@ func is_tile_wall(x,z):
 func get_map():
 	return map_grid
 
-func pathfind(searcher, start_pos, goal_pos):
-	return pathfinder.solve(searcher, start_pos, goal_pos)
-
 func hide_non_visible_from_player():
 	var viewfield = player.get_viewfield()
 	
@@ -153,15 +141,15 @@ func hide_non_visible_from_player():
 		
 	in_view_objects = viewfield
 
-func check_traps(x,z):
-	var tile_objects = get_tile_contents(x,z)
+func add_map_object(object):
+	var tile = object.get_map_pos()
 	
-	for object in tile_objects:
-		if object.get_obj_type() == 'Spike Trap':
-			object.activate_trap(tile_objects) # pass the relevant objects to affect
+	map_grid[tile[0]][tile[1]].append(object)
+	add_child(object)
 
 func remove_map_object(object):
 	var tile = object.get_map_pos()
 	
 	map_grid[tile[0]][tile[1]].erase(object)
 	remove_child(object)
+	

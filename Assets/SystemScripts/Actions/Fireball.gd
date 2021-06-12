@@ -30,9 +30,11 @@ func _ready():
 # Move the parent every frame
 func _physics_process(_delta):
 	if effect != null:
-		if turn_timer.time_left > 0.1:
-			effect.translation = effect.translation.linear_interpolate(target_pos, (1-(turn_timer.time_left - 0.1))) 
+		if parent.get_turn_anim_timer().time_left > 0:
+			var interp_mod = parent.get_turn_anim_timer().time_left / parent.get_turn_anim_timer().get_wait_time()
+			effect.translation = effect.translation.linear_interpolate(target_pos, 1-interp_mod) 
 		else:
+			get_node('Fire').queue_free()
 			remove_child(get_node('Fire'))
 			effect = null
 
@@ -44,7 +46,11 @@ func use():
 			UseSpell.play()
 			create_spell_instance()
 			set_target_pos()
+			set_power()
 			do_damage()
+
+func set_power():
+	spell_power = parent.get_spell_power()
 
 # Check if out of mana
 func mana_check() -> bool:

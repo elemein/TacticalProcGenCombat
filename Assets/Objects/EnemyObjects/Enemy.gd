@@ -7,6 +7,7 @@ const TILE_OFFSET = 2.2
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 const AI_ENGINE = preload("res://Assets/SystemScripts/AIEngine.gd")
+const INVENTORY = preload("res://Assets/Objects/UIObjects/Inventory.tscn")
 
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
@@ -17,6 +18,8 @@ onready var map = get_node("/root/World/Map")
 # Audio effects
 onready var miss_basick_attack = $Audio/Hit/basic_attack_2
 onready var audio_hit = $Audio/Hit/basic_attack_2
+
+var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
 
 var rng = RandomNumberGenerator.new()
 
@@ -62,13 +65,19 @@ var viewfield = []
 
 #death vars
 var is_dead = false
+var loot_dropped = false
 var death_anim_timer = Timer.new()
 var death_anim_info = []
+
+# unsorted vars
+var turn_anim_timer = Timer.new()
+var anim_timer_waittime = 1
 
 # object vars
 var ai_engine = AI_ENGINE.new()
 var mover = ACTOR_MOVER.new()
 var view_finder = VIEW_FINDER.new()
+var inventory = INVENTORY.instance()
 
 func _ready():
 	rng.randomize()
@@ -79,15 +88,26 @@ func setup_actor():
 	translation.x = map_pos[0] * TILE_OFFSET
 	translation.z = map_pos[1] * TILE_OFFSET
 	
+	turn_anim_timer.set_one_shot(true)
+	turn_anim_timer.set_wait_time(1)
+	add_child(turn_anim_timer)
+	
 	ai_engine.set_actor(self)
 	add_child(ai_engine)
 	
-	mover.set_actor(self)
 	add_child(mover)
-	view_finder.set_actor(self)
+	mover.set_actor(self)
+	
 	add_child(view_finder)
+	view_finder.set_actor(self)
+	
+	add_child(inventory)
+	inventory.setup_inventory(self)
+	
 	
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
+	
+	add_loot_to_inventory()
 
 func _physics_process(_delta):
 	if is_dead:
@@ -98,10 +118,11 @@ func _physics_process(_delta):
 			model.translation = (model.translation.linear_interpolate(death_anim_info[1], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
 			model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
 		if death_anim_timer.time_left == 0:
+			if loot_dropped == false: drop_loot()
 			return 'dead'
 	
 	else:
-		if turn_timer.time_left == 0: # We don't wanna decide a turn if timer isn't 0.
+		if turn_timer.get_turn_in_process() == false: # We don't wanna decide a turn if timer isn't 0.
 			if ready_status == false:
 				decide_next_action()
 		
@@ -127,9 +148,19 @@ func set_action(action):
 	ready_status = true
 
 func process_turn():
-	if proposed_action.split(" ")[0] == 'move':
+	
+	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
+	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
+	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action in ['drop item', 'equip item', 'unequip item']: turn_anim_timer.set_wait_time(0.5)
+
+	turn_anim_timer.start()
+
+	if proposed_action.split(" ")[0] == 'move' or proposed_action == 'dash':
+		mover.set_actor_direction(proposed_action.split(" ")[1])
 		if check_move_action(proposed_action) == true:
-			mover.move_actor()
+			mover.move_actor(1)
 
 	elif proposed_action == 'basic attack':
 		emit_signal("spell_cast_basic_attack")
@@ -174,9 +205,7 @@ func die():
 	add_child(death_anim_timer)
 	is_dead = true
 	turn_timer.remove_from_timer_group(self)
-
-	remove_child(mover)
-	remove_child(ai_engine)
+	
 	proposed_action = 'idle'
 	
 	var rise = Vector3(model.translation.x, 2, model.translation.z)
@@ -232,6 +261,25 @@ func play_anim(name):
 		return
 	anim.play(name)
 
+func add_loot_to_inventory():
+	inventory.add_to_gold(rng.randi_range(1,50))
+	
+func drop_loot():
+	# drop gold
+	var coins = base_coins.instance()
+	coins.translation = Vector3(map_pos[0] * TILE_OFFSET, 0.6, map_pos[1] * TILE_OFFSET)
+	coins.visible = true
+	coins.set_map_pos([map_pos[0],map_pos[1]])
+	coins.add_to_group('loot')
+	coins.set_gold_value(inventory.get_gold_total())
+	map.add_map_object(coins)
+	
+	inventory.subtract_from_gold(inventory.get_gold_total())
+	
+	# drop items
+	
+	loot_dropped = true
+
 # Getters
 func get_translation():
 	return translation
@@ -259,6 +307,18 @@ func get_speed():
 
 func get_viewfield():
 	return viewfield
+
+func get_attack_power() -> int:
+	return attack_power
+
+func get_spell_power() -> int:
+	return spell_power
+
+func get_turn_anim_timer() -> Object:
+	return turn_anim_timer
+
+func get_direction_facing() -> String:
+	return direction_facing
 
 # Setters
 func set_model_rot(dir_facing, rotation_deg):
