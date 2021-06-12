@@ -172,6 +172,9 @@ script = ExtResource( 5 )
 [node name="Graphics" parent="." instance=ExtResource( 1 )]
 transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 0, 0, 0 )
 
+[node name="Armature" parent="Graphics" index="0"]
+transform = Transform( 0.399, 0, 0, 0, 0.399, 0, 0, 0, 0.399, -0.00370395, 0.392027, 0.00157142 )
+
 [node name="Cone" parent="Graphics/Armature/Skeleton" index="0"]
 mesh = SubResource( 1 )
 material/0 = SubResource( 2 )
@@ -202,6 +205,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80738, 0 )
 pixel_size = 0.003
 
 [node name="Actions" parent="." instance=ExtResource( 6 )]
+
 [connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
 [connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]
 [connection signal="status_bar_hp" from="." to="HealthManaBar3D" method="_on_status_bar_hp"]
