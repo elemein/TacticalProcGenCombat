@@ -7,6 +7,7 @@ var fireball = preload("res://Assets/GUI/Fireball.png")
 var drop_item = preload("res://Assets/GUI/Drop_Item.png")
 var equip_item = preload("res://Assets/GUI/Equip_Item.png")
 var unequip_item = preload("res://Assets/GUI/Unequip_Item.png")
+var dash = preload("res://Assets/GUI/Dash.png")
 
 onready var action_holder = get_node("/root/World/GUI/Proposed Action")
 onready var turn_timer = get_node("/root/World/TurnTimer")
@@ -34,11 +35,16 @@ func set_action(proposed_action):
 				'left': action_holder.rotation_degrees = 180
 				'right': action_holder.rotation_degrees = 0
 	
-		'basic attack': action_holder.set_texture(basic_attack)
-		'fireball': action_holder.set_texture(fireball)
-		'drop item': action_holder.set_texture(drop_item)
-		'equip item': action_holder.set_texture(equip_item)
-		'unequip item': action_holder.set_texture(unequip_item)
+		'basic attack': set_texture_unrotated(basic_attack)
+		'fireball': set_texture_unrotated(fireball)
+		'dash': set_texture_unrotated(dash)
+		'drop item': set_texture_unrotated(drop_item)
+		'equip item': set_texture_unrotated(equip_item)
+		'unequip item': set_texture_unrotated(unequip_item)
+
+func set_texture_unrotated(action):
+	action_holder.rotation_degrees = 0
+	action_holder.set_texture(action)
 
 func _physics_process(_delta):
 	# We want to continuously display the time left on the turn timer.

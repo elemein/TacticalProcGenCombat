@@ -231,7 +231,8 @@ func get_input():
 	if Input.is_action_pressed("space"): set_action('basic attack')
 	
 	# Skills will need two presses to confirm.
-	if Input.is_action_pressed("e"): set_action('dash')
+	if Input.is_action_pressed("e"): set_action('fireball')
+	if Input.is_action_pressed("r"): set_action('dash')
 	
 func set_action(action):
 	proposed_action = action
