@@ -82,7 +82,6 @@ func solve(searcher, start, end):
 			move_count += 1
 	
 	if reached_end:
-		print(retrace_path())
 		return [move_count, retrace_path()]
 		
 	return [-1,[[-1, -1]]]

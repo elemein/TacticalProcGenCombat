@@ -270,7 +270,7 @@ func process_turn():
 	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
 	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
 	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
-	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time(0.5)
 	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.8)
 	elif proposed_action in ['drop item', 'equip item', 'unequip item']: turn_anim_timer.set_wait_time(0.5)
 

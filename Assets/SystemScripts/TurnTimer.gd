@@ -42,7 +42,7 @@ func _on_Turn_Delay_Timer_timeout():
 		elif actor.get_action() == 'idle': turn_delay_timer.set_wait_time(0.000001)
 		elif actor.get_action() == 'basic attack': turn_delay_timer.set_wait_time(0.2)
 		elif actor.get_action() == 'fireball': turn_delay_timer.set_wait_time(0.3)
-		elif actor.get_action() == 'dash': turn_delay_timer.set_wait_time(0.3)
+		elif actor.get_action() == 'dash': turn_delay_timer.set_wait_time(0.2)
 		elif actor.get_action() in ['drop item', 'equip item', 'unequip item']: turn_delay_timer.set_wait_time(0.2)
 			
 		actor.process_turn()
