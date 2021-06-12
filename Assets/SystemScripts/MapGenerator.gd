@@ -8,7 +8,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 0
+const NUMBER_OF_ENEMIES = 5
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 10
 const NUMBER_OF_COINS = 8
@@ -155,7 +155,7 @@ func create_rooms():
 			
 			room.split = leaf.split
 			
-			room.center = Vector2()
+			room.center = []
 			room.center.x = floor(room.x + room.w/2)
 			room.center.y = floor(room.y + room.h/2)
 			rooms.append(room)

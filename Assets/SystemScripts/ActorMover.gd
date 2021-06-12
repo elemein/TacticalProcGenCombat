@@ -77,43 +77,43 @@ func set_actor_direction(direction):
 
 	direction_facing = direction
 
-func move_actor():
+func move_actor(amount):
 	var target_tile
-	var direction = actor.get_action().split(" ")[1]
+	var direction = actor.get_direction_facing()
 	set_actor_direction(direction)
 
 	match direction:
 		'upleft':
-			target_tile = [map_pos[0] + 1, map_pos[1] - 1]
+			target_tile = [map_pos[0] + amount, map_pos[1] - amount]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = target_tile[1] * TILE_OFFSET
 		'upright':
-			target_tile = [map_pos[0] + 1, map_pos[1] + 1]
+			target_tile = [map_pos[0] + amount, map_pos[1] + amount]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = target_tile[1] * TILE_OFFSET
 		'downleft':
-			target_tile = [map_pos[0] - 1, map_pos[1] - 1]
+			target_tile = [map_pos[0] - amount, map_pos[1] - amount]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = target_tile[1] * TILE_OFFSET
 		'downright':
-			target_tile = [map_pos[0] - 1, map_pos[1] + 1]
+			target_tile = [map_pos[0] - amount, map_pos[1] + amount]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = target_tile[1] * TILE_OFFSET
 
 		'up':
-			target_tile = [map_pos[0] + 1, map_pos[1]]
+			target_tile = [map_pos[0] + amount, map_pos[1]]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = actor.get_translation().z
 		'down':
-			target_tile = [map_pos[0] - 1, map_pos[1]]
+			target_tile = [map_pos[0] - amount, map_pos[1]]
 			target_pos.x = target_tile[0] * TILE_OFFSET
 			target_pos.z = actor.get_translation().z
 		'left':
-			target_tile = [map_pos[0], map_pos[1] - 1]
+			target_tile = [map_pos[0], map_pos[1] - amount]
 			target_pos.z = target_tile[1] * TILE_OFFSET
 			target_pos.x = actor.get_translation().x
 		'right':
-			target_tile = [map_pos[0], map_pos[1] + 1]
+			target_tile = [map_pos[0], map_pos[1] + amount]
 			target_pos.z = target_tile[1] * TILE_OFFSET
 			target_pos.x = actor.get_translation().x
 

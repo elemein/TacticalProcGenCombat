@@ -159,7 +159,7 @@ func process_turn():
 
 	if proposed_action.split(" ")[0] == 'move':
 		if check_move_action(proposed_action) == true:
-			mover.move_actor()
+			mover.move_actor(1)
 
 	elif proposed_action == 'basic attack':
 		emit_signal("spell_cast_basic_attack")

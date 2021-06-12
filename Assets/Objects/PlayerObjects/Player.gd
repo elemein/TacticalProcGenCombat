@@ -1,7 +1,7 @@
 extends KinematicBody
 
 const DEATH_ANIM_TIME = 1
-const DIRECTION_SELECT_TIME = 0.225
+const DIRECTION_SELECT_TIME = 0.27
 
 const TILE_OFFSET = 2.2
 
@@ -127,7 +127,7 @@ func _physics_process(_delta):
 		
 		if in_turn == true:
 			# Change position based on time tickdown.
-			if proposed_action.split(" ")[0] == 'move':
+			if proposed_action.split(" ")[0] == 'move' or proposed_action == 'dash':
 				mover.set_actor_translation()
 			
 		if proposed_action != '' && in_turn == true:
@@ -278,7 +278,7 @@ func process_turn():
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(" ")[0] == 'move':
 		if check_move_action(proposed_action):
-			mover.move_actor()
+			mover.move_actor(1)
 	
 	elif proposed_action == 'idle':
 		target_pos = map_pos
@@ -446,6 +446,9 @@ func play_anim(name):
 	if anim.current_animation == name:
 		return
 	anim.play(name)
+
+func manual_move_char(amount):
+	mover.move_actor(amount)
 
 # Getters
 func get_translation():
