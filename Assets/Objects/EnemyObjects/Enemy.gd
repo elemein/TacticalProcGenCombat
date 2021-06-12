@@ -1,4 +1,4 @@
-extends KinematicBody
+extends MeshInstance
 
 const DEATH_ANIM_TIME = 1
 

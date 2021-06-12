@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Assets/Objects/EnemyObjects/polycat.dae" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Audio/EnemyAudio/hit_basic_attack_2.wav" type="AudioStream" id=2]
@@ -162,11 +162,7 @@ tracks/5/imported = true
 tracks/5/enabled = true
 tracks/5/keys = PoolRealArray( 0, 1, -7.45058e-08, -5.96046e-08, 8.9407e-08, 0.0648777, 0.0861191, -0.0554371, 0.992623, 1, 1, 1, 0.0666667, 1, -7.45058e-08, -5.96046e-08, 8.9407e-08, 0.0273239, 0.03627, -0.0233481, 0.998696, 1, 1, 1, 0.133333, 1, -7.45058e-08, -5.96046e-08, 8.9407e-08, -0.0674138, -0.0894854, 0.057604, 0.992033, 1, 1, 1, 0.266667, 1, -8.19564e-08, -8.9407e-08, 1.19209e-07, -0.228827, -0.303746, 0.195529, 0.903961, 1, 1, 1, 0.333333, 1, -8.19564e-08, -8.9407e-08, 1.19209e-07, -0.223982, -0.297316, 0.19139, 0.908188, 1, 1, 1, 0.4, 1, -7.45058e-08, -5.96046e-08, 8.9407e-08, -0.150122, -0.199273, 0.128277, 0.959843, 1, 1, 1, 0.466667, 1, -7.45058e-08, -5.96046e-08, 8.9407e-08, -0.0400174, -0.0531193, 0.0341942, 0.9972, 1, 1, 1, 0.533333, 1, -8.19564e-08, -8.9407e-08, 1.19209e-07, 0.0435117, 0.0577578, -0.0371802, 0.996689, 1, 1, 1, 0.6, 1, -7.45058e-08, -5.96046e-08, 8.9407e-08, 0.0648777, 0.0861191, -0.0554371, 0.992623, 1, 1, 1, 0.625, 1, -7.45058e-08, -5.96046e-08, 8.9407e-08, 0.0648777, 0.0861191, -0.0554371, 0.992623, 1, 1, 1 )
 
-[sub_resource type="CapsuleShape" id=6]
-radius = 0.419898
-height = 0.553413
-
-[node name="Enemy" type="KinematicBody"]
+[node name="Enemy" type="MeshInstance"]
 script = ExtResource( 5 )
 
 [node name="Graphics" parent="." instance=ExtResource( 1 )]
@@ -183,10 +179,6 @@ material/0 = SubResource( 2 )
 anims/idle = SubResource( 3 )
 anims/jump = SubResource( 4 )
 anims/walk = SubResource( 5 )
-
-[node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0.666457, 0 )
-shape = SubResource( 6 )
 
 [node name="Audio" type="Node" parent="."]
 
@@ -205,7 +197,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80738, 0 )
 pixel_size = 0.003
 
 [node name="Actions" parent="." instance=ExtResource( 6 )]
-
 [connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
 [connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]
 [connection signal="status_bar_hp" from="." to="HealthManaBar3D" method="_on_status_bar_hp"]
