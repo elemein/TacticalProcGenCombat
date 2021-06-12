@@ -155,7 +155,7 @@ func create_rooms():
 			
 			room.split = leaf.split
 			
-			room.center = []
+			room.center = Vector2()
 			room.center.x = floor(room.x + room.w/2)
 			room.center.y = floor(room.y + room.h/2)
 			rooms.append(room)

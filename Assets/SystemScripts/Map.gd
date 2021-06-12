@@ -49,7 +49,9 @@ func place_player_on_map(object):
 	
 	for room in map_dict:
 		if room['type'] == 'Player Spawn':
-			var tile = room['center']
+			var tile = []
+			tile.append(room['center'].x)
+			tile.append(room['center'].y)
 			map_grid[tile[0]][tile[1]].append(object)
 			return tile
 

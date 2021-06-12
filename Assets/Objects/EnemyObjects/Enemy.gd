@@ -157,7 +157,8 @@ func process_turn():
 
 	turn_anim_timer.start()
 
-	if proposed_action.split(" ")[0] == 'move':
+	if proposed_action.split(" ")[0] == 'move' or proposed_action == 'dash':
+		mover.set_actor_direction(proposed_action.split(" ")[1])
 		if check_move_action(proposed_action) == true:
 			mover.move_actor(1)
 
