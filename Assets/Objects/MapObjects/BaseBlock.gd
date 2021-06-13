@@ -1,6 +1,3 @@
-extends MeshInstance
+extends GameObj
 
-var object_type = 'Ground'
-
-func get_obj_type():
-	return object_type
+func _init().('Ground'): pass

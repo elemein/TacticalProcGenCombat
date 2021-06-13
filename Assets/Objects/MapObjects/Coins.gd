@@ -2,8 +2,7 @@ extends GameObj
 
 var value = 10
 
-func _init().('Coins'):
-	pass
+func _init().('Coins'): pass
 
 func set_gold_value(new_value):
 	value = new_value

@@ -73,16 +73,19 @@ func print_map_grid():
 			for object in tile:
 				match object.get_obj_type():
 					'Wall':
-						if (to_append in ['X', 'E', 't','c','s']) == false: 
+						if (to_append in ['X', 'E', 't','c','s', 'm']) == false: 
 							to_append = '.'
 					'Ground':
-						if (to_append in ['X', 'E', 't','c','s']) == false: 
+						if (to_append in ['X', 'E', 't','c','s', 'm']) == false: 
 							to_append = '0'
 					'Player': to_append = 'X'
 					'Enemy': to_append = 'E'
 					'Spike Trap': to_append = 't'
 					'Coins': to_append = 'c'
-					'Sword': to_append = 's'
+					'Inv Item':
+						match object.get_inv_item_name():
+							'Sword': to_append = 's'
+							'Magic Staff': to_append = 'm'
 			
 			converted_row.append(to_append)
 		print(converted_row)
