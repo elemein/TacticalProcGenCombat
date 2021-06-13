@@ -71,7 +71,6 @@ var viewfield = []
 var inventory_open = false
 
 #death vars
-var is_dead = false
 var death_anim_timer = Timer.new()
 var death_anim_info = []
 
@@ -460,8 +459,6 @@ func get_action():
 func get_hp():
 	return hp
 	
-func get_is_dead():
-	return is_dead
 
 func get_speed():
 	return speed
