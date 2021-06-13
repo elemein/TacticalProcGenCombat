@@ -305,7 +305,7 @@ func drop_item():
 	if item_to_act_on in [equipped_weapon, equipped_armour, equipped_accessory]:
 		unequip_item(item_to_act_on.get_inv_item_type())
 	
-	item_to_act_on.set_map_pos(inventory_owner.get_map_pos())
+	item_to_act_on.set_map_pos_and_translation(inventory_owner.get_map_pos())
 	map.add_map_object(item_to_act_on)
 
 	remove_from_inventory(item_to_act_on)

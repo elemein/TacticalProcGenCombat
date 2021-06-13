@@ -1,9 +1,7 @@
-extends MeshInstance
+extends ActorObj
 
 const DEATH_ANIM_TIME = 1
 const DIRECTION_SELECT_TIME = 0.27
-
-const TILE_OFFSET = 2.2
 
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
@@ -13,7 +11,6 @@ onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI")
 onready var turn_timer = get_node("/root/World/TurnTimer")
-onready var map = get_node("/root/World/Map")
 
 # Sound effects
 onready var miss_basic_attack = $Audio/miss_basic_attack
@@ -40,7 +37,6 @@ var turn_anim_timer = Timer.new()
 var anim_timer_waittime = 1
 
 # gameplay vars
-var object_type = 'Player'
 var hp = 100 setget set_hp
 var mp = 100 setget set_mp
 var max_hp = 100
@@ -63,7 +59,6 @@ var direction_facing = "down"
 var directional_timer = Timer.new()
 var saved_pos = Vector3()
 var target_pos = Vector3()
-var map_pos = []
 
 # vars for animation
 var anim_state = "idle"
@@ -84,6 +79,9 @@ var death_anim_info = []
 var mover = ACTOR_MOVER.new()
 var view_finder = VIEW_FINDER.new()
 var inventory = INVENTORY.instance()
+
+func _init().("Player"):
+	pass
 
 func _ready():
 	directional_timer.set_one_shot(true)
@@ -456,15 +454,6 @@ func manual_move_char(amount):
 	mover.move_actor(amount)
 
 # Getters
-func get_translation():
-	return translation
-
-func get_obj_type():
-	return object_type
-
-func get_map_pos():
-	return map_pos
-
 func get_action():
 	return proposed_action
 	
@@ -511,12 +500,6 @@ func get_direction_facing() -> String:
 func set_model_rot(dir_facing, rotation_deg):
 	direction_facing = dir_facing
 	model.rotation_degrees.y = rotation_deg
-
-func set_translation(new_translation):
-	translation = new_translation
-
-func set_map_pos(new_pos):
-	map_pos = new_pos
 
 func set_hp(new_hp):
 	hp = max_hp if (new_hp > max_hp) else new_hp
