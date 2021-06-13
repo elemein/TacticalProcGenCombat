@@ -1,9 +1,9 @@
 extends InvObject
 
-func _init().('Weapon', 'Magic Staff', 50, true, false):
+func _init().('Accessory', 'Arcane Necklace', 50, true, false):
 	pass
 
-var spell_power_bonus = 10
+var spell_power_bonus = 5
 
 func equip_object():
 	item_owner.set_spell_power(item_owner.get_spell_power() + spell_power_bonus)

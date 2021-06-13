@@ -1,4 +1,4 @@
-extends BaseInvObject
+extends InvObject
 
 func _init().('Weapon', 'Sword', 50, true, false):
 	pass

@@ -42,6 +42,10 @@ unit_db = 80.0
 [node name="Dash" type="Node" parent="."]
 script = ExtResource( 10 )
 
+[node name="out_of_mana" type="AudioStreamPlayer3D" parent="Dash"]
+stream = ExtResource( 6 )
+unit_db = 80.0
+
 [node name="DropItem" type="Node" parent="."]
 script = ExtResource( 7 )
 

@@ -1,5 +1,5 @@
 extends GameObj
-class_name BaseInvObject
+class_name InvObject
 
 var inv_item_type = "" 
 var inv_item_name = ""

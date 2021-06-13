@@ -9,19 +9,19 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "GameObj",
-"class": "BaseInvObject",
-"language": "GDScript",
-"path": "res://Assets/Objects/MapObjects/InventoryObjects/BaseInvObject.gd"
-}, {
 "base": "MeshInstance",
 "class": "GameObj",
 "language": "GDScript",
 "path": "res://Assets/SystemScripts/GameObj/GameObj.gd"
+}, {
+"base": "GameObj",
+"class": "InvObject",
+"language": "GDScript",
+"path": "res://Assets/Objects/MapObjects/InventoryObjects/InvObject.gd"
 } ]
 _global_script_class_icons={
-"BaseInvObject": "",
-"GameObj": ""
+"GameObj": "",
+"InvObject": ""
 }
 
 [application]

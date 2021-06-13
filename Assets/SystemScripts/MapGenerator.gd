@@ -8,12 +8,13 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 0
+const NUMBER_OF_ENEMIES = 10
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 30
 const NUMBER_OF_COINS = 8
-const NUMBER_OF_SWORDS = 10
-const NUMBER_OF_STAFFS = 10
+const NUMBER_OF_SWORDS = 5
+const NUMBER_OF_STAFFS = 5
+const NUMBER_OF_NECKLACES = 5
 
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
@@ -22,6 +23,7 @@ var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
 var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
 var base_sword = preload("res://Assets/Objects/MapObjects/InventoryObjects/Sword.tscn")
 var base_staff = preload("res://Assets/Objects/MapObjects/InventoryObjects/MagicStaff.tscn")
+var base_necklace = preload("res://Assets/Objects/MapObjects/InventoryObjects/ArcaneNecklace.tscn")
 
 var map_w = 30
 var map_h = 30
@@ -308,6 +310,7 @@ func spawn_loot():
 	spawn_inv_items(base_coins, NUMBER_OF_COINS)
 	spawn_inv_items(base_sword, NUMBER_OF_SWORDS)
 	spawn_inv_items(base_staff, NUMBER_OF_STAFFS)
+	spawn_inv_items(base_necklace, NUMBER_OF_NECKLACES)
 
 func spawn_inv_items(item_scene, no_of_items):
 	for obj_cnt in range(no_of_items):
