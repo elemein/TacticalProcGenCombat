@@ -1,0 +1,25 @@
+extends MeshInstance
+class_name GameObj
+
+const TILE_OFFSET = 2.2
+
+onready var map = get_node("/root/World/Map")
+
+var object_type 
+var map_pos = []
+
+func _init(obj_type):
+	object_type = obj_type
+
+func get_obj_type():
+	return object_type
+
+func get_map_pos():
+	return map_pos
+
+func set_map_pos(new_pos):
+	map_pos = new_pos
+	set_translation_w_map_pos(map_pos)
+
+func set_translation_w_map_pos(new_pos):
+	translation = Vector3(new_pos[0] * TILE_OFFSET, 0.3, new_pos[1] * TILE_OFFSET)

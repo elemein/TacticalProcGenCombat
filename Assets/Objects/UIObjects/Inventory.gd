@@ -197,8 +197,8 @@ func add_to_inventory(object):
 	var new_object = INVENTORY_OBJECT.instance()
 	inventory_ui_slots.add_child(new_object)
 	ui_objects.append(new_object)
-	new_object.set_object_text(object.get_obj_type())
-	new_object.set_object_type(object.get_inventory_item_type())
+	new_object.set_object_text(object.get_inv_item_name())
+	new_object.set_object_type(object.get_inv_item_type())
 	new_object.set_equipped(false)
 
 func remove_from_inventory(object):
@@ -234,7 +234,7 @@ func equip_item():
 		idx += 1
 		if item_to_act_on == object: break
 	
-	if item_to_act_on.get_inventory_item_type() == 'Weapon':
+	if item_to_act_on.get_inv_item_type() == 'Weapon':
 		if equipped_weapon != null:
 			unequip_item('Weapon')
 
@@ -246,7 +246,7 @@ func equip_item():
 
 func unequip_item(type):
 	var idx = -1
-	if item_to_act_on.get_inventory_item_type() == 'Weapon':
+	if item_to_act_on.get_inv_item_type() == 'Weapon':
 		for object in inventory_objects:
 			idx += 1
 			if equipped_weapon == object: break
@@ -271,7 +271,7 @@ func set_unequip_item_action():
 
 func drop_item():
 	if item_to_act_on in [equipped_weapon, equipped_armour, equipped_accessory]:
-		unequip_item(item_to_act_on.get_inventory_item_type())
+		unequip_item(item_to_act_on.get_inv_item_type())
 	
 	item_to_act_on.set_map_pos(inventory_owner.get_map_pos())
 	map.add_map_object(item_to_act_on)

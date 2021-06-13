@@ -8,12 +8,12 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 5
+const NUMBER_OF_ENEMIES = 0
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 10
 const NUMBER_OF_COINS = 8
-const NUMBER_OF_SWORDS = 5
-const NUMBER_OF_STAFFS = 5
+const NUMBER_OF_SWORDS = 10
+const NUMBER_OF_STAFFS = 10
 
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
