@@ -191,6 +191,9 @@ func make_action_option_list() -> Array:
 		elif object.get_inv_item_type() == 'Accessory':
 			if equipped_accessory != object: optionlist.append('Equip')
 			if equipped_accessory == object: optionlist.append('Unequip')
+		elif object.get_inv_item_type() == 'Armour':
+			if equipped_armour != object: optionlist.append('Equip')
+			if equipped_armour == object: optionlist.append('Unequip')
 		
 	
 	optionlist.append('Drop')
@@ -249,6 +252,11 @@ func equip_item():
 		if equipped_accessory != null:
 			unequip_item('Accessory')
 		equipped_accessory = item_to_act_on
+		
+	elif item_to_act_on.get_inv_item_type() == 'Armour':
+		if equipped_armour != null:
+			unequip_item('Accessory')
+		equipped_armour = item_to_act_on
 
 		
 		
@@ -269,6 +277,12 @@ func unequip_item(type):
 			idx += 1
 			if equipped_accessory == object: break
 		equipped_accessory = null
+		
+	elif item_to_act_on.get_inv_item_type() == 'Armour':
+		for object in inventory_objects:
+			idx += 1
+			if equipped_armour == object: break
+		equipped_armour = null
 		
 	ui_objects[idx].set_equipped(false)
 	inventory_objects[idx].unequip_object()

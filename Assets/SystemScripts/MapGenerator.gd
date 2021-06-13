@@ -11,11 +11,12 @@ const TILE_OFFSET = 2.2
 const NUMBER_OF_ENEMIES = 10
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 30
-const NUMBER_OF_COINS = 8
-const NUMBER_OF_SWORDS = 15
-const NUMBER_OF_STAFFS = 1
-const NUMBER_OF_NECKLACES = 1
-const NUMBER_OF_DAGGERS = 15
+const NUMBER_OF_COINS = 5
+const NUMBER_OF_SWORDS = 2
+const NUMBER_OF_STAFFS = 2
+const NUMBER_OF_NECKLACES = 4
+const NUMBER_OF_DAGGERS = 4
+const NUMBER_OF_ARMOURS = 10
 
 # Fun settings: 30x30
 #const NUMBER_OF_ENEMIES = 10
@@ -35,10 +36,11 @@ var base_sword = preload("res://Assets/Objects/MapObjects/InventoryObjects/Sword
 var base_staff = preload("res://Assets/Objects/MapObjects/InventoryObjects/MagicStaff.tscn")
 var base_necklace = preload("res://Assets/Objects/MapObjects/InventoryObjects/ArcaneNecklace.tscn")
 var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/ScabbardAndDagger.tscn")
+var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 
 var map_w = 30
 var map_h = 30
-var min_room_size = 3
+var min_room_size = 5
 var min_room_factor = 0.4
 
 var room_density = 70 # 0-100. 100 being most dense.
@@ -323,6 +325,7 @@ func spawn_loot():
 	spawn_inv_items(base_staff, NUMBER_OF_STAFFS)
 	spawn_inv_items(base_necklace, NUMBER_OF_NECKLACES)
 	spawn_inv_items(base_dagger, NUMBER_OF_DAGGERS)
+	spawn_inv_items(base_armour, NUMBER_OF_ARMOURS)
 
 func spawn_inv_items(item_scene, no_of_items):
 	for obj_cnt in range(no_of_items):

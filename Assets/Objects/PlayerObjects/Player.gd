@@ -45,6 +45,7 @@ var hp = 100 setget set_hp
 var mp = 100 setget set_mp
 var max_hp = 100
 var max_mp = 100
+var defense = 0
 var regen_hp = 1
 var regen_mp = 7
 var speed = 15
@@ -403,6 +404,9 @@ func set_fireball_target_pos():
 
 func take_damage(damage):
 	if not is_dead:
+		var damage_multiplier = 100 / (100+float(defense))
+		damage = floor(damage * damage_multiplier)
+		damage = floor(damage)
 		hp -= damage
 		print("%s has %s HP" % [self, hp])
 		
@@ -485,6 +489,9 @@ func get_attack_power() -> int:
 func get_spell_power() -> int:
 	return spell_power
 
+func get_defense() -> int:
+	return defense
+
 func get_inventory_open() -> bool:
 	return inventory_open
 
@@ -524,6 +531,9 @@ func set_attack_power(new_value):
 
 func set_spell_power(new_value):
 	spell_power = new_value
+
+func set_defense(new_value):
+	defense = new_value
 
 func set_inventory_open(state):
 	inventory_open = state
