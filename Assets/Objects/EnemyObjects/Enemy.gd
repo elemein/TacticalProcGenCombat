@@ -73,7 +73,6 @@ func setup_actor():
 	add_child(inventory)
 	inventory.setup_inventory(self)
 	
-	
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
 	
 	add_loot_to_inventory()
@@ -117,7 +116,6 @@ func set_action(action):
 	ready_status = true
 
 func process_turn():
-	
 	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
 	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
 	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
@@ -199,19 +197,6 @@ func get_target_tiles(num):
 func check_move_action(move):
 	return mover.check_move_action(move)
 
-# Animations related functions.
-func handle_animations():
-	match anim_state:
-		'idle':
-			play_anim("idle")
-		'walk':
-			play_anim("walk")
-
-func play_anim(name):
-	if anim.current_animation == name:
-		return
-	anim.play(name)
-
 func add_loot_to_inventory():
 	inventory.add_to_gold(rng.randi_range(1,50))
 	
@@ -228,7 +213,6 @@ func drop_loot():
 	inventory.subtract_from_gold(inventory.get_gold_total())
 	
 	# drop items
-	
 	loot_dropped = true
 
 # Getters

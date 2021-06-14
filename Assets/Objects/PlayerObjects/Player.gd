@@ -289,41 +289,6 @@ func end_turn():
 func check_move_action(move):
 	return mover.check_move_action(move)
 
-func check_cornering(direction): # This can definitely be done better. - SS
-	match direction:
-		'upleft': # check both tiles up and left to check for walls
-			var adjacent_tile = map.get_tile_contents(map_pos[0]+1,map_pos[1])
-			if adjacent_tile.get_obj_type() == 'Wall':
-				return false
-			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]-1)
-			if adjacent_tile.get_obj_type() == 'Wall':
-				return false
-			
-		'upright': # check both tiles up and right to check for walls
-			var adjacent_tile = map.get_tile_contents(map_pos[0]+1,map_pos[1])
-			if adjacent_tile.get_obj_type() == 'Wall':
-				return false
-			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]+1)
-			if adjacent_tile.get_obj_type() == 'Wall':
-				return false
-			
-		'downleft': # check both tiles down and left to check for walls
-			var adjacent_tile = map.get_tile_contents(map_pos[0]-1,map_pos[1])
-			if adjacent_tile.get_obj_type() == 'Wall':
-				return false
-			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]-1)
-			if adjacent_tile.get_obj_type() == 'Wall':
-				return false
-			
-		'downright': # check both tiles down and right to check for walls
-			var adjacent_tile = map.get_tile_contents(map_pos[0]-1,map_pos[1])
-			if adjacent_tile.get_obj_type() == 'Wall':
-				return false
-			adjacent_tile = map.get_tile_contents(map_pos[0],map_pos[1]+1)
-			if adjacent_tile.get_obj_type() == 'Wall':
-				return false
-	return true
-
 func set_direction(direction):
 	mover.set_actor_direction(direction)
 	directional_timer.start(DIRECTION_SELECT_TIME) 
@@ -346,19 +311,6 @@ func take_damage(damage):
 
 		if hp <= 0:
 			die()
-
-# Animations related functions.
-func handle_animations():
-	match anim_state:
-		'idle':
-			play_anim("idle")
-		'walk':
-			play_anim("walk")
-
-func play_anim(name):
-	if anim.current_animation == name:
-		return
-	anim.play(name)
 
 func manual_move_char(amount):
 	mover.move_actor(amount)

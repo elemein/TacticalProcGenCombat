@@ -43,6 +43,19 @@ func _init(obj_type, actor_stats).(obj_type):
 	add_child(view_finder)
 	view_finder.set_actor(self)
 
+# Animations related functions.
+func handle_animations():
+	match anim_state:
+		'idle':
+			play_anim("idle")
+		'walk':
+			play_anim("walk")
+
+func play_anim(name):
+	if anim.current_animation == name:
+		return
+	anim.play(name)
+
 func die():
 	death_anim_timer.set_one_shot(true)
 	death_anim_timer.set_wait_time(DEATH_ANIM_TIME)
