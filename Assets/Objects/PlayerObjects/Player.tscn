@@ -7,7 +7,7 @@
 [ext_resource path="res://Assets/GUI/HealthManaBar3D.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=7]
 
-[sub_resource type="Environment" id=2]
+[sub_resource type="Environment" id=1]
 ambient_light_color = Color( 1, 1, 1, 1 )
 
 [node name="Player" type="MeshInstance"]
@@ -20,7 +20,7 @@ transform = Transform( -1.62921e-07, 0, -1, 0, 1, 0, 1, 0, -1.62921e-07, 0, 0, 0
 
 [node name="Camera" type="Camera" parent="CamBase"]
 transform = Transform( -1.62921e-07, 0.939693, -0.34202, 0, 0.34202, 0.939693, 1, 1.53095e-07, -5.57221e-08, -2.5, 10, 0 )
-environment = SubResource( 2 )
+environment = SubResource( 1 )
 current = true
 __meta__ = {
 "_editor_description_": ""

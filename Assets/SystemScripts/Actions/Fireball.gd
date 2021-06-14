@@ -54,13 +54,13 @@ func set_power():
 
 # Check if out of mana
 func mana_check() -> bool:
-	if parent.get('mp') and parent.get('mp') < spell_cost:
+	if parent.get_mp() and parent.get_mp() < spell_cost:
 		out_of_mana.play()
 		return false
 		
 	# Update mana
-	elif parent.get('mp'):
-		parent.mp -= spell_cost
+	elif parent.get_mp():
+		parent.set_mp(parent.get_mp() - spell_cost)
 	return true
 
 # Spawn in the spell

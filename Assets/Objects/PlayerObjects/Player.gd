@@ -9,7 +9,6 @@ const INVENTORY = preload("res://Assets/Objects/UIObjects/Inventory.tscn")
 onready var miss_basic_attack = $Audio/miss_basic_attack
 onready var fireball_throw = $Audio/fireball_throw
 onready var out_of_mana = $Audio/out_of_mana
-onready var audio_hit = $Audio/Hit
 
 # Spell signals
 signal spell_cast_fireball
@@ -19,30 +18,9 @@ signal action_drop_item
 signal action_equip_item
 signal action_unequip_item
 
-# Status bar signals
-signal status_bar_hp(hp, max_hp)
-signal status_bar_mp(mp, max_mp)
-
-# unsorted vars
-var turn_anim_timer = Timer.new()
-var anim_timer_waittime = 1
-
 var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 				"HP Regen" : 1, "MP Regen": 7, "Attack Power" : 10, \
 				"Spell Power" : 20, "Defense" : 0, "Speed": 15, "View Range" : 4}
-
-# gameplay vars
-var hp = 100 setget set_hp
-var mp = 100 setget set_mp
-var max_hp = 100
-var max_mp = 100
-var defense = 0
-var regen_hp = 1
-var regen_mp = 7
-var speed = 15
-var attack_power = 10
-var spell_power = 20
-var view_range = 4
 
 # movement and positioning related vars
 var directional_timer = Timer.new()
@@ -61,10 +39,6 @@ func _ready():
 	directional_timer.set_one_shot(true)
 	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
 	add_child(directional_timer)
-	
-	turn_anim_timer.set_one_shot(true)
-	turn_anim_timer.set_wait_time(DIRECTION_SELECT_TIME)
-	add_child(turn_anim_timer)
 	
 	turn_timer.add_to_timer_group(self)
 	
@@ -109,18 +83,7 @@ func _physics_process(_delta):
 			anim_state = "idle"
 
 	handle_animations()
-
-func play_death_anim():
-	mover.set_actor_translation()
-	if death_anim_timer.time_left > 0.75:
-		model.translation = (model.translation.linear_interpolate(death_anim_info[0], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
-	if death_anim_timer.time_left < 0.75 && death_anim_timer.time_left != 0:
-		model.translation = (model.translation.linear_interpolate(death_anim_info[1], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
-		model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
-	if death_anim_timer.time_left == 0:
-		return 'dead'
 			
-	
 func get_input():
 	if turn_timer.get_turn_in_process() == true or inventory_open: 
 		# We don't wanna collect input if turn in action or in inventory.
@@ -208,35 +171,8 @@ func set_action(action):
 	proposed_action = action
 	gui.set_action(proposed_action)
 	ready_status = true
-	
-func get_target_tiles(num):
-	# Get the contents for the number of tiles desired
-	
-	var target_tiles = []
-	
-	for tile_num in num:
-		match direction_facing:
-			'upleft':
-				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] - 1 - tile_num])
-			'upright':
-				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1] + 1 + tile_num])
-			'downleft':
-				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] - 1 - tile_num])
-			'downright':
-				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1] + 1 + tile_num])
-			
-			'up':
-				target_tiles.append([map_pos[0] + 1 + tile_num, map_pos[1]])
-			'down':
-				target_tiles.append([map_pos[0] - 1 - tile_num, map_pos[1]])
-			'left':
-				target_tiles.append([map_pos[0], map_pos[1] - 1 - tile_num])
-			'right':
-				target_tiles.append([map_pos[0], map_pos[1] + 1 + tile_num])
-	return target_tiles
-	
+
 func process_turn():	
-	
 	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
 	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
 	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
@@ -270,8 +206,8 @@ func process_turn():
 		emit_signal("action_unequip_item")
 		
 	# Apply any regen effects
-	self.hp += regen_hp
-	self.mp += regen_mp
+	set_hp(get_hp() + stat_dict['HP Regen'])
+	set_mp(get_mp() + stat_dict['MP Regen'])
 
 	in_turn = true
 
@@ -293,47 +229,10 @@ func set_direction(direction):
 	mover.set_actor_direction(direction)
 	directional_timer.start(DIRECTION_SELECT_TIME) 
 
-func take_damage(damage):
-	if not is_dead:
-		var damage_multiplier = 100 / (100+float(defense))
-		damage = floor(damage * damage_multiplier)
-		damage = floor(damage)
-		hp -= damage
-		print("%s has %s HP" % [self, hp])
-		
-		# Player audio node is empty, so this doesnt work.
-		# Play a random audio effect upon getting hit
-		var num_audio_effects = audio_hit.get_children().size()
-		audio_hit.get_children()[randi() % num_audio_effects].play()
-		
-		# Update the health bar
-		emit_signal("status_bar_hp", hp, max_hp)
-
-		if hp <= 0:
-			die()
-
 func manual_move_char(amount):
 	mover.move_actor(amount)
 
 # Getters
-func get_hp():
-	return hp
-	
-func get_speed():
-	return speed
-
-func get_viewrange():
-	return view_range
-
-func get_attack_power() -> int:
-	return attack_power
-
-func get_spell_power() -> int:
-	return spell_power
-
-func get_defense() -> int:
-	return defense
-
 func get_inventory_open() -> bool:
 	return inventory_open
 
@@ -343,30 +242,10 @@ func get_inventory_object() -> Object:
 func get_item_to_drop() -> Object:
 	return inventory.get_item_to_drop()
 
-func get_turn_anim_timer() -> Object:
-	return turn_anim_timer
-
 #Setters
 func set_model_rot(dir_facing, rotation_deg):
 	direction_facing = dir_facing
 	model.rotation_degrees.y = rotation_deg
-
-func set_hp(new_hp):
-	hp = max_hp if (new_hp > max_hp) else new_hp
-	emit_signal("status_bar_hp", hp, max_hp)
-	
-func set_mp(new_mp):
-	mp = max_mp if (new_mp > max_mp) else new_mp
-	emit_signal("status_bar_mp", mp, max_mp)
-	
-func set_attack_power(new_value):
-	attack_power = new_value
-
-func set_spell_power(new_value):
-	spell_power = new_value
-
-func set_defense(new_value):
-	defense = new_value
 
 func set_inventory_open(state):
 	inventory_open = state
