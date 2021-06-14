@@ -105,8 +105,8 @@ func process_turn():
 		emit_signal("spell_cast_fireball")
 		
 	# Apply any regen effects
-	set_hp(get_hp() + stat_dict['HP Regen'])
-	set_mp(get_mp() + stat_dict['MP Regen'])
+	set_hp(stat_dict['HP'] + stat_dict['HP Regen'])
+	set_mp(stat_dict['MP'] + stat_dict['MP Regen'])
 
 	in_turn = true
 

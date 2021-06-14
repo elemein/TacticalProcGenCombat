@@ -114,8 +114,6 @@ func play_death_anim():
 		model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
 
 # Getters
-func get_hp(): return stat_dict['HP']
-	
 func get_mp(): return stat_dict['MP']
 
 func get_speed(): return stat_dict['Speed']
