@@ -1,24 +1,15 @@
 extends ActorObj
 
-const DEATH_ANIM_TIME = 1
 const DIRECTION_SELECT_TIME = 0.27
 
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
-const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 const INVENTORY = preload("res://Assets/Objects/UIObjects/Inventory.tscn")
-
-onready var model = $Graphics
-onready var anim = $Graphics/AnimationPlayer
-onready var gui = get_node("/root/World/GUI")
-onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # Sound effects
 onready var miss_basic_attack = $Audio/miss_basic_attack
 onready var fireball_throw = $Audio/fireball_throw
 onready var out_of_mana = $Audio/out_of_mana
 onready var audio_hit = $Audio/Hit
-
-var effects_fire = preload("res://Assets/Objects/Effects/Fire/Fire.tscn")
 
 # Spell signals
 signal spell_cast_fireball
@@ -36,6 +27,10 @@ signal status_bar_mp(mp, max_mp)
 var turn_anim_timer = Timer.new()
 var anim_timer_waittime = 1
 
+var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
+				"HP Regen" : 1, "MP Regen": 7, "Attack Power" : 10, \
+				"Spell Power" : 20, "Defense" : 0, "Speed": 15, "View Range" : 4}
+
 # gameplay vars
 var hp = 100 setget set_hp
 var mp = 100 setget set_mp
@@ -49,37 +44,17 @@ var attack_power = 10
 var spell_power = 20
 var view_range = 4
 
-# vars to handle turn state
-var proposed_action = ""
-var ready_status = false
-var in_turn = false
-
 # movement and positioning related vars
-var direction_facing = "down"
 var directional_timer = Timer.new()
-var saved_pos = Vector3()
-var target_pos = Vector3()
-
-# vars for animation
-var anim_state = "idle"
-var effect = null
-
-# view var
-var viewfield = []
 
 # inventory vars
 var inventory_open = false
 
-#death vars
-var death_anim_timer = Timer.new()
-var death_anim_info = []
-
 # object vars
 var mover = ACTOR_MOVER.new()
-var view_finder = VIEW_FINDER.new()
 var inventory = INVENTORY.instance()
 
-func _init().("Player"):
+func _init().("Player", start_stats):
 	pass
 
 func _ready():
@@ -110,9 +85,6 @@ func _ready():
 func add_sub_nodes_as_children():
 	add_child(mover)
 	mover.set_actor(self)
-	
-	add_child(view_finder)
-	view_finder.set_actor(self)
 	
 	add_child(inventory)
 	inventory.setup_inventory(self)
@@ -356,49 +328,6 @@ func set_direction(direction):
 	mover.set_actor_direction(direction)
 	directional_timer.start(DIRECTION_SELECT_TIME) 
 
-# Ability related functions.
-func set_fireball_target_pos():
-		effect = effects_fire.instance()
-		add_child(effect)
-		
-		target_pos.y = 0.3
-		
-		match direction_facing:
-			'upleft':
-				effect.rotation_degrees.y = 90 + 45
-				target_pos.x = effect.translation.x + (3*TILE_OFFSET)
-				target_pos.z = effect.translation.z - (3*TILE_OFFSET)
-			'upright':
-				effect.rotation_degrees.y = 45
-				target_pos.x = effect.translation.x + (3*TILE_OFFSET)
-				target_pos.z = effect.translation.z + (3*TILE_OFFSET)
-			'downleft':
-				effect.rotation_degrees.y = 180 + 45
-				target_pos.x = effect.translation.z - (3*TILE_OFFSET)
-				target_pos.z = effect.translation.x - (3*TILE_OFFSET)
-			'downright':
-				effect.rotation_degrees.y = 270 + 45
-				target_pos.x = effect.translation.z - (3*TILE_OFFSET)
-				target_pos.z = effect.translation.x + (3*TILE_OFFSET)
-			
-			'up':
-				effect.rotation_degrees.y = 90
-				target_pos.x = effect.translation.x + (3*TILE_OFFSET)
-				target_pos.z = 0
-			'down':
-				effect.rotation_degrees.y = 270
-				target_pos.x = effect.translation.x - (3*TILE_OFFSET)
-				target_pos.z = 0
-			'left':
-				effect.rotation_degrees.y = 180
-				target_pos.z = effect.translation.x - (3*TILE_OFFSET)
-				target_pos.x = 0
-			'right':
-				effect.rotation_degrees.y = 0
-				target_pos.z = effect.translation.x + (3*TILE_OFFSET)
-				target_pos.x = 0
-
-
 func take_damage(damage):
 	if not is_dead:
 		var damage_multiplier = 100 / (100+float(defense))
@@ -418,24 +347,6 @@ func take_damage(damage):
 		if hp <= 0:
 			die()
 
-func die():
-	death_anim_timer.set_one_shot(true)
-	death_anim_timer.set_wait_time(DEATH_ANIM_TIME)
-	add_child(death_anim_timer)
-	is_dead = true
-	turn_timer.remove_from_timer_group(self)
-	
-	proposed_action = 'idle'
-	
-	var rise = Vector3(model.translation.x, 2, model.translation.z)
-	var fall = Vector3(model.translation.x, 0.2, model.translation.z)
-	var fall_rot = Vector3(-90, model.rotation_degrees.y, model.rotation_degrees.z)
-	
-	death_anim_info = [rise, fall, fall_rot]
-	
-	death_anim_timer.start()
-	$HealthManaBar3D.visible = false
-
 # Animations related functions.
 func handle_animations():
 	match anim_state:
@@ -453,21 +364,14 @@ func manual_move_char(amount):
 	mover.move_actor(amount)
 
 # Getters
-func get_action():
-	return proposed_action
-	
 func get_hp():
 	return hp
 	
-
 func get_speed():
 	return speed
 
 func get_viewrange():
 	return view_range
-
-func get_viewfield():
-	return viewfield
 
 func get_attack_power() -> int:
 	return attack_power
@@ -489,9 +393,6 @@ func get_item_to_drop() -> Object:
 
 func get_turn_anim_timer() -> Object:
 	return turn_anim_timer
-
-func get_direction_facing() -> String:
-	return direction_facing
 
 #Setters
 func set_model_rot(dir_facing, rotation_deg):
