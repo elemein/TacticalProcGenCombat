@@ -6,6 +6,7 @@ const ACTION_TIME = 0.95
 
 onready var player = get_node("/root/World/Player")
 onready var map = get_node("/root/World/Map")
+onready var gui = get_node("/root/World/GUI")
 onready var turn_delay_timer = $TurnDelayTimer
 
 var rng = RandomNumberGenerator.new()
@@ -93,6 +94,7 @@ func sort_actors_by_speed():
 			highest_speed -= 1
 
 func end_turn():
+	gui.clear_action()
 	for actor in actors:
 		actor.end_turn()
 	turn_in_process = false

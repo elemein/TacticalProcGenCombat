@@ -3,6 +3,7 @@ class_name ActorObj
 
 const DEATH_ANIM_TIME = 1
 
+const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 
 onready var model = $Graphics
@@ -13,10 +14,19 @@ onready var turn_timer = get_node("/root/World/TurnTimer")
 # Sound effects
 onready var audio_hit = $Audio/Hit
 
+# Spell signals
+signal spell_cast_fireball
+signal spell_cast_basic_attack
+signal spell_cast_dash
+signal action_drop_item
+signal action_equip_item
+signal action_unequip_item
+
 # Status bar signals
 signal status_bar_hp(hp, max_hp)
 signal status_bar_mp(mp, max_mp)
 
+var mover = ACTOR_MOVER.new()
 var view_finder = VIEW_FINDER.new()
 
 #death vars
@@ -56,6 +66,58 @@ func _init(obj_type, actor_stats).(obj_type):
 	
 	add_child(view_finder)
 	view_finder.set_actor(self)
+
+func process_turn():	
+	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
+	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
+	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time(0.5)
+	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action in ['drop item', 'equip item', 'unequip item']: turn_anim_timer.set_wait_time(0.5)
+	turn_anim_timer.start()
+
+	# Sets target positions for move and basic attack.
+	if proposed_action.split(" ")[0] == 'move':
+		mover.set_actor_direction(proposed_action.split(" ")[1])
+		if check_move_action(proposed_action) == true:
+			mover.move_actor(1)
+	
+	elif proposed_action == 'idle':
+		target_pos = map_pos
+	
+	elif proposed_action == 'basic attack':
+		emit_signal("spell_cast_basic_attack")
+	
+	elif proposed_action == 'fireball':
+		emit_signal("spell_cast_fireball")
+	elif proposed_action == 'dash':
+		emit_signal("spell_cast_dash")
+		
+	elif proposed_action == 'drop item':
+		emit_signal("action_drop_item")
+	elif proposed_action == 'equip item':
+		emit_signal("action_equip_item")
+	elif proposed_action == 'unequip item':
+		emit_signal("action_unequip_item")
+		
+	# Apply any regen effects
+	set_hp(stat_dict['HP'] + stat_dict['HP Regen'])
+	set_mp(stat_dict['MP'] + stat_dict['MP Regen'])
+
+	in_turn = true
+
+func end_turn():
+	target_pos = translation
+	saved_pos = translation
+	proposed_action = ''
+	in_turn = false
+	ready_status = false
+	
+	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
+
+# Movement related functions.
+func check_move_action(move):
+	return mover.check_move_action(move)
 
 # Animations related functions.
 func handle_animations():
@@ -140,6 +202,10 @@ func get_turn_anim_timer() -> Object: return turn_anim_timer
 
 # Setters
 func set_stat_dict(changed_dict): stat_dict = changed_dict
+
+func set_model_rot(dir_facing, rotation_deg): # refactor this so it just takes direction and works
+	direction_facing = dir_facing
+	model.rotation_degrees.y = rotation_deg
 
 func set_hp(new_hp):
 	stat_dict['HP'] = stat_dict['Max HP'] if (new_hp > stat_dict['Max HP']) else new_hp

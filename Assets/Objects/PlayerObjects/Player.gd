@@ -2,21 +2,7 @@ extends ActorObj
 
 const DIRECTION_SELECT_TIME = 0.27
 
-const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 const INVENTORY = preload("res://Assets/Objects/UIObjects/Inventory.tscn")
-
-# Sound effects
-onready var miss_basic_attack = $Audio/miss_basic_attack
-onready var fireball_throw = $Audio/fireball_throw
-onready var out_of_mana = $Audio/out_of_mana
-
-# Spell signals
-signal spell_cast_fireball
-signal spell_cast_basic_attack
-signal spell_cast_dash
-signal action_drop_item
-signal action_equip_item
-signal action_unequip_item
 
 var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 				"HP Regen" : 1, "MP Regen": 7, "Attack Power" : 10, \
@@ -29,7 +15,7 @@ var directional_timer = Timer.new()
 var inventory_open = false
 
 # object vars
-var mover = ACTOR_MOVER.new()
+
 var inventory = INVENTORY.instance()
 
 func _init().("Player", start_stats):
@@ -172,59 +158,6 @@ func set_action(action):
 	gui.set_action(proposed_action)
 	ready_status = true
 
-func process_turn():	
-	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
-	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
-	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
-	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time(0.5)
-	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.8)
-	elif proposed_action in ['drop item', 'equip item', 'unequip item']: turn_anim_timer.set_wait_time(0.5)
-
-	turn_anim_timer.start()
-
-	# Sets target positions for move and basic attack.
-	if proposed_action.split(" ")[0] == 'move':
-		if check_move_action(proposed_action):
-			mover.move_actor(1)
-	
-	elif proposed_action == 'idle':
-		target_pos = map_pos
-	
-	elif proposed_action == 'basic attack':
-		emit_signal("spell_cast_basic_attack")
-	
-	elif proposed_action == 'fireball':
-		emit_signal("spell_cast_fireball")
-	elif proposed_action == 'dash':
-		emit_signal("spell_cast_dash")
-		
-	elif proposed_action == 'drop item':
-		emit_signal("action_drop_item")
-	elif proposed_action == 'equip item':
-		emit_signal("action_equip_item")
-	elif proposed_action == 'unequip item':
-		emit_signal("action_unequip_item")
-		
-	# Apply any regen effects
-	set_hp(stat_dict['HP'] + stat_dict['HP Regen'])
-	set_mp(stat_dict['MP'] + stat_dict['MP Regen'])
-
-	in_turn = true
-
-func end_turn():
-	target_pos = translation
-	saved_pos = translation
-	proposed_action = ''
-	in_turn = false
-	ready_status = false
-	gui.clear_action()
-	
-	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
-
-# Movement related functions.
-func check_move_action(move):
-	return mover.check_move_action(move)
-
 func set_direction(direction):
 	mover.set_actor_direction(direction)
 	directional_timer.start(DIRECTION_SELECT_TIME) 
@@ -243,9 +176,5 @@ func get_item_to_drop() -> Object:
 	return inventory.get_item_to_drop()
 
 #Setters
-func set_model_rot(dir_facing, rotation_deg):
-	direction_facing = dir_facing
-	model.rotation_degrees.y = rotation_deg
-
 func set_inventory_open(state):
 	inventory_open = state
