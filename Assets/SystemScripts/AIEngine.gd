@@ -50,7 +50,7 @@ func run_engine():
 		pathfinder_direction = determine_direction_of_path()
 		
 		if dist_from_player == 1: 
-			actor.mover.set_actor_direction(pathfinder_direction)
+			actor.set_actor_dir(pathfinder_direction)
 			match rng.randi_range(1, 2):
 				1:	actor.set_action('basic attack')
 				2:	actor.set_action('fireball')

@@ -93,7 +93,7 @@ func get_input():
 	# timer to decide direction so that it doesnt just auto-move.
 	
 	if no_of_inputs > 1:
-		if (Input.is_action_pressed("w") &&Input.is_action_pressed("a") 
+		if (Input.is_action_pressed("w") && Input.is_action_pressed("a") 
 			&& direction_facing != 'upleft'):
 			set_direction('upleft')
 		if (Input.is_action_pressed("w") && Input.is_action_pressed("d") 
@@ -152,18 +152,10 @@ func get_input():
 	# Skills will need two presses to confirm.
 	if Input.is_action_pressed("e"): set_action('fireball')
 	if Input.is_action_pressed("r"): set_action('dash')
-	
-func set_action(action):
-	proposed_action = action
-	gui.set_action(proposed_action)
-	ready_status = true
 
 func set_direction(direction):
-	mover.set_actor_direction(direction)
+	set_actor_dir(direction)
 	directional_timer.start(DIRECTION_SELECT_TIME) 
-
-func manual_move_char(amount):
-	mover.move_actor(amount)
 
 # Getters
 func get_inventory_open() -> bool:

@@ -70,10 +70,6 @@ func _physics_process(_delta):
 func decide_next_action():
 	ai_engine.run_engine()
 
-func set_action(action):
-	proposed_action = action
-	ready_status = true
-
 func add_loot_to_inventory():
 	inventory.add_to_gold(rng.randi_range(1,50))
 	

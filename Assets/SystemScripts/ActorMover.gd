@@ -62,24 +62,10 @@ func check_move_action(move):
 				
 	return false
 
-func set_actor_direction(direction):
-	match direction:
-		'upleft': actor.set_model_rot("upleft", (135))
-		'upright': actor.set_model_rot("upright", (45))
-		'downleft': actor.set_model_rot("downleft", (225))
-		'downright': actor.set_model_rot("downright", (315))
-		
-		'up': actor.set_model_rot("up", (90))
-		'down': actor.set_model_rot("down", (270))
-		'left': actor.set_model_rot("left", (180))
-		'right': actor.set_model_rot("right", (0))
-
-	direction_facing = direction
-
 func move_actor(amount):
 	var target_tile
 	var direction = actor.get_direction_facing()
-	set_actor_direction(direction)
+	actor.set_actor_dir(direction)
 
 	match direction:
 		'upleft':

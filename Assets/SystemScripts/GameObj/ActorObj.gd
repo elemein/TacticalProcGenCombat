@@ -67,18 +67,24 @@ func _init(obj_type, actor_stats).(obj_type):
 	add_child(view_finder)
 	view_finder.set_actor(self)
 
+func set_action(action):
+	proposed_action = action
+	ready_status = true
+	
+	if object_type == 'Player': gui.set_action(proposed_action)
+
 func process_turn():	
 	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
 	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
 	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
 	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time(0.5)
-	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.6)
 	elif proposed_action in ['drop item', 'equip item', 'unequip item']: turn_anim_timer.set_wait_time(0.5)
 	turn_anim_timer.start()
 
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(" ")[0] == 'move':
-		mover.set_actor_direction(proposed_action.split(" ")[1])
+		set_actor_dir(proposed_action.split(" ")[1])
 		if check_move_action(proposed_action) == true:
 			mover.move_actor(1)
 	
@@ -118,6 +124,9 @@ func end_turn():
 # Movement related functions.
 func check_move_action(move):
 	return mover.check_move_action(move)
+
+func manual_move_char(amount):
+	mover.move_actor(amount)
 
 # Animations related functions.
 func handle_animations():
@@ -203,9 +212,19 @@ func get_turn_anim_timer() -> Object: return turn_anim_timer
 # Setters
 func set_stat_dict(changed_dict): stat_dict = changed_dict
 
-func set_model_rot(dir_facing, rotation_deg): # refactor this so it just takes direction and works
+func set_actor_dir(dir_facing):
 	direction_facing = dir_facing
-	model.rotation_degrees.y = rotation_deg
+
+	match direction_facing:
+		'upleft': model.rotation_degrees.y = 135
+		'upright': model.rotation_degrees.y = 45
+		'downleft': model.rotation_degrees.y = 225
+		'downright': model.rotation_degrees.y = 315
+		
+		'up': model.rotation_degrees.y = 90
+		'down': model.rotation_degrees.y = 270
+		'left': model.rotation_degrees.y = 180
+		'right': model.rotation_degrees.y = 0
 
 func set_hp(new_hp):
 	stat_dict['HP'] = stat_dict['Max HP'] if (new_hp > stat_dict['Max HP']) else new_hp
