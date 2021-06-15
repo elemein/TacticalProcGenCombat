@@ -12,20 +12,22 @@ const NUMBER_OF_ENEMIES = 10
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 20
 const NUMBER_OF_COINS = 5
-const NUMBER_OF_SWORDS = 7
-const NUMBER_OF_STAFFS = 7
-const NUMBER_OF_NECKLACES = 7
-const NUMBER_OF_DAGGERS = 7
-const NUMBER_OF_ARMOURS = 7
+const NUMBER_OF_SWORDS = 1
+const NUMBER_OF_STAFFS = 1
+const NUMBER_OF_NECKLACES = 1
+const NUMBER_OF_DAGGERS = 1
+const NUMBER_OF_ARMOURS = 1
 
 # Fun settings: 30x30
 #const NUMBER_OF_ENEMIES = 10
-# const AVG_NO_OF_ENEMIES_PER_ROOM = 2
-#const NUMBER_OF_TRAPS = 30
-#const NUMBER_OF_COINS = 8
-#const NUMBER_OF_SWORDS = 3
-#const NUMBER_OF_STAFFS = 3
-#const NUMBER_OF_NECKLACES = 3
+## const AVG_NO_OF_ENEMIES_PER_ROOM = 2
+#const NUMBER_OF_TRAPS = 20
+#const NUMBER_OF_COINS = 5
+#const NUMBER_OF_SWORDS = 1
+#const NUMBER_OF_STAFFS = 1
+#const NUMBER_OF_NECKLACES = 1
+#const NUMBER_OF_DAGGERS = 1
+#const NUMBER_OF_ARMOURS = 1
 
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
@@ -38,12 +40,13 @@ var base_necklace = preload("res://Assets/Objects/MapObjects/InventoryObjects/Ar
 var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/ScabbardAndDagger.tscn")
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 
-var map_w = 30
-var map_h = 30
-var min_room_size = 5
-var min_room_factor = 0.4
+var map_w = 40
+var map_h = 40
+var max_room_size = 10
+var min_room_size = 4 # -1 is min room size. Now lower than 4, else islands.
+var min_room_factor = 0.4 # Higher this is, the smaller the rooms are
 
-var room_density = 70 # 0-100. 100 being most dense.
+var room_density = 95 # 0-100. 100 being most dense.
 
 var rng = RandomNumberGenerator.new()
 
@@ -163,10 +166,10 @@ func create_rooms():
 		if (rng.randi_range(0,100) < room_density):
 			var room = {}
 			room.id = leaf_id
-			room.w = rng.randi_range(min_room_size, leaf.w)
-			room.h = rng.randi_range(min_room_size, leaf.h)
-			room.x = leaf.x + floor((leaf.w-room.w)/2)
-			room.y = leaf.y + floor((leaf.h-room.h)/2)
+			room.w = rng.randi_range(min_room_size, leaf.w) - 1
+			room.h = rng.randi_range(min_room_size, leaf.h) - 1
+			room.x = leaf.x + floor((leaf.w-room.w)/2) + 1
+			room.y = leaf.y + floor((leaf.h-room.h)/2) + 1
 			
 			room.split = leaf.split
 			
