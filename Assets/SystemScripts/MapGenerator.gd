@@ -10,7 +10,7 @@ const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
 const NUMBER_OF_ENEMIES = 10
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
-const NUMBER_OF_TRAPS = 20
+const NUMBER_OF_TRAPS = 40
 const NUMBER_OF_COINS = 5
 const NUMBER_OF_SWORDS = 1
 const NUMBER_OF_STAFFS = 1
@@ -40,13 +40,12 @@ var base_necklace = preload("res://Assets/Objects/MapObjects/InventoryObjects/Ar
 var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/ScabbardAndDagger.tscn")
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 
-var map_w = 40
-var map_h = 40
-var max_room_size = 10
-var min_room_size = 4 # -1 is min room size. Now lower than 4, else islands.
+var map_w = 30
+var map_h = 30
+var min_room_size = 4 # -1 is min room size.
 var min_room_factor = 0.4 # Higher this is, the smaller the rooms are
 
-var room_density = 95 # 0-100. 100 being most dense.
+var room_density = 100 # 0-100. 100 being most dense.
 
 var rng = RandomNumberGenerator.new()
 
@@ -194,7 +193,6 @@ func join_rooms():
 		var a = sister[0]
 		var b = sister[1]
 		connect_leaves(tree[a], tree[b])
-			
 
 func connect_leaves(leaf1, leaf2):
 	var x = min(leaf1.center.x, leaf2.center.x)
@@ -208,7 +206,11 @@ func connect_leaves(leaf1, leaf2):
 	else:					 # Horizontal Corridor
 		y -= 1
 		w = abs(leaf1.center.x - leaf2.center.x)
-		
+	
+	if check_if_path_may_need_extension(x+w, y+h, leaf1.split):
+		if leaf1.split == 'h': h += 1
+		elif leaf1.split == 'v': w += 1
+
 	# Ensure within map
 	x = 0 if (x < 0) else x
 	y = 0 if (y < 0) else y
@@ -220,6 +222,16 @@ func connect_leaves(leaf1, leaf2):
 				ground.translation = Vector3((i) * TILE_OFFSET, Y_OFFSET+0.3, (j) * TILE_OFFSET)
 				ground.visible = false
 				total_map[i][j][0] = ground 
+
+func check_if_path_may_need_extension(x, y, split_type):
+	if split_type == 'h':
+		if total_map[x+1][y+1][0].get_obj_type() == 'Ground': return true
+		if total_map[x+1][y-1][0].get_obj_type() == 'Ground': return true
+	elif split_type == 'v':
+		if total_map[x+1][y+1][0].get_obj_type() == 'Ground': return true
+		if total_map[x-1][y+1][0].get_obj_type() == 'Ground': return true
+	
+	return false
 
 func clear_deadends():
 	var done = false
