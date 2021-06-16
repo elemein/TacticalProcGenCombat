@@ -21,7 +21,7 @@ var map_pos = null
 
 # Spell variables
 var spell_power = 20
-var spell_cost = 20
+var spell_cost = 25
 var spell_length = 3
 
 func _ready():

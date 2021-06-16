@@ -3,6 +3,8 @@ extends ActorObj
 const AI_ENGINE = preload("res://Assets/SystemScripts/AIEngine.gd")
 const INVENTORY = preload("res://Assets/Objects/UIObjects/Inventory.tscn")
 
+const OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner.gd")
+
 var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
 
 var rng = RandomNumberGenerator.new()
@@ -12,11 +14,15 @@ var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 				"Spell Power" : 20, "Defense" : 0, \
 				 "Speed": rng.randi_range(5,15), "View Range" : 4}
 
+var loot_to_drop = []
 var loot_dropped = false
 
 # object vars
 var ai_engine = AI_ENGINE.new()
+var obj_spawner = OBJ_SPAWNER.new()
+
 var inventory = INVENTORY.instance()
+
 
 func _init().("Enemy", start_stats):
 	pass
@@ -38,6 +44,8 @@ func setup_actor():
 	
 	add_child(inventory)
 	inventory.setup_inventory(self)
+	
+	add_child(obj_spawner)
 	
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
 	
@@ -71,19 +79,24 @@ func decide_next_action():
 	ai_engine.run_engine()
 
 func add_loot_to_inventory():
-	inventory.add_to_gold(rng.randi_range(1,50))
+	var loot_seed = rng.randi_range(1, 100)
 	
+	if loot_seed <= 50: # Gold Spawn 
+		inventory.add_to_gold(rng.randi_range(1,50))
+		loot_to_drop.append('Gold') 
+		
+	elif (50 < loot_seed) and (loot_seed <= 59): loot_to_drop.append("Sword")
+	elif (60 < loot_seed) and (loot_seed <= 69): loot_to_drop.append("Magic Staff")
+	elif (70 < loot_seed) and (loot_seed <= 79): loot_to_drop.append("Arcane Necklace")
+	elif (80 < loot_seed) and (loot_seed <= 89): loot_to_drop.append("Scabbard and Dagger")
+	elif (90 < loot_seed) and (loot_seed <= 100): loot_to_drop.append("Body Armour")
+
 func drop_loot():
-	# drop gold
-	var coins = base_coins.instance()
-	coins.translation = Vector3(map_pos[0] * TILE_OFFSET, 0.6, map_pos[1] * TILE_OFFSET)
-	coins.visible = true
-	coins.set_map_pos([map_pos[0],map_pos[1]])
-	coins.add_to_group('loot')
-	coins.set_gold_value(inventory.get_gold_total())
-	map.add_map_object(coins)
-	
-	inventory.subtract_from_gold(inventory.get_gold_total())
+	if loot_to_drop[0] == 'Gold':
+		obj_spawner.spawn_gold(inventory.get_gold_total(), map_pos)
+		inventory.subtract_from_gold(inventory.get_gold_total())
+	else:
+		obj_spawner.spawn_item(loot_to_drop[0], map_pos)
 	
 	# drop items
 	loot_dropped = true
