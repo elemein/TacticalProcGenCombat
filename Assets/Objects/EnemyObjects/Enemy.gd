@@ -23,7 +23,6 @@ var obj_spawner = OBJ_SPAWNER.new()
 
 var inventory = INVENTORY.instance()
 
-
 func _init().("Enemy", start_stats):
 	pass
 
