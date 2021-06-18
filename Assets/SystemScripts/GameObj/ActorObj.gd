@@ -16,6 +16,7 @@ onready var audio_hit = $Audio/Hit
 
 # Spell signals
 signal spell_cast_fireball
+signal spell_cast_self_heal
 signal spell_cast_basic_attack
 signal spell_cast_dash
 signal action_drop_item
@@ -78,6 +79,7 @@ func process_turn():
 	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
 	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
 	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time(0.5)
+	elif proposed_action == 'self_heal': turn_anim_timer.set_wait_time(0.7)
 	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.6)
 	elif proposed_action in ['drop item', 'equip item', 'unequip item']: turn_anim_timer.set_wait_time(0.5)
 	turn_anim_timer.start()
@@ -98,6 +100,8 @@ func process_turn():
 		emit_signal("spell_cast_fireball")
 	elif proposed_action == 'dash':
 		emit_signal("spell_cast_dash")
+	elif proposed_action == 'self heal':
+		emit_signal("spell_cast_self_heal")
 		
 	elif proposed_action == 'drop item':
 		emit_signal("action_drop_item")
@@ -185,6 +189,8 @@ func play_death_anim():
 		model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
 
 # Getters
+func get_hp(): return stat_dict['HP']
+
 func get_mp(): return stat_dict['MP']
 
 func get_speed(): return stat_dict['Speed']

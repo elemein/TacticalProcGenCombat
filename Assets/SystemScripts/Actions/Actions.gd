@@ -4,6 +4,7 @@ extends Node
 signal spell_cast_basic_attack
 signal spell_cast_fireball
 
+signal spell_cast_self_heal
 signal spell_cast_dash
 
 # Inventory Actions
@@ -40,6 +41,10 @@ func _on_action_unequip_item():
 # Movement
 func _on_spell_cast_dash():
 	emit_signal("spell_cast_dash")
+
+# Buffs
+func _on_spell_cast_self_heal():
+	emit_signal("spell_cast_self_heal")
 
 #func _on_mover_check_move_action(move):
 #	emit_signal("mover_check_move_action", move)

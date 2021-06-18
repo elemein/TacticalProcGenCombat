@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.gd" type="Script" id=1]
 [ext_resource path="res://Assets/SystemScripts/Actions/Fireball.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://Assets/SystemScripts/Actions/EquipItem.gd" type="Script" id=8]
 [ext_resource path="res://Assets/SystemScripts/Actions/UnequipItem.gd" type="Script" id=9]
 [ext_resource path="res://Assets/SystemScripts/Actions/Dash.gd" type="Script" id=10]
+[ext_resource path="res://Assets/SystemScripts/Actions/SelfHeal.gd" type="Script" id=11]
 
 [node name="Actions" type="Node"]
 script = ExtResource( 1 )
@@ -39,6 +40,18 @@ unit_db = 80.0
 stream = ExtResource( 6 )
 unit_db = 80.0
 
+[node name="SelfHeal" type="Node" parent="."]
+script = ExtResource( 11 )
+
+[node name="UseSpell" type="AudioStreamPlayer3D" parent="SelfHeal"]
+stream = ExtResource( 5 )
+unit_db = 80.0
+
+[node name="out_of_mana" type="AudioStreamPlayer3D" parent="SelfHeal"]
+transform = Transform( 0.999995, 0.00281064, -0.00174667, -0.00280796, 0.999995, 0.00153718, 0.00175098, -0.00153226, 0.999997, 0, 0, 0 )
+stream = ExtResource( 6 )
+unit_db = 80.0
+
 [node name="Dash" type="Node" parent="."]
 script = ExtResource( 10 )
 
@@ -60,3 +73,4 @@ script = ExtResource( 9 )
 [connection signal="spell_cast_basic_attack" from="." to="Attacks/BasicAttack" method="_on_Actions_spell_cast_basic_attack"]
 [connection signal="spell_cast_dash" from="." to="Dash" method="_on_Actions_spell_cast_dash"]
 [connection signal="spell_cast_fireball" from="." to="Attacks/Fireball" method="_on_Actions_spell_cast_fireball"]
+[connection signal="spell_cast_self_heal" from="." to="SelfHeal" method="_on_Actions_spell_cast_self_heal"]

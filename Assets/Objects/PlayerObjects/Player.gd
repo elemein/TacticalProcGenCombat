@@ -154,6 +154,7 @@ func get_input():
 	# Skills will need two presses to confirm.
 	if Input.is_action_pressed("e"): set_action('fireball')
 	if Input.is_action_pressed("r"): set_action('dash')
+	if Input.is_action_pressed("t"): set_action('self heal')
 
 func set_direction(direction):
 	set_actor_dir(direction)
