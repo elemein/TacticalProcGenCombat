@@ -21,7 +21,7 @@ var map_pos = null
 
 # Spell variables
 var spell_power = 0
-var spell_cost = 30
+var spell_cost = 40
 
 func _ready():
 	tile_offset = map.TILE_OFFSET
