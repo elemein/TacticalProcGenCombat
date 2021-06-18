@@ -42,8 +42,8 @@ var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/Scab
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
-var map_w = 30
-var map_h = 30
+var map_l = 30 # how many rows
+var map_w = 30 # how long are those rows
 var min_room_size = 4 # -1 is min room size.
 var min_room_factor = 0.4 # Higher this is, the smaller the rooms are
 
@@ -73,9 +73,9 @@ func generate():
 	return [total_map, rooms]
 
 func create_floor():
-	for x in range(0, map_w):
+	for x in range(0, map_l):
 		total_map.append([])
-		for z in range(0, map_h):
+		for z in range(0, map_w):
 			var wall = base_wall.instance()
 			wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
 			wall.visible = false
@@ -90,23 +90,23 @@ func start_tree():
 	leaf_id = 0
 	
 	# Set basis for first tree node.
-	# x and y are both 1, not 0, as we dont want the algo to have access to the
+	# x and z are both 1, not 0, as we dont want the algo to have access to the
 	# very bottom or left edge, where a wall should be.
-	# map_w and map_h are -2 for the same reason; not -1 because the indexing
+	# map_l and map_w are -2 for the same reason; not -1 because the indexing
 	# would make that have access to the top and right edge.
-	tree[leaf_id] = {"x": 1, "y": 1, "w": map_w - 2, "h": map_h - 2}
+	tree[leaf_id] = {"x": 1, "z": 1, "l": map_l - 2, "w": map_w - 2}
 	leaf_id += 1
 
 func create_leaf(parent_id):
 	var x = tree[parent_id].x # far left node
-	var y = tree[parent_id].y # far down node
-	var w = tree[parent_id].w # far right node
-	var h = tree[parent_id].h # far up node
+	var z = tree[parent_id].z # far down node
+	var l = tree[parent_id].l # far right node
+	var w = tree[parent_id].w # far up node
 	
 	# I believe this adds a "center" dict entry to tree[parent_id] containing the
 	# halfway points for that node.
 	# apparently used to connect the leaves later
-	tree[parent_id].center = {x = floor(x + w/2), y = floor(y + h/2)}
+	tree[parent_id].center = {x = floor(x + l/2), z = floor(z + w/2)}
 	
 	# whether the tree has space for a split?
 	var can_split = false
@@ -116,8 +116,8 @@ func create_leaf(parent_id):
 	# if not enough height, split vertical
 	var types_of_splits = ['h', 'v']
 	var split_type = types_of_splits[rng.randi() % types_of_splits.size()] # 0 = h, 1 = v
-	if (min_room_factor * w < min_room_size): split_type = 'h'
-	elif (min_room_factor * h < min_room_size): split_type = 'v'
+	if (min_room_factor * l < min_room_size): split_type = 'h'
+	elif (min_room_factor * w < min_room_size): split_type = 'v'
 	
 	var leaf1 = {}
 	var leaf2 = {}
@@ -125,27 +125,27 @@ func create_leaf(parent_id):
 	#try and split current leaf, if room will fit
 	
 	if (split_type == 'v'):
+		var room_size = min_room_factor * l
+		if (room_size >= min_room_size):
+			var l1 = rng.randi_range(room_size, (l - room_size))
+			var l2 = l - l1
+			leaf1 = {x = x, z = z, l = l1, w = w, split = 'v'}
+			leaf2 = {x = x+l1, z = z, l = l2, w = w, split = 'v'}
+			can_split = true
+	else:
 		var room_size = min_room_factor * w
 		if (room_size >= min_room_size):
 			var w1 = rng.randi_range(room_size, (w - room_size))
 			var w2 = w - w1
-			leaf1 = {x = x, y = y, w = w1, h = h, split = 'v'}
-			leaf2 = {x = x+w1, y = y, w = w2, h = h, split = 'v'}
-			can_split = true
-	else:
-		var room_size = min_room_factor * h
-		if (room_size >= min_room_size):
-			var h1 = rng.randi_range(room_size, (h - room_size))
-			var h2 = h - h1
-			leaf1 = {x = x, y = y, w = w, h = h1, split = 'h'}
-			leaf2 = {x = x, y = y + h1, w = w, h = h2, split = 'h'}
+			leaf1 = {x = x, z = z, l = l, w = w1, split = 'h'}
+			leaf2 = {x = x, z = z + w1, l = l, w = w2, split = 'h'}
 			can_split = true
 			
 			
 	if (can_split):
 		leaf1.parent_id = parent_id
 		tree[leaf_id] = leaf1
-		tree[parent_id].l = leaf_id
+		tree[parent_id].c = leaf_id
 		leaf_id += 1
 		
 		leaf2.parent_id = parent_id
@@ -153,42 +153,42 @@ func create_leaf(parent_id):
 		tree[parent_id].r = leaf_id
 		leaf_id += 1
 		
-		leaves.append([tree[parent_id].l, tree[parent_id].r])
+		leaves.append([tree[parent_id].c, tree[parent_id].r])
 		
 		# try and create more leaves
-		create_leaf(tree[parent_id].l)
+		create_leaf(tree[parent_id].c)
 		create_leaf(tree[parent_id].r)
 	
 func create_rooms():
 	for leaf_id in tree:
 		var leaf = tree[leaf_id]
-		if leaf.has("l"): continue # if node has children, don't build rooms
+		if leaf.has("c"): continue # if node has children, don't build rooms
 	
 		if (rng.randi_range(0,100) < room_density):
 			var room = {}
 			room.id = leaf_id
+			room.l = rng.randi_range(min_room_size, leaf.l) - 1
 			room.w = rng.randi_range(min_room_size, leaf.w) - 1
-			room.h = rng.randi_range(min_room_size, leaf.h) - 1
-			room.x = leaf.x + floor((leaf.w-room.w)/2) + 1
-			room.y = leaf.y + floor((leaf.h-room.h)/2) + 1
+			room.x = leaf.x + floor((leaf.l-room.l)/2) + 1
+			room.z = leaf.z + floor((leaf.w-room.w)/2) + 1
 			
 			room.split = leaf.split
 			
 			room.center = Vector2()
-			room.center.x = floor(room.x + room.w/2)
-			room.center.y = floor(room.y + room.h/2)
+			room.center.x = floor(room.x + room.l/2)
+			room.center.y = floor(room.z + room.w/2) # this must be y as it is a vector2
 			rooms.append(room)
 
 	for i in range(rooms.size()):
 		var room = rooms[i]
 		
-		for x in range(room.x, (room.x + room.w)):
-			for y in range(room.y, (room.y + room.h)):
+		for x in range(room.x, (room.x + room.l)):
+			for z in range(room.z, (room.z + room.w)):
 				var ground = base_block.instance()
-				ground.translation = Vector3((x) * TILE_OFFSET, Y_OFFSET+0.3, (y) * TILE_OFFSET)
+				ground.translation = Vector3((x) * TILE_OFFSET, Y_OFFSET+0.3, (z) * TILE_OFFSET)
 				ground.visible = false
 				
-				total_map[x][y][0] = ground
+				total_map[x][z][0] = ground
 			
 func join_rooms():
 	for sister in leaves:
@@ -198,40 +198,40 @@ func join_rooms():
 
 func connect_leaves(leaf1, leaf2):
 	var x = min(leaf1.center.x, leaf2.center.x)
-	var y = min(leaf1.center.y, leaf2.center.y)
+	var z = min(leaf1.center.z, leaf2.center.z)
+	var l = 1
 	var w = 1
-	var h = 1
 	
 	if (leaf1.split == 'h'): # Vertical Corridor
 		x -= 1
-		h = abs(leaf1.center.y - leaf2.center.y)
+		w = abs(leaf1.center.z - leaf2.center.z)
 	else:					 # Horizontal Corridor
-		y -= 1
-		w = abs(leaf1.center.x - leaf2.center.x)
+		z -= 1
+		l = abs(leaf1.center.x - leaf2.center.x)
 	
-	if check_if_path_may_need_extension(x+w, y+h, leaf1.split):
-		if leaf1.split == 'h': h += 1
-		elif leaf1.split == 'v': w += 1
+	if check_if_path_may_need_extension(x+l, z+w, leaf1.split):
+		if leaf1.split == 'h': w += 1
+		elif leaf1.split == 'v': l += 1
 
 	# Ensure within map
 	x = 0 if (x < 0) else x
-	y = 0 if (y < 0) else y
+	z = 0 if (z < 0) else z
 			
-	for i in range(x, x+w):
-		for j in range(y, y+h):
+	for i in range(x, x+l):
+		for j in range(z, z+w):
 			if (total_map[i][j][0].get_obj_type() == 'Wall'):
 				var ground = base_block.instance()
 				ground.translation = Vector3((i) * TILE_OFFSET, Y_OFFSET+0.3, (j) * TILE_OFFSET)
 				ground.visible = false
 				total_map[i][j][0] = ground 
 
-func check_if_path_may_need_extension(x, y, split_type):
+func check_if_path_may_need_extension(x, z, split_type):
 	if split_type == 'h':
-		if total_map[x+1][y+1][0].get_obj_type() == 'Ground': return true
-		if total_map[x+1][y-1][0].get_obj_type() == 'Ground': return true
+		if total_map[x+1][z+1][0].get_obj_type() == 'Ground': return true
+		if total_map[x+1][z-1][0].get_obj_type() == 'Ground': return true
 	elif split_type == 'v':
-		if total_map[x+1][y+1][0].get_obj_type() == 'Ground': return true
-		if total_map[x-1][y+1][0].get_obj_type() == 'Ground': return true
+		if total_map[x+1][z+1][0].get_obj_type() == 'Ground': return true
+		if total_map[x-1][z+1][0].get_obj_type() == 'Ground': return true
 	
 	return false
 
@@ -242,35 +242,35 @@ func clear_deadends():
 		done = true
 	
 		for x in range(0, total_map.size()-1):
-			for y in range(0, total_map[0].size()-1): 
+			for z in range(0, total_map[0].size()-1): 
 				# using 0th entry v here, is okay at this stage.
-				if total_map[x][y][0].get_obj_type() != 'Ground' : continue
+				if total_map[x][z][0].get_obj_type() != 'Ground' : continue
 				
-				var roof_count = check_nearby(x,y)
+				var roof_count = check_nearby(x,z)
 				if roof_count == 3:
 					var wall = base_wall.instance()
-					wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, y * TILE_OFFSET)
+					wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
 					wall.visible = false
 					
-					total_map[x][y][0] = wall
+					total_map[x][z][0] = wall
 
 					done = false
 
-func check_nearby(x,y):
+func check_nearby(x,z):
 	var count = 0
-	if total_map[x][y-1][0].get_obj_type() == 'Wall' : count += 1
-	if total_map[x][y+1][0].get_obj_type() == 'Wall' : count += 1
-	if total_map[x-1][y][0].get_obj_type() == 'Wall' : count += 1
-	if total_map[x+1][y][0].get_obj_type() == 'Wall' : count += 1
+	if total_map[x][z-1][0].get_obj_type() == 'Wall' : count += 1
+	if total_map[x][z+1][0].get_obj_type() == 'Wall' : count += 1
+	if total_map[x-1][z][0].get_obj_type() == 'Wall' : count += 1
+	if total_map[x+1][z][0].get_obj_type() == 'Wall' : count += 1
 			
 	return count
 
 func catalog_rooms():
 	for room in rooms:
-		room['bottomleft'] = [room.x, room.y]
-		room['bottomright'] = [room.x, (room.y + room.h)-1]
-		room['topleft'] = [(room.x + room.w) - 1, room.y]
-		room['topright'] = [(room.x + room.w) - 1, (room.y + room.h)-1]
+		room['bottomleft'] = [room.x, room.z]
+		room['bottomright'] = [room.x, (room.z + room.w)-1]
+		room['topleft'] = [(room.x + room.l) - 1, room.z]
+		room['topright'] = [(room.x + room.l) - 1, (room.z + room.w)-1]
 		room['type'] = 'Enemy'
 	
 	rooms[rng.randi_range(0, rooms.size()-1)]['type'] = 'Player Spawn'
@@ -284,10 +284,10 @@ func get_random_available_tile_in_room(room) -> Array:
 	var tile_clear = false
 	
 	while tile_clear == false:
-		# room.x/y + room.w/h gives you the right/top border tile 
+		# room.x/z + room.w/h gives you the right/top border tile 
 		# encirling the room, so we do -1 to ensure being in the room.
-		x = rng.randi_range(room.x, (room.x + room.w)-1)
-		z = rng.randi_range(room.y, (room.y + room.h)-1)
+		x = rng.randi_range(room.x, (room.x + room.l)-1)
+		z = rng.randi_range(room.z, (room.z + room.w)-1)
 		
 		var all_clear = true
 		
@@ -360,4 +360,3 @@ func spawn_inv_items(item_scene, no_of_items):
 		item.add_to_group('loot')
 
 		total_map[x][z].append(item)
-	
