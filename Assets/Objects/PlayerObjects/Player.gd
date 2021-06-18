@@ -2,7 +2,7 @@ extends ActorObj
 
 const DIRECTION_SELECT_TIME = 0.27
 
-const INVENTORY = preload("res://Assets/Objects/UIObjects/Inventory.tscn")
+const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
 
 var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 				"HP Regen" : 1, "MP Regen": 7, "Attack Power" : 10, \

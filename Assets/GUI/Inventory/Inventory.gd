@@ -2,8 +2,8 @@
 
 extends Node
 
-const INVENTORY_OBJECT = preload("res://Assets/Objects/UIObjects/InventoryUIObject.tscn")
-const OBJECT_ACTION_MENU = preload("res://Assets/Objects/UIObjects/ObjectActionMenu.tscn")
+const INVENTORY_OBJECT = preload("res://Assets/GUI/Inventory/InventoryUIObject.tscn")
+const OBJECT_ACTION_MENU = preload("res://Assets/GUI/Inventory/ObjectActionMenu.tscn")
 
 onready var map = get_node("/root/World/Map")
 onready var turn_timer = get_node("/root/World/TurnTimer")
