@@ -13,6 +13,7 @@ onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # Sound effects
 onready var audio_hit = $Audio/Hit
+onready var death_sounds = $Audio/Death
 
 # Spell signals
 signal spell_cast_fireball
@@ -176,6 +177,11 @@ func die():
 	
 	death_anim_timer.start()
 	$HealthManaBar3D.visible = false
+	
+	if self.object_type == 'Player':
+		get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
+		var num_audio_effects = death_sounds.get_children().size()
+		death_sounds.get_children()[randi() % num_audio_effects].play()
 
 func play_death_anim():
 	if death_anim_timer.time_left > 0.75:

@@ -1,11 +1,13 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/Objects/PlayerObjects/polycat.dae" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Objects/PlayerObjects/Player.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Audio/PlayerAudio/hit_basic_attack_player_2.wav" type="AudioStream" id=3]
 [ext_resource path="res://Assets/Audio/PlayerAudio/hit_basic_attack_player_1.wav" type="AudioStream" id=4]
 [ext_resource path="res://Assets/GUI/HealthManaBar3D.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Assets/Audio/ClientAudio/death_sound_1.wav" type="AudioStream" id=6]
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Assets/Audio/ClientAudio/death_sound_2.wav" type="AudioStream" id=8]
 
 [sub_resource type="Environment" id=1]
 ambient_light_color = Color( 1, 1, 1, 1 )
@@ -38,11 +40,25 @@ unit_db = 80.0
 stream = ExtResource( 3 )
 unit_db = 80.0
 
+[node name="Death" type="Node" parent="Audio"]
+
+[node name="death_sound_1" type="AudioStreamPlayer3D" parent="Audio/Death"]
+stream = ExtResource( 6 )
+unit_db = 80.0
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="death_sound_2" type="AudioStreamPlayer3D" parent="Audio/Death"]
+stream = ExtResource( 8 )
+unit_db = 80.0
+
 [node name="HealthManaBar3D" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.89, 0 )
 pixel_size = 0.003
 
 [node name="Actions" parent="." instance=ExtResource( 7 )]
+
 [connection signal="action_drop_item" from="." to="Actions" method="_on_action_drop_item"]
 [connection signal="action_equip_item" from="." to="Actions" method="_on_action_equip_item"]
 [connection signal="action_unequip_item" from="." to="Actions" method="_on_action_unequip_item"]
