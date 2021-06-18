@@ -80,7 +80,7 @@ func decide_next_action():
 func add_loot_to_inventory():
 	var loot_seed = rng.randi_range(1, 100)
 	
-	if loot_seed <= 50: # Gold Spawn 
+	if loot_seed <= 49: # Gold Spawn 
 		inventory.add_to_gold(rng.randi_range(1,50))
 		loot_to_drop.append('Gold') 
 		
