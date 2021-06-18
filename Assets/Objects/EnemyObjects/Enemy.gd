@@ -1,7 +1,7 @@
 extends ActorObj
 
 const AI_ENGINE = preload("res://Assets/SystemScripts/AIEngine.gd")
-const INVENTORY = preload("res://Assets/Objects/UIObjects/Inventory.tscn")
+const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
 
 const OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner.gd")
 

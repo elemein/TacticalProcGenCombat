@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Assets/Objects/UIObjects/Inventory.gd" type="Script" id=1]
+[ext_resource path="res://Assets/GUI/Inventory/Inventory.gd" type="Script" id=1]
 
 [node name="Inventory" type="Node"]
 script = ExtResource( 1 )
