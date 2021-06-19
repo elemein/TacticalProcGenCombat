@@ -17,6 +17,7 @@ const NUMBER_OF_STAFFS = 1
 const NUMBER_OF_NECKLACES = 1
 const NUMBER_OF_DAGGERS = 1
 const NUMBER_OF_ARMOURS = 1
+const NUMBER_OF_CUIRASSES = 1
 
 # Fun settings: 30x30
 #const NUMBER_OF_ENEMIES = 10
@@ -39,6 +40,7 @@ var base_staff = preload("res://Assets/Objects/MapObjects/InventoryObjects/Magic
 var base_necklace = preload("res://Assets/Objects/MapObjects/InventoryObjects/ArcaneNecklace.tscn")
 var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/ScabbardAndDagger.tscn")
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
+var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
 var map_w = 30
 var map_h = 30
@@ -341,6 +343,7 @@ func spawn_loot():
 	spawn_inv_items(base_necklace, NUMBER_OF_NECKLACES)
 	spawn_inv_items(base_dagger, NUMBER_OF_DAGGERS)
 	spawn_inv_items(base_armour, NUMBER_OF_ARMOURS)
+	spawn_inv_items(base_cuirass, NUMBER_OF_CUIRASSES)
 
 func spawn_inv_items(item_scene, no_of_items):
 	for obj_cnt in range(no_of_items):
