@@ -41,10 +41,14 @@ func use():
 	parent = find_parent('Actions').get_parent()
 	if parent:
 		if mana_check():
-			UseSpell.play()
+			play_audio()
 			set_target_pos()
 			set_power()
 			do_damage()
+			
+func play_audio():
+	UseSpell.translation = parent.translation
+	UseSpell.play()
 
 func set_power():
 	spell_power = parent.get_attack_power()
@@ -52,6 +56,7 @@ func set_power():
 # Check if out of mana
 func mana_check() -> bool:
 	if parent.get('mp') and parent.mp < spell_cost:
+		out_of_mana.translation = parent.translation
 		out_of_mana.play()
 		return false
 		
