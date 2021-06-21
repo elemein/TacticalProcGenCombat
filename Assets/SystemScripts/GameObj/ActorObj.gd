@@ -13,7 +13,6 @@ onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # Sound effects
 onready var audio_hit = $Audio/Hit
-onready var death_sounds = $Audio/Death
 
 # Spell signals
 signal spell_cast_fireball
@@ -182,8 +181,12 @@ func die():
 	
 	if self.object_type == 'Player':
 		get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
-		var num_audio_effects = death_sounds.get_children().size()
-		death_sounds.get_children()[randi() % num_audio_effects].play()
+	else:
+		var tmp = get_tree().root.get_node('World').get_node('Map').current_number_of_enemies
+		get_tree().root.get_node('World').get_node('Map').current_number_of_enemies -= 1
+		tmp = get_tree().root.get_node('World').get_node('Map').current_number_of_enemies
+		if get_tree().root.get_node('World').get_node('Map').current_number_of_enemies == 0:
+			get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
 
 func play_death_anim():
 	if death_anim_timer.time_left > 0.75:
