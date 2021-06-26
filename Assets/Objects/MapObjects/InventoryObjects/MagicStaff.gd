@@ -10,3 +10,6 @@ func equip_object():
 
 func unequip_object():
 	item_owner.set_spell_power(item_owner.get_spell_power() - spell_power_bonus)
+	
+func get_stats():
+	return [[spell_power_bonus, "spl pwr"]]

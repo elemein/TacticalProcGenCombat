@@ -10,3 +10,6 @@ func equip_object():
 
 func unequip_object():
 	item_owner.set_defense(item_owner.get_defense() - defense_bonus)
+	
+func get_stats():
+	return [[30, "def"]]
