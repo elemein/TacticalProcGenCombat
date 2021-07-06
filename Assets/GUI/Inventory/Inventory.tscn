@@ -92,3 +92,5 @@ __meta__ = {
 }
 
 [node name="ItemStatsUI" parent="." instance=ExtResource( 2 )]
+
+[connection signal="display_item_stats" from="." to="ItemStatsUI" method="_on_Inventory_display_item_stats"]

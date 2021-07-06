@@ -26,7 +26,7 @@ __meta__ = {
 }
 
 [node name="ColorRect" type="ColorRect" parent="InventoryUI"]
-margin_right = 150.0
+margin_right = 154.0
 margin_bottom = 100.0
 color = Color( 0.203922, 0.203922, 0.203922, 0.439216 )
 __meta__ = {
@@ -34,7 +34,7 @@ __meta__ = {
 }
 
 [node name="InventoryPanels" type="VBoxContainer" parent="InventoryUI"]
-margin_right = 150.0
+margin_right = 154.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 150, 100 )
 __meta__ = {
@@ -42,7 +42,7 @@ __meta__ = {
 }
 
 [node name="Title" type="MarginContainer" parent="InventoryUI/InventoryPanels"]
-margin_right = 150.0
+margin_right = 154.0
 margin_bottom = 15.0
 rect_min_size = Vector2( 150, 15 )
 __meta__ = {
@@ -50,7 +50,7 @@ __meta__ = {
 }
 
 [node name="Title" type="Label" parent="InventoryUI/InventoryPanels/Title"]
-margin_right = 150.0
+margin_right = 154.0
 margin_bottom = 15.0
 rect_min_size = Vector2( 150, 15 )
 text = "Item Stats"
@@ -61,19 +61,27 @@ __meta__ = {
 
 [node name="ItemStats" type="MarginContainer" parent="InventoryUI/InventoryPanels"]
 margin_top = 19.0
-margin_right = 150.0
+margin_right = 154.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 150, 15 )
 script = ExtResource( 2 )
 
-[node name="Amount" type="Label" parent="InventoryUI/InventoryPanels/ItemStats"]
-margin_right = 150.0
-margin_bottom = 14.0
+[node name="StatContainer" type="HBoxContainer" parent="InventoryUI/InventoryPanels/ItemStats"]
+margin_right = 154.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 150, 0 )
+
+[node name="Amount" type="Label" parent="InventoryUI/InventoryPanels/ItemStats/StatContainer"]
+margin_right = 75.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 75, 15 )
 text = "Amount"
 align = 1
 
-[node name="Stat" type="Label" parent="InventoryUI/InventoryPanels/ItemStats"]
-margin_right = 150.0
-margin_bottom = 14.0
+[node name="Stat" type="Label" parent="InventoryUI/InventoryPanels/ItemStats/StatContainer"]
+margin_left = 79.0
+margin_right = 154.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 75, 15 )
 text = "Stat"
 align = 1

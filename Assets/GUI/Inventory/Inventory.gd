@@ -17,6 +17,9 @@ onready var inventory_ui_gold = $InventoryUI/InventoryPanels/Gold/GoldContainer/
 onready var inv_selector = $InventorySelector
 onready var actmenu_selector = $ActionMenuSelector
 
+# signals
+signal display_item_stats
+
 #unsorted vars
 var gold = 0
 var item_to_act_on
@@ -117,6 +120,7 @@ func move_inv_selector(index_mod):
 		var y = inventory_ui.rect_position.y + inventory_ui_slots.rect_position.y
 	
 		inv_selector.rect_position = Vector2(x, y + ui_objects[inv_selector_index].rect_position.y)
+		emit_signal("display_item_stats")
 
 func show_actmenu_selector():
 	move_child(actmenu_selector, get_children().size()-1) # this places selector down the tree of the menu

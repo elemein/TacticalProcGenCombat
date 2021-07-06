@@ -1,13 +1,13 @@
 extends MarginContainer
 
-onready var amount = $Amount
-onready var stat = $Stat
+onready var amount = $StatContainer/Amount
+onready var stat = $StatContainer/Stat
 
-var amount_text = 0
+var amount_text = ''
 var stat_text = ''
 
 var pos_x = 0 setget set_pos_x
-var pos_y = 20 setget set_pos_y
+var pos_y = 0 setget set_pos_y
 var marg_top = 20 setget set_marg_top
 var marg_bot = 35 setget set_marg_top
 
