@@ -10,3 +10,6 @@ func equip_object():
 
 func unequip_object():
 	item_owner.set_attack_power(item_owner.get_attack_power() - attack_power_bonus)
+	
+func get_stats():
+	return [[attack_power_bonus, "atk pwr"]]
