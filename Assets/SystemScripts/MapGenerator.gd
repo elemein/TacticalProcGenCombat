@@ -171,12 +171,13 @@ func create_rooms():
 			room.w = rng.randi_range(min_room_size, leaf.w) - 1
 			room.x = leaf.x + floor((leaf.l-room.l)/2) + 1
 			room.z = leaf.z + floor((leaf.w-room.w)/2) + 1
+			room.parent_id = leaf.parent_id
 			
 			room.split = leaf.split
 			
-			room.center = Vector2()
+			room.center = {"x": 0, "z": 0}
 			room.center.x = floor(room.x + room.l/2)
-			room.center.y = floor(room.z + room.w/2) # this must be y as it is a vector2
+			room.center.z = floor(room.z + room.w/2) 
 			rooms.append(room)
 
 	for i in range(rooms.size()):

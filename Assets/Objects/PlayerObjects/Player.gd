@@ -5,8 +5,8 @@ const DIRECTION_SELECT_TIME = 0.27
 const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
 
 var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
-				"HP Regen" : 1, "MP Regen": 7, "Attack Power" : 10, \
-				"Spell Power" : 20, "Defense" : 0, "Speed": 15, "View Range" : 4}
+				"HP Regen" : 1, "MP Regen": 6, "Attack Power" : 10, \
+				"Spell Power" : 20, "Defense" : 0, "Speed": 13, "View Range" : 4}
 
 # movement and positioning related vars
 var directional_timer = Timer.new()
