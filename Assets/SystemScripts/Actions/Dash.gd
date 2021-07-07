@@ -5,7 +5,7 @@ onready var map = get_node("/root/World/Map")
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # Sound effects
-onready var UseSpell = $UseSpell
+# onready var UseSpell = $UseSpell - Dash has no audio.
 onready var out_of_mana = $out_of_mana
 
 # Misc variables

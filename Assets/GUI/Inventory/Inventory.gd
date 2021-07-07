@@ -16,6 +16,7 @@ onready var inv_gold_holder = $InventoryUI/InventoryPanels/Gold
 onready var inventory_ui_gold = $InventoryUI/InventoryPanels/Gold/GoldContainer/GoldValue
 onready var inv_selector = $InventorySelector
 onready var actmenu_selector = $ActionMenuSelector
+onready var item_stats_ui = $ItemStatsUI
 
 # signals
 signal display_item_stats

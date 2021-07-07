@@ -43,7 +43,7 @@ func use():
 	parent = find_parent('Actions').get_parent()
 	if parent:
 		if mana_check():
-			play_audio()
+			# play_audio() - Dash has no audio.
 			create_spell_instance()
 			set_target_pos()
 			set_power()
