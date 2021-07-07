@@ -60,9 +60,8 @@ __meta__ = {
 }
 
 [node name="ItemStats" type="MarginContainer" parent="InventoryUI/InventoryPanels"]
-margin_top = 19.0
 margin_right = 154.0
-margin_bottom = 34.0
+margin_bottom = 15.0
 rect_min_size = Vector2( 150, 15 )
 script = ExtResource( 2 )
 
@@ -75,7 +74,6 @@ rect_min_size = Vector2( 150, 0 )
 margin_right = 75.0
 margin_bottom = 15.0
 rect_min_size = Vector2( 75, 15 )
-text = "Amount"
 align = 1
 
 [node name="Stat" type="Label" parent="InventoryUI/InventoryPanels/ItemStats/StatContainer"]
@@ -83,5 +81,4 @@ margin_left = 79.0
 margin_right = 154.0
 margin_bottom = 15.0
 rect_min_size = Vector2( 75, 15 )
-text = "Stat"
 align = 1

@@ -103,6 +103,7 @@ func show_inv_selector():
 	inv_selector.visible = true
 	inv_selector.rect_position = Vector2(dflt_x, dflt_y)
 	inv_selector.rect_size = ui_objects[0].rect_size
+	emit_signal("display_item_stats")
 
 func hide_inv_selector():
 	inv_selector.visible = false
