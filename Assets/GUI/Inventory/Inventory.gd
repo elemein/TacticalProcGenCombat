@@ -88,8 +88,10 @@ func handle_action_menu():
 
 func open_inv_ui():
 	inventory_ui.visible = true
-	if ui_objects.size() > 0: show_inv_selector()
 	inv_selector_index = 0
+	if ui_objects.size() > 0: 
+		show_inv_selector()
+
 
 func close_inv_ui():
 	inventory_ui.visible = false
