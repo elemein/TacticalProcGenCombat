@@ -92,7 +92,6 @@ func open_inv_ui():
 	if ui_objects.size() > 0: 
 		show_inv_selector()
 
-
 func close_inv_ui():
 	inventory_ui.visible = false
 	hide_inv_selector()
