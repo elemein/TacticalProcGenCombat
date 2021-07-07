@@ -5,19 +5,13 @@ onready var turn_timer = get_node("/root/World/TurnTimer")
 
 onready var item_stat_row = $InventoryUI/InventoryPanels/ItemStats
 onready var inventory_panels = $InventoryUI/InventoryPanels
+onready var inventory_ui = get_parent().get_node("InventoryUI")
 
 var item_stats = []
 var null_items = []
 
 func _physics_process(delta):
-	if get_parent().owner_type == 'Player':
-		
-		if turn_timer.get_turn_in_process() == true: return # lock out while in turn
-		
-		visible = get_parent().inv_selector.visible
-
-	else:
-		visible = false
+	visible = inventory_ui.visible
 		
 func clear_old_stats_window():
 	for object in item_stats:
