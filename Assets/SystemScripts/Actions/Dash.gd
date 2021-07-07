@@ -39,6 +39,7 @@ func use():
 # Check if out of mana
 func mana_check() -> bool:
 	if parent.get_mp() and parent.get_mp() < spell_cost:
+		out_of_mana.translation = parent.translation
 		out_of_mana.play()
 		return false
 		

@@ -67,6 +67,7 @@ script = ExtResource( 8 )
 
 [node name="UnequipItem" type="Node" parent="."]
 script = ExtResource( 9 )
+
 [connection signal="action_drop_item" from="." to="DropItem" method="_on_Actions_action_drop_item"]
 [connection signal="action_equip_item" from="." to="EquipItem" method="_on_Actions_action_equip_item"]
 [connection signal="action_unequip_item" from="." to="UnequipItem" method="_on_Actions_action_unequip_item"]

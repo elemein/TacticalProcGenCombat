@@ -155,7 +155,9 @@ func take_damage(damage):
 		
 		# Play a random audio effect upon getting hit
 		var num_audio_effects = audio_hit.get_children().size()
-		audio_hit.get_children()[randi() % num_audio_effects].play()
+		var hit_sound = audio_hit.get_children()[randi() % num_audio_effects]
+		hit_sound.translation = self.translation
+		hit_sound.play()
 		
 		# Update the health bar
 		emit_signal("status_bar_hp", stat_dict['HP'], stat_dict['Max HP'])
@@ -180,6 +182,15 @@ func die():
 	
 	death_anim_timer.start()
 	$HealthManaBar3D.visible = false
+	
+	if self.object_type == 'Player':
+		get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
+	else:
+		var tmp = get_tree().root.get_node('World').get_node('Map').current_number_of_enemies
+		get_tree().root.get_node('World').get_node('Map').current_number_of_enemies -= 1
+		tmp = get_tree().root.get_node('World').get_node('Map').current_number_of_enemies
+		if get_tree().root.get_node('World').get_node('Map').current_number_of_enemies == 0:
+			get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
 
 func play_death_anim():
 	if death_anim_timer.time_left > 0.75:

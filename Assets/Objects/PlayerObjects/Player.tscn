@@ -43,6 +43,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.89, 0 )
 pixel_size = 0.003
 
 [node name="Actions" parent="." instance=ExtResource( 7 )]
+
 [connection signal="action_drop_item" from="." to="Actions" method="_on_action_drop_item"]
 [connection signal="action_equip_item" from="." to="Actions" method="_on_action_equip_item"]
 [connection signal="action_unequip_item" from="." to="Actions" method="_on_action_unequip_item"]
