@@ -129,15 +129,6 @@ func get_map():
 	return map_grid
 
 func hide_non_visible_from_player():
-	# if something can move, it may move out to a square out of the old viewfield
-	# and out of the new viewfield, meaning it wont have a visibility change
-	# when it ought to
-	
-	# store a list of objects that have visbility on
-	# see if they're in the new viewfield, if not, visible off
-	# turn on visible for new stuff in viewfield
-	# leave indifferent alone
-	
 	var viewfield = player.get_viewfield()
 	var objs_visible_to_player = []
 	
