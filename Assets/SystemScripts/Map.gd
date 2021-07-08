@@ -12,6 +12,7 @@ var rng = RandomNumberGenerator.new()
 var map_generator = MAP_GEN.new()
 
 var in_view_objects = []
+var objs_visible_to_player_last_turn = []
 var player
 
 onready var turn_timer = get_node("/root/World/TurnTimer")
@@ -128,21 +129,36 @@ func get_map():
 	return map_grid
 
 func hide_non_visible_from_player():
+	# if something can move, it may move out to a square out of the old viewfield
+	# and out of the new viewfield, meaning it wont have a visibility change
+	# when it ought to
+	
+	# store a list of objects that have visbility on
+	# see if they're in the new viewfield, if not, visible off
+	# turn on visible for new stuff in viewfield
+	# leave indifferent alone
+	
 	var viewfield = player.get_viewfield()
+	var objs_visible_to_player = []
 	
-	for tile in in_view_objects: 
-		var objects_on_tile = get_tile_contents(tile[0], tile[1])
-		for object in objects_on_tile:
-			object.visible = false
-	
+	# catalog what ought to be in view
 	for tile in viewfield: 
 		var objects_on_tile = get_tile_contents(tile[0], tile[1])
 		
 		for object in objects_on_tile:
 			if object.get_obj_type() != 'Spike Trap': # dont reveal traps
+				objs_visible_to_player.append(object)
 				object.visible = true
-		
-	in_view_objects = viewfield
+
+	# check what was in vision last turn
+	# if its not in the seen objects, turn off visible
+	for object in objs_visible_to_player_last_turn:
+		if not (object in objs_visible_to_player):
+			object.visible = false
+	
+	# save what was in vision
+	objs_visible_to_player_last_turn = objs_visible_to_player
+
 
 func add_map_object(object):
 	var tile = object.get_map_pos()

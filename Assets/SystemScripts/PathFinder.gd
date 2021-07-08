@@ -31,7 +31,7 @@ var reached_end = false
 var path_holder = {}
 
 var pos_queue = []
-var direction_list = ['upleft', 'upright', 'downleft', 'downright', 'up', 'down', 'left', 'right']
+var direction_list = ['up', 'down', 'left', 'right', 'upleft', 'upright', 'downleft', 'downright']
 
 var move_count = 0
 var nodes_left_in_layer = 0
