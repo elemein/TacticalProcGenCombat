@@ -85,48 +85,51 @@ func solve(searcher, start, end):
 		return [move_count, retrace_path()]
 		
 	return [-1,[[-1, -1]]]
+
+func check_valid_cornering(pos, direction):
+	var valid_cornering = true
+	
+	match direction: # checking cornering
+		'upleft':
+			if map.is_tile_wall(pos[0] + 1, pos[1]): valid_cornering = false
+			if map.is_tile_wall(pos[0], pos[1] - 1): valid_cornering = false
+		'upright': 
+			if map.is_tile_wall(pos[0] + 1, pos[1]): valid_cornering = false
+			if map.is_tile_wall(pos[0], pos[1] + 1): valid_cornering = false
+		'downleft': 
+			if map.is_tile_wall(pos[0] - 1, pos[1]): valid_cornering = false
+			if map.is_tile_wall(pos[0], pos[1] - 1): valid_cornering = false
+		'downright':
+			if map.is_tile_wall(pos[0] - 1, pos[1]): valid_cornering = false
+			if map.is_tile_wall(pos[0], pos[1]+1): valid_cornering = false
 			
+	return valid_cornering
+
+func get_target_adjacent_pos(pos, direction):
+	var adj_pos
+	
+	match direction:
+		'up': adj_pos = [pos[0] + 1, pos[1]]
+		'down': adj_pos = [pos[0] - 1, pos[1]]
+		'left': adj_pos = [pos[0], pos[1] - 1]
+		'right': adj_pos = [pos[0], pos[1] + 1]
+
+		'upleft': adj_pos = [pos[0] + 1, pos[1] - 1]
+		'upright': adj_pos = [pos[0] + 1, pos[1] + 1]
+		'downleft': adj_pos = [pos[0] - 1, pos[1] - 1]
+		'downright': adj_pos = [pos[0] - 1, pos[1] + 1]
+		
+	return adj_pos
+
 func explore_neighbors(pos): # this function basically just adds adjacent tiles to queue if its valid
 	path_holder[pos] = []
 	for direction in direction_list: # diagonals must be processed first
-				
-		var search_pos
-		var tile_contents
-		var invalid_cornering = false
+		if check_valid_cornering(pos, direction) == false: continue
 		
-		match direction: # checking cornering
-			'upleft':
-				if map.is_tile_wall(pos[0] + 1, pos[1]): invalid_cornering = true
-				if map.is_tile_wall(pos[0], pos[1] - 1): invalid_cornering = true
-			'upright': 
-				if map.is_tile_wall(pos[0] + 1, pos[1]): invalid_cornering = true
-				if map.is_tile_wall(pos[0], pos[1] + 1): invalid_cornering = true
-			'downleft': 
-				if map.is_tile_wall(pos[0] - 1, pos[1]): invalid_cornering = true
-				if map.is_tile_wall(pos[0], pos[1] - 1): invalid_cornering = true
-			'downright':
-				if map.is_tile_wall(pos[0] - 1, pos[1]): invalid_cornering = true
-				if map.is_tile_wall(pos[0], pos[1]+1): invalid_cornering = true
-		
-		if invalid_cornering: continue
-		
-		match direction:
-			'up': search_pos = [pos[0] + 1, pos[1]]
-			'down': search_pos = [pos[0] - 1, pos[1]]
-			'left': search_pos = [pos[0], pos[1] - 1]
-			'right': search_pos = [pos[0], pos[1] + 1]
-			
-			'upleft': search_pos = [pos[0] + 1, pos[1] - 1]
-			'upright': search_pos = [pos[0] + 1, pos[1] + 1]
-			'downleft': search_pos = [pos[0] - 1, pos[1] - 1]
-			'downright': search_pos = [pos[0] - 1, pos[1] + 1]
-			
-		tile_contents = map.get_tile_contents(search_pos[0], search_pos[1])
-		
+		var search_pos = get_target_adjacent_pos(pos, direction)
 		if search_pos in visited: continue
-
-#		no idea why, but the below doesnt work despite it doing the same thing as everything below
-#		if map.tile_available(search_pos[0], search_pos[1]) == false: continue
+		
+		var tile_contents = map.get_tile_contents(search_pos[0], search_pos[1])
 		
 		if typeof(tile_contents) == TYPE_STRING:
 			if tile_contents == 'Out of Bounds': continue
