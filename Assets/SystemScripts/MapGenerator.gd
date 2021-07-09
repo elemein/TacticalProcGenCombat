@@ -8,7 +8,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 15
+const NUMBER_OF_ENEMIES = 20
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 5
 const NUMBER_OF_COINS = 5
@@ -18,17 +18,6 @@ const NUMBER_OF_NECKLACES = 1
 const NUMBER_OF_DAGGERS = 1
 const NUMBER_OF_ARMOURS = 1
 const NUMBER_OF_CUIRASSES = 1
-
-# Fun settings: 30x30
-#const NUMBER_OF_ENEMIES = 10
-## const AVG_NO_OF_ENEMIES_PER_ROOM = 2
-#const NUMBER_OF_TRAPS = 20
-#const NUMBER_OF_COINS = 5
-#const NUMBER_OF_SWORDS = 1
-#const NUMBER_OF_STAFFS = 1
-#const NUMBER_OF_NECKLACES = 1
-#const NUMBER_OF_DAGGERS = 1
-#const NUMBER_OF_ARMOURS = 1
 
 var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
@@ -42,8 +31,8 @@ var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/Scab
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
-var map_l = 30 # MIN: 12, how many rows
-var map_w = 30 # MIN: 12, how long are those rows
+var map_l = 20 # MIN: 12, how many rows
+var map_w = 20# MIN: 12, how long are those rows
 var min_room_size = 4 # -1 is min room size.
 var min_room_factor = 0.4 # Higher this is, the smaller the rooms are
 

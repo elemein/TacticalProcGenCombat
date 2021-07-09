@@ -54,8 +54,6 @@ func reset_vars():
 	curr_pos = []
 	end_pos = []
 	
-	direction_list = ['upleft', 'upright', 'downleft', 'downright', 'up', 'down', 'left', 'right']
-	
 func solve(searcher, start, end):
 	reset_vars()
 	start_pos = start
@@ -123,7 +121,7 @@ func get_target_adjacent_pos(pos, direction):
 
 func explore_neighbors(pos): # this function basically just adds adjacent tiles to queue if its valid
 	path_holder[pos] = []
-	for direction in direction_list: # diagonals must be processed first
+	for direction in direction_list: 
 		if check_valid_cornering(pos, direction) == false: continue
 		
 		var search_pos = get_target_adjacent_pos(pos, direction)
