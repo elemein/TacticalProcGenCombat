@@ -11,7 +11,7 @@ var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 
 # movement and positioning related vars
 var directional_timer = Timer.new()
-var diagonal_input_smoothing_timer = Timer.new()
+var input_smoothing_timer = Timer.new()
 
 # inventory vars
 var inventory_open = false
@@ -28,9 +28,9 @@ func _ready():
 	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
 	add_child(directional_timer)
 	
-	diagonal_input_smoothing_timer.set_one_shot(true)
-	diagonal_input_smoothing_timer.set_wait_time(DIAGONAL_INPUT_SMOOTHING_TIME)
-	add_child(diagonal_input_smoothing_timer)
+	input_smoothing_timer.set_one_shot(true)
+	input_smoothing_timer.set_wait_time(DIAGONAL_INPUT_SMOOTHING_TIME)
+	add_child(input_smoothing_timer)
 	
 	turn_timer.add_to_timer_group(self)
 	
@@ -83,22 +83,38 @@ func smooth_diagonal_input():
 	match direction_facing:
 		'upleft':
 			if (Input.is_action_just_released('w') or Input.is_action_just_released('a')):
-				diagonal_input_smoothing_timer.start()
+				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 		'upright':
 			if (Input.is_action_just_released('w') or Input.is_action_just_released('d')):
-				diagonal_input_smoothing_timer.start()
+				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 		'downleft':
 			if (Input.is_action_just_released('s') or Input.is_action_just_released('a')):
-				diagonal_input_smoothing_timer.start()
+				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 		'downright':
 			if (Input.is_action_just_released('s') or Input.is_action_just_released('d')):
-				diagonal_input_smoothing_timer.start()
-			
+				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
+
+func smooth_move_confirm_input():
+	match direction_facing:
+		'up':
+			if (Input.is_action_just_pressed('w')):
+				directional_timer.start(0.1)
+		'down':
+			if (Input.is_action_just_pressed('s')):
+				directional_timer.start(0.1)
+		'left':
+			if (Input.is_action_just_pressed('a')):
+				directional_timer.start(0.1)
+		'right':
+			if (Input.is_action_just_pressed('d')):
+				directional_timer.start(0.1)
+
 func get_input():
 	smooth_diagonal_input()
+	smooth_move_confirm_input()
 	
 	if (turn_timer.get_turn_in_process() == true) or (inventory_open) or \
-	(diagonal_input_smoothing_timer.time_left > 0): 
+	(input_smoothing_timer.time_left > 0): 
 		# We don't wanna collect input if turn in action or in inventory or
 		# while smoothing input.
 		return
