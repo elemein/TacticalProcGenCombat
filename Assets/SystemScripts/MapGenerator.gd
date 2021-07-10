@@ -8,7 +8,7 @@ extends Node
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.2
-const NUMBER_OF_ENEMIES = 20
+const NUMBER_OF_ENEMIES = 1
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 5
 const NUMBER_OF_COINS = 5
@@ -31,8 +31,8 @@ var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/Scab
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
-var map_l = 20 # MIN: 12, how many rows
-var map_w = 20# MIN: 12, how long are those rows
+var map_l = 13 # MIN: 12, how many rows
+var map_w = 13 # MIN: 12, how long are those rows
 var min_room_size = 4 # -1 is min room size.
 var min_room_factor = 0.4 # Higher this is, the smaller the rooms are
 
@@ -193,10 +193,10 @@ func connect_leaves(leaf1, leaf2):
 	var w = 1
 	
 	if (leaf1.split == 'h'): # Vertical Corridor
-		x -= 1
+		x -= floor(w/2)+1
 		w = abs(leaf1.center.z - leaf2.center.z)
 	else:					 # Horizontal Corridor
-		z -= 1
+		z -= floor(l/2)+1
 		l = abs(leaf1.center.x - leaf2.center.x)
 	
 	if check_if_path_may_need_extension(x+l, z+w, leaf1.split):

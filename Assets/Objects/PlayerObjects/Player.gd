@@ -1,6 +1,7 @@
 extends ActorObj
 
 const DIRECTION_SELECT_TIME = 0.27
+const DIAGONAL_INPUT_SMOOTHING_TIME = 0.1
 
 const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
 
@@ -10,6 +11,7 @@ var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 
 # movement and positioning related vars
 var directional_timer = Timer.new()
+var diagonal_input_smoothing_timer = Timer.new()
 
 # inventory vars
 var inventory_open = false
@@ -25,6 +27,10 @@ func _ready():
 	directional_timer.set_one_shot(true)
 	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
 	add_child(directional_timer)
+	
+	diagonal_input_smoothing_timer.set_one_shot(true)
+	diagonal_input_smoothing_timer.set_wait_time(DIAGONAL_INPUT_SMOOTHING_TIME)
+	add_child(diagonal_input_smoothing_timer)
 	
 	turn_timer.add_to_timer_group(self)
 	
@@ -72,9 +78,29 @@ func _physics_process(_delta):
 
 	handle_animations()
 			
+
+func smooth_diagonal_input():
+	match direction_facing:
+		'upleft':
+			if (Input.is_action_just_released('w') or Input.is_action_just_released('a')):
+				diagonal_input_smoothing_timer.start()
+		'upright':
+			if (Input.is_action_just_released('w') or Input.is_action_just_released('d')):
+				diagonal_input_smoothing_timer.start()
+		'downleft':
+			if (Input.is_action_just_released('s') or Input.is_action_just_released('a')):
+				diagonal_input_smoothing_timer.start()
+		'downright':
+			if (Input.is_action_just_released('s') or Input.is_action_just_released('d')):
+				diagonal_input_smoothing_timer.start()
+			
 func get_input():
-	if turn_timer.get_turn_in_process() == true or inventory_open: 
-		# We don't wanna collect input if turn in action or in inventory.
+	smooth_diagonal_input()
+	
+	if (turn_timer.get_turn_in_process() == true) or (inventory_open) or \
+	(diagonal_input_smoothing_timer.time_left > 0): 
+		# We don't wanna collect input if turn in action or in inventory or
+		# while smoothing input.
 		return
 	
 	if Input.is_action_just_pressed('tab'): 
@@ -95,6 +121,7 @@ func get_input():
 	# timer to decide direction so that it doesnt just auto-move.
 	
 	if no_of_inputs > 1:
+		
 		if (Input.is_action_pressed("w") && Input.is_action_pressed("a") 
 			&& direction_facing != 'upleft'):
 			set_direction('upleft')
