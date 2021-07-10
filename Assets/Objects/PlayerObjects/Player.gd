@@ -2,6 +2,7 @@ extends ActorObj
 
 const DIRECTION_SELECT_TIME = 0.27
 const DIAGONAL_INPUT_SMOOTHING_TIME = 0.1
+const INPUT_CONFIRMATION_SMOOTHING_TIME = 0.1
 
 const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
 
@@ -95,19 +96,31 @@ func smooth_diagonal_input():
 				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 
 func smooth_move_confirm_input():
+	var dir_char = ''
+
 	match direction_facing:
-		'up':
-			if (Input.is_action_just_pressed('w')):
-				directional_timer.start(0.1)
-		'down':
-			if (Input.is_action_just_pressed('s')):
-				directional_timer.start(0.1)
-		'left':
-			if (Input.is_action_just_pressed('a')):
-				directional_timer.start(0.1)
-		'right':
-			if (Input.is_action_just_pressed('d')):
-				directional_timer.start(0.1)
+		'up': dir_char = 'w'
+		'down': dir_char = 's'
+		'left': dir_char = 'a'
+		'right': dir_char = 'd'
+	
+	if(Input.is_action_just_pressed(dir_char)):
+		directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
+	
+	
+#	match direction_facing:
+#		'up':
+#			if (Input.is_action_just_pressed('w')):
+#				directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
+#		'down':
+#			if (Input.is_action_just_pressed('s')):
+#				directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
+#		'left':
+#			if (Input.is_action_just_pressed('a')):
+#				directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
+#		'right':
+#			if (Input.is_action_just_pressed('d')):
+#				directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
 
 func get_input():
 	smooth_diagonal_input()
