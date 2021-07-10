@@ -106,21 +106,6 @@ func smooth_move_confirm_input():
 	
 	if(Input.is_action_just_pressed(dir_char)):
 		directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
-	
-	
-#	match direction_facing:
-#		'up':
-#			if (Input.is_action_just_pressed('w')):
-#				directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
-#		'down':
-#			if (Input.is_action_just_pressed('s')):
-#				directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
-#		'left':
-#			if (Input.is_action_just_pressed('a')):
-#				directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
-#		'right':
-#			if (Input.is_action_just_pressed('d')):
-#				directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
 
 func get_input():
 	smooth_diagonal_input()

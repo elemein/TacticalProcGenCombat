@@ -84,13 +84,13 @@ func add_loot_to_inventory():
 		inventory.add_to_gold(rng.randi_range(1,50))
 		loot_to_drop.append('Gold') 
 		
-	elif (50 < loot_seed) and (loot_seed <= 59): loot_to_drop.append("Sword")
-	elif (60 < loot_seed) and (loot_seed <= 69): loot_to_drop.append("Magic Staff")
-	elif (70 < loot_seed) and (loot_seed <= 79): loot_to_drop.append("Arcane Necklace")
-	elif (80 < loot_seed) and (loot_seed <= 89): loot_to_drop.append("Scabbard and Dagger")
-	elif (90 < loot_seed) and (loot_seed <= 94): loot_to_drop.append("Body Armour")
-	elif (95 < loot_seed) and (loot_seed <= 100): loot_to_drop.append("Leather Cuirass")
-
+	elif (50 <= loot_seed) and (loot_seed <= 59): loot_to_drop.append("Sword")
+	elif (60 <= loot_seed) and (loot_seed <= 69): loot_to_drop.append("Magic Staff")
+	elif (70 <= loot_seed) and (loot_seed <= 79): loot_to_drop.append("Arcane Necklace")
+	elif (80 <= loot_seed) and (loot_seed <= 89): loot_to_drop.append("Scabbard and Dagger")
+	elif (90 <= loot_seed) and (loot_seed <= 94): loot_to_drop.append("Body Armour")
+	elif (95 <= loot_seed) and (loot_seed <= 100): loot_to_drop.append("Leather Cuirass")
+	
 func drop_loot():
 	if loot_to_drop[0] == 'Gold':
 		obj_spawner.spawn_gold(inventory.get_gold_total(), map_pos)
