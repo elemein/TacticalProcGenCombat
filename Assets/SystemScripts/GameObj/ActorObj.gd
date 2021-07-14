@@ -138,7 +138,7 @@ func handle_animations():
 		'idle':
 			play_anim("idle")
 		'walk':
-			play_anim("walk")
+			play_anim("run")
 
 func play_anim(name):
 	if anim.current_animation == name:
