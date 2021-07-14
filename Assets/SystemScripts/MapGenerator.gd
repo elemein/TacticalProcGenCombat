@@ -7,7 +7,7 @@ extends Node
 # I had to do some modification to it as the link uses a TileMap, whereas we use a 2D Array. 
 
 const Y_OFFSET = -0.3
-const TILE_OFFSET = 2.2
+const TILE_OFFSET = 2.0
 const NUMBER_OF_ENEMIES = 15
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 5

@@ -1,7 +1,7 @@
 extends MeshInstance
 class_name GameObj
 
-const TILE_OFFSET = 2.2
+const TILE_OFFSET = 2.0
 
 onready var map = get_node("/root/World/Map")
 
