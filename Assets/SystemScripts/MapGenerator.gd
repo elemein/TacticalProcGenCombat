@@ -60,11 +60,12 @@ func generate():
 		create_rooms()
 		join_rooms()
 		clear_deadends()
-	
-	catalog_rooms()
-	
+		catalog_rooms()
+
+	print_rooms()
 	print('%d maps thrown away' % [maps_thrown_away])
 	# map must be accepted to go further
+	
 	spawn_enemies()
 	spawn_traps()
 	spawn_loot()
@@ -73,13 +74,14 @@ func generate():
 func test_if_map_valid():
 	if total_map == []: return false
 	
-	var checking_dir = 'up'
-	
 	var x
 	var z
 	
 	for room in rooms:
-		test_room_boundaries(room)
+		#test_room_boundaries(room)
+		
+		var last_was_ground = false
+		var exits = []
 		
 		# start at bottomleft
 		x = room.bottomleft[0]
@@ -90,11 +92,15 @@ func test_if_map_valid():
 		
 		while (x <= room.topleft[0]):
 			if total_map[x][z][0].get_obj_type() == 'Ground':
-				if (total_map[x+1][z][0].get_obj_type() == 'Ground') and \
-					(x+1 <= room.topleft[0]):
-					return false
+				if last_was_ground: return false
+				else: 
+					last_was_ground = true
+					exits.append([x,z])
+			else: last_was_ground = false
 			x += 1
+		last_was_ground = false
 		# left side checked
+		
 		# go to topleft, then one more up
 		x = room.topleft[0]
 		z = room.topleft[1]
@@ -102,11 +108,15 @@ func test_if_map_valid():
 		
 		while (z <= room.topright[1]):
 			if total_map[x][z][0].get_obj_type() == 'Ground':
-				if (total_map[x][z+1][0].get_obj_type() == 'Ground') and \
-					(z+1 <= room.topright[0]):
-						return false
+				if last_was_ground: return false
+				else: 
+					last_was_ground = true
+					exits.append([x,z])
+			else: last_was_ground = false
 			z += 1
+		last_was_ground = false
 		# top side checked
+		
 		# go to topright, then one more right
 		x = room.topright[0]
 		z = room.topright[1]
@@ -114,11 +124,15 @@ func test_if_map_valid():
 		
 		while (x >= room.bottomright[0]):
 			if total_map[x][z][0].get_obj_type() == 'Ground':
-				if (total_map[x-1][z][0].get_obj_type() == 'Ground') and \
-					(x-1 >= room.bottomright[0]):
-						return false
+				if last_was_ground: return false
+				else: 
+					last_was_ground = true
+					exits.append([x,z])
+			else: last_was_ground = false
 			x -= 1
+		last_was_ground = false
 		# right side checked
+		
 		# go to bottomright, then one more down
 		x = room.bottomright[0]
 		z = room.bottomright[1]
@@ -126,12 +140,17 @@ func test_if_map_valid():
 		
 		while (z >= room.bottomleft[1]):
 			if total_map[x][z][0].get_obj_type() == 'Ground':
-				if (total_map[x][z-1][0].get_obj_type() == 'Ground') and \
-					(z-1 >= room.bottomright[0]):
-						return false
+				if last_was_ground: return false
+				else: 
+					last_was_ground = true
+					exits.append([x,z])
+			else: last_was_ground = false
 			z -= 1
+		last_was_ground = false
 		#bottom side checked
 		
+		room.exits = exits
+	
 	return true
 
 func test_room_boundaries(room):
@@ -423,6 +442,7 @@ func catalog_rooms():
 	
 	rooms[rng.randi_range(0, rooms.size()-1)]['type'] = 'Player Spawn'
 	
+func print_rooms():
 	for room in rooms: print(room)
 
 func get_random_available_tile_in_room(room) -> Array:
