@@ -7,8 +7,8 @@ extends Node
 # I had to do some modification to it as the link uses a TileMap, whereas we use a 2D Array. 
 
 const Y_OFFSET = -0.3
-const TILE_OFFSET = 2.0
-const NUMBER_OF_ENEMIES = 15
+const TILE_OFFSET = 2.1
+const NUMBER_OF_ENEMIES = 1
 # const AVG_NO_OF_ENEMIES_PER_ROOM = 2
 const NUMBER_OF_TRAPS = 5
 const NUMBER_OF_COINS = 5
@@ -48,18 +48,144 @@ var rooms = []
 var total_map = []
 	
 func generate():
-	rng.randomize()
-	create_floor()
-	start_tree()
-	create_leaf(0)
-	create_rooms()
-	join_rooms()
-	clear_deadends()
+	var maps_thrown_away = -1
+	
+	while (test_if_map_valid() == false):
+		maps_thrown_away += 1
+		reset_map_gen_vars()
+		rng.randomize()
+		create_floor()
+		start_tree()
+		create_leaf(0)
+		create_rooms()
+		join_rooms()
+		clear_deadends()
+	
 	catalog_rooms()
+	
+	print('%d maps thrown away' % [maps_thrown_away])
+	# map must be accepted to go further
 	spawn_enemies()
 	spawn_traps()
 	spawn_loot()
 	return [total_map, rooms]
+
+func test_if_map_valid():
+	if total_map == []: return false
+	
+	var checking_dir = 'up'
+	
+	var x
+	var z
+	
+	for room in rooms:
+		test_room_boundaries(room)
+		
+		# start at bottomleft
+		x = room.bottomleft[0]
+		z = room.bottomleft[1]
+		
+		# go one left
+		z -= 1
+		
+		while (x <= room.topleft[0]):
+			if total_map[x][z][0].get_obj_type() == 'Ground':
+				if (total_map[x+1][z][0].get_obj_type() == 'Ground') and \
+					(x+1 <= room.topleft[0]):
+					return false
+			x += 1
+		# left side checked
+		# go to topleft, then one more up
+		x = room.topleft[0]
+		z = room.topleft[1]
+		x += 1
+		
+		while (z <= room.topright[1]):
+			if total_map[x][z][0].get_obj_type() == 'Ground':
+				if (total_map[x][z+1][0].get_obj_type() == 'Ground') and \
+					(z+1 <= room.topright[0]):
+						return false
+			z += 1
+		# top side checked
+		# go to topright, then one more right
+		x = room.topright[0]
+		z = room.topright[1]
+		z += 1
+		
+		while (x >= room.bottomright[0]):
+			if total_map[x][z][0].get_obj_type() == 'Ground':
+				if (total_map[x-1][z][0].get_obj_type() == 'Ground') and \
+					(x-1 >= room.bottomright[0]):
+						return false
+			x -= 1
+		# right side checked
+		# go to bottomright, then one more down
+		x = room.bottomright[0]
+		z = room.bottomright[1]
+		x -= 1
+		
+		while (z >= room.bottomleft[1]):
+			if total_map[x][z][0].get_obj_type() == 'Ground':
+				if (total_map[x][z-1][0].get_obj_type() == 'Ground') and \
+					(z-1 >= room.bottomright[0]):
+						return false
+			z -= 1
+		#bottom side checked
+		
+	return true
+
+func test_room_boundaries(room):
+	var bottom
+	var top
+	var left
+	var right
+	
+	var x = room.center.x
+	var z = room.center.z
+	
+	# test down
+	while (total_map[x-1][z][0].get_obj_type() == 'Ground') and \
+		  (total_map[x-1][z-1][0].get_obj_type() == 'Ground') and \
+		  (total_map[x-1][z+1][0].get_obj_type() == 'Ground'):
+			x -= 1
+	bottom = x
+	x = room.center.x
+
+	# test up
+	while (total_map[x+1][z][0].get_obj_type() == 'Ground') and \
+		  (total_map[x+1][z-1][0].get_obj_type() == 'Ground') and \
+		  (total_map[x+1][z+1][0].get_obj_type() == 'Ground'):
+			x += 1
+	top = x
+	x = room.center.x
+	
+	# test left
+	while (total_map[x][z-1][0].get_obj_type() == 'Ground') and \
+		  (total_map[x+1][z-1][0].get_obj_type() == 'Ground') and \
+		  (total_map[x-1][z-1][0].get_obj_type() == 'Ground'):
+			z -= 1
+	left = z
+	z = room.center.z
+	
+	# test right
+	while (total_map[x][z+1][0].get_obj_type() == 'Ground') and \
+		  (total_map[x+1][z+1][0].get_obj_type() == 'Ground') and \
+		  (total_map[x-1][z+1][0].get_obj_type() == 'Ground'):
+			z += 1
+	right = z
+	z = room.center.z
+	
+	room.bottomleft = [bottom,left]
+	room.bottomright = [bottom,right]
+	room.topleft = [top,left]
+	room.topright = [top,right]
+
+func reset_map_gen_vars():
+	tree = {}
+	leaves = []
+	leaf_id = 0
+	rooms = []
+	total_map = []
 
 func create_floor():
 	for x in range(0, map_l):
@@ -187,6 +313,7 @@ func join_rooms():
 		connect_leaves(tree[a], tree[b])
 
 func connect_leaves(leaf1, leaf2):
+	# connects leaves by shooting corridors right or up
 	var x = min(leaf1.center.x, leaf2.center.x)
 	var z = min(leaf1.center.z, leaf2.center.z)
 	var l = 1
@@ -215,6 +342,37 @@ func connect_leaves(leaf1, leaf2):
 				ground.visible = false
 				total_map[i][j][0] = ground 
 
+func check_if_pos_adj_to_leaf(x, z, dest_leaf):
+	if total_map[x][z-1][0].get_obj_type() == 'Ground' : 
+		if is_pos_in_leaf(x,z-1, dest_leaf) == true: return true
+	if total_map[x][z+1][0].get_obj_type() == 'Ground' : 
+		if is_pos_in_leaf(x,z+1, dest_leaf) == true: return true
+	if total_map[x-1][z][0].get_obj_type() == 'Ground' : 
+		if is_pos_in_leaf(x-1,z, dest_leaf) == true: return true
+	if total_map[x+1][z][0].get_obj_type() == 'Ground' : 
+		if is_pos_in_leaf(x+1,z, dest_leaf) == true: return true
+	
+	return false
+
+func is_pos_in_leaf(x,z, leaf):
+	return (x > leaf.x) and (x < (leaf.x + leaf.l)) and (z > leaf.z) and (z < (leaf.z + leaf.w))
+
+func check_for_room_collisions(x, z, from_leaf, to_leaf):
+	var nearby_walls = check_cardinal_dirs_for_walls(x,z)
+	
+	if nearby_walls > 1:
+		return true
+	else:
+		print('x is %d z is %d and nearby walls is %d' % [x,z,nearby_walls])
+		if total_map[x][z-1][0].get_obj_type() == 'Ground' : 
+			pass
+		if total_map[x][z+1][0].get_obj_type() == 'Ground' : 
+			pass
+		if total_map[x-1][z][0].get_obj_type() == 'Ground' : 
+			pass
+		if total_map[x+1][z][0].get_obj_type() == 'Ground' : 
+			pass
+
 func check_if_path_may_need_extension(x, z, split_type):
 	if split_type == 'h':
 		if total_map[x+1][z+1][0].get_obj_type() == 'Ground': return true
@@ -236,7 +394,7 @@ func clear_deadends():
 				# using 0th entry v here, is okay at this stage.
 				if total_map[x][z][0].get_obj_type() != 'Ground' : continue
 				
-				var roof_count = check_nearby(x,z)
+				var roof_count = check_cardinal_dirs_for_walls(x,z)
 				if roof_count == 3:
 					var wall = base_wall.instance()
 					wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
@@ -246,7 +404,7 @@ func clear_deadends():
 
 					done = false
 
-func check_nearby(x,z):
+func check_cardinal_dirs_for_walls(x,z):
 	var count = 0
 	if total_map[x][z-1][0].get_obj_type() == 'Wall' : count += 1
 	if total_map[x][z+1][0].get_obj_type() == 'Wall' : count += 1

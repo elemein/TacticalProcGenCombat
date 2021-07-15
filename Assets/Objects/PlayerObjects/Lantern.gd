@@ -6,7 +6,7 @@ var max_energy = 1
 var min_energy = 0.75
 var growing = false
 
-var change_rate = 0.005 # lower is slower
+var change_rate = 0.003 # lower is slower
 
 func _ready():
 	pass

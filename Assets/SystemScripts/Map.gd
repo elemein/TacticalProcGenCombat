@@ -1,7 +1,7 @@
 extends Node
 
 const Y_OFFSET = -0.3
-const TILE_OFFSET = 2.0
+const TILE_OFFSET = 2.1
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 

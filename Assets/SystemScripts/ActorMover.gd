@@ -1,6 +1,6 @@
 extends Node
 
-const TILE_OFFSET = 2.0
+const TILE_OFFSET = 2.1
 
 onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var map = get_node("/root/World/Map")
