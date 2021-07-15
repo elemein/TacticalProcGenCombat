@@ -78,8 +78,6 @@ func test_if_map_valid():
 	var z
 	
 	for room in rooms:
-		#test_room_boundaries(room)
-		
 		var last_was_ground = false
 		var exits = []
 		
@@ -152,52 +150,6 @@ func test_if_map_valid():
 		room.exits = exits
 	
 	return true
-
-func test_room_boundaries(room):
-	var bottom
-	var top
-	var left
-	var right
-	
-	var x = room.center.x
-	var z = room.center.z
-	
-	# test down
-	while (total_map[x-1][z][0].get_obj_type() == 'Ground') and \
-		  (total_map[x-1][z-1][0].get_obj_type() == 'Ground') and \
-		  (total_map[x-1][z+1][0].get_obj_type() == 'Ground'):
-			x -= 1
-	bottom = x
-	x = room.center.x
-
-	# test up
-	while (total_map[x+1][z][0].get_obj_type() == 'Ground') and \
-		  (total_map[x+1][z-1][0].get_obj_type() == 'Ground') and \
-		  (total_map[x+1][z+1][0].get_obj_type() == 'Ground'):
-			x += 1
-	top = x
-	x = room.center.x
-	
-	# test left
-	while (total_map[x][z-1][0].get_obj_type() == 'Ground') and \
-		  (total_map[x+1][z-1][0].get_obj_type() == 'Ground') and \
-		  (total_map[x-1][z-1][0].get_obj_type() == 'Ground'):
-			z -= 1
-	left = z
-	z = room.center.z
-	
-	# test right
-	while (total_map[x][z+1][0].get_obj_type() == 'Ground') and \
-		  (total_map[x+1][z+1][0].get_obj_type() == 'Ground') and \
-		  (total_map[x-1][z+1][0].get_obj_type() == 'Ground'):
-			z += 1
-	right = z
-	z = room.center.z
-	
-	room.bottomleft = [bottom,left]
-	room.bottomright = [bottom,right]
-	room.topleft = [top,left]
-	room.topright = [top,right]
 
 func reset_map_gen_vars():
 	tree = {}
