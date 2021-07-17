@@ -68,11 +68,26 @@ func get_random_available_tile_in_room(room) -> Array:
 	
 	return [x,z]
 	
-func assign_room_types():
-	for room in rooms:
-		room['type'] = 'Enemy'
+
+func find_smallest_room():
+	var smallest_room
+	var smallest_room_area = 99999
 	
-	rooms[rng.randi_range(0, rooms.size()-1)]['type'] = 'Player Spawn'
+	for room in rooms:
+		if room.area < smallest_room_area: 
+			smallest_room = room
+			smallest_room_area = room['area']
+	
+	return smallest_room
+
+func assign_room_types():
+	
+	var smallest_room = find_smallest_room()
+	smallest_room['type'] = 'Player Spawn'
+	
+	for room in rooms:
+		if room['type'] != 'Player Spawn':
+			room['type'] = 'Enemy'
 
 func spawn_enemies():
 	for room in rooms:
