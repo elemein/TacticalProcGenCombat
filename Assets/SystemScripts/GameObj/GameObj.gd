@@ -3,9 +3,8 @@ class_name GameObj
 
 const TILE_OFFSET = 2.1
 
-onready var map = get_node("/root/World/Map")
-
 var object_type 
+var parent_map = []
 var map_pos = []
 
 func _init(obj_type):
@@ -14,11 +13,15 @@ func _init(obj_type):
 # Getters
 func get_obj_type(): return object_type
 
+func get_parent_map(): return parent_map
+
 func get_map_pos(): return map_pos
 
 func get_translation(): return translation
 
 # Setters
+func set_parent_map(map): parent_map = map
+
 func set_map_pos(new_pos): map_pos = new_pos
 
 func set_translation(new_translation): translation = new_translation 

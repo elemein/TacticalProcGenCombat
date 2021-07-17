@@ -1,13 +1,13 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Assets/Objects/PlayerObjects/Player.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Assets/SystemScripts/Map.gd" type="Script" id=2]
 [ext_resource path="res://Assets/GUI/Arrow.png" type="Texture" id=3]
 [ext_resource path="res://Assets/GUI/GUI.gd" type="Script" id=4]
 [ext_resource path="res://Assets/SystemScripts/TurnTimer.gd" type="Script" id=5]
+[ext_resource path="res://World.gd" type="Script" id=6]
 
-[node name="World" type="Spatial"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00459242, -0.00956917, -0.00249863 )
+[node name="World" type="Node"]
+script = ExtResource( 6 )
 
 [node name="GUI" type="MarginContainer" parent="."]
 margin_left = 100.0
@@ -22,18 +22,6 @@ __meta__ = {
 [node name="Proposed Action" type="Sprite" parent="GUI"]
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 3 )
-
-[node name="TimerReadout" type="Label" parent="."]
-margin_left = 200.0
-margin_top = 112.0
-margin_right = 200.0
-margin_bottom = 126.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Map" type="Node" parent="."]
-script = ExtResource( 2 )
 
 [node name="TurnTimer" type="Timer" parent="."]
 one_shot = true

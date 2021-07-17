@@ -31,4 +31,4 @@ func collect_item(tile_objects):
 		if object.get_obj_type() == 'Player':
 			item_owner = object
 			object.inventory.add_to_inventory(self)
-			map.remove_map_object(self)
+			parent_map.remove_map_object(self)

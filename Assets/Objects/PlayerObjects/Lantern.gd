@@ -1,9 +1,9 @@
 extends OmniLight
 
 var max_range = 15
-var min_range = 10
-var max_energy = 1
-var min_energy = 0.75
+var min_range = 6
+var max_energy = 1.25
+var min_energy = 0.6
 var growing = false
 
 var change_rate = 0.003 # lower is slower

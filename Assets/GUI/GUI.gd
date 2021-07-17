@@ -12,7 +12,6 @@ var self_heal = preload("res://Assets/GUI/Self_Heal.png")
 
 onready var action_holder = get_node("/root/World/GUI/Proposed Action")
 onready var turn_timer = get_node("/root/World/TurnTimer")
-onready var timer_label = get_node("/root/World/TimerReadout")
 onready var player = get_node("/root/World/Player")
 
 func _ready():
@@ -49,8 +48,7 @@ func set_texture_unrotated(action):
 	action_holder.set_texture(action)
 
 func _physics_process(_delta):
-	# We want to continuously display the time left on the turn timer.
-	timer_label.text = str(turn_timer.time_left)
+	pass
 
 func clear_action():
 	action_holder.rotation_degrees = 0

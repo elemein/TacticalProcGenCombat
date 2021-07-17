@@ -138,7 +138,10 @@ func handle_animations():
 		'idle':
 			play_anim("idle")
 		'walk':
-			play_anim("run")
+			if get_obj_type() == 'Player':
+				play_anim("run")
+			if get_obj_type() == 'Enemy':
+				play_anim("walk")
 
 func play_anim(name):
 	if anim.current_animation == name:
@@ -186,10 +189,8 @@ func die():
 	if self.object_type == 'Player':
 		get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
 	else:
-		var tmp = get_tree().root.get_node('World').get_node('Map').current_number_of_enemies
-		get_tree().root.get_node('World').get_node('Map').current_number_of_enemies -= 1
-		tmp = get_tree().root.get_node('World').get_node('Map').current_number_of_enemies
-		if get_tree().root.get_node('World').get_node('Map').current_number_of_enemies == 0:
+		parent_map.current_number_of_enemies -= 1
+		if parent_map.current_number_of_enemies == 0:
 			get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
 
 func play_death_anim():

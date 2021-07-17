@@ -1,7 +1,8 @@
 extends Node
 
+const TILE_OFFSET = 2.1
+
 # Get required nodes
-onready var map = get_node("/root/World/Map")
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # Sound effects
@@ -16,6 +17,7 @@ var effect = null
 var parent = null
 var direction_facing = null
 var map_pos = null
+var map
 
 # Spell variables
 var spell_power = 10
@@ -23,7 +25,7 @@ var spell_cost = 0
 var spell_length = 1
 
 func _ready():
-	tile_offset = map.TILE_OFFSET
+	tile_offset = TILE_OFFSET
 	
 # Move the parent every frame
 func _physics_process(_delta):
@@ -39,6 +41,7 @@ func _physics_process(_delta):
 # Main functionality of the spell
 func use():
 	parent = find_parent('Actions').get_parent()
+	map = parent.get_parent_map()
 	if parent:
 		if mana_check():
 			play_audio()

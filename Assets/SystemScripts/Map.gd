@@ -1,15 +1,14 @@
 extends Node
 
+# This script is way overloaded and needs to be refactored.
+# Things to move OUT:
+# ALL mapgen shit. The map should contain the map; it shouldnt generate itself.
+# Revealing and hiding things from the player.
+
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.1
 
-const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
-
-var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
-var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
-
 var rng = RandomNumberGenerator.new()
-var map_generator = MAP_GEN.new()
 
 var in_view_objects = []
 var objs_visible_to_player_last_turn = []
@@ -18,24 +17,30 @@ var player
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
+var map_name = 'Dungeon Floor 1'
+var map_id = 1
 var map_grid = []
 var map_dict
+
 var catalog_of_ground_tiles = []
 
 var current_number_of_enemies = 0
 
+func _init(name, id):
+	map_name = name
+	map_id = id
+
 func _ready():
 	rng.randomize()
-
-	var generated_map = map_generator.generate()
-	
-	map_grid = generated_map[0]
-	map_dict = generated_map[1]
 	
 	add_map_objects_to_tree()
 	
 	catalog_ground_tiles()
 
+func set_map_grid_and_dict(grid, dict):
+	map_grid = grid
+	map_dict = dict
+	
 func add_map_objects_to_tree():
 	for line in map_grid.size():
 		for column in map_grid[0].size():

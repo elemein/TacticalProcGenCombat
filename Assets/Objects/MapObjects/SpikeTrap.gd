@@ -18,7 +18,7 @@ func _physics_process(_delta):
 		translation = translation.linear_interpolate(sprung_pos, (1-intrp_mod))
 		
 		if trap_anim_timer.time_left == 0:
-			map.remove_map_object(self)
+			parent_map.remove_map_object(self)
 
 func activate_trap(tile_objects):
 	for object in tile_objects:
