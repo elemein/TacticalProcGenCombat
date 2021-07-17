@@ -171,9 +171,6 @@ func create_leaf(parent_id):
 	var l = tree[parent_id].l # far right node
 	var w = tree[parent_id].w # far up node
 	
-	# I believe this adds a "center" dict entry to tree[parent_id] containing the
-	# halfway points for that node.
-	# apparently used to connect the leaves later
 	tree[parent_id].center = {x = floor(x + l/2), z = floor(z + w/2)}
 	
 	# whether the tree has space for a split?
@@ -208,7 +205,6 @@ func create_leaf(parent_id):
 			leaf1 = {x = x, z = z, l = l, w = w1, split = 'h'}
 			leaf2 = {x = x, z = z + w1, l = l, w = w2, split = 'h'}
 			can_split = true
-			
 			
 	if (can_split):
 		leaf1.parent_id = parent_id

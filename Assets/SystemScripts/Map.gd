@@ -5,9 +5,6 @@ const TILE_OFFSET = 2.1
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 
-var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
-var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
-
 var rng = RandomNumberGenerator.new()
 var map_generator = MAP_GEN.new()
 
@@ -18,11 +15,17 @@ var player
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
+var map_name = 'Dungeon Floor 1'
+var map_id = 1
 var map_grid = []
 var map_dict
+
 var catalog_of_ground_tiles = []
 
 var current_number_of_enemies = 0
+
+func _init():
+	pass
 
 func _ready():
 	rng.randomize()

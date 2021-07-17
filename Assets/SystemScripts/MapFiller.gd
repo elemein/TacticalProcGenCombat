@@ -87,6 +87,7 @@ func spawn_enemies():
 					enemy.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
 					enemy.visible = false
 					enemy.set_map_pos([x,z])
+					enemy.set_parent_map(total_map)
 					enemy.add_to_group('enemies')
 
 					total_map[x][z].append(enemy)
@@ -103,6 +104,7 @@ func spawn_traps():
 		trap.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3-1, z * TILE_OFFSET)
 		trap.visible = false
 		trap.set_map_pos([x,z])
+		trap.set_parent_map(total_map)
 		trap.add_to_group('traps')
 
 		total_map[x][z].append(trap)
@@ -128,6 +130,7 @@ func spawn_inv_items(item_scene, no_of_items):
 		item.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
 		item.visible = false
 		item.set_map_pos([x,z])
+		item.set_parent_map(total_map)
 		item.add_to_group('loot')
 
 		total_map[x][z].append(item)

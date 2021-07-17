@@ -6,8 +6,7 @@
 [ext_resource path="res://Assets/GUI/GUI.gd" type="Script" id=4]
 [ext_resource path="res://Assets/SystemScripts/TurnTimer.gd" type="Script" id=5]
 
-[node name="World" type="Spatial"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00459242, -0.00956917, -0.00249863 )
+[node name="World" type="Node"]
 
 [node name="GUI" type="MarginContainer" parent="."]
 margin_left = 100.0
