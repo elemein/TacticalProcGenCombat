@@ -49,8 +49,7 @@ func set_texture_unrotated(action):
 	action_holder.set_texture(action)
 
 func _physics_process(_delta):
-	# We want to continuously display the time left on the turn timer.
-	timer_label.text = str(turn_timer.time_left)
+	pass
 
 func clear_action():
 	action_holder.rotation_degrees = 0

@@ -1,5 +1,10 @@
 extends Node
 
+# This script is way overloaded and needs to be refactored.
+# Things to move OUT:
+# ALL mapgen shit. The map should contain the map; it shouldnt generate itself.
+# Revealing and hiding things from the player.
+
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.1
 
