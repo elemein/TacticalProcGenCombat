@@ -10,7 +10,7 @@ var unequip_item = preload("res://Assets/GUI/Unequip_Item.png")
 var dash = preload("res://Assets/GUI/Dash.png")
 var self_heal = preload("res://Assets/GUI/Self_Heal.png")
 
-onready var action_holder = get_node("/root/World/GUI/Proposed Action")
+onready var action_holder = get_node("/root/World/GUI/Action/Proposed Action")
 onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var player = get_node("/root/World/Player")
 

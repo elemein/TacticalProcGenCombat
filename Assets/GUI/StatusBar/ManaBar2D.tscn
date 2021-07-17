@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/GUI/StatusBar/ProgressBar2D.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/GUI/StatusBar/mana_progress.png" type="Texture" id=2]
+[ext_resource path="res://Assets/GUI/StatusBar/ManaBar2D.gd" type="Script" id=3]
+
+[node name="ManaBar2D" instance=ExtResource( 1 )]
+script = ExtResource( 3 )
+
+[node name="ProgressBar2D" parent="." index="0"]
+texture_progress = ExtResource( 2 )
+
+[connection signal="set_mana_bar" from="." to="ProgressBar2D" method="_on_ManaBar2D_set_mana_bar"]

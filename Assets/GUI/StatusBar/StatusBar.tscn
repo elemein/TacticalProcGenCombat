@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/GUI/StatusBar/HealthBar2D.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/GUI/StatusBar/ManaBar2D.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/GUI/StatusBar/StatusBar.gd" type="Script" id=3]
+
+[node name="StatusBar" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="StatusBarContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 500.0
+margin_right = -524.0
+rect_min_size = Vector2( 500, 100 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBox container" type="HBoxContainer" parent="StatusBarContainer"]
+margin_right = 500.0
+margin_bottom = 100.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="StatusBarContainer/HBox container"]
+margin_right = 256.0
+margin_bottom = 100.0
+
+[node name="HealthBar2D" parent="StatusBarContainer/HBox container/VBoxContainer" instance=ExtResource( 1 )]
+margin_top = 8.0
+margin_right = 256.0
+margin_bottom = 40.0
+size_flags_horizontal = 0
+size_flags_vertical = 6
+
+[node name="ManaBar2D" parent="StatusBarContainer/HBox container/VBoxContainer" instance=ExtResource( 2 )]
+margin_top = 60.0
+margin_right = 256.0
+margin_bottom = 92.0
+size_flags_horizontal = 0
+size_flags_vertical = 6
+
+[connection signal="set_health_bar" from="." to="StatusBarContainer/HBox container/VBoxContainer/HealthBar2D" method="_on_StatusBar_set_health_bar"]
+[connection signal="set_mana_bar" from="." to="StatusBarContainer/HBox container/VBoxContainer/ManaBar2D" method="_on_StatusBar_set_mana_bar"]
