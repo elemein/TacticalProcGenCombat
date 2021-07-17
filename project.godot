@@ -40,6 +40,11 @@ config/icon="res://icon.png"
 
 gdscript/completion/autocomplete_setters_and_getters=true
 
+[display]
+
+window/stretch/mode="2d"
+window/stretch/aspect="expand"
+
 [editor_plugins]
 
 enabled=PoolStringArray(  )

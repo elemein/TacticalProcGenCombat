@@ -6,7 +6,7 @@ const ACTION_TIME = 0.95
 
 onready var world = get_parent()
 onready var player = get_node("/root/World/Player")
-onready var gui = get_node("/root/World/GUI")
+onready var gui = get_node("/root/World/GUI/Action")
 onready var turn_delay_timer = $TurnDelayTimer
 
 var rng = RandomNumberGenerator.new()
