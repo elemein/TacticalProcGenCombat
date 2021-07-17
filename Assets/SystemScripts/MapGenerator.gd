@@ -9,13 +9,14 @@ extends Node
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.1
 
+const MAP_CLASS = preload("res://Assets/SystemScripts/Map.gd")
 const MAP_FILL = preload("res://Assets/SystemScripts/MapFiller.gd")
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
 
-var map_l = 25 # MIN: 12, how many rows
-var map_w = 25 # MIN: 12, how long are those rows
+var map_l = 13 # MIN: 12, how many rows
+var map_w = 13 # MIN: 12, how long are those rows
 var min_room_size = 4 # -1 is min room size.
 var min_room_factor = 0.4 # Higher this is, the smaller the rooms are
 
@@ -31,7 +32,9 @@ var rooms = []
 
 var total_map = []
 	
-func generate():
+func generate(name, id):
+	var map_to_return = MAP_CLASS.new(name, id)
+	
 	var maps_thrown_away = -1
 	
 	while (test_if_map_valid() == false):
@@ -46,12 +49,15 @@ func generate():
 		clear_deadends()
 		assign_room_corners()
 	
-	var filled_map = map_filler.fill_map(total_map, rooms)
+	var filled_map = map_filler.fill_map(map_to_return, total_map, rooms)
 	
 	print_rooms(filled_map[1])
 	print('%d maps thrown away' % [maps_thrown_away])
 	# map must be accepted to go further
-	return filled_map
+	
+	map_to_return.set_map_grid_and_dict(filled_map[0], filled_map[1])
+	
+	return map_to_return
 
 func test_if_map_valid():
 	if total_map == []: return false

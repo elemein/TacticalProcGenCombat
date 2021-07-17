@@ -3,8 +3,6 @@ class_name GameObj
 
 const TILE_OFFSET = 2.1
 
-onready var map = get_node("/root/World/Map")
-
 var object_type 
 var parent_map = []
 var map_pos = []

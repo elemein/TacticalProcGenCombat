@@ -2,8 +2,6 @@ extends Node
 
 const TILE_OFFSET = 2.1
 
-onready var map = get_node("/root/World/Map")
-
 var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
 
 # Gold
@@ -17,7 +15,7 @@ var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/Scab
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
-func spawn_item(item_name, map_pos):
+func spawn_item(item_name, map, map_pos):
 	var item_scene
 	
 	match item_name:
@@ -32,14 +30,16 @@ func spawn_item(item_name, map_pos):
 	item.translation = Vector3(map_pos[0] * TILE_OFFSET, 0.3, map_pos[1] * TILE_OFFSET)
 	item.visible = true
 	item.set_map_pos([map_pos[0], map_pos[1]])
+	item.set_parent_map(map)
 	item.add_to_group('loot')
 	map.add_map_object(item)
 	
-func spawn_gold(value, map_pos):
+func spawn_gold(value, map, map_pos):
 	var coins = base_coins.instance()
 	coins.translation = Vector3(map_pos[0] * TILE_OFFSET, 0.6, map_pos[1] * TILE_OFFSET)
 	coins.visible = true
 	coins.set_map_pos([map_pos[0],map_pos[1]])
+	coins.set_parent_map(map)
 	coins.add_to_group('loot')
 	coins.set_gold_value(value)
 	map.add_map_object(coins)

@@ -46,7 +46,7 @@ func setup_actor():
 	
 	add_child(obj_spawner)
 	
-	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
+	#viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
 	
 	add_loot_to_inventory()
 
@@ -93,10 +93,10 @@ func add_loot_to_inventory():
 	
 func drop_loot():
 	if loot_to_drop[0] == 'Gold':
-		obj_spawner.spawn_gold(inventory.get_gold_total(), map_pos)
+		obj_spawner.spawn_gold(inventory.get_gold_total(), parent_map, map_pos)
 		inventory.subtract_from_gold(inventory.get_gold_total())
 	else:
-		obj_spawner.spawn_item(loot_to_drop[0], map_pos)
+		obj_spawner.spawn_item(loot_to_drop[0], parent_map, map_pos)
 	
 	# drop items
 	loot_dropped = true

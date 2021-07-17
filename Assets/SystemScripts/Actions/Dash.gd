@@ -1,7 +1,8 @@
 extends Node
 
+const TILE_OFFSET = 2.1
+
 # Get required nodes
-onready var map = get_node("/root/World/Map")
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # Sound effects
@@ -16,19 +17,21 @@ var direction_facing = null
 var dashing = false
 var end_tile = []
 var start_tile = []
+var map
 
 # Spell variables
 var spell_cost = 20
 var spell_length = 2
 
 func _ready():
-	tile_offset = map.TILE_OFFSET
+	tile_offset = TILE_OFFSET
 
 func _on_Actions_spell_cast_dash():
 	use()
 # Main functionality of the spell
 func use():
 	parent = find_parent('Actions').get_parent()
+	map = parent.get_parent_map()
 	if parent:
 		if mana_check():
 			direction_facing = parent.get_direction_facing()

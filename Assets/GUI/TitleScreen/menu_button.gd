@@ -1,6 +1,5 @@
 extends Button
 
-
 export var reference_path = ""
 export(bool) var start_focused = false
 

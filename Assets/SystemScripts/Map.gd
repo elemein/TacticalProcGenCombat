@@ -8,10 +8,7 @@ extends Node
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.1
 
-const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
-
 var rng = RandomNumberGenerator.new()
-var map_generator = MAP_GEN.new()
 
 var in_view_objects = []
 var objs_visible_to_player_last_turn = []
@@ -29,21 +26,21 @@ var catalog_of_ground_tiles = []
 
 var current_number_of_enemies = 0
 
-func _init():
-	pass
+func _init(name, id):
+	map_name = name
+	map_id = id
 
 func _ready():
 	rng.randomize()
-
-	var generated_map = map_generator.generate()
-	
-	map_grid = generated_map[0]
-	map_dict = generated_map[1]
 	
 	add_map_objects_to_tree()
 	
 	catalog_ground_tiles()
 
+func set_map_grid_and_dict(grid, dict):
+	map_grid = grid
+	map_dict = dict
+	
 func add_map_objects_to_tree():
 	for line in map_grid.size():
 		for column in map_grid[0].size():

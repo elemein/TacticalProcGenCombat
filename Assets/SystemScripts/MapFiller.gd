@@ -4,7 +4,7 @@ var rng = RandomNumberGenerator.new()
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.1
-const AVG_NO_OF_ENEMIES_PER_ROOM = 2
+const AVG_NO_OF_ENEMIES_PER_ROOM = 1
 const NUMBER_OF_TRAPS = 5
 const NUMBER_OF_COINS = 5
 const NUMBER_OF_SWORDS = 1
@@ -26,13 +26,15 @@ var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/Scab
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
+var map_object
 var total_map
 var rooms
 
 func _ready():
 	rng.randomize()
 
-func fill_map(passed_map, passed_rooms):
+func fill_map(passed_map_object, passed_map, passed_rooms):
+	map_object = passed_map_object
 	total_map = passed_map
 	rooms = passed_rooms
 	
@@ -75,7 +77,8 @@ func assign_room_types():
 func spawn_enemies():
 	for room in rooms:
 		if room['type'] == 'Enemy':
-			var no_of_enemy_in_room = rng.randi_range(-1,1) + AVG_NO_OF_ENEMIES_PER_ROOM
+			var rng_mod = rng.randi_range(-1,2)
+			var no_of_enemy_in_room = rng_mod + AVG_NO_OF_ENEMIES_PER_ROOM
 			
 			if no_of_enemy_in_room > 0:
 				for enemy_cnt in range(no_of_enemy_in_room):
@@ -87,7 +90,7 @@ func spawn_enemies():
 					enemy.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
 					enemy.visible = false
 					enemy.set_map_pos([x,z])
-					enemy.set_parent_map(total_map)
+					enemy.set_parent_map(map_object)
 					enemy.add_to_group('enemies')
 
 					total_map[x][z].append(enemy)
@@ -104,7 +107,7 @@ func spawn_traps():
 		trap.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3-1, z * TILE_OFFSET)
 		trap.visible = false
 		trap.set_map_pos([x,z])
-		trap.set_parent_map(total_map)
+		trap.set_parent_map(map_object)
 		trap.add_to_group('traps')
 
 		total_map[x][z].append(trap)
@@ -130,7 +133,7 @@ func spawn_inv_items(item_scene, no_of_items):
 		item.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
 		item.visible = false
 		item.set_map_pos([x,z])
-		item.set_parent_map(total_map)
+		item.set_parent_map(map_object)
 		item.add_to_group('loot')
 
 		total_map[x][z].append(item)

@@ -1,6 +1,5 @@
 extends Control
 
-onready var map = get_node("/root/World/Map")
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
 onready var item_stat_row = $InventoryUI/InventoryPanels/ItemStats

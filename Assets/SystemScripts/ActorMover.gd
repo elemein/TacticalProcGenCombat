@@ -3,7 +3,6 @@ extends Node
 const TILE_OFFSET = 2.1
 
 onready var turn_timer = get_node("/root/World/TurnTimer")
-onready var map = get_node("/root/World/Map")
 
 var actor
 var map_pos
@@ -23,42 +22,42 @@ func set_actor_translation():
 func check_cornering(direction):
 	match direction:
 		'upleft':
-			if map.is_tile_wall(map_pos[0]+1,map_pos[1]): return false
-			if map.is_tile_wall(map_pos[0],map_pos[1]-1): return false
+			if actor.parent_map.is_tile_wall(map_pos[0]+1,map_pos[1]): return false
+			if actor.parent_map.is_tile_wall(map_pos[0],map_pos[1]-1): return false
 		'upright': 
-			if map.is_tile_wall(map_pos[0]+1,map_pos[1]): return false
-			if map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
+			if actor.parent_map.is_tile_wall(map_pos[0]+1,map_pos[1]): return false
+			if actor.parent_map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
 		'downleft': 
-			if map.is_tile_wall(map_pos[0]-1,map_pos[1]): return false
-			if map.is_tile_wall(map_pos[0],map_pos[1]-1): return false	
+			if actor.parent_map.is_tile_wall(map_pos[0]-1,map_pos[1]): return false
+			if actor.parent_map.is_tile_wall(map_pos[0],map_pos[1]-1): return false	
 		'downright': 
-			if map.is_tile_wall(map_pos[0]-1,map_pos[1]): return false
-			if map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
+			if actor.parent_map.is_tile_wall(map_pos[0]-1,map_pos[1]): return false
+			if actor.parent_map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
 	return true
 
 func check_move_action(move):
 	match move:
 		'move upleft':
-			if map.tile_available(map_pos[0] + 1, map_pos[1] - 1) == true: 
+			if actor.parent_map.tile_available(map_pos[0] + 1, map_pos[1] - 1) == true: 
 				if check_cornering('upleft'): return true
 		'move upright':
-			if map.tile_available(map_pos[0] + 1, map_pos[1] + 1) == true: 
+			if actor.parent_map.tile_available(map_pos[0] + 1, map_pos[1] + 1) == true: 
 				if check_cornering('upright'): return true
 		'move downleft':
-			if map.tile_available(map_pos[0] - 1, map_pos[1] - 1) == true: 
+			if actor.parent_map.tile_available(map_pos[0] - 1, map_pos[1] - 1) == true: 
 				if check_cornering('downleft'): return true
 		'move downright':
-			if map.tile_available(map_pos[0] - 1, map_pos[1] + 1) == true: 
+			if actor.parent_map.tile_available(map_pos[0] - 1, map_pos[1] + 1) == true: 
 				if check_cornering('downright'): return true
 		
 		'move up':
-			if map.tile_available(map_pos[0] + 1, map_pos[1]) == true: return true
+			if actor.parent_map.tile_available(map_pos[0] + 1, map_pos[1]) == true: return true
 		'move down':
-			if map.tile_available(map_pos[0] - 1, map_pos[1]) == true: return true
+			if actor.parent_map.tile_available(map_pos[0] - 1, map_pos[1]) == true: return true
 		'move left':
-			if map.tile_available(map_pos[0], map_pos[1] - 1) == true: return true
+			if actor.parent_map.tile_available(map_pos[0], map_pos[1] - 1) == true: return true
 		'move right':
-			if map.tile_available(map_pos[0], map_pos[1] + 1) == true: return true
+			if actor.parent_map.tile_available(map_pos[0], map_pos[1] + 1) == true: return true
 				
 	return false
 
@@ -102,12 +101,12 @@ func move_actor(amount):
 			target_pos.z = target_tile[1] * TILE_OFFSET
 			target_pos.x = actor.get_translation().x
 
-	map_pos = map.move_on_map(actor, map_pos, target_tile)
+	map_pos = actor.parent_map.move_on_map(actor, map_pos, target_tile)
 	actor.set_map_pos(map_pos)
 	check_tile_for_steppable_objects(map_pos[0], map_pos[1])
 
 func check_tile_for_steppable_objects(x,z):
-	var tile_objects = map.get_tile_contents(x,z)
+	var tile_objects = actor.parent_map.get_tile_contents(x,z)
 	
 	for object in tile_objects:
 		match object.get_obj_type():

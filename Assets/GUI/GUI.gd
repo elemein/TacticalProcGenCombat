@@ -12,7 +12,6 @@ var self_heal = preload("res://Assets/GUI/Self_Heal.png")
 
 onready var action_holder = get_node("/root/World/GUI/Proposed Action")
 onready var turn_timer = get_node("/root/World/TurnTimer")
-onready var timer_label = get_node("/root/World/TimerReadout")
 onready var player = get_node("/root/World/Player")
 
 func _ready():

@@ -4,13 +4,14 @@ const RESET_TIME = 0.1
 const MOVING_TIME = 0.35
 const ACTION_TIME = 0.95
 
+onready var world = get_parent()
 onready var player = get_node("/root/World/Player")
-onready var map = get_node("/root/World/Map")
 onready var gui = get_node("/root/World/GUI")
 onready var turn_delay_timer = $TurnDelayTimer
 
 var rng = RandomNumberGenerator.new()
 
+var map
 var turn_in_process = false
 var in_delay = false
 var turn_counter = 1
@@ -22,6 +23,9 @@ var actors = []
 func _ready():
 	rng.randomize()
 	wait_time = RESET_TIME
+
+func set_map(new_map):
+	map = new_map
 
 func add_to_timer_group(actor):
 	actors.append(actor)

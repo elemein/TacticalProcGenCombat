@@ -35,19 +35,8 @@ func _ready():
 	
 	turn_timer.add_to_timer_group(self)
 	
-	map_pos = map.place_player_on_map(self)
-	translation.x = map_pos[0] * TILE_OFFSET
-	translation.z = map_pos[1] * TILE_OFFSET
-	
 	target_pos = translation
 	saved_pos = translation
-	
-	add_sub_nodes_as_children()
-	
-	map.print_map_grid()
-	
-	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
-	map.hide_non_visible_from_player()
 
 func add_sub_nodes_as_children():
 	add_child(mover)

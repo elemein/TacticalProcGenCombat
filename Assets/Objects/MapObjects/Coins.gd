@@ -14,4 +14,4 @@ func collect_item(tile_objects):
 	for object in tile_objects:
 		if object.get_obj_type() == 'Player':
 			object.inventory.add_to_gold(self)
-			map.remove_map_object(self)
+			parent_map.remove_map_object(self)

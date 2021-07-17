@@ -18,13 +18,12 @@
 
 extends Node
 
-onready var map = get_node("/root/World/Map")
-
 var visited = []
 
 var start_pos = []
 var curr_pos = []
 var end_pos = []
+var map
 
 var reached_end = false
 
@@ -55,6 +54,7 @@ func reset_vars():
 	end_pos = []
 	
 func solve(searcher, start, end):
+	map = searcher.get_parent_map()
 	reset_vars()
 	start_pos = start
 	end_pos = end

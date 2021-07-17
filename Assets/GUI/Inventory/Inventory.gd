@@ -5,7 +5,6 @@ extends Node
 const INVENTORY_OBJECT = preload("res://Assets/GUI/Inventory/InventoryUIObject.tscn")
 const OBJECT_ACTION_MENU = preload("res://Assets/GUI/Inventory/ObjectActionMenu.tscn")
 
-onready var map = get_node("/root/World/Map")
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
 onready var inventory_ui = $InventoryUI
@@ -28,6 +27,7 @@ var item_to_act_on
 # selector indexes
 var actmenu_selector_index = 0
 var inv_selector_index = 0
+var map
 
 # owner vars
 var inventory_owner
@@ -55,6 +55,7 @@ func setup_inventory(owner):
 	inventory_owner = owner
 	owner_type = owner.get_obj_type()
 	inventory_ui.visible = false
+	map = inventory_owner.get_parent_map()
 
 func _physics_process(delta):
 	if owner_type == 'Player':

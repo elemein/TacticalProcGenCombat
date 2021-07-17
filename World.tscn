@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Assets/Objects/PlayerObjects/Player.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Assets/SystemScripts/Map.gd" type="Script" id=2]
 [ext_resource path="res://Assets/GUI/Arrow.png" type="Texture" id=3]
 [ext_resource path="res://Assets/GUI/GUI.gd" type="Script" id=4]
 [ext_resource path="res://Assets/SystemScripts/TurnTimer.gd" type="Script" id=5]
@@ -23,9 +22,6 @@ __meta__ = {
 [node name="Proposed Action" type="Sprite" parent="GUI"]
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 3 )
-
-[node name="Map" type="Node" parent="."]
-script = ExtResource( 2 )
 
 [node name="TurnTimer" type="Timer" parent="."]
 one_shot = true
