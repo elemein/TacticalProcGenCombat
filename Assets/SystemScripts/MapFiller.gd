@@ -2,6 +2,12 @@ extends Node
 
 var rng = RandomNumberGenerator.new()
 
+const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
+var pathfinder = PATHFINDER.new()
+
+const OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner.gd")
+var obj_spawner = OBJ_SPAWNER.new()
+
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.1
 const AVG_NO_OF_ENEMIES_PER_ROOM = 1
@@ -30,6 +36,10 @@ var map_object
 var total_map
 var rooms
 
+var dist_to_spawn_dict = {}
+var spawn_room
+var exit_room
+
 func _ready():
 	rng.randomize()
 
@@ -37,6 +47,12 @@ func fill_map(passed_map_object, passed_map, passed_rooms):
 	map_object = passed_map_object
 	total_map = passed_map
 	rooms = passed_rooms
+	
+	map_object.map_grid = total_map
+	
+	assign_spawn_room()
+	
+	assign_exit_room()
 	
 	assign_room_types()
 	
@@ -80,13 +96,39 @@ func find_smallest_room():
 	
 	return smallest_room
 
-func assign_room_types():
+func assign_spawn_room():
 	var smallest_room = find_smallest_room()
-	smallest_room['type'] = 'Player Spawn'
+	spawn_room = smallest_room
+	spawn_room['type'] = 'Player Spawn'
+
+func assign_exit_room():
+	find_room_dists_to_spawn()
+	exit_room['type'] = 'Exit Room'
+	
+	obj_spawner.spawn_item('Stairs', map_object, [exit_room.center.x, exit_room.center.z])
+
+func assign_room_types():
+	for room in rooms:
+		if room['type'] == 'Unassigned':
+			room['type'] = 'Enemy'
+
+func find_room_dists_to_spawn():
+	var furthest_dist = -99
+	var furthest_room
 	
 	for room in rooms:
-		if room['type'] != 'Player Spawn':
-			room['type'] = 'Enemy'
+		var from = [room.center.x, room.center.z]
+		var to = [spawn_room.center.x, spawn_room.center.z]
+		
+		var dist_from_spawn = pathfinder.solve(self, map_object, from, to)[0]
+		
+		room['distance_to_spawn'] = dist_from_spawn
+		
+		if (dist_from_spawn > furthest_dist):
+			furthest_dist = dist_from_spawn
+			furthest_room = room
+			
+	exit_room = furthest_room
 
 func spawn_enemies():
 	for room in rooms:

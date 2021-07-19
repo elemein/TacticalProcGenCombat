@@ -67,7 +67,7 @@ func run_engine():
 			actor.set_action('idle')
 				
 func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
-	var path_info = pathfinder.solve(actor, actor.get_map_pos(), player_pos[0])
+	var path_info = pathfinder.solve(actor, actor.get_parent_map(), actor.get_map_pos(), player_pos[0])
 	
 	dist_from_player = path_info[0]
 	path = path_info[1]

@@ -15,6 +15,9 @@ var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/Scab
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
+# Map Objects
+var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
+
 func spawn_item(item_name, map, map_pos):
 	var item_scene
 	
@@ -25,6 +28,7 @@ func spawn_item(item_name, map, map_pos):
 		'Scabbard and Dagger': item_scene = base_dagger
 		'Body Armour': item_scene = base_armour
 		'Leather Cuirass': item_scene = base_cuirass
+		'Stairs': item_scene = base_stairs
 			
 	var item = item_scene.instance()
 	item.translation = Vector3(map_pos[0] * TILE_OFFSET, 0.3, map_pos[1] * TILE_OFFSET)
