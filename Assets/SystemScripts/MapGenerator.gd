@@ -31,8 +31,9 @@ var leaf_id = 0
 var rooms = []
 
 var total_map = []
-	
+
 func generate(name, id):
+	reset_map_gen_vars()
 	var map_to_return = MAP_CLASS.new(name, id)
 	
 	var maps_thrown_away = -1

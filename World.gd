@@ -9,20 +9,24 @@ var map_generator = MAP_GEN.new()
 var maps = []
 
 func _ready():
-	var generated_map = map_generator.generate('Dungeon Floor 1', 1)
+	var floor_1 = map_generator.generate('Dungeon Floor 1', 1)
+	var floor_2 = map_generator.generate('Dungeon Floor 2', 2)
 	
-	maps.append(generated_map)
+	maps.append(floor_1)
+	maps.append(floor_2)
 
-	player.set_parent_map(generated_map)
-	var player_pos = generated_map.place_player_on_map(player)
+	# setup player on map
+	player.set_parent_map(floor_1)
+	var player_pos = floor_1.place_player_on_map(player)
 	player.set_map_pos_and_translation(player_pos)
 	player.add_sub_nodes_as_children()
 	
-	turn_timer.set_map(generated_map)
+	turn_timer.set_map(floor_1) # this should belong to map
 
-	generated_map.print_map_grid()
+	floor_1.print_map_grid()
 	
-	add_child(generated_map)
+	add_child(floor_1)
+	add_child(floor_2)
 	
 	first_turn_workaround_for_player_sight()
 

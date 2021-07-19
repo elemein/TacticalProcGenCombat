@@ -84,7 +84,6 @@ func get_random_available_tile_in_room(room) -> Array:
 	
 	return [x,z]
 	
-
 func find_smallest_room():
 	var smallest_room
 	var smallest_room_area = 99999
