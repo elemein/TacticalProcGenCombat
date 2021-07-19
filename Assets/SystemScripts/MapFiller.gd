@@ -81,7 +81,6 @@ func find_smallest_room():
 	return smallest_room
 
 func assign_room_types():
-	
 	var smallest_room = find_smallest_room()
 	smallest_room['type'] = 'Player Spawn'
 	
