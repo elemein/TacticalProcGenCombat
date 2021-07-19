@@ -46,7 +46,6 @@ scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 3 )
 
 [node name="StatusBar" parent="GUI" instance=ExtResource( 2 )]
-
 [connection signal="timeout" from="TurnTimer/TurnDelayTimer" to="TurnTimer" method="_on_Turn_Delay_Timer_timeout"]
 [connection signal="prepare_gui" from="Player" to="GUI" method="_on_Player_prepare_gui"]
 [connection signal="status_bar_hp" from="Player" to="GUI" method="_on_Player_status_bar_hp"]
@@ -56,4 +55,7 @@ texture = ExtResource( 3 )
 [connection signal="update_mana_bar" from="GUI" to="GUI/StatusBar" method="_on_GUI_update_mana_bar"]
 
 [editable path="Player"]
+
 [editable path="Player/Graphics"]
+
+[editable path="GUI/StatusBar"]
