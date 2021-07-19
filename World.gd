@@ -30,6 +30,24 @@ func _ready():
 	
 	first_turn_workaround_for_player_sight()
 
+func move_to_map(object, target_map_id):
+	var map_to_move_to
+	for map in maps:
+		if map.map_id == target_map_id:
+			map_to_move_to = map
+			
+	object.get_parent_map().hide_all()
+			
+	object.set_parent_map(map_to_move_to)
+	var player_pos = map_to_move_to.place_player_on_map(object)
+	object.set_map_pos_and_translation([map_to_move_to.spawn_room.center.x, map_to_move_to.spawn_room.center.z])
+	turn_timer.set_map(map_to_move_to)
+	
+	first_turn_workaround_for_player_sight()
+	
+	
+	
+
 func first_turn_workaround_for_player_sight():
 	player.viewfield = player.view_finder.find_view_field(player.get_map_pos()[0], player.get_map_pos()[1])	
 	player.get_parent_map().hide_non_visible_from_player()

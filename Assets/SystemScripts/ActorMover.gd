@@ -113,3 +113,4 @@ func check_tile_for_steppable_objects(x,z):
 			'Spike Trap': object.activate_trap(tile_objects)
 			'Coins': object.collect_item(tile_objects)
 			'Inv Item': object.collect_item(tile_objects)
+			'Stairs': object.take_stairs(tile_objects)

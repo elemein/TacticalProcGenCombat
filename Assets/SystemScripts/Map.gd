@@ -20,7 +20,11 @@ onready var turn_timer = get_node("/root/World/TurnTimer")
 var map_name = 'Dungeon Floor 1'
 var map_id = 1
 var map_grid = []
-var map_dict
+var map_dict # more like room_dict
+
+var spawn_room
+var exit_room
+
 
 var catalog_of_ground_tiles = []
 
@@ -155,6 +159,10 @@ func hide_non_visible_from_player():
 	# save what was in vision
 	objs_visible_to_player_last_turn = objs_visible_to_player
 
+
+func hide_all():
+	for object in objs_visible_to_player_last_turn:
+		object.visible = false
 
 func add_map_object(object):
 	var tile = object.get_map_pos()

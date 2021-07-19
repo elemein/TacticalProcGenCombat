@@ -2,6 +2,8 @@ extends Node
 
 var rng = RandomNumberGenerator.new()
 
+onready var world = get_node('/.')
+
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
 var pathfinder = PATHFINDER.new()
 
@@ -10,7 +12,7 @@ var obj_spawner = OBJ_SPAWNER.new()
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.1
-const AVG_NO_OF_ENEMIES_PER_ROOM = 1
+const AVG_NO_OF_ENEMIES_PER_ROOM = 0
 const NUMBER_OF_TRAPS = 5
 const NUMBER_OF_COINS = 5
 const NUMBER_OF_SWORDS = 1
@@ -31,6 +33,8 @@ var base_necklace = preload("res://Assets/Objects/MapObjects/InventoryObjects/Ar
 var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/ScabbardAndDagger.tscn")
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
+
+var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
 
 var map_object
 var total_map
@@ -99,12 +103,19 @@ func assign_spawn_room():
 	var smallest_room = find_smallest_room()
 	spawn_room = smallest_room
 	spawn_room['type'] = 'Player Spawn'
+	map_object.spawn_room = spawn_room
 
 func assign_exit_room():
 	find_room_dists_to_spawn()
 	exit_room['type'] = 'Exit Room'
 	
-	obj_spawner.spawn_item('Stairs', map_object, [exit_room.center.x, exit_room.center.z])
+	var stairs = base_stairs.instance()
+	stairs.translation = Vector3(exit_room.center.x * TILE_OFFSET, 0.3, exit_room.center.z * TILE_OFFSET)
+	stairs.visible = false
+	stairs.set_map_pos([exit_room.center.x, exit_room.center.z])
+	stairs.set_parent_map(map_object)
+	stairs.connects_to = map_object.map_id + 1
+	map_object.add_map_object(stairs)
 
 func assign_room_types():
 	for room in rooms:

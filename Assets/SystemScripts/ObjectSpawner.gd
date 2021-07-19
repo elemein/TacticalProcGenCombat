@@ -28,7 +28,6 @@ func spawn_item(item_name, map, map_pos):
 		'Scabbard and Dagger': item_scene = base_dagger
 		'Body Armour': item_scene = base_armour
 		'Leather Cuirass': item_scene = base_cuirass
-		'Stairs': item_scene = base_stairs
 			
 	var item = item_scene.instance()
 	item.translation = Vector3(map_pos[0] * TILE_OFFSET, 0.3, map_pos[1] * TILE_OFFSET)
