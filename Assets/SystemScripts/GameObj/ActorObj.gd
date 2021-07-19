@@ -70,6 +70,7 @@ func _init(obj_type, actor_stats).(obj_type):
 
 func set_action(action):
 	proposed_action = action
+#	if action == 'idle' or 'move ' in action:
 	ready_status = true
 	
 	if object_type == 'Player': gui.set_action(proposed_action)

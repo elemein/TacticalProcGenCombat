@@ -5,6 +5,9 @@ const TILE_OFFSET = 2.1
 # Get required nodes
 onready var turn_timer = get_node("/root/World/TurnTimer")
 
+# Signals
+signal set_ready_status
+
 # Sound effects
 onready var UseSpell = $UseSpell
 onready var out_of_mana = $out_of_mana
@@ -45,11 +48,15 @@ func use():
 	map = parent.get_parent_map()
 	if parent:
 		if mana_check():
+			set_ready_status()
 			UseSpell.play()
 			create_spell_instance()
 			target_pos = parent.get_translation()
 			set_power()
 			heal_user()
+			
+func set_ready_status():
+	emit_signal("set_ready_status")
 
 func set_power():
 	spell_power = parent.get_spell_power()
