@@ -37,3 +37,7 @@ texture = ExtResource( 3 )
 [connection signal="update_mana_bar" from="GUI" to="GUI/StatusBar" method="_on_GUI_update_mana_bar"]
 
 [editable path="GUI/StatusBar"]
+
+[editable path="GUI/StatusBar/StatusBarContainer/HBox container/VBoxContainer/HealthBar2D"]
+
+[editable path="GUI/StatusBar/StatusBarContainer/HBox container/VBoxContainer/ManaBar2D"]

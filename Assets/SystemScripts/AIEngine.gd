@@ -4,8 +4,6 @@ const VISION_RANGE = 15
 
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
 
-onready var player = get_node("/root/World/Player")
-
 var rng = RandomNumberGenerator.new()
 
 var ai_state = 'idle' # [idle, active]

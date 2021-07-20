@@ -67,6 +67,7 @@ func _init(obj_type, actor_stats).(obj_type):
 	add_child(view_finder)
 	view_finder.set_actor(self)
 
+
 func set_action(action):
 	proposed_action = action
 	ready_status = true
@@ -153,7 +154,7 @@ func take_damage(damage):
 		damage = floor(damage * damage_multiplier)
 		damage = floor(damage)
 		stat_dict['HP'] -= damage
-		print("%s has %s HP" % [self, stat_dict['HP']])
+		print("%s has %s HP" % [self.get_obj_type(), stat_dict['HP']])
 		
 		# Play a random audio effect upon getting hit
 		var num_audio_effects = audio_hit.get_children().size()
@@ -245,6 +246,7 @@ func set_actor_dir(dir_facing):
 
 func set_hp(new_hp):
 	stat_dict['HP'] = stat_dict['Max HP'] if (new_hp > stat_dict['Max HP']) else new_hp
+
 	emit_signal("status_bar_hp", stat_dict['HP'], stat_dict['Max HP'])
 	
 func set_mp(new_mp):

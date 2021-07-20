@@ -41,9 +41,6 @@ func move_to_map(object, target_map_id):
 	
 	first_turn_workaround_for_player_sight()
 	
-	
-	
-
 func first_turn_workaround_for_player_sight():
 	player.viewfield = player.view_finder.find_view_field(player.get_map_pos()[0], player.get_map_pos()[1])	
 	player.get_parent_map().hide_non_visible_from_player()
