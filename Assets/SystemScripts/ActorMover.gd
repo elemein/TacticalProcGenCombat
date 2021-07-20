@@ -2,18 +2,18 @@ extends Node
 
 const TILE_OFFSET = 2.1
 
-onready var turn_timer = get_node("/root/World/TurnTimer")
-
 var actor
 var map_pos
 var direction_facing
 var target_pos
+var turn_timer
 
 # Initiliaztion functions
 func set_actor(setter):
 	actor = setter
 	map_pos = actor.get_map_pos()
 	target_pos = actor.get_translation()
+	turn_timer = actor.get_parent_map().get_turn_timer()
 
 func set_actor_translation():
 	var interp_mod = actor.get_turn_anim_timer().time_left / actor.get_turn_anim_timer().get_wait_time()

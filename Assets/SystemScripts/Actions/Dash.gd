@@ -2,9 +2,6 @@ extends Node
 
 const TILE_OFFSET = 2.1
 
-# Get required nodes
-onready var turn_timer = get_node("/root/World/TurnTimer")
-
 # Sound effects
 # onready var UseSpell = $UseSpell - Dash has no audio.
 onready var out_of_mana = $out_of_mana

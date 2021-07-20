@@ -1,7 +1,5 @@
 extends Control
 
-onready var turn_timer = get_node("/root/World/TurnTimer")
-
 onready var item_stat_row = $InventoryUI/InventoryPanels/ItemStats
 onready var inventory_panels = $InventoryUI/InventoryPanels
 onready var inventory_ui = get_parent().get_node("InventoryUI")

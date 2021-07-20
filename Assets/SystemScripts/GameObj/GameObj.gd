@@ -5,6 +5,7 @@ const TILE_OFFSET = 2.1
 
 var object_type 
 var parent_map = []
+var turn_timer
 var map_pos = []
 
 func _init(obj_type):
@@ -20,7 +21,9 @@ func get_map_pos(): return map_pos
 func get_translation(): return translation
 
 # Setters
-func set_parent_map(map): parent_map = map
+func set_parent_map(map): 
+	parent_map = map
+	turn_timer = map.get_turn_timer()
 
 func set_map_pos(new_pos): map_pos = new_pos
 

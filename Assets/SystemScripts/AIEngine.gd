@@ -4,7 +4,6 @@ const VISION_RANGE = 15
 
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
 
-onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var player = get_node("/root/World/Player")
 
 var rng = RandomNumberGenerator.new()
@@ -13,6 +12,7 @@ var ai_state = 'idle' # [idle, active]
 
 var actor
 var map
+var turn_timer
 
 var player_pos = []
 
@@ -30,6 +30,7 @@ func _ready():
 func set_actor(setter):
 	actor = setter
 	map = actor.get_parent_map()
+	turn_timer = actor.get_parent_map().get_turn_timer()
 	
 func reset_vars():
 	player_pos = []
