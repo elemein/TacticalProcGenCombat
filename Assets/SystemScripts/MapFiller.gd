@@ -104,6 +104,17 @@ func assign_spawn_room():
 	spawn_room = smallest_room
 	spawn_room['type'] = 'Player Spawn'
 	map_object.spawn_room = spawn_room
+	
+	var x = spawn_room.topleft[0]
+	var z = spawn_room.topleft[1]
+	
+	var stairs = base_stairs.instance()
+	stairs.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
+	stairs.visible = false
+	stairs.set_map_pos([x, z])
+	stairs.set_parent_map(map_object)
+	stairs.connects_to = map_object.map_id + 1
+	map_object.add_map_object(stairs)
 
 func assign_exit_room():
 	find_room_dists_to_spawn()

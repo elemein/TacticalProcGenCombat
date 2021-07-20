@@ -12,8 +12,7 @@ func _ready():
 	var floor_1 = map_generator.generate('Dungeon Floor 1', 1)
 	var floor_2 = map_generator.generate('Dungeon Floor 2', 2)
 	
-	maps.append(floor_1)
-	maps.append(floor_2)
+	maps = [floor_1, floor_2]
 
 	# setup player on map
 	player.set_parent_map(floor_1)
@@ -28,16 +27,22 @@ func _ready():
 	first_turn_workaround_for_player_sight()
 
 func move_to_map(object, target_map_id):
-	var map_to_move_to
+	var targ_map
 	for map in maps:
 		if map.map_id == target_map_id:
-			map_to_move_to = map
-			
+			targ_map = map
+	
 	object.get_parent_map().hide_all()
-			
-	object.set_parent_map(map_to_move_to)
-	var player_pos = map_to_move_to.place_player_on_map(object)
-	object.set_map_pos_and_translation([map_to_move_to.spawn_room.center.x, map_to_move_to.spawn_room.center.z])
+	object.get_parent_map().remove_map_object(object)
+	object.get_parent_map().get_turn_timer().remove_from_timer_group(object)
+	
+	
+	object.set_parent_map(targ_map)
+	object.get_parent_map().get_turn_timer().add_to_timer_group(object)
+	
+	var player_pos = targ_map.place_player_on_map(object)
+	targ_map.add_map_object(object)
+	object.set_map_pos_and_translation([targ_map.spawn_room.center.x, targ_map.spawn_room.center.z])
 	
 	first_turn_workaround_for_player_sight()
 	
