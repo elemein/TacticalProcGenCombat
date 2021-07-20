@@ -41,6 +41,7 @@ func _ready():
 	saved_pos = translation
 	
 	emit_signal("prepare_gui", start_stats)
+	add_sub_nodes_as_children()
 
 func add_sub_nodes_as_children():
 	add_child(mover)

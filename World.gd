@@ -1,7 +1,9 @@
 extends Node
 
-onready var player = get_node("Player")
 onready var turn_timer = get_node("TurnTimer")
+
+const BASE_PLAYER = preload("res://Assets/Objects/PlayerObjects/Player.tscn")
+var player = BASE_PLAYER.instance()
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
 var map_generator = MAP_GEN.new()
@@ -19,7 +21,7 @@ func _ready():
 	player.set_parent_map(floor_1)
 	var player_pos = floor_1.place_player_on_map(player)
 	player.set_map_pos_and_translation(player_pos)
-	player.add_sub_nodes_as_children()
+#	player.add_sub_nodes_as_children()
 	
 	turn_timer.set_map(floor_1) # this should belong to map
 
