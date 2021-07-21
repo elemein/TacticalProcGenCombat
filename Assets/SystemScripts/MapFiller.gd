@@ -12,7 +12,7 @@ var obj_spawner = OBJ_SPAWNER.new()
 
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.1
-const AVG_NO_OF_ENEMIES_PER_ROOM = 0
+const AVG_NO_OF_ENEMIES_PER_ROOM = 1
 const NUMBER_OF_TRAPS = 5
 const NUMBER_OF_COINS = 5
 const NUMBER_OF_SWORDS = 1

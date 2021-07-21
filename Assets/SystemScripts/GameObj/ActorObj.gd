@@ -138,10 +138,7 @@ func handle_animations():
 		'idle':
 			play_anim("idle")
 		'walk':
-			if get_obj_type() == 'Player':
-				play_anim("run")
-			if get_obj_type() == 'Enemy':
-				play_anim("walk")
+			play_anim("run")
 
 func play_anim(name):
 	if anim.current_animation == name:
