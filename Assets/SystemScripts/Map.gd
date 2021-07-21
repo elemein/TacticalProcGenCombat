@@ -63,6 +63,7 @@ func place_player_on_map(object):
 		if room['type'] == 'Player Spawn':
 			var tile = [room.center.x, room.center.z]
 			map_grid[tile[0]][tile[1]].append(object)
+			add_child(player)
 			return tile
 
 func move_on_map(object, old_pos, new_pos):
@@ -166,6 +167,7 @@ func hide_all():
 
 func add_map_object(object):
 	var tile = object.get_map_pos()
+	var is_actor
 	
 	map_grid[tile[0]][tile[1]].append(object)
 	add_child(object)

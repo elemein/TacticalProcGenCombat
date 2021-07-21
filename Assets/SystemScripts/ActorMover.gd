@@ -3,7 +3,6 @@ extends Node
 const TILE_OFFSET = 2.1
 
 var actor
-var map_pos
 var direction_facing
 var target_pos
 var turn_timer
@@ -11,7 +10,6 @@ var turn_timer
 # Initiliaztion functions
 func set_actor(setter):
 	actor = setter
-	map_pos = actor.get_map_pos()
 	target_pos = actor.get_translation()
 	turn_timer = actor.get_parent_map().get_turn_timer()
 
@@ -20,6 +18,8 @@ func set_actor_translation():
 	actor.set_translation(actor.get_translation().linear_interpolate(target_pos, 1-interp_mod))
 
 func check_cornering(direction):
+	var map_pos = actor.get_map_pos()
+	
 	match direction:
 		'upleft':
 			if actor.parent_map.is_tile_wall(map_pos[0]+1,map_pos[1]): return false
@@ -36,6 +36,8 @@ func check_cornering(direction):
 	return true
 
 func check_move_action(move):
+	var map_pos = actor.get_map_pos()
+	
 	match move:
 		'move upleft':
 			if actor.parent_map.tile_available(map_pos[0] + 1, map_pos[1] - 1) == true: 
@@ -62,6 +64,7 @@ func check_move_action(move):
 	return false
 
 func move_actor(amount):
+	var map_pos = actor.get_map_pos()
 	var target_tile
 	var direction = actor.get_direction_facing()
 	actor.set_actor_dir(direction)

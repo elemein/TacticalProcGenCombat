@@ -26,7 +26,6 @@ var item_to_act_on
 var actmenu_selector_index = 0
 var inv_selector_index = 0
 var map
-var turn_timer
 
 # owner vars
 var inventory_owner
@@ -55,10 +54,10 @@ func setup_inventory(owner):
 	owner_type = owner.get_obj_type()
 	inventory_ui.visible = false
 	map = inventory_owner.get_parent_map()
-	turn_timer = inventory_owner.get_parent_map().get_turn_timer()
 
 func _physics_process(delta):
 	if owner_type == 'Player':
+		var turn_timer = inventory_owner.get_parent_map().get_turn_timer()
 		
 		if turn_timer.get_turn_in_process() == true: return # lock out while in turn
 		
