@@ -42,6 +42,8 @@ func move_to_map(object, target_map_id):
 	curr_map.hide_all()
 	curr_map.remove_map_object(object)
 	curr_map.get_turn_timer().remove_from_timer_group(object)
+	maps.erase(curr_map)
+	curr_map.queue_free()
 	
 	object.set_parent_map(targ_map)
 	
@@ -49,6 +51,7 @@ func move_to_map(object, target_map_id):
 	print(player_pos)
 	object.set_map_pos_and_translation(player_pos)
 	targ_map.get_turn_timer().add_to_timer_group(object)
+	object.set_actor_dir("none")
 	
 	first_turn_workaround_for_player_sight()
 	

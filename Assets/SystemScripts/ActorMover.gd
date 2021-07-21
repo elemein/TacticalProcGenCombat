@@ -67,7 +67,8 @@ func move_actor(amount):
 	var map_pos = actor.get_map_pos()
 	var target_tile
 	var direction = actor.get_direction_facing()
-	actor.set_actor_dir(direction)
+	
+	print(direction)
 
 	match direction:
 		'upleft':
