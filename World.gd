@@ -39,19 +39,16 @@ func move_to_map(object, target_map_id):
 	
 	var curr_map = object.get_parent_map()
 	
-	curr_map.hide_all()
 	curr_map.remove_map_object(object)
-	curr_map.get_turn_timer().remove_from_timer_group(object)
 	maps.erase(curr_map)
-	curr_map.queue_free()
+	curr_map.queue_free() # remove the old map so it doesnt overlap and mess shit up with the new one
+	object.set_action('idle') # prevents using the last map's move action on the next map
 	
 	object.set_parent_map(targ_map)
 	
 	var player_pos = targ_map.place_player_on_map(object)
-	print(player_pos)
 	object.set_map_pos_and_translation(player_pos)
 	targ_map.get_turn_timer().add_to_timer_group(object)
-	object.set_actor_dir("none")
 	
 	first_turn_workaround_for_player_sight()
 	

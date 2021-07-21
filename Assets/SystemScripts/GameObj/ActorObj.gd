@@ -230,9 +230,8 @@ func get_turn_anim_timer() -> Object: return turn_anim_timer
 # Setters
 func set_stat_dict(changed_dict): stat_dict = changed_dict
 
-func set_actor_dir(dir_facing):
+func set_actor_dir(dir_facing): 
 	direction_facing = dir_facing
-	print(direction_facing)
 
 	match direction_facing:
 		'upleft': model.rotation_degrees.y = 135
