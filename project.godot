@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "AI_Engine",
+"language": "GDScript",
+"path": "res://Assets/SystemScripts/AIEngine.gd"
+}, {
 "base": "GameObj",
 "class": "ActorObj",
 "language": "GDScript",
@@ -25,6 +30,7 @@ _global_script_classes=[ {
 "path": "res://Assets/Objects/MapObjects/InventoryObjects/InvObject.gd"
 } ]
 _global_script_class_icons={
+"AI_Engine": "",
 "ActorObj": "",
 "GameObj": "",
 "InvObject": ""
