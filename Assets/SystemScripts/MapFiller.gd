@@ -2,6 +2,14 @@ extends Node
 
 var rng = RandomNumberGenerator.new()
 
+onready var world = get_node('/.')
+
+const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
+var pathfinder = PATHFINDER.new()
+
+const OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner.gd")
+var obj_spawner = OBJ_SPAWNER.new()
+
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.1
 const AVG_NO_OF_ENEMIES_PER_ROOM = 1
@@ -14,7 +22,8 @@ const NUMBER_OF_DAGGERS = 1
 const NUMBER_OF_ARMOURS = 1
 const NUMBER_OF_CUIRASSES = 1
 
-var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
+var base_imp = preload("res://Assets/Objects/EnemyObjects/Imp.tscn")
+var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
 var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
@@ -26,9 +35,15 @@ var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/Scab
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
+var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
+
 var map_object
 var total_map
 var rooms
+
+var dist_to_spawn_dict = {}
+var spawn_room
+var exit_room
 
 func _ready():
 	rng.randomize()
@@ -37,6 +52,12 @@ func fill_map(passed_map_object, passed_map, passed_rooms):
 	map_object = passed_map_object
 	total_map = passed_map
 	rooms = passed_rooms
+	
+	map_object.map_grid = total_map
+	
+	assign_spawn_room()
+	
+	assign_exit_room()
 	
 	assign_room_types()
 	
@@ -68,11 +89,68 @@ func get_random_available_tile_in_room(room) -> Array:
 	
 	return [x,z]
 	
+func find_smallest_room():
+	var smallest_room
+	var smallest_room_area = 99999
+	
+	for room in rooms:
+		if room.area < smallest_room_area: 
+			smallest_room = room
+			smallest_room_area = room['area']
+	
+	return smallest_room
+
+func assign_spawn_room():
+	var smallest_room = find_smallest_room()
+	spawn_room = smallest_room
+	spawn_room['type'] = 'Player Spawn'
+	map_object.spawn_room = spawn_room
+	
+	var x = spawn_room.topleft[0]
+	var z = spawn_room.topleft[1]
+	
+	var stairs = base_stairs.instance()
+	stairs.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
+	stairs.visible = false
+	stairs.set_map_pos([x, z])
+	stairs.set_parent_map(map_object)
+	stairs.connects_to = map_object.map_id + 1
+	map_object.add_map_object(stairs)
+
+func assign_exit_room():
+	find_room_dists_to_spawn()
+	exit_room['type'] = 'Exit Room'
+	
+	var stairs = base_stairs.instance()
+	stairs.translation = Vector3(exit_room.center.x * TILE_OFFSET, 0.3, exit_room.center.z * TILE_OFFSET)
+	stairs.visible = false
+	stairs.set_map_pos([exit_room.center.x, exit_room.center.z])
+	stairs.set_parent_map(map_object)
+	stairs.connects_to = map_object.map_id + 1
+	map_object.add_map_object(stairs)
+
 func assign_room_types():
 	for room in rooms:
-		room['type'] = 'Enemy'
+		if room['type'] == 'Unassigned':
+			room['type'] = 'Enemy'
+
+func find_room_dists_to_spawn():
+	var furthest_dist = -99
+	var furthest_room
 	
-	rooms[rng.randi_range(0, rooms.size()-1)]['type'] = 'Player Spawn'
+	for room in rooms:
+		var from = [room.center.x, room.center.z]
+		var to = [spawn_room.center.x, spawn_room.center.z]
+		
+		var dist_from_spawn = pathfinder.solve(self, map_object, from, to)[0]
+		
+		room['distance_to_spawn'] = dist_from_spawn
+		
+		if (dist_from_spawn > furthest_dist):
+			furthest_dist = dist_from_spawn
+			furthest_room = room
+			
+	exit_room = furthest_room
 
 func spawn_enemies():
 	for room in rooms:
@@ -85,8 +163,10 @@ func spawn_enemies():
 					var rand_tile = get_random_available_tile_in_room(room)
 					var x = rand_tile[0]
 					var z = rand_tile[1]
-							
-					var enemy = base_enemy.instance()
+					
+					var possible_enemies = [base_imp, base_fox]
+					
+					var enemy = possible_enemies[rng.randi_range(0,1)].instance()
 					enemy.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
 					enemy.visible = false
 					enemy.set_map_pos([x,z])

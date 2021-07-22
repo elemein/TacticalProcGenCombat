@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Assets/Audio/EnemyAudio/hit_basic_attack_1.wav" type="AudioStream" id=1]
+[ext_resource path="res://Assets/Audio/EnemyAudio/hit_basic_attack_2.wav" type="AudioStream" id=2]
+[ext_resource path="res://Assets/GUI/HealthManaBar3D.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Assets/NewArt/Imp/Imp.glb" type="PackedScene" id=4]
+[ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Assets/Objects/EnemyObjects/Enemy.gd" type="Script" id=6]
+
+[node name="Enemy" type="MeshInstance"]
+script = ExtResource( 6 )
+
+[node name="Graphics" parent="." instance=ExtResource( 4 )]
+transform = Transform( 0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0 )
+
+[node name="Armature" parent="Graphics" index="2"]
+transform = Transform( -7.53263e-08, 0, -0.462349, 0, 0.462349, 0, 0.462349, 0, -7.53263e-08, 0, 1.24048, 0 )
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="Hit" type="Node" parent="Audio"]
+
+[node name="basic_attack_1" type="AudioStreamPlayer3D" parent="Audio/Hit"]
+stream = ExtResource( 1 )
+unit_db = 80.0
+
+[node name="basic_attack_2" type="AudioStreamPlayer3D" parent="Audio/Hit"]
+stream = ExtResource( 2 )
+unit_db = 80.0
+
+[node name="HealthManaBar3D" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80738, 0 )
+pixel_size = 0.003
+
+[node name="Actions" parent="." instance=ExtResource( 5 )]
+[connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
+[connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]
+[connection signal="status_bar_hp" from="." to="HealthManaBar3D" method="_on_status_bar_hp"]
+[connection signal="status_bar_mp" from="." to="HealthManaBar3D" method="_on_status_bar_mp"]
+
+[editable path="Graphics"]

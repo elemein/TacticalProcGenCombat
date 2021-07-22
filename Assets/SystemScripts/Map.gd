@@ -8,19 +8,23 @@ extends Node
 const Y_OFFSET = -0.3
 const TILE_OFFSET = 2.1
 
+const TIMER_SCENE = preload("res://Assets/Objects/TurnTimer.tscn")
+var turn_timer = TIMER_SCENE.instance()
+
 var rng = RandomNumberGenerator.new()
 
 var in_view_objects = []
 var objs_visible_to_player_last_turn = []
 var player
 
-onready var turn_timer = get_node("/root/World/TurnTimer")
-
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
 var map_name = 'Dungeon Floor 1'
 var map_id = 1
 var map_grid = []
-var map_dict
+var map_dict # more like room_dict
+
+var spawn_room
+var exit_room
 
 var catalog_of_ground_tiles = []
 
@@ -32,6 +36,8 @@ func _init(name, id):
 
 func _ready():
 	rng.randomize()
+	turn_timer.set_map(self)
+	add_child(turn_timer)
 	
 	add_map_objects_to_tree()
 	
@@ -55,10 +61,9 @@ func place_player_on_map(object):
 	
 	for room in map_dict:
 		if room['type'] == 'Player Spawn':
-			var tile = []
-			tile.append(room['center'].x)
-			tile.append(room['center'].z)
+			var tile = [room.center.x, room.center.z]
 			map_grid[tile[0]][tile[1]].append(object)
+			add_child(player)
 			return tile
 
 func move_on_map(object, old_pos, new_pos):
@@ -156,8 +161,13 @@ func hide_non_visible_from_player():
 	objs_visible_to_player_last_turn = objs_visible_to_player
 
 
+func hide_all():
+	for object in objs_visible_to_player_last_turn:
+		object.visible = false
+
 func add_map_object(object):
 	var tile = object.get_map_pos()
+	var is_actor
 	
 	map_grid[tile[0]][tile[1]].append(object)
 	add_child(object)
@@ -168,3 +178,4 @@ func remove_map_object(object):
 	map_grid[tile[0]][tile[1]].erase(object)
 	remove_child(object)
 	
+func get_turn_timer(): return turn_timer

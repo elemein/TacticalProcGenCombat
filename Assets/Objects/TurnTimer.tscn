@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Assets/SystemScripts/TurnTimer.gd" type="Script" id=1]
+
+[node name="TurnTimer" type="Timer"]
+one_shot = true
+script = ExtResource( 1 )
+
+[node name="TurnDelayTimer" type="Timer" parent="."]
+one_shot = true
+[connection signal="timeout" from="TurnDelayTimer" to="." method="_on_Turn_Delay_Timer_timeout"]

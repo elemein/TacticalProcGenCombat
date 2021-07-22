@@ -1,7 +1,7 @@
 extends Control
 
 
-signal set_health_current(amounr)
+signal set_health_current(amount)
 signal set_health_max(amount)
 signal set_mana_current(amount)
 signal set_mana_max(amount)

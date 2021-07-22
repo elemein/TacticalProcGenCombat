@@ -5,8 +5,6 @@ extends Node
 const INVENTORY_OBJECT = preload("res://Assets/GUI/Inventory/InventoryUIObject.tscn")
 const OBJECT_ACTION_MENU = preload("res://Assets/GUI/Inventory/ObjectActionMenu.tscn")
 
-onready var turn_timer = get_node("/root/World/TurnTimer")
-
 onready var inventory_ui = $InventoryUI
 onready var inventory_panels = $InventoryUI/InventoryPanels
 onready var inventory_ui_slots = $InventoryUI/InventoryPanels/InventorySlots
@@ -59,6 +57,7 @@ func setup_inventory(owner):
 
 func _physics_process(_delta):
 	if owner_type == 'Player':
+		var turn_timer = inventory_owner.get_parent_map().get_turn_timer()
 		
 		if turn_timer.get_turn_in_process() == true: return # lock out while in turn
 		

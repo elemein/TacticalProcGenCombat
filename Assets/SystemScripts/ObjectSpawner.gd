@@ -15,6 +15,9 @@ var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/Scab
 var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
+# Map Objects
+var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
+
 func spawn_item(item_name, map, map_pos):
 	var item_scene
 	

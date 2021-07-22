@@ -9,7 +9,6 @@ const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI/Action")
-onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # Sound effects
 onready var audio_hit = $Audio/Hit
@@ -71,13 +70,12 @@ func _init(obj_type, actor_stats).(obj_type):
 
 func set_action(action, ready=true):
 	proposed_action = action
-#	if action == 'idle' or 'move ' in action:
 
 	if not ready:
 		emit_signal("spell_can_cast", action)
 	if ready:
 		ready_status = true
-		
+
 	if object_type == 'Player': gui.set_action(proposed_action)
 
 func process_turn():	
@@ -144,10 +142,7 @@ func handle_animations():
 		'idle':
 			play_anim("idle")
 		'walk':
-			if get_obj_type() == 'Player':
-				play_anim("run")
-			if get_obj_type() == 'Enemy':
-				play_anim("walk")
+			play_anim("run")
 
 func play_anim(name):
 	if anim.current_animation == name:
@@ -160,7 +155,7 @@ func take_damage(damage):
 		damage = floor(damage * damage_multiplier)
 		damage = floor(damage)
 		stat_dict['HP'] -= damage
-		print("%s has %s HP" % [self, stat_dict['HP']])
+		print("%s has %s HP" % [self.get_obj_type(), stat_dict['HP']])
 		
 		# Play a random audio effect upon getting hit
 		var num_audio_effects = audio_hit.get_children().size()

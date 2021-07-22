@@ -4,15 +4,13 @@ const VISION_RANGE = 15
 
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
 
-onready var turn_timer = get_node("/root/World/TurnTimer")
-onready var player = get_node("/root/World/Player")
-
 var rng = RandomNumberGenerator.new()
 
 var ai_state = 'idle' # [idle, active]
 
 var actor
 var map
+var turn_timer
 
 var player_pos = []
 
@@ -30,6 +28,7 @@ func _ready():
 func set_actor(setter):
 	actor = setter
 	map = actor.get_parent_map()
+	turn_timer = actor.get_parent_map().get_turn_timer()
 	
 func reset_vars():
 	player_pos = []
@@ -67,7 +66,7 @@ func run_engine():
 			actor.set_action('idle')
 				
 func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
-	var path_info = pathfinder.solve(actor, actor.get_map_pos(), player_pos[0])
+	var path_info = pathfinder.solve(actor, actor.get_parent_map(), actor.get_map_pos(), player_pos[0])
 	
 	dist_from_player = path_info[0]
 	path = path_info[1]

@@ -31,6 +31,7 @@ func _ready():
 	stat_dict['Speed'] = rng.randi_range(5,15)
 
 func setup_actor():
+	
 	turn_timer.add_to_timer_group(self)
 	translation.x = map_pos[0] * TILE_OFFSET
 	translation.z = map_pos[1] * TILE_OFFSET

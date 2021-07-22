@@ -15,8 +15,8 @@ const MAP_FILL = preload("res://Assets/SystemScripts/MapFiller.gd")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
 
-var map_l = 13 # MIN: 12, how many rows
-var map_w = 13 # MIN: 12, how long are those rows
+var map_l = 20 # MIN: 12, how many rows
+var map_w = 20 # MIN: 12, how long are those rows
 var min_room_size = 4 # -1 is min room size.
 var min_room_factor = 0.4 # Higher this is, the smaller the rooms are
 
@@ -31,8 +31,9 @@ var leaf_id = 0
 var rooms = []
 
 var total_map = []
-	
+
 func generate(name, id):
+	reset_map_gen_vars()
 	var map_to_return = MAP_CLASS.new(name, id)
 	
 	var maps_thrown_away = -1
@@ -47,7 +48,7 @@ func generate(name, id):
 		create_rooms()
 		join_rooms()
 		clear_deadends()
-		assign_room_corners()
+		define_extra_room_stats()
 	
 	var filled_map = map_filler.fill_map(map_to_return, total_map, rooms)
 	
@@ -337,12 +338,15 @@ func check_cardinal_dirs_for_walls(x,z):
 			
 	return count
 
-func assign_room_corners():
+func define_extra_room_stats():
 	for room in rooms:
 		room['bottomleft'] = [room.x, room.z]
 		room['bottomright'] = [room.x, (room.z + room.w)-1]
 		room['topleft'] = [(room.x + room.l) - 1, room.z]
 		room['topright'] = [(room.x + room.l) - 1, (room.z + room.w)-1]
+		room['area'] = room.l * room.w
+		
+		
 		room['type'] = 'Unassigned'
 	
 func print_rooms(_rooms_in_map):
