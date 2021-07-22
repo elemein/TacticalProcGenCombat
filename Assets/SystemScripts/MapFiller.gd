@@ -22,7 +22,8 @@ const NUMBER_OF_DAGGERS = 1
 const NUMBER_OF_ARMOURS = 1
 const NUMBER_OF_CUIRASSES = 1
 
-var base_enemy = preload("res://Assets/Objects/EnemyObjects/Enemy.tscn")
+var base_imp = preload("res://Assets/Objects/EnemyObjects/Imp.tscn")
+var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
 var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
@@ -162,8 +163,10 @@ func spawn_enemies():
 					var rand_tile = get_random_available_tile_in_room(room)
 					var x = rand_tile[0]
 					var z = rand_tile[1]
-							
-					var enemy = base_enemy.instance()
+					
+					var possible_enemies = [base_imp, base_fox]
+					
+					var enemy = possible_enemies[rng.randi_range(0,1)].instance()
 					enemy.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
 					enemy.visible = false
 					enemy.set_map_pos([x,z])
