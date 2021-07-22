@@ -9,9 +9,9 @@ var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
 
 var rng = RandomNumberGenerator.new()
 
-var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
-				"HP Regen" : 1, "MP Regen": 7, "Attack Power" : 10, \
-				"Spell Power" : 20, "Defense" : 0, \
+var start_stats = {"Max HP" : 80, "HP" : 80, "Max MP": 100, "MP": 100, \
+				"HP Regen" : 1, "MP Regen": 7, "Attack Power" : 5, \
+				"Spell Power" : 25, "Defense" : 0, \
 				 "Speed": rng.randi_range(5,15), "View Range" : 4}
 
 var loot_to_drop = []
