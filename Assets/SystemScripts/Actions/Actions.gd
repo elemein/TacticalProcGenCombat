@@ -50,7 +50,7 @@ func _on_set_ready_status():
 	emit_signal("set_ready_status")
 
 
-func _on_Player_spell_can_cast(action):
+func _on_spell_can_cast(action):
 	match action:
 		'fireball':
 			emit_signal("can_cast_fireball")
