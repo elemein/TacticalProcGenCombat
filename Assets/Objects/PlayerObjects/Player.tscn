@@ -60,6 +60,7 @@ script = ExtResource( 6 )
 [connection signal="action_drop_item" from="." to="Actions" method="_on_action_drop_item"]
 [connection signal="action_equip_item" from="." to="Actions" method="_on_action_equip_item"]
 [connection signal="action_unequip_item" from="." to="Actions" method="_on_action_unequip_item"]
+[connection signal="spell_can_cast" from="." to="Actions" method="_on_Player_spell_can_cast"]
 [connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
 [connection signal="spell_cast_dash" from="." to="Actions" method="_on_spell_cast_dash"]
 [connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]

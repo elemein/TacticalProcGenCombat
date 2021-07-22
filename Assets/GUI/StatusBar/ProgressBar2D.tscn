@@ -35,4 +35,3 @@ valign = 1
 script = ExtResource( 6 )
 
 [connection signal="update_text" from="ProgressBar2D" to="StatIndicator" method="_on_ProgressBar2D_update_text"]
-[connection signal="value_changed" from="ProgressBar2D" to="ProgressBar2D" method="_on_ProgressBar2D_value_changed"]

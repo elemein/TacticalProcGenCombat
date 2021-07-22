@@ -9,7 +9,7 @@ onready var turn_timer = get_node("/root/World/TurnTimer")
 signal set_ready_status
 
 # Sound effects
-onready var UseSpell = $UseSpell
+onready var UseSpell = null
 onready var out_of_mana = $out_of_mana
 
 # Misc variables
@@ -33,9 +33,12 @@ var spell_power = 0
 var spell_cost = 0
 var spell_length = 0
 var spell_name = 'spell name'
+var spell_heal_user = false
 
 # Visual assets - This needs to be updated for each spell if it has an effect
 var visual_effect = null
+var effect_start_height = 0
+var effect_end_height = 0
 
 func _ready():
 	tile_offset = world.MAP_GEN.TILE_OFFSET
@@ -58,33 +61,31 @@ func _physics_process(_delta):
 			parent.translation = parent.translation.linear_interpolate(saved_actor_pos, 1-interp_mod)
 		else:
 			parent = null
-	elif moving and parent:
-		var interp_mod = parent.get_turn_anim_timer().time_left / parent.get_turn_anim_timer().get_wait_time()
-		if interp_mod > 0:
-			parent.translation = parent.translation.linear_interpolate(target_actor_pos, 1-interp_mod)
-		else:
-			parent = null
 
 # Main functionality of the spell
 func use():
-	parent = find_parent('Actions').get_parent()
+	if parent == null:
+		parent = find_parent('Actions').get_parent()
 	map = parent.get_parent_map()
 	if moving and not moving_back and not move_check():
 		parent = null
 		return
-	if parent and mana_check():
+	if parent:
 		set_ready_status()
-		if UseSpell != null:
-			play_audio()
+		play_audio()
 		if visual_effect != null:
 			create_spell_instance()
 			set_target_spell_pos()
 		if moving:
 			set_target_actor_pos()
+		if moving and not moving_back:
+			parent.manual_move_char(2)
 		set_power()
 		do_damage()
+		if spell_heal_user:
+			heal_user()
 		
-func move_check():
+func move_check() -> bool:
 	set_target_actor_pos()
 	for target_tile in get_target_tiles():
 		for object in target_tile:
@@ -94,19 +95,26 @@ func move_check():
 			
 func set_ready_status():
 	emit_signal("set_ready_status")
+	
+func heal_user():
+	parent.set_hp(parent.get_hp() + spell_power)
 			
 func play_audio():
-	UseSpell.translation = parent.translation
-	UseSpell.play()
+	UseSpell = find_node('UseSpell')
+	if UseSpell != null and not UseSpell.is_playing():
+		UseSpell.translation = parent.translation
+		UseSpell.play()
 
 func set_power():
 	damage = parent.get_spell_power() + spell_power
 
 # Check if out of mana
 func mana_check() -> bool:
+	parent = find_parent('Actions').get_parent()
 	if parent.get_mp() and parent.get_mp() < spell_cost:
-		out_of_mana.translation = parent.translation
-		out_of_mana.play()
+		if not out_of_mana.is_playing():
+			out_of_mana.translation = parent.translation
+			out_of_mana.play()
 		return false
 		
 	# Update mana
@@ -121,6 +129,7 @@ func create_spell_instance():
 	add_child(effect)
 	effect.translation.x = parent.translation.x
 	effect.translation.z = parent.translation.z
+	effect.translation.y = parent.translation.y + effect_start_height
 
 # Set the destination tile
 func set_target_spell_pos():
@@ -133,35 +142,43 @@ func set_target_spell_pos():
 			effect.rotation_degrees.y = 90 + 45
 			target_spell_pos.x = effect.translation.x + (spell_length*tile_offset)
 			target_spell_pos.z = effect.translation.z - (spell_length*tile_offset)
+			target_spell_pos.y = effect.translation.y + (effect_end_height - effect_start_height)
 		'upright':
 			effect.rotation_degrees.y = 90 - 45
 			target_spell_pos.x = effect.translation.x + (spell_length*tile_offset)
 			target_spell_pos.z = effect.translation.z + (spell_length*tile_offset)
+			target_spell_pos.y = effect.translation.y + (effect_end_height - effect_start_height)
 		'downleft':
 			effect.rotation_degrees.y = 270 - 45
 			target_spell_pos.x = effect.translation.x - (spell_length*tile_offset)
 			target_spell_pos.z = effect.translation.z - (spell_length*tile_offset)
+			target_spell_pos.y = effect.translation.y + (effect_end_height - effect_start_height)
 		'downright':
 			effect.rotation_degrees.y = 270 + 45
 			target_spell_pos.x = effect.translation.x - (spell_length*tile_offset)
 			target_spell_pos.z = effect.translation.z + (spell_length*tile_offset)
-		
+			target_spell_pos.y = effect.translation.y + (effect_end_height - effect_start_height)
+					
 		'up':
 			effect.rotation_degrees.y = 90
 			target_spell_pos.x = effect.translation.x + (spell_length*tile_offset)
 			target_spell_pos.z = effect.translation.z
+			target_spell_pos.y = effect.translation.y + (effect_end_height - effect_start_height)
 		'down':
 			effect.rotation_degrees.y = 270
 			target_spell_pos.x = effect.translation.x - (spell_length*tile_offset)
 			target_spell_pos.z = effect.translation.z
+			target_spell_pos.y = effect.translation.y + (effect_end_height - effect_start_height)
 		'left':
 			effect.rotation_degrees.y = 180
 			target_spell_pos.x = effect.translation.x
 			target_spell_pos.z = effect.translation.z - (spell_length*tile_offset)
+			target_spell_pos.y = effect.translation.y + (effect_end_height - effect_start_height)
 		'right':
 			effect.rotation_degrees.y = 0
 			target_spell_pos.x = effect.translation.x
 			target_spell_pos.z = effect.translation.z + (spell_length*tile_offset)
+			target_spell_pos.y = effect.translation.y + (effect_end_height - effect_start_height)
 			
 # Set the destination tile
 func set_target_actor_pos():

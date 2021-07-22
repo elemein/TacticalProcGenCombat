@@ -42,6 +42,10 @@ config/name="RyanSebProj"
 run/main_scene="res://Assets/GUI/TitleScreen/MainTitleScreen.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Signals="*res://Assets/SystemScripts/Signals.gd"
+
 [debug]
 
 gdscript/completion/autocomplete_setters_and_getters=true

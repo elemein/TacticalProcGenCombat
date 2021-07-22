@@ -11,7 +11,7 @@ var change_rate = 0.003 # lower is slower
 func _ready():
 	pass
 
-func _process(delta):
+func _process(_delta):
 	if (growing == false):
 		if (omni_range > min_range) and (light_energy > min_energy):
 			omni_range += -((max_range - min_range) * change_rate)

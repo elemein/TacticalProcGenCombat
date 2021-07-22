@@ -81,7 +81,7 @@ func spawn_enemies():
 			var no_of_enemy_in_room = rng_mod + AVG_NO_OF_ENEMIES_PER_ROOM
 			
 			if no_of_enemy_in_room > 0:
-				for enemy_cnt in range(no_of_enemy_in_room):
+				for _enemy_cnt in range(no_of_enemy_in_room):
 					var rand_tile = get_random_available_tile_in_room(room)
 					var x = rand_tile[0]
 					var z = rand_tile[1]
@@ -96,7 +96,7 @@ func spawn_enemies():
 					total_map[x][z].append(enemy)
 
 func spawn_traps():
-	for trap_cnt in range(NUMBER_OF_TRAPS):
+	for _trap_cnt in range(NUMBER_OF_TRAPS):
 		var room = rooms[rng.randi_range(0, rooms.size()-1)]
 
 		var rand_tile = get_random_available_tile_in_room(room)
@@ -122,7 +122,7 @@ func spawn_loot():
 	spawn_inv_items(base_cuirass, NUMBER_OF_CUIRASSES)
 
 func spawn_inv_items(item_scene, no_of_items):
-	for obj_cnt in range(no_of_items):
+	for _obj_cnt in range(no_of_items):
 		var room = rooms[rng.randi_range(0, rooms.size()-1)]
 		
 		var rand_tile = get_random_available_tile_in_room(room)

@@ -15,6 +15,7 @@ onready var turn_timer = get_node("/root/World/TurnTimer")
 onready var audio_hit = $Audio/Hit
 
 # Spell signals
+signal spell_can_cast(action)
 signal spell_cast_fireball
 signal spell_cast_self_heal
 signal spell_cast_basic_attack
@@ -68,11 +69,15 @@ func _init(obj_type, actor_stats).(obj_type):
 	add_child(view_finder)
 	view_finder.set_actor(self)
 
-func set_action(action):
+func set_action(action, ready=true):
 	proposed_action = action
 #	if action == 'idle' or 'move ' in action:
-	ready_status = true
-	
+
+	if not ready:
+		emit_signal("spell_can_cast", action)
+	if ready:
+		ready_status = true
+		
 	if object_type == 'Player': gui.set_action(proposed_action)
 
 func process_turn():	
@@ -188,11 +193,11 @@ func die():
 	$HealthManaBar3D.visible = false
 	
 	if self.object_type == 'Player':
-		get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
+		var _result = get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
 	else:
 		parent_map.current_number_of_enemies -= 1
 		if parent_map.current_number_of_enemies == 0:
-			get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
+			var _result = get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
 
 func play_death_anim():
 	if death_anim_timer.time_left > 0.75:

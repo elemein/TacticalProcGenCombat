@@ -97,8 +97,9 @@ func smooth_move_confirm_input():
 		'left': dir_char = 'a'
 		'right': dir_char = 'd'
 	
-	if(Input.is_action_just_pressed(dir_char)):
-		directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
+	if dir_char != '':
+		if(Input.is_action_just_pressed(dir_char)):
+			directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
 
 func get_input():
 	smooth_diagonal_input()
@@ -183,11 +184,11 @@ func get_input():
 	if Input.is_action_pressed("x"): set_action('idle')
 	
 	# Basic attacks only need one press.
-	if Input.is_action_pressed("space"): set_action('basic attack')
+	if Input.is_action_pressed("space"): set_action('basic attack', false)
 	
 	# Skills will need two presses to confirm.
-	if Input.is_action_pressed("e"): set_action('fireball')
-	if Input.is_action_pressed("r"): set_action('dash')
+	if Input.is_action_pressed("e"): set_action('fireball', false)
+	if Input.is_action_pressed("r"): set_action('dash', false)
 	if Input.is_action_pressed("t"): set_action('self heal')
 
 func set_direction(direction):

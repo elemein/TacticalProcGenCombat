@@ -230,13 +230,13 @@ func create_leaf(parent_id):
 		create_leaf(tree[parent_id].r)
 	
 func create_rooms():
-	for leaf_id in tree:
-		var leaf = tree[leaf_id]
+	for leaf_id_num in tree:
+		var leaf = tree[leaf_id_num]
 		if leaf.has("c"): continue # if node has children, don't build rooms
 	
 		if (rng.randi_range(0,100) < room_density):
 			var room = {}
-			room.id = leaf_id
+			room.id = leaf_id_num
 			room.l = rng.randi_range(min_room_size, leaf.l) - 1
 			room.w = rng.randi_range(min_room_size, leaf.w) - 1
 			room.x = leaf.x + floor((leaf.l-room.l)/2) + 1
@@ -345,5 +345,5 @@ func assign_room_corners():
 		room['topright'] = [(room.x + room.l) - 1, (room.z + room.w)-1]
 		room['type'] = 'Unassigned'
 	
-func print_rooms(rooms_in_map):
+func print_rooms(_rooms_in_map):
 	for room in rooms: print(room)
