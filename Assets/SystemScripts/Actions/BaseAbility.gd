@@ -21,7 +21,7 @@ var parent = null
 var direction_facing = null
 var map_pos = null
 var map = null
-var damage = 0
+var spell_final_power = 0
 
 # Movement Variables - These need to be changed if the actor is moving as apart of the spell
 var moving = false
@@ -80,9 +80,10 @@ func use():
 		if moving and not moving_back:
 			parent.manual_move_char(2)
 		set_power()
-		do_damage()
 		if spell_heal_user:
 			heal_user()
+		else:
+			do_damage()
 		
 func move_check() -> bool:
 	set_target_actor_pos()
@@ -96,7 +97,7 @@ func set_ready_status():
 	emit_signal("set_ready_status")
 	
 func heal_user():
-	parent.set_hp(parent.get_hp() + spell_power)
+	parent.set_hp(parent.get_hp() + spell_final_power)
 			
 func play_audio():
 	UseSpell = find_node('UseSpell')
@@ -105,7 +106,7 @@ func play_audio():
 		UseSpell.play()
 
 func set_power():
-	damage = parent.get_spell_power() + spell_power
+	spell_final_power = parent.get_spell_power() + spell_power
 
 # Check if out of mana
 func mana_check() -> bool:
@@ -248,4 +249,4 @@ func do_damage():
 		if typeof(objects_on_tile) != TYPE_STRING:
 			for object in objects_on_tile:
 				if object.get_obj_type() in ['Enemy', 'Player']:
-					object.take_damage(damage)
+					object.take_damage(spell_final_power)
