@@ -32,9 +32,11 @@ var rooms = []
 
 var total_map = []
 
-func generate(name, id):
+func generate(parent_mapset, name, id):
 	reset_map_gen_vars()
 	var map_to_return = MAP_CLASS.new(name, id)
+	
+	map_to_return.set_parent_mapset(parent_mapset)
 	
 	var maps_thrown_away = -1
 	

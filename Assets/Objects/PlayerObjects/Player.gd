@@ -35,8 +35,6 @@ func _ready():
 	input_smoothing_timer.set_wait_time(DIAGONAL_INPUT_SMOOTHING_TIME)
 	add_child(input_smoothing_timer)
 	
-	turn_timer.add_to_timer_group(self)
-	
 	target_pos = translation
 	saved_pos = translation
 	

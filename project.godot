@@ -33,13 +33,19 @@ _global_script_classes=[ {
 "class": "InvObject",
 "language": "GDScript",
 "path": "res://Assets/Objects/MapObjects/InventoryObjects/InvObject.gd"
+}, {
+"base": "Node",
+"class": "Mapset",
+"language": "GDScript",
+"path": "res://Assets/SystemScripts/Mapset.gd"
 } ]
 _global_script_class_icons={
 "AI_Engine": "",
 "ActorObj": "",
 "BaseAbility": "",
 "GameObj": "",
-"InvObject": ""
+"InvObject": "",
+"Mapset": ""
 }
 
 [application]

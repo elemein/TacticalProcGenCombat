@@ -18,7 +18,8 @@ var objs_visible_to_player_last_turn = []
 var player
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
-var map_name = 'Dungeon Floor 1'
+var parent_mapset
+var map_name = ''
 var map_id = 1
 var map_grid = []
 var map_dict # more like room_dict
@@ -66,6 +67,7 @@ func place_player_on_map(object):
 			var tile = [room.center.x, room.center.z]
 			map_grid[tile[0]][tile[1]].append(object)
 			add_child(player)
+			turn_timer.add_to_timer_group(player)
 			return tile
 
 func move_on_map(object, old_pos, new_pos):
@@ -179,4 +181,13 @@ func remove_map_object(object):
 	map_grid[tile[0]][tile[1]].erase(object)
 	remove_child(object)
 	
-func get_turn_timer(): return turn_timer
+
+# Getters
+func get_turn_timer() -> Object: return turn_timer
+
+func get_parent_mapset() -> Object: return parent_mapset
+
+func get_map_name() -> String: return map_name
+
+# Setters
+func set_parent_mapset(mapset): parent_mapset = mapset
