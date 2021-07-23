@@ -29,10 +29,7 @@ func set_parent_map(map):
 	turn_timer = map.get_turn_timer()
 	parent_mapset = map.get_parent_mapset()
 
-func set_map_pos(new_pos): 
-	if object_type == 'Player':
-		print(new_pos)
-	map_pos = new_pos
+func set_map_pos(new_pos): map_pos = new_pos
 
 func set_translation(new_translation): translation = new_translation 
 

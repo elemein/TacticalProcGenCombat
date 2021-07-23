@@ -24,6 +24,7 @@ var map_id = 1
 var map_grid = []
 var map_dict # more like room_dict
 
+var map_type
 var spawn_room
 var exit_room
 
@@ -31,9 +32,10 @@ var catalog_of_ground_tiles = []
 
 var current_number_of_enemies = 0
 
-func _init(name, id):
+func _init(name, id, type):
 	map_name = name
 	map_id = id
+	map_type = type
 
 func _ready():
 	rng.randomize()
@@ -188,6 +190,8 @@ func get_turn_timer() -> Object: return turn_timer
 func get_parent_mapset() -> Object: return parent_mapset
 
 func get_map_name() -> String: return map_name
+
+func get_map_type() -> String: return map_type
 
 # Setters
 func set_parent_mapset(mapset): parent_mapset = mapset

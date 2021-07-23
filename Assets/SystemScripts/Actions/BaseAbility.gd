@@ -1,6 +1,8 @@
 extends Node
 class_name BaseAbility
 
+const TILE_OFFSET = 2.1
+
 # Get required nodes
 onready var world = get_node('/root/World/')
 
@@ -40,7 +42,7 @@ var effect_start_height = 0
 var effect_end_height = 0
 
 func _ready():
-	tile_offset = world.MAP_GEN.TILE_OFFSET
+	tile_offset = TILE_OFFSET
 	
 # Move the parent every frame
 func _physics_process(_delta):

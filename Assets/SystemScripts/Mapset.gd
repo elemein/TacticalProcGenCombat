@@ -15,9 +15,12 @@ func _init(d_name, flr_count):
 
 func _ready():
 	for flr_no in range(1, floor_count+1):
-		floors['Dungeon Floor %d' % [flr_no]] = map_generator.generate(self, 'Dungeon Floor %d' % [flr_no], flr_no)
+		var map_type = 'Normal Floor' if flr_no < floor_count else 'End Floor'
+		floors['Dungeon Floor %d' % [flr_no]] = map_generator.generate(self, 'Dungeon Floor %d' % [flr_no], flr_no, map_type)
 		add_child(floors['Dungeon Floor %d' % [flr_no]])
 
+
+# Getters
 func get_mapset_name() -> String: return dungeon_name
 
 func get_floors() -> Dictionary: return floors

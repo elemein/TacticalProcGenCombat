@@ -8,10 +8,7 @@ const BASE_PLAYER = preload("res://Assets/Objects/PlayerObjects/Player.tscn")
 var player = BASE_PLAYER.instance()
 
 const MAPSET_CLASS = preload("res://Assets/SystemScripts/Mapset.gd")
-var dungeon = MAPSET_CLASS.new('The Cave', 10)
-
-const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
-var map_generator = MAP_GEN.new()
+var dungeon = MAPSET_CLASS.new('The Cave', 3)
 
 var mapsets = []
 

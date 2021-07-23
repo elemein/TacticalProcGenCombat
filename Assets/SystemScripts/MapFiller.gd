@@ -120,14 +120,18 @@ func assign_spawn_room():
 func assign_exit_room():
 	find_room_dists_to_spawn()
 	exit_room['type'] = 'Exit Room'
+	map_object.exit_room = exit_room
 	
-	var stairs = base_stairs.instance()
-	stairs.translation = Vector3(exit_room.center.x * TILE_OFFSET, 0.3, exit_room.center.z * TILE_OFFSET)
-	stairs.visible = false
-	stairs.set_map_pos([exit_room.center.x, exit_room.center.z])
-	stairs.set_parent_map(map_object)
-	stairs.connects_to = map_object.map_id + 1
-	map_object.add_map_object(stairs)
+	if map_object.get_map_type() == 'Normal Floor':
+		var stairs = base_stairs.instance()
+		stairs.translation = Vector3(exit_room.center.x * TILE_OFFSET, 0.3, exit_room.center.z * TILE_OFFSET)
+		stairs.visible = false
+		stairs.set_map_pos([exit_room.center.x, exit_room.center.z])
+		stairs.set_parent_map(map_object)
+		stairs.connects_to = map_object.map_id + 1
+		map_object.add_map_object(stairs)
+	elif map_object.get_map_type() == 'End Floor':
+		spawn_enemies_in_room(exit_room, floor(exit_room.area/3))
 
 func assign_room_types():
 	for room in rooms:
@@ -151,6 +155,24 @@ func find_room_dists_to_spawn():
 			furthest_room = room
 			
 	exit_room = furthest_room
+
+func spawn_enemies_in_room(room, enemy_cnt):
+	if enemy_cnt > 0:
+		for _cnt in range(enemy_cnt):
+			var rand_tile = get_random_available_tile_in_room(room)
+			var x = rand_tile[0]
+			var z = rand_tile[1]
+			
+			var possible_enemies = [base_imp, base_fox]
+			
+			var enemy = possible_enemies[rng.randi_range(0,1)].instance()
+			enemy.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
+			enemy.visible = false
+			enemy.set_map_pos([x,z])
+			enemy.set_parent_map(map_object)
+			enemy.add_to_group('enemies')
+
+			total_map[x][z].append(enemy)
 
 func spawn_enemies():
 	for room in rooms:
