@@ -51,6 +51,8 @@ func add_map_objects_to_tree():
 	for line in map_grid.size():
 		for column in map_grid[0].size():
 			for object in map_grid[line][column]:
+				if object.get_parent() != null:
+					object.get_parent().remove_child(object)
 				add_child(object)
 				if object.get_obj_type() == 'Enemy':
 					object.setup_actor()
@@ -167,7 +169,6 @@ func hide_all():
 
 func add_map_object(object):
 	var tile = object.get_map_pos()
-	var is_actor
 	
 	map_grid[tile[0]][tile[1]].append(object)
 	add_child(object)

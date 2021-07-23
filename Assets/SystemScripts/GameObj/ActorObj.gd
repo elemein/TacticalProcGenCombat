@@ -9,12 +9,12 @@ const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI/Action")
+onready var actions = find_node('Actions')
 
 # Sound effects
 onready var audio_hit = $Audio/Hit
 
 # Spell signals
-signal spell_can_cast(action)
 signal spell_cast_fireball
 signal spell_cast_self_heal
 signal spell_cast_basic_attack
@@ -72,7 +72,7 @@ func set_action(action, ready=true):
 	proposed_action = action
 
 	if not ready:
-		emit_signal("spell_can_cast", action)
+		actions.spell_can_cast(action)
 	if ready:
 		ready_status = true
 

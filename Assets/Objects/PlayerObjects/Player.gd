@@ -40,9 +40,9 @@ func _ready():
 	target_pos = translation
 	saved_pos = translation
 	
-	self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
-	self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
-	self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
+	var _result = self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
+	_result = self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
+	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
 	
 	emit_signal("prepare_gui", start_stats)
 	
@@ -195,7 +195,7 @@ func get_input():
 	# Skills will need two presses to confirm.
 	if Input.is_action_pressed("e"): set_action('fireball', false)
 	if Input.is_action_pressed("r"): set_action('dash', false)
-	if Input.is_action_pressed("t"): set_action('self heal')
+	if Input.is_action_pressed("t"): set_action('self heal', false)
 
 func set_direction(direction):
 	set_actor_dir(direction)

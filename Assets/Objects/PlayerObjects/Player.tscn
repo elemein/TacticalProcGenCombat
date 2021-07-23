@@ -17,7 +17,7 @@ ambient_light_sky_contribution = 0.0
 script = ExtResource( 2 )
 
 [node name="Graphics" parent="." instance=ExtResource( 1 )]
-transform = Transform( 0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0, 0, 0 )
+transform = Transform( -5.70222e-08, 0, -0.35, 0, 0.35, 0, 0.35, 0, -5.70222e-08, 0, 0, 0 )
 
 [node name="Armature" parent="Graphics" index="4"]
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 2.52816, 0 )
@@ -25,7 +25,7 @@ transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 2.52
 [node name="CamBase" type="Spatial" parent="."]
 
 [node name="Camera" type="Camera" parent="CamBase"]
-transform = Transform( -1.62921e-07, 0.984808, -0.173648, 0, 0.173648, 0.984808, 1, 1.60446e-07, -2.82909e-08, -2.5, 15, 0 )
+transform = Transform( -1.62921e-07, 0.939693, -0.34202, 0, 0.34202, 0.939693, 1, 1.53095e-07, -5.57221e-08, -2.5, 10, 0 )
 environment = SubResource( 1 )
 current = true
 __meta__ = {
@@ -56,16 +56,15 @@ light_color = Color( 0.882353, 0.788235, 0.607843, 1 )
 omni_range = 15.0
 omni_attenuation = 0.999999
 script = ExtResource( 6 )
+
 [connection signal="action_drop_item" from="." to="Actions" method="_on_action_drop_item"]
 [connection signal="action_equip_item" from="." to="Actions" method="_on_action_equip_item"]
 [connection signal="action_unequip_item" from="." to="Actions" method="_on_action_unequip_item"]
-[connection signal="spell_can_cast" from="." to="Actions" method="_on_spell_can_cast"]
 [connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
 [connection signal="spell_cast_dash" from="." to="Actions" method="_on_spell_cast_dash"]
 [connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]
 [connection signal="spell_cast_self_heal" from="." to="Actions" method="_on_spell_cast_self_heal"]
 [connection signal="status_bar_hp" from="." to="HealthManaBar3D" method="_on_status_bar_hp"]
 [connection signal="status_bar_mp" from="." to="HealthManaBar3D" method="_on_status_bar_mp"]
-[connection signal="set_ready_status" from="Actions" to="." method="_on_Actions_set_ready_status"]
 
 [editable path="Graphics"]

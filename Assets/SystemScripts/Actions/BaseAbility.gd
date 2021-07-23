@@ -3,7 +3,6 @@ class_name BaseAbility
 
 # Get required nodes
 onready var world = get_node('/root/World/')
-onready var turn_timer = get_node("/root/World/TurnTimer")
 
 # Signals
 signal set_ready_status

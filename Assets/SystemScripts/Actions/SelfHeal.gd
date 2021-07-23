@@ -2,9 +2,10 @@ extends BaseAbility
 
 
 func _ready():
-	spell_power = 0
+	spell_power = 30
 	spell_cost = 40
 	spell_name = 'SelfHeal'
+	spell_heal_user = true
 	effect_start_height = 8
 	effect_end_height = 0
 	visual_effect = preload("res://Assets/Objects/Effects/Heal/Heal.tscn")
