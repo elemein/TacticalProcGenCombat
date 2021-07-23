@@ -67,10 +67,19 @@ script = ExtResource( 8 )
 
 [node name="UnequipItem" type="Node" parent="."]
 script = ExtResource( 9 )
+
 [connection signal="action_drop_item" from="." to="DropItem" method="_on_Actions_action_drop_item"]
 [connection signal="action_equip_item" from="." to="EquipItem" method="_on_Actions_action_equip_item"]
 [connection signal="action_unequip_item" from="." to="UnequipItem" method="_on_Actions_action_unequip_item"]
+[connection signal="can_cast_basic_attack" from="." to="Attacks/BasicAttack" method="_on_Actions_can_cast_basic_attack"]
+[connection signal="can_cast_dash" from="." to="Dash" method="_on_Actions_can_cast_dash"]
+[connection signal="can_cast_fireball" from="." to="Attacks/Fireball" method="_on_Actions_can_cast_fireball"]
+[connection signal="can_cast_self_heal" from="." to="SelfHeal" method="_on_Actions_can_cast_self_heal"]
 [connection signal="spell_cast_basic_attack" from="." to="Attacks/BasicAttack" method="_on_Actions_spell_cast_basic_attack"]
 [connection signal="spell_cast_dash" from="." to="Dash" method="_on_Actions_spell_cast_dash"]
 [connection signal="spell_cast_fireball" from="." to="Attacks/Fireball" method="_on_Actions_spell_cast_fireball"]
 [connection signal="spell_cast_self_heal" from="." to="SelfHeal" method="_on_Actions_spell_cast_self_heal"]
+[connection signal="set_ready_status" from="Attacks/Fireball" to="." method="_on_set_ready_status"]
+[connection signal="set_ready_status" from="Attacks/BasicAttack" to="." method="_on_set_ready_status"]
+[connection signal="set_ready_status" from="SelfHeal" to="." method="_on_set_ready_status"]
+[connection signal="set_ready_status" from="Dash" to="." method="_on_set_ready_status"]

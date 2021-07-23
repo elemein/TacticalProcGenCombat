@@ -21,14 +21,14 @@ var rng = RandomNumberGenerator.new()
 
 func _ready():
 	rng.randomize()
-	
+
 	var light_timer = Timer.new()
 	light_timer.connect("timeout", self, "_on_timer_timeout")
 	add_child(light_timer)
 	light_timer.set_wait_time(0.0333)
 	light_timer.start()
 
-func _process(delta):
+func _process(_delta):
 	pass
 
 func _on_timer_timeout():
@@ -37,16 +37,16 @@ func _on_timer_timeout():
 func flicker_effect(): #works like dogshit
 	omni_range += -((max_range - min_range) * change_rate)
 	light_energy += -((max_energy - min_energy) * change_rate)
-	
+
 	var flicker = rng.randi_range(0,100)
 	var flicker_chance = 20
-	
+
 	if (flicker < flicker_chance):
 		print(flicker)
 		print("flicker")
 		omni_range += rng.randi_range(2,5)
 		omni_range = max_range if omni_range > max_range else omni_range
-		
+
 		light_energy += (rng.randi_range(5,45) * 0.01)
 		light_energy = max_energy if light_energy > max_range else light_energy
 

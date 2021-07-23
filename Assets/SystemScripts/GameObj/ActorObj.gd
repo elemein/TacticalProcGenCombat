@@ -9,6 +9,7 @@ const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI/Action")
+onready var actions = find_node('Actions')
 
 # Sound effects
 onready var audio_hit = $Audio/Hit
@@ -67,11 +68,14 @@ func _init(obj_type, actor_stats).(obj_type):
 	add_child(view_finder)
 	view_finder.set_actor(self)
 
-
-func set_action(action):
+func set_action(action, ready=true):
 	proposed_action = action
-	ready_status = true
-	
+
+	if not ready:
+		actions.spell_can_cast(action)
+	if ready:
+		ready_status = true
+
 	if object_type == 'Player': gui.set_action(proposed_action)
 
 func process_turn():	
@@ -184,11 +188,11 @@ func die():
 	$HealthManaBar3D.visible = false
 	
 	if self.object_type == 'Player':
-		get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
+		var _result = get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
 	else:
 		parent_map.current_number_of_enemies -= 1
 		if parent_map.current_number_of_enemies == 0:
-			get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
+			var _result = get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
 
 func play_death_anim():
 	if death_anim_timer.time_left > 0.75:
@@ -227,7 +231,7 @@ func get_turn_anim_timer() -> Object: return turn_anim_timer
 # Setters
 func set_stat_dict(changed_dict): stat_dict = changed_dict
 
-func set_actor_dir(dir_facing): 
+func set_actor_dir(dir_facing):
 	direction_facing = dir_facing
 
 	match direction_facing:
@@ -243,7 +247,6 @@ func set_actor_dir(dir_facing):
 
 func set_hp(new_hp):
 	stat_dict['HP'] = stat_dict['Max HP'] if (new_hp > stat_dict['Max HP']) else new_hp
-
 	emit_signal("status_bar_hp", stat_dict['HP'], stat_dict['Max HP'])
 	
 func set_mp(new_mp):

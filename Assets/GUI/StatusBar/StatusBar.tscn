@@ -66,5 +66,6 @@ margin_right = 568.0
 [node name="SelfHealAbility" parent="StatusBarContainer/HBox container" instance=ExtResource( 7 )]
 margin_left = 572.0
 margin_right = 672.0
+
 [connection signal="set_health_bar" from="." to="StatusBarContainer/HBox container/VBoxContainer/HealthBar2D" method="_on_StatusBar_set_health_bar"]
 [connection signal="set_mana_bar" from="." to="StatusBarContainer/HBox container/VBoxContainer/ManaBar2D" method="_on_StatusBar_set_mana_bar"]
