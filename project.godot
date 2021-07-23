@@ -14,6 +14,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Assets/SystemScripts/GameObj/ActorObj.gd"
 }, {
+"base": "Node",
+"class": "BaseAbility",
+"language": "GDScript",
+"path": "res://Assets/SystemScripts/Actions/BaseAbility.gd"
+}, {
 "base": "MeshInstance",
 "class": "GameObj",
 "language": "GDScript",
@@ -26,6 +31,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "ActorObj": "",
+"BaseAbility": "",
 "GameObj": "",
 "InvObject": ""
 }
@@ -35,6 +41,10 @@ _global_script_class_icons={
 config/name="RyanSebProj"
 run/main_scene="res://Assets/GUI/TitleScreen/MainTitleScreen.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Signals="*res://Assets/SystemScripts/Signals.gd"
 
 [debug]
 

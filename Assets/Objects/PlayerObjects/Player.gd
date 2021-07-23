@@ -40,9 +40,9 @@ func _ready():
 	target_pos = translation
 	saved_pos = translation
 	
-	self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
-	self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
-	self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
+	var _result = self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
+	_result = self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
+	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
 	
 	emit_signal("prepare_gui", start_stats)
 	
@@ -103,8 +103,9 @@ func smooth_move_confirm_input():
 		'left': dir_char = 'a'
 		'right': dir_char = 'd'
 	
-	if(Input.is_action_just_pressed(dir_char)):
-		directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
+	if dir_char != '':
+		if(Input.is_action_just_pressed(dir_char)):
+			directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
 
 func get_input():
 	smooth_diagonal_input()
@@ -189,12 +190,12 @@ func get_input():
 	if Input.is_action_pressed("x"): set_action('idle')
 	
 	# Basic attacks only need one press.
-	if Input.is_action_pressed("space"): set_action('basic attack')
+	if Input.is_action_pressed("space"): set_action('basic attack', false)
 	
 	# Skills will need two presses to confirm.
-	if Input.is_action_pressed("e"): set_action('fireball')
-	if Input.is_action_pressed("r"): set_action('dash')
-	if Input.is_action_pressed("t"): set_action('self heal')
+	if Input.is_action_pressed("e"): set_action('fireball', false)
+	if Input.is_action_pressed("r"): set_action('dash', false)
+	if Input.is_action_pressed("t"): set_action('self heal', false)
 
 func set_direction(direction):
 	set_actor_dir(direction)
@@ -213,3 +214,7 @@ func get_item_to_drop() -> Object:
 #Setters
 func set_inventory_open(state):
 	inventory_open = state
+
+
+func _on_Actions_set_ready_status():
+	ready_status = true

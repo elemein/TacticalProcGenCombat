@@ -7,7 +7,7 @@ onready var inventory_ui = get_parent().get_node("InventoryUI")
 var item_stats = []
 var null_items = []
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	visible = inventory_ui.visible
 		
 func clear_old_stats_window():

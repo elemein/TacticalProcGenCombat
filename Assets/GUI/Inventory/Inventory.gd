@@ -55,7 +55,7 @@ func setup_inventory(owner):
 	inventory_ui.visible = false
 	map = inventory_owner.get_parent_map()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if owner_type == 'Player':
 		var turn_timer = inventory_owner.get_parent_map().get_turn_timer()
 		
@@ -271,7 +271,7 @@ func equip_item():
 	inventory_objects[idx].equip_object()
 	close_inv_ui()
 
-func unequip_item(type):
+func unequip_item(_type):
 	var idx = -1
 	if item_to_act_on.get_inv_item_type() == 'Weapon':
 		for object in inventory_objects:

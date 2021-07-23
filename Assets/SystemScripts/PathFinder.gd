@@ -53,7 +53,7 @@ func reset_vars():
 	curr_pos = []
 	end_pos = []
 	
-func solve(searcher, search_map, start, end):
+func solve(_searcher, search_map, start, end):
 	map = search_map
 	reset_vars()
 	start_pos = start

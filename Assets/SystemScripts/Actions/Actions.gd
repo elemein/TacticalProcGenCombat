@@ -12,13 +12,11 @@ signal action_drop_item
 signal action_equip_item
 signal action_unequip_item
 
-# Movement
-#signal mover_check_move_action(move)
-#signal mover_move_actor
-#signal mover_set_actor(actor)
-#signal mover_set_actor_direction(direction)
-#signal mover_set_actor_translation
-#signal mover_reset_pos_vars
+# Ready status
+signal can_cast_fireball
+signal can_cast_basic_attack
+signal can_cast_dash
+signal can_cast_self_heal
 
 
 # Attacks
@@ -46,23 +44,18 @@ func _on_spell_cast_dash():
 func _on_spell_cast_self_heal():
 	emit_signal("spell_cast_self_heal")
 
-#func _on_mover_check_move_action(move):
-#	emit_signal("mover_check_move_action", move)
-#
-#func _on_mover_move_actor():
-#	emit_signal("mover_move_actor")
-#
-#func _on_mover_set_actor(actor):
-#	emit_signal("mover_set_actor", actor)
-#
-#func _on_mover_set_actor_direction(direction):
-#	emit_signal("mover_set_actor_direction", direction)
-#
-#func _on_mover_set_actor_translation():
-#	emit_signal("mover_set_actor_translation")
-#
-#func _on_mover_reset_pos_vars():
-#	emit_signal("mover_reset_pos_vars")
+
+func _on_set_ready_status():
+	get_parent().ready_status = true
 
 
-
+func spell_can_cast(action):
+	match action:
+		'fireball':
+			emit_signal("can_cast_fireball")
+		'basic attack':
+			emit_signal("can_cast_basic_attack")
+		'dash':
+			emit_signal("can_cast_dash")
+		'self heal':
+			emit_signal("can_cast_self_heal")

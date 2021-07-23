@@ -52,8 +52,8 @@ func run_engine():
 		if dist_from_player == 1: 
 			actor.set_actor_dir(pathfinder_direction)
 			match rng.randi_range(1, 2):
-				1:	actor.set_action('basic attack')
-				2:	actor.set_action('fireball')
+				1:	actor.set_action('basic attack', false)
+				2:	actor.set_action('fireball', false)
 		
 		elif dist_from_player > 1:
 			var move_command = 'move %s' % [pathfinder_direction]

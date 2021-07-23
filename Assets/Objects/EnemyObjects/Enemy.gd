@@ -101,3 +101,7 @@ func drop_loot():
 	
 	# drop items
 	loot_dropped = true
+
+
+func _on_Actions_set_ready_status():
+	ready_status = true
