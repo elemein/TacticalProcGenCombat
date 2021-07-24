@@ -3,10 +3,6 @@ extends ActorObj
 const IMP_AI = preload("res://Assets/Objects/EnemyObjects/ImpScripts/ImpAI.gd")
 const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
 
-const OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner.gd")
-
-var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
-
 var rng = RandomNumberGenerator.new()
 
 var start_stats = {"Max HP" : 75, "HP" : 80, "Max MP": 40, "MP": 40, \
@@ -19,7 +15,7 @@ var loot_dropped = false
 
 # object vars
 var ai_engine = IMP_AI.new()
-var obj_spawner = OBJ_SPAWNER.new()
+var obj_spawner = GlobalVars.obj_spawner
 
 var inventory = INVENTORY.instance()
 
@@ -43,10 +39,6 @@ func setup_actor():
 	
 	add_child(inventory)
 	inventory.setup_inventory(self)
-	
-	add_child(obj_spawner)
-	
-	#viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
 	
 	add_loot_to_inventory()
 

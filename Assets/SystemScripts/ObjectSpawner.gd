@@ -15,6 +15,10 @@ var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/Lea
 var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
 var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
 
+# Enemies
+var base_imp = preload("res://Assets/Objects/EnemyObjects/Imp.tscn")
+var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
+
 func spawn_item(item_name, map, map_pos, visibility):
 	var item_scene
 	
@@ -33,7 +37,22 @@ func spawn_item(item_name, map, map_pos, visibility):
 	item.set_parent_map(map)
 	item.add_to_group('loot')
 	map.add_map_object(item)
+
+func spawn_enemy(enemy_name, map, map_pos, visibility):
+	var enemy_scene
 	
+	match enemy_name:
+		'Fox': enemy_scene = base_fox
+		'Imp': enemy_scene = base_imp
+	
+	var enemy = enemy_scene.instance()
+	enemy.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
+	enemy.visible = visibility
+	enemy.set_map_pos([map_pos[0], map_pos[1]])
+	enemy.set_parent_map(map)
+	enemy.add_to_group('enemies')
+	map.add_map_object(enemy)
+
 func spawn_gold(value, map, map_pos, visibility):
 	var coins = base_coins.instance()
 	coins.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.6, map_pos[1] * GlobalVars.TILE_OFFSET)

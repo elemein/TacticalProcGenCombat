@@ -38,6 +38,11 @@ _global_script_classes=[ {
 "class": "Mapset",
 "language": "GDScript",
 "path": "res://Assets/SystemScripts/Mapset.gd"
+}, {
+"base": "Node",
+"class": "Room",
+"language": "GDScript",
+"path": "res://Assets/SystemScripts/Room.gd"
 } ]
 _global_script_class_icons={
 "AI_Engine": "",
@@ -45,7 +50,8 @@ _global_script_class_icons={
 "BaseAbility": "",
 "GameObj": "",
 "InvObject": "",
-"Mapset": ""
+"Mapset": "",
+"Room": ""
 }
 
 [application]
