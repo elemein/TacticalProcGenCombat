@@ -187,7 +187,6 @@ func remove_map_object(object):
 func check_what_room_player_is_in():
 	for room in rooms:
 		room.pos_in_room(player.get_map_pos())
-	
 
 # Getters
 func get_turn_timer() -> Object: return turn_timer
@@ -200,3 +199,11 @@ func get_map_type() -> String: return map_type
 
 # Setters
 func set_parent_mapset(mapset): parent_mapset = mapset
+
+func log_enemy_death(dead_enemy): 
+	current_number_of_enemies -= 1
+	
+	for room in rooms:
+		var in_room = room.pos_in_room(player.get_map_pos())
+		if in_room == true:
+			room.log_enemy_death(dead_enemy)
