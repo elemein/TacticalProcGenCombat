@@ -112,9 +112,9 @@ func assign_exit_room():
 	
 	if map_object.get_map_type() == 'Normal Floor':
 		var stairs = base_stairs.instance()
-		stairs.translation = Vector3(exit_room.center.x * GlobalVars.TILE_OFFSET, 0.3, exit_room.center.z * GlobalVars.TILE_OFFSET)
+		stairs.translation = Vector3(exit_room.center[0] * GlobalVars.TILE_OFFSET, 0.3, exit_room.center[1] * GlobalVars.TILE_OFFSET)
 		stairs.visible = false
-		stairs.set_map_pos([exit_room.center.x, exit_room.center.z])
+		stairs.set_map_pos([exit_room.center[0], exit_room.center[1]])
 		stairs.set_parent_map(map_object)
 		stairs.connects_to = map_object.map_id + 1
 		map_object.add_map_object(stairs)
@@ -131,8 +131,8 @@ func find_room_dists_to_spawn():
 	var furthest_room
 	
 	for room in rooms:
-		var from = [room.center.x, room.center.z]
-		var to = [spawn_room.center.x, spawn_room.center.z]
+		var from = [room.center[0], room.center[1]]
+		var to = [spawn_room.center[0], spawn_room.center[1]]
 		
 		var dist_from_spawn = pathfinder.solve(self, map_object, from, to)[0]
 		

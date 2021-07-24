@@ -106,6 +106,8 @@ func end_turn():
 	map.print_map_grid()
 	
 	map.hide_non_visible_from_player()
+	
+	map.check_what_room_player_is_in()
 
 func _physics_process(_delta):
 	if turn_in_process:

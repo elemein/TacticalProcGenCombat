@@ -181,7 +181,7 @@ func create_leaf(parent_id):
 	var l = tree[parent_id].l # far right node
 	var w = tree[parent_id].w # far up node
 	
-	tree[parent_id].center = {x = floor(x + l/2), z = floor(z + w/2)}
+	tree[parent_id].center = [floor(x + l/2), floor(z + w/2)]
 	
 	# whether the tree has space for a split?
 	var can_split = false
@@ -249,9 +249,9 @@ func create_rooms():
 			
 			room.split = leaf.split
 			
-			room.center = {"x": 0, "z": 0}
-			room.center.x = floor(room.x + room.l/2)
-			room.center.z = floor(room.z + room.w/2) 
+			room.center = [0,0]
+			room.center[0] = floor(room.x + room.l/2)
+			room.center[1] = floor(room.z + room.w/2) 
 			rooms.append(room)
 
 	for i in range(rooms.size()):
@@ -273,17 +273,17 @@ func join_rooms():
 
 func connect_leaves(leaf1, leaf2):
 	# connects leaves by shooting corridors right or up
-	var x = min(leaf1.center.x, leaf2.center.x)
-	var z = min(leaf1.center.z, leaf2.center.z)
+	var x = min(leaf1.center[0], leaf2.center[0])
+	var z = min(leaf1.center[1], leaf2.center[1])
 	var l = 1
 	var w = 1
 	
 	if (leaf1.split == 'h'): # Vertical Corridor
 		x -= floor(w/2)+1
-		w = abs(leaf1.center.z - leaf2.center.z)
+		w = abs(leaf1.center[1] - leaf2.center[1])
 	else:					 # Horizontal Corridor
 		z -= floor(l/2)+1
-		l = abs(leaf1.center.x - leaf2.center.x)
+		l = abs(leaf1.center[0] - leaf2.center[0])
 	
 	if check_if_path_may_need_extension(x+l, z+w, leaf1.split):
 		if leaf1.split == 'h': w += 1

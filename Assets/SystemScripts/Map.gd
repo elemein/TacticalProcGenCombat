@@ -21,7 +21,7 @@ var parent_mapset
 var map_name = ''
 var map_id = 1
 var map_grid = []
-var map_dict # more like room_dict
+var rooms
 
 var map_type
 var spawn_room
@@ -47,7 +47,7 @@ func _ready():
 
 func set_map_grid_and_dict(grid, dict):
 	map_grid = grid
-	map_dict = dict
+	rooms = dict
 	
 func add_map_objects_to_tree():
 	for line in map_grid.size():
@@ -63,9 +63,9 @@ func add_map_objects_to_tree():
 func place_player_on_map(object):
 	player = object # caches player for future funcs
 	
-	for room in map_dict:
+	for room in rooms:
 		if room['type'] == 'Player Spawn':
-			var tile = [room.center.x, room.center.z]
+			var tile = [room.center[0], room.center[1]]
 			map_grid[tile[0]][tile[1]].append(object)
 			add_child(player)
 			turn_timer.add_to_timer_group(player)
@@ -181,6 +181,11 @@ func remove_map_object(object):
 	
 	map_grid[tile[0]][tile[1]].erase(object)
 	remove_child(object)
+	
+
+func check_what_room_player_is_in():
+	for room in rooms:
+		room.pos_in_room(player.get_map_pos())
 	
 
 # Getters
