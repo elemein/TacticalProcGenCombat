@@ -57,6 +57,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Signals="*res://Assets/SystemScripts/Signals.gd"
+GlobalVars="*res://Assets/SystemScripts/Singletons/GlobalVars.gd"
 
 [debug]
 

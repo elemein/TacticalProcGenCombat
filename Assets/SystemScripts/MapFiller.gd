@@ -11,7 +11,6 @@ const OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner.gd")
 var obj_spawner = OBJ_SPAWNER.new()
 
 const Y_OFFSET = -0.3
-const TILE_OFFSET = 2.1
 const AVG_NO_OF_ENEMIES_PER_ROOM = 1
 const NUMBER_OF_TRAPS = 5
 const NUMBER_OF_COINS = 5
@@ -110,7 +109,7 @@ func assign_spawn_room():
 	var z = spawn_room.topleft[1]
 	
 	var stairs = base_stairs.instance()
-	stairs.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
+	stairs.translation = Vector3(x * GlobalVars.TILE_OFFSET, 0.3, z * GlobalVars.TILE_OFFSET)
 	stairs.visible = false
 	stairs.set_map_pos([x, z])
 	stairs.set_parent_map(map_object)
@@ -124,7 +123,7 @@ func assign_exit_room():
 	
 	if map_object.get_map_type() == 'Normal Floor':
 		var stairs = base_stairs.instance()
-		stairs.translation = Vector3(exit_room.center.x * TILE_OFFSET, 0.3, exit_room.center.z * TILE_OFFSET)
+		stairs.translation = Vector3(exit_room.center.x * GlobalVars.TILE_OFFSET, 0.3, exit_room.center.z * GlobalVars.TILE_OFFSET)
 		stairs.visible = false
 		stairs.set_map_pos([exit_room.center.x, exit_room.center.z])
 		stairs.set_parent_map(map_object)
@@ -166,7 +165,7 @@ func spawn_enemies_in_room(room, enemy_cnt):
 			var possible_enemies = [base_imp, base_fox]
 			
 			var enemy = possible_enemies[rng.randi_range(0,1)].instance()
-			enemy.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
+			enemy.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, z * GlobalVars.TILE_OFFSET)
 			enemy.visible = false
 			enemy.set_map_pos([x,z])
 			enemy.set_parent_map(map_object)
@@ -189,7 +188,7 @@ func spawn_enemies():
 					var possible_enemies = [base_imp, base_fox]
 					
 					var enemy = possible_enemies[rng.randi_range(0,1)].instance()
-					enemy.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
+					enemy.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, z * GlobalVars.TILE_OFFSET)
 					enemy.visible = false
 					enemy.set_map_pos([x,z])
 					enemy.set_parent_map(map_object)
@@ -206,7 +205,7 @@ func spawn_traps():
 		var z = rand_tile[1]
 				
 		var trap = base_spiketrap.instance()
-		trap.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3-1, z * TILE_OFFSET)
+		trap.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3-1, z * GlobalVars.TILE_OFFSET)
 		trap.visible = false
 		trap.set_map_pos([x,z])
 		trap.set_parent_map(map_object)
@@ -216,12 +215,14 @@ func spawn_traps():
 
 func spawn_loot():
 	spawn_inv_items(base_coins, NUMBER_OF_COINS)
-	spawn_inv_items(base_sword, NUMBER_OF_SWORDS)
-	spawn_inv_items(base_staff, NUMBER_OF_STAFFS)
-	spawn_inv_items(base_necklace, NUMBER_OF_NECKLACES)
-	spawn_inv_items(base_dagger, NUMBER_OF_DAGGERS)
-	spawn_inv_items(base_armour, NUMBER_OF_ARMOURS)
-	spawn_inv_items(base_cuirass, NUMBER_OF_CUIRASSES)
+	
+	new_spawn_inv_items('Sword', NUMBER_OF_SWORDS)
+	new_spawn_inv_items('Magic Staff', NUMBER_OF_STAFFS)
+	new_spawn_inv_items('Arcane Necklace', NUMBER_OF_NECKLACES)
+	new_spawn_inv_items('Scabbard and Dagger', NUMBER_OF_DAGGERS)
+	new_spawn_inv_items('Body Armour', NUMBER_OF_ARMOURS)
+	new_spawn_inv_items('Leather Cuirass', NUMBER_OF_CUIRASSES)
+	
 
 func spawn_inv_items(item_scene, no_of_items):
 	for _obj_cnt in range(no_of_items):
@@ -232,10 +233,20 @@ func spawn_inv_items(item_scene, no_of_items):
 		var z = rand_tile[1]
 				
 		var item = item_scene.instance()
-		item.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
+		item.translation = Vector3(x * GlobalVars.TILE_OFFSET, 0.3, z * GlobalVars.TILE_OFFSET)
 		item.visible = false
 		item.set_map_pos([x,z])
 		item.set_parent_map(map_object)
 		item.add_to_group('loot')
 
 		total_map[x][z].append(item)
+
+func new_spawn_inv_items(item_name, no_of_items):
+	for _obj_cnt in range(no_of_items):
+		var room = rooms[rng.randi_range(0, rooms.size()-1)]
+		
+		var rand_tile = get_random_available_tile_in_room(room)
+		var x = rand_tile[0]
+		var z = rand_tile[1]
+		
+		obj_spawner.spawn_item(item_name, map_object, [x, z], false)

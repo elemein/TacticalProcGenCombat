@@ -1,9 +1,5 @@
 extends Node
 
-const TILE_OFFSET = 2.1
-
-var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
-
 # Gold
 var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
 
@@ -17,8 +13,9 @@ var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/Lea
 
 # Map Objects
 var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
+var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
 
-func spawn_item(item_name, map, map_pos):
+func spawn_item(item_name, map, map_pos, visibility):
 	var item_scene
 	
 	match item_name:
@@ -30,17 +27,17 @@ func spawn_item(item_name, map, map_pos):
 		'Leather Cuirass': item_scene = base_cuirass
 			
 	var item = item_scene.instance()
-	item.translation = Vector3(map_pos[0] * TILE_OFFSET, 0.3, map_pos[1] * TILE_OFFSET)
-	item.visible = true
+	item.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
+	item.visible = visibility
 	item.set_map_pos([map_pos[0], map_pos[1]])
 	item.set_parent_map(map)
 	item.add_to_group('loot')
 	map.add_map_object(item)
 	
-func spawn_gold(value, map, map_pos):
+func spawn_gold(value, map, map_pos, visibility):
 	var coins = base_coins.instance()
-	coins.translation = Vector3(map_pos[0] * TILE_OFFSET, 0.6, map_pos[1] * TILE_OFFSET)
-	coins.visible = true
+	coins.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.6, map_pos[1] * GlobalVars.TILE_OFFSET)
+	coins.visible = visibility
 	coins.set_map_pos([map_pos[0],map_pos[1]])
 	coins.set_parent_map(map)
 	coins.add_to_group('loot')

@@ -33,8 +33,8 @@ func _ready():
 func setup_actor():
 	
 	turn_timer.add_to_timer_group(self)
-	translation.x = map_pos[0] * TILE_OFFSET
-	translation.z = map_pos[1] * TILE_OFFSET
+	translation.x = map_pos[0] * GlobalVars.TILE_OFFSET
+	translation.z = map_pos[1] * GlobalVars.TILE_OFFSET
 	
 	ai_engine.set_actor(self)
 	add_child(ai_engine)
@@ -94,10 +94,10 @@ func add_loot_to_inventory():
 	
 func drop_loot():
 	if loot_to_drop[0] == 'Gold':
-		obj_spawner.spawn_gold(inventory.get_gold_total(), parent_map, map_pos)
+		obj_spawner.spawn_gold(inventory.get_gold_total(), parent_map, map_pos, true)
 		inventory.subtract_from_gold(inventory.get_gold_total())
 	else:
-		obj_spawner.spawn_item(loot_to_drop[0], parent_map, map_pos)
+		obj_spawner.spawn_item(loot_to_drop[0], parent_map, map_pos, true)
 	
 	# drop items
 	loot_dropped = true

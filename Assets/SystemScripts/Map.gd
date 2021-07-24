@@ -6,7 +6,6 @@ extends Node
 # Revealing and hiding things from the player.
 
 const Y_OFFSET = -0.3
-const TILE_OFFSET = 2.1
 
 const TIMER_SCENE = preload("res://Assets/Objects/TurnTimer.tscn")
 var turn_timer = TIMER_SCENE.instance()

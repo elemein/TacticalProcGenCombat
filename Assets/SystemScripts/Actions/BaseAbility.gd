@@ -1,8 +1,6 @@
 extends Node
 class_name BaseAbility
 
-const TILE_OFFSET = 2.1
-
 # Get required nodes
 onready var world = get_node('/root/World/')
 
@@ -17,7 +15,7 @@ onready var out_of_mana = $out_of_mana
 var target_spell_pos = Vector3()
 var target_actor_pos = Vector3()
 var saved_actor_pos = Vector3()
-var tile_offset = null
+var tile_offset = GlobalVars.TILE_OFFSET
 var effect = null
 var parent = null
 var direction_facing = null
@@ -42,7 +40,7 @@ var effect_start_height = 0
 var effect_end_height = 0
 
 func _ready():
-	tile_offset = TILE_OFFSET
+	pass
 	
 # Move the parent every frame
 func _physics_process(_delta):
