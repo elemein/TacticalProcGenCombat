@@ -89,7 +89,7 @@ func move_check() -> bool:
 	set_target_actor_pos()
 	for target_tile in get_target_tiles():
 		for object in target_tile:
-			if object.object_type == 'Wall':
+			if object.object_type in GlobalVars.NON_TRAVERSABLES:
 				return false
 	return true
 			

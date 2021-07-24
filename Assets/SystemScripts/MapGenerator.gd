@@ -53,6 +53,9 @@ func generate(parent_mapset, name, id, type):
 		clear_deadends()
 		define_extra_room_stats()
 	
+	for room in rooms:
+		room.parent_map = map_to_return
+	
 	var filled_map = map_filler.fill_map(map_to_return, total_map, rooms)
 	
 	print_rooms(filled_map[1])

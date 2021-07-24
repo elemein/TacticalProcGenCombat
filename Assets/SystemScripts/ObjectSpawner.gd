@@ -12,7 +12,10 @@ var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/Body
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
 # Map Objects
+var base_tempwall = preload("res://Assets/Objects/MapObjects/TempWall.tscn")
 var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
+
+# Traps
 var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
 
 # Enemies
@@ -62,3 +65,16 @@ func spawn_gold(value, map, map_pos, visibility):
 	coins.add_to_group('loot')
 	coins.set_gold_value(value)
 	map.add_map_object(coins)
+
+func spawn_map_object(object_name, map, map_pos, visibility):
+	var object_scene
+	
+	match object_name:
+		'TempWall': object_scene = base_tempwall
+			
+	var object = object_scene.instance()
+	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
+	object.visible = visibility
+	object.set_map_pos([map_pos[0], map_pos[1]])
+	object.set_parent_map(map)
+	map.add_map_object(object)

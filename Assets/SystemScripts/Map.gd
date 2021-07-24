@@ -126,9 +126,10 @@ func tile_in_bounds(x,z):
 func tile_available(x,z):
 	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
-			if object.get_obj_type() == 'Wall': return false
+			if object.get_obj_type() in GlobalVars.NON_TRAVERSABLES: return false
 			
-			if object.get_obj_type() in ['Enemy', 'Player']:
+			if (object.get_obj_type() in GlobalVars.ENEMY_TYPES) or \
+				(object.get_obj_type() == 'Player'):
 				if object.get_is_dead() == true: continue
 				else: return false
 		return true
@@ -137,7 +138,7 @@ func tile_available(x,z):
 func is_tile_wall(x,z):
 	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
-			if object.get_obj_type() == 'Wall': return true
+			if object.get_obj_type() in ['Wall', 'TempWall']: return true
 	return false
 
 func get_map():
