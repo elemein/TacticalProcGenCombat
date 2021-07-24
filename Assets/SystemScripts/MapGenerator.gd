@@ -8,6 +8,8 @@ extends Node
 
 const Y_OFFSET = -0.3
 
+const ROOM_CLASS = preload("res://Assets/SystemScripts/Room.gd")
+
 const MAP_CLASS = preload("res://Assets/SystemScripts/Map.gd")
 const MAP_FILL = preload("res://Assets/SystemScripts/MapFiller.gd")
 
@@ -237,7 +239,7 @@ func create_rooms():
 		if leaf.has("c"): continue # if node has children, don't build rooms
 	
 		if (rng.randi_range(0,100) < room_density):
-			var room = {}
+			var room = ROOM_CLASS.new()
 			room.id = leaf_id_num
 			room.l = rng.randi_range(min_room_size, leaf.l) - 1
 			room.w = rng.randi_range(min_room_size, leaf.w) - 1

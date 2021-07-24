@@ -2,8 +2,8 @@ extends Node
 class_name Room
 
 var id
-var length
-var width
+var l
+var w
 var x
 var z
 
