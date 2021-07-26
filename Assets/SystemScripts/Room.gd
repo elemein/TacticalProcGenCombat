@@ -43,7 +43,8 @@ func pos_in_room(pos):
 				if type == 'Enemy':
 					if exits_blocked == false:
 						count_enemies_in_room()
-						block_exits()
+						if enemy_count > 0:
+							block_exits()
 			
 			return true
 	#else
@@ -52,8 +53,8 @@ func pos_in_room(pos):
 func count_enemies_in_room():
 	var temp_count = 0
 	
-	for pos_x in range(x, x+l-1):
-		for pos_z in range(z, z+w-1):
+	for pos_x in range(x, x+l):
+		for pos_z in range(z, z+w):
 			var objects_on_tile = parent_map.get_tile_contents(pos_x, pos_z)
 			
 			for obj in objects_on_tile:
@@ -61,7 +62,7 @@ func count_enemies_in_room():
 					if obj.get_is_dead() == false:
 						temp_count += 1
 	enemy_count = temp_count
-	print(enemy_count)
+	print("Enemies detected in room: " + str(enemy_count))
 
 func block_exits():
 	for exit in exits:
@@ -70,7 +71,7 @@ func block_exits():
 		# below rotates the wall 90 degrees if it runs horizontally
 		if parent_map.is_tile_wall(exit[0], exit[1]-1) and \
 			parent_map.is_tile_wall(exit[0], exit[1]+1):
-			tempwall.rotation_degrees.y = 90\
+			tempwall.rotation_degrees.y = 90
 	
 	exits_blocked = true
 
@@ -84,8 +85,7 @@ func unblock_exits():
 		
 		for obj in objects_on_tile:
 			if obj.get_obj_type() == 'TempWall':
-				parent_map.remove_map_object(obj)
-#				obj.queue_free()
+				obj.remove_self()
 	
 func log_enemy_death(dead_enemy):
 	count_enemies_in_room()

@@ -177,12 +177,20 @@ func add_map_object(object):
 	map_grid[tile[0]][tile[1]].append(object)
 	add_child(object)
 
+# REMOVE FROM MAP FUNCS --------------------
 func remove_map_object(object):
 	var tile = object.get_map_pos()
 	
 	map_grid[tile[0]][tile[1]].erase(object)
 	remove_child(object)
-	
+
+func remove_from_map_grid_but_keep_node(object):
+	var tile = object.get_map_pos()
+	map_grid[tile[0]][tile[1]].erase(object)
+
+func remove_from_map_tree(object):
+	remove_child(object)
+# -----------------------------------------
 
 func check_what_room_player_is_in():
 	for room in rooms:

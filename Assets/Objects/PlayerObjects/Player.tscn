@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/NewArt/Gull.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Objects/PlayerObjects/Player.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Assets/GUI/HealthManaBar3D.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/Objects/PlayerObjects/Lantern.gd" type="Script" id=6]
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Assets/Objects/PlayerObjects/Camera.gd" type="Script" id=8]
 
 [sub_resource type="Environment" id=1]
 ambient_light_color = Color( 1, 1, 1, 1 )
@@ -28,9 +29,14 @@ transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 2.52
 transform = Transform( -1.62921e-07, 0.984808, -0.173648, 0, 0.173648, 0.984808, 1, 1.60446e-07, -2.82909e-08, -2.5, 15, 0 )
 environment = SubResource( 1 )
 current = true
+script = ExtResource( 8 )
 __meta__ = {
 "_editor_description_": ""
 }
+
+[node name="Timer" type="Timer" parent="CamBase/Camera"]
+
+[node name="Tween" type="Tween" parent="CamBase/Camera"]
 
 [node name="Audio" type="Node" parent="."]
 
@@ -65,5 +71,6 @@ script = ExtResource( 6 )
 [connection signal="spell_cast_self_heal" from="." to="Actions" method="_on_spell_cast_self_heal"]
 [connection signal="status_bar_hp" from="." to="HealthManaBar3D" method="_on_status_bar_hp"]
 [connection signal="status_bar_mp" from="." to="HealthManaBar3D" method="_on_status_bar_mp"]
+[connection signal="timeout" from="CamBase/Camera/Timer" to="CamBase/Camera" method="_on_Timer_timeout"]
 
 [editable path="Graphics"]
