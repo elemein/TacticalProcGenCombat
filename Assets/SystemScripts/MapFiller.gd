@@ -10,13 +10,6 @@ var pathfinder = PATHFINDER.new()
 const Y_OFFSET = -0.3
 const AVG_NO_OF_ENEMIES_PER_ROOM = 1
 const NUMBER_OF_TRAPS = 5
-const NUMBER_OF_COINS = 5
-const NUMBER_OF_SWORDS = 1
-const NUMBER_OF_STAFFS = 1
-const NUMBER_OF_NECKLACES = 1
-const NUMBER_OF_DAGGERS = 1
-const NUMBER_OF_ARMOURS = 1
-const NUMBER_OF_CUIRASSES = 1
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
@@ -53,7 +46,6 @@ func fill_map(passed_map_object, passed_map, passed_rooms):
 	fill_rooms()
 
 	spawn_traps()
-#	spawn_loot()
 
 	return [total_map, rooms]
 	
@@ -98,13 +90,8 @@ func assign_spawn_room():
 	var x = spawn_room.topleft[0]
 	var z = spawn_room.topleft[1]
 	
-	var stairs = base_stairs.instance()
-	stairs.translation = Vector3(x * GlobalVars.TILE_OFFSET, 0.3, z * GlobalVars.TILE_OFFSET)
-	stairs.visible = false
-	stairs.set_map_pos([x, z])
-	stairs.set_parent_map(map_object)
+	var stairs = obj_spawner.spawn_map_object('Stairs', map_object, [x,z], false)
 	stairs.connects_to = map_object.map_id + 1
-	map_object.add_map_object(stairs)
 	
 	spawn_treasure_in_room(spawn_room, rng.randi_range(0,1), 
 							rng.randi_range(0,1), rng.randi_range(0,1), 0)
@@ -115,13 +102,11 @@ func assign_exit_room():
 	map_object.exit_room = exit_room
 	
 	if map_object.get_map_type() == 'Normal Floor':
-		var stairs = base_stairs.instance()
-		stairs.translation = Vector3(exit_room.center[0] * GlobalVars.TILE_OFFSET, 0.3, exit_room.center[1] * GlobalVars.TILE_OFFSET)
-		stairs.visible = false
-		stairs.set_map_pos([exit_room.center[0], exit_room.center[1]])
-		stairs.set_parent_map(map_object)
+		var x = exit_room.center[0]
+		var z = exit_room.center[1]
+		var stairs = obj_spawner.spawn_map_object('Stairs', map_object, [x,z], false)
 		stairs.connects_to = map_object.map_id + 1
-		map_object.add_map_object(stairs)
+
 	elif map_object.get_map_type() == 'End Floor':
 		spawn_enemies_in_room(exit_room, floor(exit_room.area/3))
 
@@ -212,23 +197,6 @@ func spawn_enemies_in_room(room, enemy_cnt):
 			
 			obj_spawner.spawn_enemy(chosen_enemy, map_object, [x, z], false)
 
-func spawn_enemies():
-	for room in rooms:
-		if room['type'] == 'Enemy':
-			var rng_mod = rng.randi_range(-1,2)
-			var no_of_enemy_in_room = rng_mod + AVG_NO_OF_ENEMIES_PER_ROOM
-			
-			if no_of_enemy_in_room > 0:
-				for _enemy_cnt in range(no_of_enemy_in_room):
-					var rand_tile = get_random_available_tile_in_room(room)
-					var x = rand_tile[0]
-					var z = rand_tile[1]
-					
-					var enemy_list = ['Imp', 'Fox']
-					var chosen_enemy = enemy_list[rng.randi_range(0,1)]
-					
-					obj_spawner.spawn_enemy(chosen_enemy, map_object, [x, z], false)
-
 func spawn_traps():
 	for _trap_cnt in range(NUMBER_OF_TRAPS):
 		var room = rooms[rng.randi_range(0, rooms.size()-1)]
@@ -245,27 +213,3 @@ func spawn_traps():
 		trap.add_to_group('traps')
 
 		total_map[x][z].append(trap)
-
-func spawn_loot():
-	spawn_gold(NUMBER_OF_COINS)
-	
-	spawn_inv_items('Sword', NUMBER_OF_SWORDS)
-	spawn_inv_items('Magic Staff', NUMBER_OF_STAFFS)
-	spawn_inv_items('Arcane Necklace', NUMBER_OF_NECKLACES)
-	spawn_inv_items('Scabbard and Dagger', NUMBER_OF_DAGGERS)
-	spawn_inv_items('Body Armour', NUMBER_OF_ARMOURS)
-	spawn_inv_items('Leather Cuirass', NUMBER_OF_CUIRASSES)
-	
-func spawn_gold(no_of_items):
-	for _obj_cnt in range(no_of_items):
-		var room = rooms[rng.randi_range(0, rooms.size()-1)]
-		var rand_tile = get_random_available_tile_in_room(room)
-
-		obj_spawner.spawn_gold(rng.randi_range(10,30), map_object, rand_tile, false)
-
-func spawn_inv_items(item_name, no_of_items):
-	for _obj_cnt in range(no_of_items):
-		var room = rooms[rng.randi_range(0, rooms.size()-1)]
-		var rand_tile = get_random_available_tile_in_room(room)
-
-		obj_spawner.spawn_item(item_name, map_object, rand_tile, false)

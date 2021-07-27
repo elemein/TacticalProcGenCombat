@@ -73,6 +73,7 @@ func spawn_map_object(object_name, map, map_pos, visibility):
 	
 	match object_name:
 		'TempWall': object_scene = base_tempwall
+		'Stairs': object_scene = base_stairs
 			
 	var object = create_object(object_scene, map, map_pos, visibility)
 	
