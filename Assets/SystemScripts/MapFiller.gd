@@ -50,9 +50,10 @@ func fill_map(passed_map_object, passed_map, passed_rooms):
 	
 	assign_room_types()
 	
-	spawn_enemies()
+	fill_rooms()
+
 	spawn_traps()
-	spawn_loot()
+#	spawn_loot()
 
 	return [total_map, rooms]
 	
@@ -104,6 +105,9 @@ func assign_spawn_room():
 	stairs.set_parent_map(map_object)
 	stairs.connects_to = map_object.map_id + 1
 	map_object.add_map_object(stairs)
+	
+	spawn_treasure_in_room(spawn_room, rng.randi_range(0,1), 
+							rng.randi_range(0,1), rng.randi_range(0,1), 0)
 
 func assign_exit_room():
 	find_room_dists_to_spawn()
@@ -123,8 +127,35 @@ func assign_exit_room():
 
 func assign_room_types():
 	for room in rooms:
-		if room['type'] == 'Unassigned':
-			room['type'] = 'Enemy'
+		if room.type == 'Unassigned':
+			var rand_mod = rng.randi_range(0,100)
+			
+			if (rand_mod >= 0) and (rand_mod <= 70):
+				room.type = 'Enemy'
+			elif (rand_mod >= 71) and (rand_mod <= 90):
+				room.type = 'Treasure'
+			elif (rand_mod >= 91) and (rand_mod <= 100):
+				room.type = 'Horde'
+
+func fill_rooms():
+	for room in rooms:
+		if room.type == 'Enemy':
+			var rng_mod = rng.randi_range(-1,2)
+			var no_of_enemy_in_room = rng_mod + AVG_NO_OF_ENEMIES_PER_ROOM
+			spawn_enemies_in_room(room, no_of_enemy_in_room)		
+
+		elif room.type == 'Treasure':
+			var wep_cnt = rng.randi_range(0,1)
+			var armr_cnt = rng.randi_range(0,1)
+			var acc_cnt = rng.randi_range(1,2)
+			var gold_cnt = rng.randi_range(1,3)
+			
+			spawn_treasure_in_room(room, wep_cnt, armr_cnt, acc_cnt, gold_cnt)
+		
+		if room.type == 'Horde':
+			var enemy_cnt = (room.area/2)
+			if enemy_cnt > 5: enemy_cnt = 5
+			spawn_enemies_in_room(room, enemy_cnt)
 
 func find_room_dists_to_spawn():
 	var furthest_dist = -99
@@ -143,6 +174,31 @@ func find_room_dists_to_spawn():
 			furthest_room = room
 			
 	exit_room = furthest_room
+
+
+				
+func spawn_treasure_in_room(room, wep_cnt, armr_cnt, acc_cnt, gold_cnt):
+	var pos_weps = ['Sword', 'Magic Staff']
+	for wep in range(0, wep_cnt):
+		var rand_tile = get_random_available_tile_in_room(room)
+		var chosen_wep = pos_weps[rng.randi_range(0,1)]
+		obj_spawner.spawn_item(chosen_wep, map_object, rand_tile, false)
+		
+	var pos_armrs = ['Body Armour', 'Leather Cuirass']
+	for armr in range(0, armr_cnt):
+		var rand_tile = get_random_available_tile_in_room(room)
+		var chosen_armr = pos_armrs[rng.randi_range(0,1)]
+		obj_spawner.spawn_item(chosen_armr, map_object, rand_tile, false)
+		
+	var pos_accs = ['Arcane Necklace', 'Scabbard and Dagger']
+	for acc in range(0, acc_cnt):
+		var rand_tile = get_random_available_tile_in_room(room)
+		var chosen_acc = pos_accs[rng.randi_range(0,1)]
+		obj_spawner.spawn_item(chosen_acc, map_object, rand_tile, false)
+	
+	for gold in range(0, gold_cnt):
+		var rand_tile = get_random_available_tile_in_room(room)
+		obj_spawner.spawn_gold(rng.randi_range(10,30), map_object, rand_tile, false)
 
 func spawn_enemies_in_room(room, enemy_cnt):
 	if enemy_cnt > 0:
@@ -205,11 +261,11 @@ func spawn_gold(no_of_items):
 		var room = rooms[rng.randi_range(0, rooms.size()-1)]
 		var rand_tile = get_random_available_tile_in_room(room)
 
-		obj_spawner.spawn_gold(rng.randi_range(10,30), map_object, [rand_tile[0], rand_tile[1]], false)
+		obj_spawner.spawn_gold(rng.randi_range(10,30), map_object, rand_tile, false)
 
 func spawn_inv_items(item_name, no_of_items):
 	for _obj_cnt in range(no_of_items):
 		var room = rooms[rng.randi_range(0, rooms.size()-1)]
 		var rand_tile = get_random_available_tile_in_room(room)
 
-		obj_spawner.spawn_item(item_name, map_object, [rand_tile[0], rand_tile[1]], false)
+		obj_spawner.spawn_item(item_name, map_object, rand_tile, false)
