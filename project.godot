@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "AI_Engine",
+"language": "GDScript",
+"path": "res://Assets/SystemScripts/AIEngine.gd"
+}, {
 "base": "GameObj",
 "class": "ActorObj",
 "language": "GDScript",
@@ -28,12 +33,25 @@ _global_script_classes=[ {
 "class": "InvObject",
 "language": "GDScript",
 "path": "res://Assets/Objects/MapObjects/InventoryObjects/InvObject.gd"
+}, {
+"base": "Node",
+"class": "Mapset",
+"language": "GDScript",
+"path": "res://Assets/SystemScripts/Mapset.gd"
+}, {
+"base": "Node",
+"class": "Room",
+"language": "GDScript",
+"path": "res://Assets/SystemScripts/Room.gd"
 } ]
 _global_script_class_icons={
+"AI_Engine": "",
 "ActorObj": "",
 "BaseAbility": "",
 "GameObj": "",
-"InvObject": ""
+"InvObject": "",
+"Mapset": "",
+"Room": ""
 }
 
 [application]
@@ -45,6 +63,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Signals="*res://Assets/SystemScripts/Signals.gd"
+GlobalVars="*res://Assets/SystemScripts/Singletons/GlobalVars.gd"
 
 [debug]
 
@@ -127,5 +146,6 @@ limits/debugger_stdout/max_chars_per_second=100000000000000000
 
 [rendering]
 
+quality/filters/anisotropic_filter_level=16
 environment/default_clear_color=Color( 0.0338334, 0, 0.07, 1 )
 environment/default_environment="res://default_env.tres"

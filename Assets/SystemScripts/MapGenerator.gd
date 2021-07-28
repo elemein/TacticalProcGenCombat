@@ -7,7 +7,8 @@ extends Node
 # I had to do some modification to it as the link uses a TileMap, whereas we use a 2D Array. 
 
 const Y_OFFSET = -0.3
-const TILE_OFFSET = 2.1
+
+const ROOM_CLASS = preload("res://Assets/SystemScripts/Room.gd")
 
 const MAP_CLASS = preload("res://Assets/SystemScripts/Map.gd")
 const MAP_FILL = preload("res://Assets/SystemScripts/MapFiller.gd")
@@ -32,9 +33,11 @@ var rooms = []
 
 var total_map = []
 
-func generate(name, id):
+func generate(parent_mapset, name, id, type):
 	reset_map_gen_vars()
-	var map_to_return = MAP_CLASS.new(name, id)
+	var map_to_return = MAP_CLASS.new(name, id, type)
+	
+	map_to_return.set_parent_mapset(parent_mapset)
 	
 	var maps_thrown_away = -1
 	
@@ -49,6 +52,9 @@ func generate(name, id):
 		join_rooms()
 		clear_deadends()
 		define_extra_room_stats()
+	
+	for room in rooms:
+		room.parent_map = map_to_return
 	
 	var filled_map = map_filler.fill_map(map_to_return, total_map, rooms)
 	
@@ -152,7 +158,7 @@ func create_floor():
 		total_map.append([])
 		for z in range(0, map_w):
 			var wall = base_wall.instance()
-			wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
+			wall.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, z * GlobalVars.TILE_OFFSET)
 			wall.visible = false
 			
 			total_map[x].append([wall])
@@ -178,7 +184,7 @@ func create_leaf(parent_id):
 	var l = tree[parent_id].l # far right node
 	var w = tree[parent_id].w # far up node
 	
-	tree[parent_id].center = {x = floor(x + l/2), z = floor(z + w/2)}
+	tree[parent_id].center = [floor(x + l/2), floor(z + w/2)]
 	
 	# whether the tree has space for a split?
 	var can_split = false
@@ -236,7 +242,7 @@ func create_rooms():
 		if leaf.has("c"): continue # if node has children, don't build rooms
 	
 		if (rng.randi_range(0,100) < room_density):
-			var room = {}
+			var room = ROOM_CLASS.new()
 			room.id = leaf_id_num
 			room.l = rng.randi_range(min_room_size, leaf.l) - 1
 			room.w = rng.randi_range(min_room_size, leaf.w) - 1
@@ -246,9 +252,9 @@ func create_rooms():
 			
 			room.split = leaf.split
 			
-			room.center = {"x": 0, "z": 0}
-			room.center.x = floor(room.x + room.l/2)
-			room.center.z = floor(room.z + room.w/2) 
+			room.center = [0,0]
+			room.center[0] = floor(room.x + room.l/2)
+			room.center[1] = floor(room.z + room.w/2) 
 			rooms.append(room)
 
 	for i in range(rooms.size()):
@@ -257,7 +263,7 @@ func create_rooms():
 		for x in range(room.x, (room.x + room.l)):
 			for z in range(room.z, (room.z + room.w)):
 				var ground = base_block.instance()
-				ground.translation = Vector3((x) * TILE_OFFSET, Y_OFFSET+0.3, (z) * TILE_OFFSET)
+				ground.translation = Vector3((x) * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, (z) * GlobalVars.TILE_OFFSET)
 				ground.visible = false
 				
 				total_map[x][z][0] = ground
@@ -270,17 +276,17 @@ func join_rooms():
 
 func connect_leaves(leaf1, leaf2):
 	# connects leaves by shooting corridors right or up
-	var x = min(leaf1.center.x, leaf2.center.x)
-	var z = min(leaf1.center.z, leaf2.center.z)
+	var x = min(leaf1.center[0], leaf2.center[0])
+	var z = min(leaf1.center[1], leaf2.center[1])
 	var l = 1
 	var w = 1
 	
 	if (leaf1.split == 'h'): # Vertical Corridor
 		x -= floor(w/2)+1
-		w = abs(leaf1.center.z - leaf2.center.z)
+		w = abs(leaf1.center[1] - leaf2.center[1])
 	else:					 # Horizontal Corridor
 		z -= floor(l/2)+1
-		l = abs(leaf1.center.x - leaf2.center.x)
+		l = abs(leaf1.center[0] - leaf2.center[0])
 	
 	if check_if_path_may_need_extension(x+l, z+w, leaf1.split):
 		if leaf1.split == 'h': w += 1
@@ -294,7 +300,7 @@ func connect_leaves(leaf1, leaf2):
 		for j in range(z, z+w):
 			if (total_map[i][j][0].get_obj_type() == 'Wall'):
 				var ground = base_block.instance()
-				ground.translation = Vector3((i) * TILE_OFFSET, Y_OFFSET+0.3, (j) * TILE_OFFSET)
+				ground.translation = Vector3((i) * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, (j) * GlobalVars.TILE_OFFSET)
 				ground.visible = false
 				total_map[i][j][0] = ground 
 
@@ -322,7 +328,7 @@ func clear_deadends():
 				var roof_count = check_cardinal_dirs_for_walls(x,z)
 				if roof_count == 3:
 					var wall = base_wall.instance()
-					wall.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
+					wall.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, z * GlobalVars.TILE_OFFSET)
 					wall.visible = false
 					
 					total_map[x][z][0] = wall

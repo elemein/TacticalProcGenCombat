@@ -15,24 +15,27 @@ onready var out_of_mana = $out_of_mana
 var target_spell_pos = Vector3()
 var target_actor_pos = Vector3()
 var saved_actor_pos = Vector3()
-var tile_offset = null
+var tile_offset = GlobalVars.TILE_OFFSET
 var effect = null
 var parent = null
 var direction_facing = null
 var map_pos = null
 var map = null
 var spell_final_power = 0
+var spell_final_attack_power = 0
 
 # Movement Variables - These need to be changed if the actor is moving as apart of the spell
 var moving = false
 var moving_back = false  # if the actor will move back to it's starting postion
 
 # Spell variables - These need to be updated for each spell
+var attack_power = 0
 var spell_power = 0
 var spell_cost = 0
 var spell_length = 0
 var spell_name = 'spell name'
 var spell_heal_user = false
+var scales_off_atk_or_spl = null
 
 # Visual assets - This needs to be updated for each spell if it has an effect
 var visual_effect = null
@@ -40,7 +43,7 @@ var effect_start_height = 0
 var effect_end_height = 0
 
 func _ready():
-	tile_offset = world.MAP_GEN.TILE_OFFSET
+	pass
 	
 # Move the parent every frame
 func _physics_process(_delta):
@@ -80,6 +83,7 @@ func use():
 		if moving and not moving_back:
 			parent.manual_move_char(2)
 		set_power()
+		set_attack_power()
 		if spell_heal_user:
 			heal_user()
 		else:
@@ -89,7 +93,7 @@ func move_check() -> bool:
 	set_target_actor_pos()
 	for target_tile in get_target_tiles():
 		for object in target_tile:
-			if object.object_type == 'Wall':
+			if object.object_type in GlobalVars.NON_TRAVERSABLES:
 				return false
 	return true
 			
@@ -107,6 +111,9 @@ func play_audio():
 
 func set_power():
 	spell_final_power = parent.get_spell_power() + spell_power
+
+func set_attack_power():
+	spell_final_attack_power = parent.get_attack_power() + attack_power
 
 # Check if out of mana
 func mana_check() -> bool:
@@ -249,4 +256,7 @@ func do_damage():
 		if typeof(objects_on_tile) != TYPE_STRING:
 			for object in objects_on_tile:
 				if object.get_obj_type() in ['Enemy', 'Player']:
-					object.take_damage(spell_final_power)
+					if scales_off_atk_or_spl == 'spl':
+						object.take_damage(spell_final_power)
+					elif scales_off_atk_or_spl == 'atk':
+						object.take_damage(spell_final_attack_power)

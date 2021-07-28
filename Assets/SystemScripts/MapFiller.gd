@@ -7,35 +7,17 @@ onready var world = get_node('/.')
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
 var pathfinder = PATHFINDER.new()
 
-const OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner.gd")
-var obj_spawner = OBJ_SPAWNER.new()
-
 const Y_OFFSET = -0.3
-const TILE_OFFSET = 2.1
 const AVG_NO_OF_ENEMIES_PER_ROOM = 1
 const NUMBER_OF_TRAPS = 5
-const NUMBER_OF_COINS = 5
-const NUMBER_OF_SWORDS = 1
-const NUMBER_OF_STAFFS = 1
-const NUMBER_OF_NECKLACES = 1
-const NUMBER_OF_DAGGERS = 1
-const NUMBER_OF_ARMOURS = 1
-const NUMBER_OF_CUIRASSES = 1
 
-var base_imp = preload("res://Assets/Objects/EnemyObjects/Imp.tscn")
-var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
 var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
 var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
-var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
-var base_sword = preload("res://Assets/Objects/MapObjects/InventoryObjects/Sword.tscn")
-var base_staff = preload("res://Assets/Objects/MapObjects/InventoryObjects/MagicStaff.tscn")
-var base_necklace = preload("res://Assets/Objects/MapObjects/InventoryObjects/ArcaneNecklace.tscn")
-var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/ScabbardAndDagger.tscn")
-var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
-var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
 var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
+
+var obj_spawner = GlobalVars.obj_spawner
 
 var map_object
 var total_map
@@ -61,9 +43,9 @@ func fill_map(passed_map_object, passed_map, passed_rooms):
 	
 	assign_room_types()
 	
-	spawn_enemies()
+	fill_rooms()
+
 	spawn_traps()
-	spawn_loot()
 
 	return [total_map, rooms]
 	
@@ -72,7 +54,6 @@ func get_random_available_tile_in_room(room) -> Array:
 	var z
 	
 	var tile_clear = false
-	
 	while tile_clear == false:
 		# room.x/z + room.w/h gives you the right/top border tile 
 		# encirling the room, so we do -1 to ensure being in the room.
@@ -109,38 +90,65 @@ func assign_spawn_room():
 	var x = spawn_room.topleft[0]
 	var z = spawn_room.topleft[1]
 	
-	var stairs = base_stairs.instance()
-	stairs.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
-	stairs.visible = false
-	stairs.set_map_pos([x, z])
-	stairs.set_parent_map(map_object)
+	var stairs = obj_spawner.spawn_map_object('Stairs', map_object, [x,z], false)
 	stairs.connects_to = map_object.map_id + 1
-	map_object.add_map_object(stairs)
+	
+	spawn_treasure_in_room(spawn_room, rng.randi_range(0,1), 
+							rng.randi_range(0,1), rng.randi_range(0,1), 0)
 
 func assign_exit_room():
 	find_room_dists_to_spawn()
 	exit_room['type'] = 'Exit Room'
+	map_object.exit_room = exit_room
 	
-	var stairs = base_stairs.instance()
-	stairs.translation = Vector3(exit_room.center.x * TILE_OFFSET, 0.3, exit_room.center.z * TILE_OFFSET)
-	stairs.visible = false
-	stairs.set_map_pos([exit_room.center.x, exit_room.center.z])
-	stairs.set_parent_map(map_object)
-	stairs.connects_to = map_object.map_id + 1
-	map_object.add_map_object(stairs)
+	if map_object.get_map_type() == 'Normal Floor':
+		var x = exit_room.center[0]
+		var z = exit_room.center[1]
+		var stairs = obj_spawner.spawn_map_object('Stairs', map_object, [x,z], false)
+		stairs.connects_to = map_object.map_id + 1
+
+	elif map_object.get_map_type() == 'End Floor':
+		spawn_specific_enemy_in_room(exit_room, 1, 'Minotaur')
 
 func assign_room_types():
 	for room in rooms:
-		if room['type'] == 'Unassigned':
-			room['type'] = 'Enemy'
+		if room.type == 'Unassigned':
+			var rand_mod = rng.randi_range(0,100)
+			
+			if (rand_mod >= 0) and (rand_mod <= 70):
+				room.type = 'Enemy'
+			elif (rand_mod >= 71) and (rand_mod <= 90):
+				room.type = 'Treasure'
+			elif (rand_mod >= 91) and (rand_mod <= 100):
+				room.type = 'Horde'
+
+func fill_rooms():
+	for room in rooms:
+		if room.type == 'Enemy':
+			var rng_mod = rng.randi_range(-1,2)
+			var no_of_enemy_in_room = rng_mod + AVG_NO_OF_ENEMIES_PER_ROOM
+			spawn_enemies_in_room(room, no_of_enemy_in_room)		
+
+		elif room.type == 'Treasure':
+			var wep_cnt = rng.randi_range(0,1)
+			var armr_cnt = rng.randi_range(0,1)
+			var acc_cnt = rng.randi_range(0,1)
+			var gold_cnt = rng.randi_range(1,2)
+			
+			spawn_treasure_in_room(room, wep_cnt, armr_cnt, acc_cnt, gold_cnt)
+		
+		if room.type == 'Horde':
+			var enemy_cnt = (room.area/2)
+			if enemy_cnt > 5: enemy_cnt = 5
+			spawn_enemies_in_room(room, enemy_cnt)
 
 func find_room_dists_to_spawn():
 	var furthest_dist = -99
 	var furthest_room
 	
 	for room in rooms:
-		var from = [room.center.x, room.center.z]
-		var to = [spawn_room.center.x, spawn_room.center.z]
+		var from = [room.center[0], room.center[1]]
+		var to = [spawn_room.center[0], spawn_room.center[1]]
 		
 		var dist_from_spawn = pathfinder.solve(self, map_object, from, to)[0]
 		
@@ -152,28 +160,51 @@ func find_room_dists_to_spawn():
 			
 	exit_room = furthest_room
 
-func spawn_enemies():
-	for room in rooms:
-		if room['type'] == 'Enemy':
-			var rng_mod = rng.randi_range(-1,2)
-			var no_of_enemy_in_room = rng_mod + AVG_NO_OF_ENEMIES_PER_ROOM
-			
-			if no_of_enemy_in_room > 0:
-				for _enemy_cnt in range(no_of_enemy_in_room):
-					var rand_tile = get_random_available_tile_in_room(room)
-					var x = rand_tile[0]
-					var z = rand_tile[1]
-					
-					var possible_enemies = [base_imp, base_fox]
-					
-					var enemy = possible_enemies[rng.randi_range(0,1)].instance()
-					enemy.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3, z * TILE_OFFSET)
-					enemy.visible = false
-					enemy.set_map_pos([x,z])
-					enemy.set_parent_map(map_object)
-					enemy.add_to_group('enemies')
 
-					total_map[x][z].append(enemy)
+				
+func spawn_treasure_in_room(room, wep_cnt, armr_cnt, acc_cnt, gold_cnt):
+	var pos_weps = ['Sword', 'Magic Staff']
+	for wep in range(0, wep_cnt):
+		var rand_tile = get_random_available_tile_in_room(room)
+		var chosen_wep = pos_weps[rng.randi_range(0,1)]
+		obj_spawner.spawn_item(chosen_wep, map_object, rand_tile, false)
+		
+	var pos_armrs = ['Body Armour', 'Leather Cuirass']
+	for armr in range(0, armr_cnt):
+		var rand_tile = get_random_available_tile_in_room(room)
+		var chosen_armr = pos_armrs[rng.randi_range(0,1)]
+		obj_spawner.spawn_item(chosen_armr, map_object, rand_tile, false)
+		
+	var pos_accs = ['Arcane Necklace', 'Scabbard and Dagger']
+	for acc in range(0, acc_cnt):
+		var rand_tile = get_random_available_tile_in_room(room)
+		var chosen_acc = pos_accs[rng.randi_range(0,1)]
+		obj_spawner.spawn_item(chosen_acc, map_object, rand_tile, false)
+	
+	for gold in range(0, gold_cnt):
+		var rand_tile = get_random_available_tile_in_room(room)
+		obj_spawner.spawn_gold(rng.randi_range(10,30), map_object, rand_tile, false)
+
+func spawn_enemies_in_room(room, enemy_cnt):
+	if enemy_cnt > 0:
+		for _cnt in range(enemy_cnt):
+			var rand_tile = get_random_available_tile_in_room(room)
+			var x = rand_tile[0]
+			var z = rand_tile[1]
+			
+			var enemy_list = ['Imp', 'Fox']
+			var chosen_enemy = enemy_list[rng.randi_range(0,1)]
+			
+			obj_spawner.spawn_enemy(chosen_enemy, map_object, [x, z], false)
+
+func spawn_specific_enemy_in_room(room, enemy_cnt, enemy_type):
+	if enemy_cnt > 0:
+			for _cnt in range(enemy_cnt):
+				var rand_tile = get_random_available_tile_in_room(room)
+				var x = rand_tile[0]
+				var z = rand_tile[1]
+				
+				obj_spawner.spawn_enemy(enemy_type, map_object, [x, z], false)
 
 func spawn_traps():
 	for _trap_cnt in range(NUMBER_OF_TRAPS):
@@ -184,36 +215,10 @@ func spawn_traps():
 		var z = rand_tile[1]
 				
 		var trap = base_spiketrap.instance()
-		trap.translation = Vector3(x * TILE_OFFSET, Y_OFFSET+0.3-1, z * TILE_OFFSET)
+		trap.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3-1, z * GlobalVars.TILE_OFFSET)
 		trap.visible = false
 		trap.set_map_pos([x,z])
 		trap.set_parent_map(map_object)
 		trap.add_to_group('traps')
 
 		total_map[x][z].append(trap)
-
-func spawn_loot():
-	spawn_inv_items(base_coins, NUMBER_OF_COINS)
-	spawn_inv_items(base_sword, NUMBER_OF_SWORDS)
-	spawn_inv_items(base_staff, NUMBER_OF_STAFFS)
-	spawn_inv_items(base_necklace, NUMBER_OF_NECKLACES)
-	spawn_inv_items(base_dagger, NUMBER_OF_DAGGERS)
-	spawn_inv_items(base_armour, NUMBER_OF_ARMOURS)
-	spawn_inv_items(base_cuirass, NUMBER_OF_CUIRASSES)
-
-func spawn_inv_items(item_scene, no_of_items):
-	for _obj_cnt in range(no_of_items):
-		var room = rooms[rng.randi_range(0, rooms.size()-1)]
-		
-		var rand_tile = get_random_available_tile_in_room(room)
-		var x = rand_tile[0]
-		var z = rand_tile[1]
-				
-		var item = item_scene.instance()
-		item.translation = Vector3(x * TILE_OFFSET, 0.3, z * TILE_OFFSET)
-		item.visible = false
-		item.set_map_pos([x,z])
-		item.set_parent_map(map_object)
-		item.add_to_group('loot')
-
-		total_map[x][z].append(item)

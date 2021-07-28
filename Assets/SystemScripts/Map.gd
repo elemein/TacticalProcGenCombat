@@ -6,7 +6,6 @@ extends Node
 # Revealing and hiding things from the player.
 
 const Y_OFFSET = -0.3
-const TILE_OFFSET = 2.1
 
 const TIMER_SCENE = preload("res://Assets/Objects/TurnTimer.tscn")
 var turn_timer = TIMER_SCENE.instance()
@@ -18,11 +17,13 @@ var objs_visible_to_player_last_turn = []
 var player
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
-var map_name = 'Dungeon Floor 1'
+var parent_mapset
+var map_name = ''
 var map_id = 1
 var map_grid = []
-var map_dict # more like room_dict
+var rooms
 
+var map_type
 var spawn_room
 var exit_room
 
@@ -30,9 +31,10 @@ var catalog_of_ground_tiles = []
 
 var current_number_of_enemies = 0
 
-func _init(name, id):
+func _init(name, id, type):
 	map_name = name
 	map_id = id
+	map_type = type
 
 func _ready():
 	rng.randomize()
@@ -45,7 +47,7 @@ func _ready():
 
 func set_map_grid_and_dict(grid, dict):
 	map_grid = grid
-	map_dict = dict
+	rooms = dict
 	
 func add_map_objects_to_tree():
 	for line in map_grid.size():
@@ -61,11 +63,12 @@ func add_map_objects_to_tree():
 func place_player_on_map(object):
 	player = object # caches player for future funcs
 	
-	for room in map_dict:
+	for room in rooms:
 		if room['type'] == 'Player Spawn':
-			var tile = [room.center.x, room.center.z]
+			var tile = [room.center[0], room.center[1]]
 			map_grid[tile[0]][tile[1]].append(object)
 			add_child(player)
+			turn_timer.add_to_timer_group(player)
 			return tile
 
 func move_on_map(object, old_pos, new_pos):
@@ -123,9 +126,10 @@ func tile_in_bounds(x,z):
 func tile_available(x,z):
 	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
-			if object.get_obj_type() == 'Wall': return false
+			if object.get_obj_type() in GlobalVars.NON_TRAVERSABLES: return false
 			
-			if object.get_obj_type() in ['Enemy', 'Player']:
+			if (object.get_obj_type() in GlobalVars.ENEMY_TYPES) or \
+				(object.get_obj_type() == 'Player'):
 				if object.get_is_dead() == true: continue
 				else: return false
 		return true
@@ -134,7 +138,7 @@ func tile_available(x,z):
 func is_tile_wall(x,z):
 	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
-			if object.get_obj_type() == 'Wall': return true
+			if object.get_obj_type() in ['Wall', 'TempWall']: return true
 	return false
 
 func get_map():
@@ -173,10 +177,41 @@ func add_map_object(object):
 	map_grid[tile[0]][tile[1]].append(object)
 	add_child(object)
 
+# REMOVE FROM MAP FUNCS --------------------
 func remove_map_object(object):
 	var tile = object.get_map_pos()
 	
 	map_grid[tile[0]][tile[1]].erase(object)
 	remove_child(object)
+
+func remove_from_map_grid_but_keep_node(object):
+	var tile = object.get_map_pos()
+	map_grid[tile[0]][tile[1]].erase(object)
+
+func remove_from_map_tree(object):
+	remove_child(object)
+# -----------------------------------------
+
+func check_what_room_player_is_in():
+	for room in rooms:
+		room.pos_in_room(player.get_map_pos())
+
+# Getters
+func get_turn_timer() -> Object: return turn_timer
+
+func get_parent_mapset() -> Object: return parent_mapset
+
+func get_map_name() -> String: return map_name
+
+func get_map_type() -> String: return map_type
+
+# Setters
+func set_parent_mapset(mapset): parent_mapset = mapset
+
+func log_enemy_death(dead_enemy): 
+	current_number_of_enemies -= 1
 	
-func get_turn_timer(): return turn_timer
+	for room in rooms:
+		var in_room = room.pos_in_room(player.get_map_pos())
+		if in_room == true:
+			room.log_enemy_death(dead_enemy)

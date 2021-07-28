@@ -190,9 +190,7 @@ func die():
 	if self.object_type == 'Player':
 		var _result = get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
 	else:
-		parent_map.current_number_of_enemies -= 1
-		if parent_map.current_number_of_enemies == 0:
-			var _result = get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
+		parent_map.log_enemy_death(self)
 
 func play_death_anim():
 	if death_anim_timer.time_left > 0.75:

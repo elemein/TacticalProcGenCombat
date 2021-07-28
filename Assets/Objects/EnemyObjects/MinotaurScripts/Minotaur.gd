@@ -1,16 +1,12 @@
 extends ActorObj
 
-const AI_ENGINE = preload("res://Assets/SystemScripts/AIEngine.gd")
+const MINOTAUR_AI = preload("res://Assets/Objects/EnemyObjects/MinotaurScripts/MinotaurAI.gd")
 const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
-
-const OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner.gd")
-
-var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
 
 var rng = RandomNumberGenerator.new()
 
-var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
-				"HP Regen" : 1, "MP Regen": 7, "Attack Power" : 10, \
+var start_stats = {"Max HP" : 1, "HP" : 1, "Max MP": 40, "MP": 40, \
+				"HP Regen" : 1, "MP Regen": 10, "Attack Power" : 40, \
 				"Spell Power" : 20, "Defense" : 0, \
 				 "Speed": rng.randi_range(5,15), "View Range" : 4}
 
@@ -18,8 +14,8 @@ var loot_to_drop = []
 var loot_dropped = false
 
 # object vars
-var ai_engine = AI_ENGINE.new()
-var obj_spawner = OBJ_SPAWNER.new()
+var ai_engine = MINOTAUR_AI.new()
+var obj_spawner = GlobalVars.obj_spawner
 
 var inventory = INVENTORY.instance()
 
@@ -31,10 +27,9 @@ func _ready():
 	stat_dict['Speed'] = rng.randi_range(5,15)
 
 func setup_actor():
-	
 	turn_timer.add_to_timer_group(self)
-	translation.x = map_pos[0] * TILE_OFFSET
-	translation.z = map_pos[1] * TILE_OFFSET
+	translation.x = map_pos[0] * GlobalVars.TILE_OFFSET
+	translation.z = map_pos[1] * GlobalVars.TILE_OFFSET
 	
 	ai_engine.set_actor(self)
 	add_child(ai_engine)
@@ -44,10 +39,6 @@ func setup_actor():
 	
 	add_child(inventory)
 	inventory.setup_inventory(self)
-	
-	add_child(obj_spawner)
-	
-	#viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
 	
 	add_loot_to_inventory()
 
@@ -94,14 +85,10 @@ func add_loot_to_inventory():
 	
 func drop_loot():
 	if loot_to_drop[0] == 'Gold':
-		obj_spawner.spawn_gold(inventory.get_gold_total(), parent_map, map_pos)
+		obj_spawner.spawn_gold(inventory.get_gold_total(), parent_map, map_pos, true)
 		inventory.subtract_from_gold(inventory.get_gold_total())
 	else:
-		obj_spawner.spawn_item(loot_to_drop[0], parent_map, map_pos)
+		obj_spawner.spawn_item(loot_to_drop[0], parent_map, map_pos, true)
 	
 	# drop items
 	loot_dropped = true
-
-
-func _on_Actions_set_ready_status():
-	ready_status = true

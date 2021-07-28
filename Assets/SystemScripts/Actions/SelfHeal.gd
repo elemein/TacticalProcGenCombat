@@ -2,7 +2,7 @@ extends BaseAbility
 
 
 func _ready():
-	spell_power = 30
+	spell_power = 15
 	spell_cost = 40
 	spell_name = 'SelfHeal'
 	spell_heal_user = true

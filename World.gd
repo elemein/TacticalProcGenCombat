@@ -1,54 +1,60 @@
 extends Node
 
+# When traversing maps, the previous map is destroyed so that it does not interfere
+# with the new one. This isnt desirable behaviour as it completely prevents backtracking.
+# Have this sorted for v0.1
+
 const BASE_PLAYER = preload("res://Assets/Objects/PlayerObjects/Player.tscn")
 var player = BASE_PLAYER.instance()
 
-const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
-var map_generator = MAP_GEN.new()
+const MAPSET_CLASS = preload("res://Assets/SystemScripts/Mapset.gd")
+var dungeon = MAPSET_CLASS.new('The Cave', 3)
 
-var maps = []
+var mapsets = []
 
 func _ready():
-	var floor_1 = map_generator.generate('Dungeon Floor 1', 1)
-	var floor_2 = map_generator.generate('Dungeon Floor 2', 2)
-	var floor_3 = map_generator.generate('Dungeon Floor 3', 3)
+	add_child(dungeon)
+	mapsets = [dungeon]
 	
-	maps = [floor_1, floor_2, floor_3]
-
-	# setup player on map
-	player.set_parent_map(floor_1)
-	var player_pos = floor_1.place_player_on_map(player)
-	player.set_map_pos_and_translation(player_pos)
-	
-	
-	
-
-	floor_1.print_map_grid()
-	
-	add_child(floor_1)
-	add_child(floor_2)
-	add_child(floor_3)
+	move_to_map(player, 'The Cave', 1)
 	
 	first_turn_workaround_for_player_sight()
 
-func move_to_map(object, target_map_id):
-	var targ_map
-	for map in maps:
-		if map.map_id == target_map_id:
-			targ_map = map
+func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):
+	var targ_mapset
+	for map in mapsets:
+		if map.get_mapset_name() == targ_mapset_name:
+			targ_mapset = map
+	
+	var floor_dict = targ_mapset.get_floors()
+	for flr in floor_dict.values():
+		if flr.map_id == target_map_id:
+			return flr
+	
+	return 'Map ID not found in mapset.'
+
+func get_mapset_from_name(mapset_name):
+	for mapset in mapsets:
+		if mapset.get_mapset_name() == mapset_name:
+			return mapset
+
+func move_to_map(object, mapset_name, target_map_id):
+	var targ_map = return_map_w_mapset_and_id(mapset_name, target_map_id)
 	
 	var curr_map = object.get_parent_map()
-	
-	curr_map.remove_map_object(object)
-	maps.erase(curr_map)
-	curr_map.queue_free() # remove the old map so it doesnt overlap and mess shit up with the new one
-	object.set_action('idle') # prevents using the last map's move action on the next map
+	if typeof(curr_map) != TYPE_STRING:
+		curr_map.remove_map_object(object)
+		curr_map.get_parent_mapset().get_floors().erase(curr_map.get_map_name())
+		curr_map.queue_free() # remove the old map so it doesnt overlap and mess shit up with the new one
+		
+		object.set_action('idle') # prevents using the last map's move action on the next map
 	
 	object.set_parent_map(targ_map)
-	
+
 	var player_pos = targ_map.place_player_on_map(object)
 	object.set_map_pos_and_translation(player_pos)
-	targ_map.get_turn_timer().add_to_timer_group(object)
+	
+	targ_map.print_map_grid()
 	
 	first_turn_workaround_for_player_sight()
 	

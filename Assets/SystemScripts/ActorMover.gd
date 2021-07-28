@@ -1,7 +1,5 @@
 extends Node
 
-const TILE_OFFSET = 2.1
-
 var actor
 var direction_facing
 var target_pos
@@ -71,36 +69,36 @@ func move_actor(amount):
 	match direction:
 		'upleft':
 			target_tile = [map_pos[0] + amount, map_pos[1] - amount]
-			target_pos.x = target_tile[0] * TILE_OFFSET
-			target_pos.z = target_tile[1] * TILE_OFFSET
+			target_pos.x = target_tile[0] * GlobalVars.TILE_OFFSET
+			target_pos.z = target_tile[1] * GlobalVars.TILE_OFFSET
 		'upright':
 			target_tile = [map_pos[0] + amount, map_pos[1] + amount]
-			target_pos.x = target_tile[0] * TILE_OFFSET
-			target_pos.z = target_tile[1] * TILE_OFFSET
+			target_pos.x = target_tile[0] * GlobalVars.TILE_OFFSET
+			target_pos.z = target_tile[1] * GlobalVars.TILE_OFFSET
 		'downleft':
 			target_tile = [map_pos[0] - amount, map_pos[1] - amount]
-			target_pos.x = target_tile[0] * TILE_OFFSET
-			target_pos.z = target_tile[1] * TILE_OFFSET
+			target_pos.x = target_tile[0] * GlobalVars.TILE_OFFSET
+			target_pos.z = target_tile[1] * GlobalVars.TILE_OFFSET
 		'downright':
 			target_tile = [map_pos[0] - amount, map_pos[1] + amount]
-			target_pos.x = target_tile[0] * TILE_OFFSET
-			target_pos.z = target_tile[1] * TILE_OFFSET
+			target_pos.x = target_tile[0] * GlobalVars.TILE_OFFSET
+			target_pos.z = target_tile[1] * GlobalVars.TILE_OFFSET
 
 		'up':
 			target_tile = [map_pos[0] + amount, map_pos[1]]
-			target_pos.x = target_tile[0] * TILE_OFFSET
+			target_pos.x = target_tile[0] * GlobalVars.TILE_OFFSET
 			target_pos.z = actor.get_translation().z
 		'down':
 			target_tile = [map_pos[0] - amount, map_pos[1]]
-			target_pos.x = target_tile[0] * TILE_OFFSET
+			target_pos.x = target_tile[0] * GlobalVars.TILE_OFFSET
 			target_pos.z = actor.get_translation().z
 		'left':
 			target_tile = [map_pos[0], map_pos[1] - amount]
-			target_pos.z = target_tile[1] * TILE_OFFSET
+			target_pos.z = target_tile[1] * GlobalVars.TILE_OFFSET
 			target_pos.x = actor.get_translation().x
 		'right':
 			target_tile = [map_pos[0], map_pos[1] + amount]
-			target_pos.z = target_tile[1] * TILE_OFFSET
+			target_pos.z = target_tile[1] * GlobalVars.TILE_OFFSET
 			target_pos.x = actor.get_translation().x
 
 	map_pos = actor.parent_map.move_on_map(actor, map_pos, target_tile)

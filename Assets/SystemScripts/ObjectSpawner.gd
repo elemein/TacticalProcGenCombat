@@ -1,9 +1,5 @@
 extends Node
 
-const TILE_OFFSET = 2.1
-
-var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
-
 # Gold
 var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
 
@@ -16,9 +12,28 @@ var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/Body
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
 # Map Objects
+var base_tempwall = preload("res://Assets/Objects/MapObjects/TempWall.tscn")
 var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
 
-func spawn_item(item_name, map, map_pos):
+# Traps
+var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
+
+# Enemies
+var base_imp = preload("res://Assets/Objects/EnemyObjects/Imp.tscn")
+var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
+var base_minotaur = preload("res://Assets/Objects/EnemyObjects/Minotaur.tscn")
+
+func create_object(object_scene, map, map_pos, visibility) -> Object:
+	var object = object_scene.instance()
+	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
+	object.visible = visibility
+	object.set_map_pos([map_pos[0], map_pos[1]])
+	object.set_parent_map(map)
+	map.add_map_object(object)
+	
+	return object
+
+func spawn_item(item_name, map, map_pos, visibility):
 	var item_scene
 	
 	match item_name:
@@ -29,20 +44,39 @@ func spawn_item(item_name, map, map_pos):
 		'Body Armour': item_scene = base_armour
 		'Leather Cuirass': item_scene = base_cuirass
 			
-	var item = item_scene.instance()
-	item.translation = Vector3(map_pos[0] * TILE_OFFSET, 0.3, map_pos[1] * TILE_OFFSET)
-	item.visible = true
-	item.set_map_pos([map_pos[0], map_pos[1]])
-	item.set_parent_map(map)
+	var item = create_object(item_scene, map, map_pos, visibility)
 	item.add_to_group('loot')
-	map.add_map_object(item)
 	
-func spawn_gold(value, map, map_pos):
-	var coins = base_coins.instance()
-	coins.translation = Vector3(map_pos[0] * TILE_OFFSET, 0.6, map_pos[1] * TILE_OFFSET)
-	coins.visible = true
-	coins.set_map_pos([map_pos[0],map_pos[1]])
-	coins.set_parent_map(map)
+	return item
+
+func spawn_enemy(enemy_name, map, map_pos, visibility):
+	var enemy_scene
+	
+	match enemy_name:
+		'Fox': enemy_scene = base_fox
+		'Imp': enemy_scene = base_imp
+		'Minotaur': enemy_scene = base_minotaur
+	
+	var enemy = create_object(enemy_scene, map, map_pos, visibility)
+	enemy.add_to_group('enemies')
+	
+	return enemy
+
+func spawn_gold(value, map, map_pos, visibility):
+	var coins = create_object(base_coins, map, map_pos, visibility)
+
 	coins.add_to_group('loot')
 	coins.set_gold_value(value)
-	map.add_map_object(coins)
+	
+	return coins
+
+func spawn_map_object(object_name, map, map_pos, visibility):
+	var object_scene
+	
+	match object_name:
+		'TempWall': object_scene = base_tempwall
+		'Stairs': object_scene = base_stairs
+			
+	var object = create_object(object_scene, map, map_pos, visibility)
+	
+	return object
