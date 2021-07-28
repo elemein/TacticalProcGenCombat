@@ -1,20 +1,20 @@
 extends ActorObj
 
-const FOX_AI = preload("res://Assets/Objects/EnemyObjects/FoxScripts/FoxAI.gd")
+const MINOTAUR_AI = preload("res://Assets/Objects/EnemyObjects/MinotaurScripts/MinotaurAI.gd")
 const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
 
 var rng = RandomNumberGenerator.new()
 
-var start_stats = {"Max HP" : 130, "HP" : 130, "Max MP": 0, "MP": 0, \
-				"HP Regen" : 1, "MP Regen": 0, "Attack Power" : 15, \
-				"Spell Power" : 0, "Defense" : 0, \
+var start_stats = {"Max HP" : 1, "HP" : 1, "Max MP": 40, "MP": 40, \
+				"HP Regen" : 1, "MP Regen": 10, "Attack Power" : 40, \
+				"Spell Power" : 20, "Defense" : 0, \
 				 "Speed": rng.randi_range(5,15), "View Range" : 4}
 
 var loot_to_drop = []
 var loot_dropped = false
 
 # object vars
-var ai_engine = FOX_AI.new()
+var ai_engine = MINOTAUR_AI.new()
 var obj_spawner = GlobalVars.obj_spawner
 
 var inventory = INVENTORY.instance()

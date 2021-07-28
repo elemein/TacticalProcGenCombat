@@ -21,6 +21,7 @@ var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
 # Enemies
 var base_imp = preload("res://Assets/Objects/EnemyObjects/Imp.tscn")
 var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
+var base_minotaur = preload("res://Assets/Objects/EnemyObjects/Minotaur.tscn")
 
 func create_object(object_scene, map, map_pos, visibility) -> Object:
 	var object = object_scene.instance()
@@ -54,6 +55,7 @@ func spawn_enemy(enemy_name, map, map_pos, visibility):
 	match enemy_name:
 		'Fox': enemy_scene = base_fox
 		'Imp': enemy_scene = base_imp
+		'Minotaur': enemy_scene = base_minotaur
 	
 	var enemy = create_object(enemy_scene, map, map_pos, visibility)
 	enemy.add_to_group('enemies')

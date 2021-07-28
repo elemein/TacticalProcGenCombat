@@ -108,7 +108,7 @@ func assign_exit_room():
 		stairs.connects_to = map_object.map_id + 1
 
 	elif map_object.get_map_type() == 'End Floor':
-		spawn_enemies_in_room(exit_room, floor(exit_room.area/3))
+		spawn_specific_enemy_in_room(exit_room, 1, 'Minotaur')
 
 func assign_room_types():
 	for room in rooms:
@@ -132,8 +132,8 @@ func fill_rooms():
 		elif room.type == 'Treasure':
 			var wep_cnt = rng.randi_range(0,1)
 			var armr_cnt = rng.randi_range(0,1)
-			var acc_cnt = rng.randi_range(1,2)
-			var gold_cnt = rng.randi_range(1,3)
+			var acc_cnt = rng.randi_range(0,1)
+			var gold_cnt = rng.randi_range(1,2)
 			
 			spawn_treasure_in_room(room, wep_cnt, armr_cnt, acc_cnt, gold_cnt)
 		
@@ -196,6 +196,15 @@ func spawn_enemies_in_room(room, enemy_cnt):
 			var chosen_enemy = enemy_list[rng.randi_range(0,1)]
 			
 			obj_spawner.spawn_enemy(chosen_enemy, map_object, [x, z], false)
+
+func spawn_specific_enemy_in_room(room, enemy_cnt, enemy_type):
+	if enemy_cnt > 0:
+			for _cnt in range(enemy_cnt):
+				var rand_tile = get_random_available_tile_in_room(room)
+				var x = rand_tile[0]
+				var z = rand_tile[1]
+				
+				obj_spawner.spawn_enemy(enemy_type, map_object, [x, z], false)
 
 func spawn_traps():
 	for _trap_cnt in range(NUMBER_OF_TRAPS):

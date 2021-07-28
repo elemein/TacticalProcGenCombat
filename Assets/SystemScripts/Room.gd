@@ -40,7 +40,7 @@ func pos_in_room(pos):
 			print("Player is inside me! I'm %s" % [self])
 			
 			if room_cleared == false:
-				if type == 'Enemy':
+				if type in ['Enemy', 'Exit Room']:
 					if exits_blocked == false:
 						count_enemies_in_room()
 						if enemy_count > 0:
@@ -93,3 +93,6 @@ func log_enemy_death(dead_enemy):
 	if enemy_count <= 0: 
 		room_cleared = true
 		unblock_exits()
+		
+		if type == 'Exit Room':
+			var _result = GlobalVars.get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')

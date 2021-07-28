@@ -146,5 +146,6 @@ limits/debugger_stdout/max_chars_per_second=100000000000000000
 
 [rendering]
 
+quality/filters/anisotropic_filter_level=16
 environment/default_clear_color=Color( 0.0338334, 0, 0.07, 1 )
 environment/default_environment="res://default_env.tres"
