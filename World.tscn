@@ -32,12 +32,7 @@ scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 3 )
 
 [node name="StatusBar" parent="GUI" instance=ExtResource( 2 )]
+
 [connection signal="set_status_bars" from="GUI" to="GUI/StatusBar" method="_on_GUI_set_status_bars"]
 [connection signal="update_health_bar" from="GUI" to="GUI/StatusBar" method="_on_GUI_update_health_bar"]
 [connection signal="update_mana_bar" from="GUI" to="GUI/StatusBar" method="_on_GUI_update_mana_bar"]
-
-[editable path="GUI/StatusBar"]
-
-[editable path="GUI/StatusBar/StatusBarContainer/HBox container/VBoxContainer/HealthBar2D"]
-
-[editable path="GUI/StatusBar/StatusBarContainer/HBox container/VBoxContainer/ManaBar2D"]
