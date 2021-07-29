@@ -64,6 +64,7 @@ config/icon="res://icon.png"
 
 Signals="*res://Assets/SystemScripts/Signals.gd"
 GlobalVars="*res://Assets/SystemScripts/Singletons/GlobalVars.gd"
+PlayerInfo="*res://Assets/SystemScripts/PlayerInfo.gd"
 
 [debug]
 

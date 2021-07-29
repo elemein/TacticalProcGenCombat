@@ -81,11 +81,11 @@ size_flags_horizontal = 6
 texture_normal = ExtResource( 6 )
 
 [node name="AbilityBox" type="GridContainer" parent="HBoxContainer"]
-margin_left = 404.0
+margin_left = 492.0
 margin_top = 186.0
-margin_right = 720.0
+margin_right = 808.0
 margin_bottom = 262.0
-size_flags_horizontal = 8
+size_flags_horizontal = 6
 size_flags_vertical = 6
 columns = 4
 
@@ -117,3 +117,4 @@ start_focused = true
 
 [connection signal="button_down" from="HBoxContainer/VBoxContainer/HBoxContainer/Left" to="." method="_on_Left_button_down"]
 [connection signal="button_down" from="HBoxContainer/VBoxContainer/HBoxContainer/Right" to="." method="_on_Right_button_down"]
+[connection signal="pressed" from="LockIn" to="." method="_on_LockIn_pressed"]

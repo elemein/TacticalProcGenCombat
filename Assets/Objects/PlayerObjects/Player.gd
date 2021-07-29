@@ -20,8 +20,8 @@ var input_smoothing_timer = Timer.new()
 var inventory_open = false
 
 # object vars
-
 var inventory = INVENTORY.instance()
+
 
 func _init().("Player", start_stats):
 	pass
@@ -188,12 +188,16 @@ func get_input():
 	if Input.is_action_pressed("x"): set_action('idle')
 	
 	# Basic attacks only need one press.
-	if Input.is_action_pressed("space"): set_action('basic attack', false)
+	if 'BasicAttackAbility' in PlayerInfo.abilities:
+		if Input.is_action_pressed("space"): set_action('basic attack', false)
 	
 	# Skills will need two presses to confirm.
-	if Input.is_action_pressed("e"): set_action('fireball', false)
-	if Input.is_action_pressed("r"): set_action('dash', false)
-	if Input.is_action_pressed("t"): set_action('self heal', false)
+	if 'FireballAbility' in PlayerInfo.abilities:
+		if Input.is_action_pressed("e"): set_action('fireball', false)
+	if 'DashAbility' in PlayerInfo.abilities:
+		if Input.is_action_pressed("r"): set_action('dash', false)
+	if 'SelfHealAbility' in PlayerInfo.abilities:
+		if Input.is_action_pressed("t"): set_action('self heal', false)
 
 func set_direction(direction):
 	set_actor_dir(direction)

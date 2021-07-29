@@ -40,3 +40,9 @@ func _on_Left_button_down():
 
 func _on_Right_button_down():
 	model.rotate_y(deg2rad(15))
+
+
+func _on_LockIn_pressed():
+	for ability_button in ability_box.get_children():
+		if ability_button.is_pressed():
+			PlayerInfo.abilities.append(ability_button.name)
