@@ -1,0 +1,119 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Assets/GUI/TitleScreen/menu_button.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/GUI/CharacterSelect/AbilitySelectButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/GUI/CharacterSelect/Left_Arrow.png" type="Texture" id=3]
+[ext_resource path="res://Assets/NewArt/Gull.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/GUI/CharacterSelect/CharacterSelect.gd" type="Script" id=5]
+[ext_resource path="res://Assets/GUI/CharacterSelect/Right_Arrow.png" type="Texture" id=6]
+
+[sub_resource type="Environment" id=1]
+ambient_light_color = Color( 1, 1, 1, 1 )
+ambient_light_energy = 0.0
+ambient_light_sky_contribution = 0.0
+
+[node name="VBoxContainer" type="VBoxContainer"]
+margin_left = 64.0
+margin_right = 896.0
+margin_bottom = 525.0
+rect_min_size = Vector2( 896, 525 )
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_right = 896.0
+margin_bottom = 448.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_right = 400.0
+margin_bottom = 448.0
+
+[node name="ViewportContainer" type="ViewportContainer" parent="HBoxContainer/VBoxContainer"]
+margin_right = 400.0
+margin_bottom = 400.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="Viewport" type="Viewport" parent="HBoxContainer/VBoxContainer/ViewportContainer"]
+size = Vector2( 400, 400 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="Character" parent="HBoxContainer/VBoxContainer/ViewportContainer/Viewport" instance=ExtResource( 4 )]
+
+[node name="Camera" type="Camera" parent="HBoxContainer/VBoxContainer/ViewportContainer/Viewport"]
+transform = Transform( -9.52296e-08, 0.400077, -0.916481, -1.18016e-07, 0.916481, 0.400077, 1, 1.46259e-07, -4.00607e-08, -6.84321, 5.7037, 0 )
+environment = SubResource( 1 )
+current = true
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="OmniLight" type="OmniLight" parent="HBoxContainer/VBoxContainer/ViewportContainer/Viewport"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2553, 4.06205, 0 )
+light_color = Color( 0.882353, 0.788235, 0.607843, 1 )
+omni_range = 15.0
+omni_attenuation = 0.999999
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+margin_top = 404.0
+margin_right = 400.0
+margin_bottom = 448.0
+
+[node name="Left" type="TextureButton" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 61.0
+margin_right = 137.0
+margin_bottom = 44.0
+size_flags_horizontal = 6
+texture_normal = ExtResource( 3 )
+
+[node name="Right" type="TextureButton" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 263.0
+margin_right = 339.0
+margin_bottom = 44.0
+size_flags_horizontal = 6
+texture_normal = ExtResource( 6 )
+
+[node name="AbilityBox" type="GridContainer" parent="HBoxContainer"]
+margin_left = 404.0
+margin_top = 186.0
+margin_right = 720.0
+margin_bottom = 262.0
+size_flags_horizontal = 8
+size_flags_vertical = 6
+columns = 4
+
+[node name="BasicAttackAbility" parent="HBoxContainer/AbilityBox" instance=ExtResource( 2 )]
+
+[node name="FireballAbility" parent="HBoxContainer/AbilityBox" instance=ExtResource( 2 )]
+margin_left = 80.0
+margin_right = 156.0
+
+[node name="DashAbility" parent="HBoxContainer/AbilityBox" instance=ExtResource( 2 )]
+margin_left = 160.0
+margin_right = 236.0
+
+[node name="SelfHealAbility" parent="HBoxContainer/AbilityBox" instance=ExtResource( 2 )]
+margin_left = 240.0
+margin_right = 316.0
+
+[node name="LockIn" parent="." instance=ExtResource( 1 )]
+margin_left = 348.0
+margin_top = 452.0
+margin_right = 548.0
+margin_bottom = 527.0
+rect_min_size = Vector2( 200, 75 )
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "Start"
+reference_path = "res://World.tscn"
+start_focused = true
+
+[connection signal="button_down" from="HBoxContainer/VBoxContainer/HBoxContainer/Left" to="." method="_on_Left_button_down"]
+[connection signal="button_down" from="HBoxContainer/VBoxContainer/HBoxContainer/Right" to="." method="_on_Right_button_down"]
