@@ -164,24 +164,24 @@ func find_room_dists_to_spawn():
 				
 func spawn_treasure_in_room(room, wep_cnt, armr_cnt, acc_cnt, gold_cnt):
 	var pos_weps = ['Sword', 'Magic Staff']
-	for wep in range(0, wep_cnt):
+	for _wep in range(0, wep_cnt):
 		var rand_tile = get_random_available_tile_in_room(room)
 		var chosen_wep = pos_weps[rng.randi_range(0,1)]
 		obj_spawner.spawn_item(chosen_wep, map_object, rand_tile, false)
 		
 	var pos_armrs = ['Body Armour', 'Leather Cuirass']
-	for armr in range(0, armr_cnt):
+	for _armr in range(0, armr_cnt):
 		var rand_tile = get_random_available_tile_in_room(room)
 		var chosen_armr = pos_armrs[rng.randi_range(0,1)]
 		obj_spawner.spawn_item(chosen_armr, map_object, rand_tile, false)
 		
 	var pos_accs = ['Arcane Necklace', 'Scabbard and Dagger']
-	for acc in range(0, acc_cnt):
+	for _acc in range(0, acc_cnt):
 		var rand_tile = get_random_available_tile_in_room(room)
 		var chosen_acc = pos_accs[rng.randi_range(0,1)]
 		obj_spawner.spawn_item(chosen_acc, map_object, rand_tile, false)
 	
-	for gold in range(0, gold_cnt):
+	for _gold in range(0, gold_cnt):
 		var rand_tile = get_random_available_tile_in_room(room)
 		obj_spawner.spawn_gold(rng.randi_range(10,30), map_object, rand_tile, false)
 

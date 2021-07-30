@@ -22,7 +22,7 @@ func get_map_pos(): return map_pos
 func get_translation(): return translation
 
 # Setters
-func set_parent_map(map): 
+func set_parent_map(map):
 	parent_map = map
 	turn_timer = map.get_turn_timer()
 	parent_mapset = map.get_parent_mapset()

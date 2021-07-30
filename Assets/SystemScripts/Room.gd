@@ -87,7 +87,7 @@ func unblock_exits():
 			if obj.get_obj_type() == 'TempWall':
 				obj.remove_self()
 	
-func log_enemy_death(dead_enemy):
+func log_enemy_death(_dead_enemy):
 	count_enemies_in_room()
 	
 	if enemy_count <= 0: 
