@@ -1,9 +1,6 @@
 extends Node
 class_name BaseAbility
 
-# Get required nodes
-onready var world = get_node('/root/World/')
-
 # Signals
 signal set_ready_status
 
@@ -34,6 +31,7 @@ var spell_power = 0
 var spell_cost = 0
 var spell_length = 0
 var spell_name = 'spell name'
+var spell_description = 'spell description'
 var spell_heal_user = false
 var scales_off_atk_or_spl = null
 

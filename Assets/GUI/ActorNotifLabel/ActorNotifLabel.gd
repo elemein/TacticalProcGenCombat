@@ -9,7 +9,7 @@ func set_text(new_text):
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
 	
-	$Tween.connect("tween_completed", self, "_on_timer_timeout")
+	var _result = $Tween.connect("tween_completed", self, "_on_timer_timeout")
 	$Tween.interpolate_property(self, "translation", translation, 
 		translation + Vector3(0,(4 + (rng.randf_range(0,0.75))),
 		(rng.randf_range(0,1.5)-0.75)), tween_time, 

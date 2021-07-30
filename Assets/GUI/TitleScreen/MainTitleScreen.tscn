@@ -23,7 +23,7 @@ focus_neighbour_bottom = NodePath("../menuExit")
 focus_next = NodePath("../menuExit")
 focus_previous = NodePath("../menuExit")
 text = "New Game"
-reference_path = "res://World.tscn"
+reference_path = "res://Assets/GUI/CharacterSelect/CharacterSelect.tscn"
 start_focused = true
 
 [node name="menuExit" parent="." instance=ExtResource( 2 )]
