@@ -8,7 +8,7 @@ const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
 
 signal prepare_gui(stats)
 
-var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
+var start_stats = {"Max HP" : 10000, "HP" : 10000, "Max MP": 100, "MP": 100, \
 				"HP Regen" : 1, "MP Regen": 6, "Attack Power" : 10, \
 				"Spell Power" : 20, "Defense" : 0, "Speed": 13, "View Range" : 4}
 
