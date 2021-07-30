@@ -11,7 +11,7 @@
 script = ExtResource( 4 )
 
 [node name="Graphics" parent="." instance=ExtResource( 6 )]
-transform = Transform( 0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0 )
+transform = Transform( 0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0 )
 
 [node name="Armature" parent="Graphics" index="0"]
 transform = Transform( -1.62921e-07, 0, -1, 0, 1, 0, 1, 0, -1.62921e-07, 0, 3.15651, 0 )
@@ -29,7 +29,7 @@ stream = ExtResource( 2 )
 unit_db = 80.0
 
 [node name="HealthManaBar3D" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0 )
 pixel_size = 0.003
 
 [node name="Actions" parent="." instance=ExtResource( 5 )]

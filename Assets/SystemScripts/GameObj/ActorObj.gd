@@ -6,6 +6,8 @@ const DEATH_ANIM_TIME = 1
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 
+const ACTOR_NOTIF_LABEL = preload("res://Assets/GUI/ActorNotifLabel/ActorNotifLabel.tscn")
+
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI/Action")
@@ -149,12 +151,20 @@ func play_anim(name):
 		return
 	anim.play(name)
 
+func display_notif(notif_text):
+	var new_notif = ACTOR_NOTIF_LABEL.instance()
+	add_child(new_notif)
+	new_notif.set_text(notif_text)
+
 func take_damage(damage):
 	if not is_dead:
 		var damage_multiplier = 100 / (100+float(stat_dict['Defense']))
 		damage = floor(damage * damage_multiplier)
 		damage = floor(damage)
 		stat_dict['HP'] -= damage
+		
+		display_notif("-" + str(damage))
+		
 		print("%s has %s HP" % [self.get_obj_type(), stat_dict['HP']])
 		
 		# Play a random audio effect upon getting hit

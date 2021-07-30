@@ -5,7 +5,7 @@ const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
 
 var rng = RandomNumberGenerator.new()
 
-var start_stats = {"Max HP" : 1, "HP" : 1, "Max MP": 40, "MP": 40, \
+var start_stats = {"Max HP" : 500, "HP" : 500, "Max MP": 40, "MP": 40, \
 				"HP Regen" : 1, "MP Regen": 10, "Attack Power" : 40, \
 				"Spell Power" : 20, "Defense" : 0, \
 				 "Speed": rng.randi_range(5,15), "View Range" : 4}
