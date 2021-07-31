@@ -1,6 +1,5 @@
 extends BaseAbility
 
-
 func _ready():
 	spell_power = 15
 	spell_cost = 40

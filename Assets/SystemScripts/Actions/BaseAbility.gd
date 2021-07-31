@@ -67,6 +67,10 @@ func use():
 	if parent == null:
 		parent = find_parent('Actions').get_parent()
 	map = parent.get_parent_map()
+	
+		# Update mana
+	parent.set_mp(parent.get_mp() - spell_cost)
+	
 	if moving and not moving_back and not move_check():
 		parent = null
 		return
@@ -121,10 +125,6 @@ func mana_check() -> bool:
 			out_of_mana.translation = parent.translation
 			out_of_mana.play()
 		return false
-		
-	# Update mana
-	elif parent.get_mp():
-		parent.set_mp(parent.get_mp() - spell_cost)
 	return true
 
 # Spawn in the spell
