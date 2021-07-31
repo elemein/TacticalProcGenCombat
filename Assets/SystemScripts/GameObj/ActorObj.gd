@@ -11,7 +11,7 @@ const ACTOR_NOTIF_LABEL = preload("res://Assets/GUI/ActorNotifLabel/ActorNotifLa
 onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI/Action")
-onready var actions = find_node('Actions')
+onready var actions = $Actions
 
 # Sound effects
 onready var audio_hit = $Audio/Hit
@@ -72,6 +72,8 @@ func _init(obj_type, actor_stats).(obj_type):
 
 func set_action(action, ready=true):
 	proposed_action = action
+
+	if actions.spell_can_cast(action) == true: ready_status = true
 
 	if not ready:
 		actions.spell_can_cast(action)

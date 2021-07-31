@@ -62,34 +62,6 @@ func _physics_process(_delta):
 		else:
 			parent = null
 
-# Main functionality of the spell
-func use():
-	if parent == null:
-		parent = find_parent('Actions').get_parent()
-	map = parent.get_parent_map()
-	
-		# Update mana
-	parent.set_mp(parent.get_mp() - spell_cost)
-	
-	if moving and not moving_back and not move_check():
-		parent = null
-		return
-	if parent:
-		set_ready_status()
-		play_audio()
-		if visual_effect != null:
-			create_spell_instance()
-			set_target_spell_pos()
-		if moving:
-			set_target_actor_pos()
-		if moving and not moving_back:
-			parent.manual_move_char(2)
-		set_power()
-		set_attack_power()
-		if spell_heal_user:
-			heal_user()
-		else:
-			do_damage()
 		
 func move_check() -> bool:
 	set_target_actor_pos()

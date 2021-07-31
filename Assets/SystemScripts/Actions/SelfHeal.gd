@@ -20,3 +20,17 @@ func _on_Actions_spell_cast_self_heal():
 func _on_Actions_can_cast_self_heal():
 	if mana_check():
 		emit_signal("set_ready_status")
+
+func use():
+	if parent == null: parent = find_parent('Actions').get_parent()
+	map = parent.get_parent_map()
+	
+	# Update mana
+	parent.set_mp(parent.get_mp() - spell_cost)
+	
+	play_audio()
+	create_spell_instance()
+	set_target_spell_pos()
+	set_power()
+
+	heal_user()
