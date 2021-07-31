@@ -23,7 +23,7 @@ transparent_bg = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.45, 0, 0, 1 )
+custom_colors/font_color = Color( 0.168627, 0.698039, 0, 1 )
 text = "asdfad"
 align = 1
 

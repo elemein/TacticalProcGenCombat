@@ -29,3 +29,4 @@ func use():
 	set_power()
 
 	heal_user()
+	parent.display_notif(("+" + str(spell_final_power)), 'heal')

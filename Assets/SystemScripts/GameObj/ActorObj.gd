@@ -166,10 +166,10 @@ func play_anim(name):
 		return
 	anim.play(name)
 
-func display_notif(notif_text):
+func display_notif(notif_text, notif_type):
 	var new_notif = ACTOR_NOTIF_LABEL.instance()
 	add_child(new_notif)
-	new_notif.set_text(notif_text)
+	new_notif.create_notif(notif_text, notif_type)
 
 func take_damage(damage):
 	if not is_dead:
@@ -178,7 +178,7 @@ func take_damage(damage):
 		damage = floor(damage)
 		stat_dict['HP'] -= damage
 		
-		display_notif("-" + str(damage))
+		display_notif(("-" + str(damage)), 'damage')
 		
 		print("%s has %s HP" % [self.get_obj_type(), stat_dict['HP']])
 		
