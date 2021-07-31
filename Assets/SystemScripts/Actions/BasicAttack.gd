@@ -16,10 +16,6 @@ func _ready():
 func _on_Actions_spell_cast_basic_attack():
 	use()
 
-func _on_Actions_can_cast_basic_attack():
-	if mana_check():
-		emit_signal("set_ready_status")
-
 func use():
 	if parent == null: parent = find_parent('Actions').get_parent()
 	map = parent.get_parent_map()

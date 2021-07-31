@@ -74,3 +74,5 @@ script = ExtResource( 6 )
 [connection signal="timeout" from="CamBase/Camera/Timer" to="CamBase/Camera" method="_on_Timer_timeout"]
 
 [editable path="Graphics"]
+
+[editable path="Actions"]

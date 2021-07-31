@@ -70,15 +70,28 @@ func _init(obj_type, actor_stats).(obj_type):
 	add_child(view_finder)
 	view_finder.set_actor(self)
 
-func set_action(action, ready=true):
+func set_action(action):
 	proposed_action = action
 
-	if actions.spell_can_cast(action) == true: ready_status = true
+	match action:
+		'fireball':
+			if $Actions/Attacks/Fireball.mana_check():
+				ready_status = true
+			else: return
+		'basic attack':
+			if $Actions/Attacks/BasicAttack.mana_check():
+				ready_status = true
+			else: return
+		'dash':
+			if $Actions/Dash.mana_check():
+				ready_status = true
+			else: return
+		'self heal':
+			if $Actions/SelfHeal.mana_check():
+				ready_status = true
+			else: return
 
-	if not ready:
-		actions.spell_can_cast(action)
-	if ready:
-		ready_status = true
+	ready_status = true
 
 	if object_type == 'Player': gui.set_action(proposed_action)
 

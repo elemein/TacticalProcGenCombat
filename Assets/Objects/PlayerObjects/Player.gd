@@ -189,15 +189,15 @@ func get_input():
 	
 	# Basic attacks only need one press.
 	if 'BasicAttackAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("space"): set_action('basic attack', false)
+		if Input.is_action_pressed("space"): set_action('basic attack')
 	
 	# Skills will need two presses to confirm.
 	if 'FireballAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("e"): set_action('fireball', false)
+		if Input.is_action_pressed("e"): set_action('fireball')
 	if 'DashAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("r"): set_action('dash', false)
+		if Input.is_action_pressed("r"): set_action('dash')
 	if 'SelfHealAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("t"): set_action('self heal', false)
+		if Input.is_action_pressed("t"): set_action('self heal')
 
 func set_direction(direction):
 	set_actor_dir(direction)

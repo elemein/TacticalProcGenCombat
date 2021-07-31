@@ -32,7 +32,6 @@ var spell_cost = 0
 var spell_length = 0
 var spell_name = 'spell name'
 var spell_description = 'spell description'
-var spell_heal_user = false
 var scales_off_atk_or_spl = null
 
 # Visual assets - This needs to be updated for each spell if it has an effect
@@ -159,7 +158,6 @@ func set_target_spell_pos():
 			
 # Set the destination tile
 func set_target_actor_pos():
-
 	direction_facing = parent.direction_facing
 	saved_actor_pos = parent.translation
 

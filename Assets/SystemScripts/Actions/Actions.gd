@@ -12,13 +12,6 @@ signal action_drop_item
 signal action_equip_item
 signal action_unequip_item
 
-# Ready status
-signal can_cast_fireball
-signal can_cast_basic_attack
-signal can_cast_dash
-signal can_cast_self_heal
-
-
 # Attacks
 func _on_spell_cast_basic_attack():
 	emit_signal("spell_cast_basic_attack")
@@ -47,15 +40,3 @@ func _on_spell_cast_self_heal():
 
 func _on_set_ready_status():
 	get_parent().ready_status = true
-
-
-func spell_can_cast(action):
-	match action:
-		'fireball':
-			emit_signal("can_cast_fireball")
-		'basic attack':
-			emit_signal("can_cast_basic_attack")
-		'dash':
-			emit_signal("can_cast_dash")
-		'self heal':
-			emit_signal("can_cast_self_heal")
