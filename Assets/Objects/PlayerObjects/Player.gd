@@ -216,7 +216,3 @@ func get_item_to_drop() -> Object:
 #Setters
 func set_inventory_open(state):
 	inventory_open = state
-
-
-func _on_Actions_set_ready_status():
-	ready_status = true

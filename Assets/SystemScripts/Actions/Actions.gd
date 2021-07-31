@@ -36,7 +36,3 @@ func _on_spell_cast_dash():
 # Buffs
 func _on_spell_cast_self_heal():
 	emit_signal("spell_cast_self_heal")
-
-
-func _on_set_ready_status():
-	get_parent().ready_status = true

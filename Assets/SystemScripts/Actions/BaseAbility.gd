@@ -1,9 +1,6 @@
 extends Node
 class_name BaseAbility
 
-# Signals
-signal set_ready_status
-
 # Sound effects
 onready var UseSpell = null
 onready var out_of_mana = $out_of_mana
@@ -70,9 +67,6 @@ func move_check() -> bool:
 				return false
 	return true
 			
-func set_ready_status():
-	emit_signal("set_ready_status")
-	
 func heal_user():
 	parent.set_hp(parent.get_hp() + spell_final_power)
 			
