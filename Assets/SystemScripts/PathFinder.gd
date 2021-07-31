@@ -136,7 +136,8 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 		for object in tile_contents:
 			if object.get_obj_type() in GlobalVars.NON_TRAVERSABLES: skip_tile = true
 			if object.get_obj_type() in GlobalVars.ENEMY_TYPES:
-				if object.get_is_dead() == false: skip_tile = true
+				if object.get_is_dead() == false:
+					if move_count <= 1: skip_tile = true # if more than 2 spaces from player, ignore enemies
 		if skip_tile: continue
 			
 		pos_queue.push_front(search_pos)

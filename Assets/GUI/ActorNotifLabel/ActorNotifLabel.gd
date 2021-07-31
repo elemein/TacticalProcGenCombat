@@ -19,7 +19,7 @@ func heal_notif():
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
 	
-	var _result = $Tween.connect("tween_completed", self, "_on_timer_timeout")
+	$Tween.connect("tween_completed", self, "_on_tween_complete")
 	$Tween.interpolate_property(self, "translation", translation, 
 		translation + Vector3(0,3.5,0), tween_time, 
 		Tween.TRANS_EXPO, Tween.EASE_OUT)
@@ -32,13 +32,13 @@ func damage_notif():
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
 	
-	var _result = $Tween.connect("tween_completed", self, "_on_timer_timeout")
+	$Tween.connect("tween_completed", self, "_on_tween_complete")
 	$Tween.interpolate_property(self, "translation", translation, 
 		translation + Vector3(0,(4 + (rng.randf_range(0,0.75))),
 		(rng.randf_range(0,1.5)-0.75)), tween_time, 
 		Tween.TRANS_QUART, Tween.EASE_OUT)
 	$Tween.start()
 
-func _on_timer_timeout(_tween_object, _tween_node_path):
+func _on_tween_complete(_tween_object, _tween_node_path):
 	get_parent().remove_child(self)
 	self.queue_free()

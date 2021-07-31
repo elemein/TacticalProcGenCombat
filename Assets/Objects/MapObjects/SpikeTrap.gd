@@ -1,24 +1,10 @@
 extends GameObj
 
 var trap_damage = 33
-var sprung_pos = Vector3()
 
 var sprung = false
 
-var trap_anim_timer = Timer.new()
-
-func _init().('Spike Trap'):
-	trap_anim_timer.set_one_shot(true)
-	trap_anim_timer.set_wait_time(1)
-	add_child(trap_anim_timer)
-
-func _physics_process(_delta):
-	if sprung:
-		var intrp_mod = trap_anim_timer.time_left / trap_anim_timer.get_wait_time()
-		translation = translation.linear_interpolate(sprung_pos, (1-intrp_mod))
-		
-		if trap_anim_timer.time_left == 0:
-			parent_map.remove_map_object(self)
+func _init().('Spike Trap'): pass
 
 func activate_trap(tile_objects):
 	for object in tile_objects:
@@ -27,5 +13,14 @@ func activate_trap(tile_objects):
 				sprung = true
 				visible = true
 				object.take_damage(trap_damage)
-				sprung_pos = Vector3(translation.x, translation.y + 0.75, translation.z)
-				trap_anim_timer.start()
+				
+				$Tween.connect("tween_completed", self, "_on_tween_complete")
+				$Tween.interpolate_property(self, "translation", translation, 
+					translation + Vector3(0,1,0), 1, 
+					Tween.TRANS_ELASTIC, Tween.EASE_OUT)
+				$Tween.start()
+
+func _on_tween_complete(_tween_object, _tween_node_path):
+	print('tween completed')
+	parent_map.remove_map_object(self)
+	self.queue_free()
