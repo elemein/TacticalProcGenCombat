@@ -2,6 +2,8 @@ extends BaseAbility
 
 onready var effect_tween = $Tween
 
+var damage_variance = 50
+
 func _ready():
 	spell_name = 'Fireball'
 	anim_time = 0.4
@@ -10,7 +12,6 @@ func _ready():
 	spell_power = 20
 	effect_start_height = 1
 	effect_end_height = 1
-	scales_off_atk_or_spl = 'spl'
 	spell_description = str("""Fireball
 	Cost: {cost}\tPower: {power}
 	
@@ -22,7 +23,6 @@ func _on_Actions_spell_cast_fireball():
 	use()
 
 func use():
-	if parent == null: parent = find_parent('Actions').get_parent()
 	map = parent.get_parent_map()
 	
 	# Update mana
@@ -39,9 +39,10 @@ func use():
 	effect_tween.start()
 
 	set_power()
-	do_damage()
+	do_damage(spell_final_power, damage_variance)
 
 func _on_tween_complete(_tween_object, _tween_node_path):
+	effect_tween.disconnect("tween_completed", self, "_on_tween_complete")
 	get_node(spell_name).queue_free()
 	remove_child(get_node(spell_name))
 	effect = null

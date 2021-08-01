@@ -9,13 +9,11 @@ func _ready():
 	
 	Dash {length} tiles and move first in a turn.
 	""").format({'cost': spell_cost, 'length': spell_length})
-	moving = true
 
 func _on_Actions_spell_cast_dash():
 	use()
 
 func use():
-	if parent == null: parent = find_parent('Actions').get_parent()
 	map = parent.get_parent_map()
 	
 	# Update mana

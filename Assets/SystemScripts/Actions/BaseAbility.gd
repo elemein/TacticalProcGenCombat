@@ -18,10 +18,7 @@ var map = null
 var spell_final_power = 0
 var spell_final_attack_power = 0
 var anim_time = 0
-
-# Movement Variables - These need to be changed if the actor is moving as apart of the spell
-var moving = false
-var moving_back = false  # if the actor will move back to it's starting postion
+var rng = RandomNumberGenerator.new()
 
 # Spell variables - These need to be updated for each spell
 var attack_power = 0
@@ -30,24 +27,15 @@ var spell_cost = 0
 var spell_length = 0
 var spell_name = 'spell name'
 var spell_description = 'spell description'
-var scales_off_atk_or_spl = null
 
 # Visual assets - This needs to be updated for each spell if it has an effect
 var visual_effect = null
 var effect_start_height = 0
 var effect_end_height = 0
 
-# Move the parent every frame
-func _physics_process(_delta): pass
-#	if moving and moving_back and parent:
-#		var interp_mod = parent.get_turn_anim_timer().time_left / parent.get_turn_anim_timer().get_wait_time()
-#		if interp_mod > 0.5:
-#			parent.translation = parent.translation.linear_interpolate(target_actor_pos, 1-interp_mod)
-#		elif parent.in_turn:
-#			parent.translation = parent.translation.linear_interpolate(saved_actor_pos, 1-interp_mod)
-#		else:
-#			parent = null
-		
+func _ready():
+	parent = find_parent("Actions").get_parent()
+
 func move_check() -> bool:
 	set_target_actor_pos()
 	for target_tile in get_target_tiles():
@@ -58,6 +46,7 @@ func move_check() -> bool:
 			
 func heal_user():
 	parent.set_hp(parent.get_hp() + spell_final_power)
+	parent.display_notif(("+" + str(spell_final_power)), 'heal')
 			
 func play_audio():
 	UseSpell = find_node('UseSpell')
@@ -73,7 +62,6 @@ func set_attack_power():
 
 # Check if out of mana
 func mana_check() -> bool:
-	parent = find_parent('Actions').get_parent()
 	if parent.get_mp() and parent.get_mp() < spell_cost:
 		if not out_of_mana.is_playing():
 			out_of_mana.translation = parent.translation
@@ -200,12 +188,17 @@ func get_target_tiles() -> Array:
 	return target_tile_contents
 
 # Actually inflict damage on the target tiles
-func do_damage():
+func do_damage(amount, variance):
+	var damage_percentage = (100 - rng.randf_range(0, variance)) / 100
+	var damage_amount = floor(amount * damage_percentage)
+	
+	var damaged_objects = []
+	
 	for objects_on_tile in get_target_tiles():
 		if typeof(objects_on_tile) != TYPE_STRING:
 			for object in objects_on_tile:
 				if object.get_obj_type() in ['Enemy', 'Player']:
-					if scales_off_atk_or_spl == 'spl':
-						object.take_damage(spell_final_power)
-					elif scales_off_atk_or_spl == 'atk':
-						object.take_damage(spell_final_attack_power)
+					damaged_objects.append(object)
+
+	for object in damaged_objects:
+		object.take_damage(damage_amount)

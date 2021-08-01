@@ -20,7 +20,6 @@ func _on_Actions_spell_cast_self_heal():
 	use()
 
 func use():
-	if parent == null: parent = find_parent('Actions').get_parent()
 	map = parent.get_parent_map()
 	
 	# Update mana
@@ -39,7 +38,6 @@ func use():
 	set_power()
 
 	heal_user()
-	parent.display_notif(("+" + str(spell_final_power)), 'heal')
 
 func _on_tween_complete(_tween_object, _tween_node_path):
 	get_node(spell_name).queue_free()

@@ -2,13 +2,12 @@ extends BaseAbility
 
 onready var effect_tween = $Tween
 
+var damage_variance = 30
+
 func _ready():
 	attack_power = 10
 	spell_cost = 0
 	spell_length = 1
-	moving = true
-	moving_back = true
-	scales_off_atk_or_spl = 'atk'
 	anim_time = 0.6
 	spell_description = str("""Basic Attack
 	Cost: {cost}\tPower: {power}
@@ -20,7 +19,6 @@ func _on_Actions_spell_cast_basic_attack():
 	use()
 
 func use():
-	if parent == null: parent = find_parent('Actions').get_parent()
 	map = parent.get_parent_map()
 	
 	parent.set_mp(parent.get_mp() - spell_cost)
@@ -35,7 +33,7 @@ func use():
 
 	set_attack_power()
 
-	do_damage()
+	do_damage(spell_final_attack_power, damage_variance)
 
 # Move back
 func _on_tween_complete(_tween_object, _tween_node_path):
