@@ -13,8 +13,6 @@
 #		top left enemy to crowd, but the other enemies are already
 #		adjacent, so they won't move, leaving no room for the top
 #		left enemy.
-#	- If an enemy is in a 1 wide hallway, it will block pathfinding
-#		for all enemies behind that hallway, causing them to not move.
 
 extends Node
 
@@ -38,6 +36,22 @@ var nodes_in_next_layer = 0
 
 var ignore_enemies
 
+func solve(_searcher, search_map, start, end):
+	ignore_enemies = true
+	var path = pathfind(_searcher, search_map, start, end)
+	
+	var first_tile_in_path_x = path[1][0][0]
+	var first_tile_in_path_z = path[1][0][1]
+	
+	# the first pathfind ignores enemies so that enemies don't render corridors
+	# untraversable. this if makes it so if the next move suggested is illegal,
+	# it reruns it taking enemies into consideration
+	if search_map.tile_available(first_tile_in_path_x, first_tile_in_path_z) == false:
+		ignore_enemies = false
+		path = pathfind(_searcher, search_map, start, end)
+	
+	return [path[0], path[1]]
+
 func reset_vars():
 	pos_queue = []
 
@@ -54,19 +68,6 @@ func reset_vars():
 	start_pos = []
 	curr_pos = []
 	end_pos = []
-
-func solve(_searcher, search_map, start, end):
-	ignore_enemies = true
-	var path = pathfind(_searcher, search_map, start, end)
-	
-	var first_tile_in_path_x = path[1][0][0]
-	var first_tile_in_path_z = path[1][0][1]
-	
-	if search_map.tile_available(first_tile_in_path_x, first_tile_in_path_z) == false:
-		ignore_enemies = false
-		path = pathfind(_searcher, search_map, start, end)
-	
-	return [path[0], path[1]]
 
 func pathfind(_searcher, search_map, start, end):
 	reset_vars()
