@@ -36,6 +36,8 @@ var move_count = 0
 var nodes_left_in_layer = 0
 var nodes_in_next_layer = 0
 
+var ignore_enemies
+
 func reset_vars():
 	pos_queue = []
 
@@ -52,10 +54,23 @@ func reset_vars():
 	start_pos = []
 	curr_pos = []
 	end_pos = []
-	
+
 func solve(_searcher, search_map, start, end):
-	map = search_map
+	ignore_enemies = true
+	var path = pathfind(_searcher, search_map, start, end)
+	
+	var first_tile_in_path_x = path[1][0][0]
+	var first_tile_in_path_z = path[1][0][1]
+	
+	if search_map.tile_available(first_tile_in_path_x, first_tile_in_path_z) == false:
+		ignore_enemies = false
+		path = pathfind(_searcher, search_map, start, end)
+	
+	return [path[0], path[1]]
+
+func pathfind(_searcher, search_map, start, end):
 	reset_vars()
+	map = search_map
 	start_pos = start
 	end_pos = end
 	
@@ -137,7 +152,7 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 			if object.get_obj_type() in GlobalVars.NON_TRAVERSABLES: skip_tile = true
 			if object.get_obj_type() in GlobalVars.ENEMY_TYPES:
 				if object.get_is_dead() == false:
-					if move_count <= 1: skip_tile = true # if more than 2 spaces from player, ignore enemies
+					if ignore_enemies == false: skip_tile = true
 		if skip_tile: continue
 			
 		pos_queue.push_front(search_pos)

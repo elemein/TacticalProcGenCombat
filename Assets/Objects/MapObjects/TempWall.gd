@@ -10,7 +10,7 @@ var to_remove = false
 func _init().('TempWall'): pass
 
 func _ready():
-	print("IM A TEMPWALL")
+	pass
 
 func _physics_process(_delta):
 	if (anim_played == false) and (anim_playing == false):
