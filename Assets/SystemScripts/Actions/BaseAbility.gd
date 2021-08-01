@@ -37,20 +37,16 @@ var visual_effect = null
 var effect_start_height = 0
 var effect_end_height = 0
 
-func _ready():
-	pass
-	
 # Move the parent every frame
-func _physics_process(_delta):
-	if moving and moving_back and parent:
-		var interp_mod = parent.get_turn_anim_timer().time_left / parent.get_turn_anim_timer().get_wait_time()
-		if interp_mod > 0.5:
-			parent.translation = parent.translation.linear_interpolate(target_actor_pos, 1-interp_mod)
-		elif parent.in_turn:
-			parent.translation = parent.translation.linear_interpolate(saved_actor_pos, 1-interp_mod)
-		else:
-			parent = null
-
+func _physics_process(_delta): pass
+#	if moving and moving_back and parent:
+#		var interp_mod = parent.get_turn_anim_timer().time_left / parent.get_turn_anim_timer().get_wait_time()
+#		if interp_mod > 0.5:
+#			parent.translation = parent.translation.linear_interpolate(target_actor_pos, 1-interp_mod)
+#		elif parent.in_turn:
+#			parent.translation = parent.translation.linear_interpolate(saved_actor_pos, 1-interp_mod)
+#		else:
+#			parent = null
 		
 func move_check() -> bool:
 	set_target_actor_pos()

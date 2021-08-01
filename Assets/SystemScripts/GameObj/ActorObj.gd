@@ -98,7 +98,7 @@ func set_action(action):
 func process_turn():	
 	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
 	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
-	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time(0.8)
+	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time($Actions/Attacks/BasicAttack.anim_time)
 	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time($Actions/Attacks/Fireball.anim_time)
 	elif proposed_action == 'self heal': turn_anim_timer.set_wait_time($Actions/SelfHeal.anim_time)
 	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.6)

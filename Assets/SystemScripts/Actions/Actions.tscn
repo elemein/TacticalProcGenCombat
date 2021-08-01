@@ -42,6 +42,8 @@ unit_db = 80.0
 stream = ExtResource( 6 )
 unit_db = 80.0
 
+[node name="Tween" type="Tween" parent="Attacks/BasicAttack"]
+
 [node name="SelfHeal" type="Node" parent="."]
 script = ExtResource( 11 )
 
