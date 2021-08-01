@@ -17,6 +17,7 @@ var map_pos = null
 var map = null
 var spell_final_power = 0
 var spell_final_attack_power = 0
+var anim_time = 0
 
 # Movement Variables - These need to be changed if the actor is moving as apart of the spell
 var moving = false
@@ -41,14 +42,6 @@ func _ready():
 	
 # Move the parent every frame
 func _physics_process(_delta):
-	if effect != null:
-		if parent.get_turn_anim_timer().time_left > 0:
-			var interp_mod = parent.get_turn_anim_timer().time_left / parent.get_turn_anim_timer().get_wait_time()
-			effect.translation = effect.translation.linear_interpolate(target_spell_pos, 1-interp_mod) 
-		else:
-			get_node(spell_name).queue_free()
-			remove_child(get_node(spell_name))
-			effect = null
 	if moving and moving_back and parent:
 		var interp_mod = parent.get_turn_anim_timer().time_left / parent.get_turn_anim_timer().get_wait_time()
 		if interp_mod > 0.5:
@@ -97,9 +90,7 @@ func create_spell_instance():
 	effect = visual_effect.instance()
 	effect.name = spell_name
 	add_child(effect)
-	effect.translation.x = parent.translation.x
-	effect.translation.z = parent.translation.z
-	effect.translation.y = parent.translation.y + effect_start_height
+	effect.translation = parent.translation + Vector3(0, effect_start_height, 0)
 
 # Set the destination tile
 func set_target_spell_pos():

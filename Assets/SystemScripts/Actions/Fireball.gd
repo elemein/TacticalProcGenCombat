@@ -1,7 +1,10 @@
 extends BaseAbility
 
+onready var effect_tween = $Tween
+
 func _ready():
 	spell_name = 'Fireball'
+	anim_time = 0.4
 	spell_cost = 25
 	spell_length = 3
 	spell_power = 20
@@ -28,7 +31,17 @@ func use():
 	play_audio()
 	
 	create_spell_instance()
+	
 	set_target_spell_pos()
+	
+	effect_tween.connect("tween_completed", self, "_on_tween_complete")
+	effect_tween.interpolate_property(effect, "translation", effect.translation, target_spell_pos, anim_time, Tween.TRANS_QUAD, Tween.EASE_OUT)
+	effect_tween.start()
 
 	set_power()
 	do_damage()
+
+func _on_tween_complete(_tween_object, _tween_node_path):
+	get_node(spell_name).queue_free()
+	remove_child(get_node(spell_name))
+	effect = null
