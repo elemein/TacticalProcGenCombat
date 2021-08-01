@@ -33,6 +33,8 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80738, 0 )
 pixel_size = 0.003
 
 [node name="Actions" parent="." instance=ExtResource( 5 )]
+
+[node name="Tween" type="Tween" parent="."]
 [connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
 [connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]
 [connection signal="status_bar_hp" from="." to="HealthManaBar3D" method="_on_status_bar_hp"]

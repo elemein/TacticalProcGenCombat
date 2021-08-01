@@ -62,6 +62,8 @@ light_color = Color( 0.882353, 0.788235, 0.607843, 1 )
 omni_range = 15.0
 omni_attenuation = 0.999999
 script = ExtResource( 6 )
+
+[node name="Tween" type="Tween" parent="."]
 [connection signal="action_drop_item" from="." to="Actions" method="_on_action_drop_item"]
 [connection signal="action_equip_item" from="." to="Actions" method="_on_action_equip_item"]
 [connection signal="action_unequip_item" from="." to="Actions" method="_on_action_unequip_item"]
