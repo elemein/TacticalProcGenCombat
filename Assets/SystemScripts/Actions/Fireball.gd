@@ -2,7 +2,7 @@ extends BaseAbility
 
 onready var effect_tween = $Tween
 
-var damage_variance = 50
+var damage_variance = 30
 
 func _ready():
 	spell_name = 'Fireball'
