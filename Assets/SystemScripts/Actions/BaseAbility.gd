@@ -189,8 +189,12 @@ func get_target_tiles() -> Array:
 
 # Actually inflict damage on the target tiles
 func do_damage(amount, variance):
+	var is_crit = rng.randi_range(0,100) < parent.get_crit_chance()
+	
 	var damage_percentage = (100 - rng.randf_range(0, variance)) / 100
 	var damage_amount = floor(amount * damage_percentage)
+	
+	if is_crit == true: damage_amount * 2
 	
 	var damaged_objects = []
 	
@@ -201,4 +205,4 @@ func do_damage(amount, variance):
 					damaged_objects.append(object)
 
 	for object in damaged_objects:
-		object.take_damage(damage_amount)
+		object.take_damage(damage_amount, is_crit)

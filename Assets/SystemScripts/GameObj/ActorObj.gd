@@ -58,7 +58,8 @@ var effect = null
 
 var stat_dict = {"Max HP" : 0, "HP" : 0, "Max MP": 0, "MP": 0, \
 				"HP Regen" : 0, "MP Regen": 0, "Attack Power" : 0, \
-				"Spell Power" : 0, "Defense" : 0, "Speed": 0, "View Range" : 0}
+				"Crit Chance" : 0, "Spell Power" : 0, "Defense" : 0, \
+				"Speed": 0, "View Range" : 0}
 
 func _init(obj_type, actor_stats).(obj_type):
 	stat_dict = actor_stats
@@ -171,14 +172,15 @@ func display_notif(notif_text, notif_type):
 	add_child(new_notif)
 	new_notif.create_notif(notif_text, notif_type)
 
-func take_damage(damage):
+func take_damage(damage, is_crit):
 	if not is_dead:
 		var damage_multiplier = 100 / (100+float(stat_dict['Defense']))
 		damage = floor(damage * damage_multiplier)
 		damage = floor(damage)
 		stat_dict['HP'] -= damage
 		
-		display_notif(("-" + str(damage)), 'damage')
+		if is_crit == false: display_notif(("-" + str(damage)), 'damage')
+		else: display_notif(("-" + str(damage)) + "!", 'crit damage')
 		
 		print("%s has %s HP" % [self.get_obj_type(), stat_dict['HP']])
 		
@@ -238,6 +240,8 @@ func get_attack_power() -> int: return stat_dict['Attack Power']
 func get_spell_power() -> int: return stat_dict['Spell Power']
 
 func get_defense() -> int: return stat_dict['Defense']
+
+func get_crit_chance() -> int: return stat_dict['Crit Chance']
 
 func get_is_dead() -> bool: return is_dead
 

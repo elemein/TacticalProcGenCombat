@@ -9,8 +9,10 @@ func create_notif(notif_text, notif_type):
 	translation.y += 1
 	
 	match notif_type:
-		'damage': damage_notif()
+		'damage': damage_notif(false)
+		'crit damage' : damage_notif(true)
 		'heal': heal_notif()
+		
 
 func heal_notif():
 	$Viewport/Label.set("custom_colors/font_color", Color(0.168627, 0.698039, 0))
@@ -25,8 +27,9 @@ func heal_notif():
 		Tween.TRANS_EXPO, Tween.EASE_OUT)
 	$Tween.start()
 
-func damage_notif():
-	$Viewport/Label.set("custom_colors/font_color", Color(0.45098, 0, 0))
+func damage_notif(is_crit):
+	if is_crit == false: $Viewport/Label.set("custom_colors/font_color", Color(0.45098, 0, 0))
+	elif is_crit == true: $Viewport/Label.set("custom_colors/font_color", Color(0.854902, 0.745098, 0))
 	
 	var tween_time = 0.75
 	var rng = RandomNumberGenerator.new()

@@ -7,7 +7,7 @@ var rng = RandomNumberGenerator.new()
 
 var start_stats = {"Max HP" : 500, "HP" : 500, "Max MP": 40, "MP": 40, \
 				"HP Regen" : 1, "MP Regen": 2, "Attack Power" : 40, \
-				"Spell Power" : 20, "Defense" : 0, \
+				"Crit Chance" : 5, "Spell Power" : 20, "Defense" : 0, \
 				 "Speed": 10, "View Range" : 4}
 
 var loot_to_drop = []

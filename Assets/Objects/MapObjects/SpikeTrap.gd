@@ -12,7 +12,7 @@ func activate_trap(tile_objects):
 			if sprung == false: # only spring if not already sprung
 				sprung = true
 				visible = true
-				object.take_damage(trap_damage)
+				object.take_damage(trap_damage, false)
 				
 				$Tween.connect("tween_completed", self, "_on_tween_complete")
 				$Tween.interpolate_property(self, "translation", translation, 
