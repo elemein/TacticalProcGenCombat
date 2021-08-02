@@ -44,7 +44,7 @@ func _on_Turn_Delay_Timer_timeout():
 		
 		if actor.get_action().split(" ")[0] == 'move': turn_delay_timer.set_wait_time(0.15)
 		elif actor.get_action() == 'idle': turn_delay_timer.set_wait_time(0.000001)
-		elif actor.get_action() == 'basic attack': turn_delay_timer.set_wait_time(0.2)
+		elif actor.get_action() == 'basic attack': turn_delay_timer.set_wait_time(0.5)
 		elif actor.get_action() == 'fireball': turn_delay_timer.set_wait_time(0.3)
 		elif actor.get_action() == 'self heal': turn_delay_timer.set_wait_time(0.3)
 		elif actor.get_action() == 'dash': turn_delay_timer.set_wait_time(0.175)
