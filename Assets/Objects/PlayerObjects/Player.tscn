@@ -51,7 +51,7 @@ stream = ExtResource( 3 )
 unit_db = 80.0
 
 [node name="HealthManaBar3D" parent="." instance=ExtResource( 5 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.89, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.89, 0 )
 pixel_size = 0.003
 
 [node name="Actions" parent="." instance=ExtResource( 7 )]
@@ -64,6 +64,7 @@ omni_attenuation = 0.999999
 script = ExtResource( 6 )
 
 [node name="Tween" type="Tween" parent="."]
+
 [connection signal="action_drop_item" from="." to="Actions" method="_on_action_drop_item"]
 [connection signal="action_equip_item" from="." to="Actions" method="_on_action_equip_item"]
 [connection signal="action_unequip_item" from="." to="Actions" method="_on_action_unequip_item"]
@@ -76,5 +77,4 @@ script = ExtResource( 6 )
 [connection signal="timeout" from="CamBase/Camera/Timer" to="CamBase/Camera" method="_on_Timer_timeout"]
 
 [editable path="Graphics"]
-
 [editable path="Actions"]

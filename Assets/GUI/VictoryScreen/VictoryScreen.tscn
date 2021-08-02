@@ -9,38 +9,6 @@
 [node name="VictoryScreen" type="Node"]
 script = ExtResource( 2 )
 
-[node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 460, 290 )
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 5 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="menuNewGame" parent="." instance=ExtResource( 1 )]
-margin_left = 388.0
-margin_top = 200.0
-margin_right = 638.0
-margin_bottom = 275.0
-focus_neighbour_top = NodePath("../menuExit")
-focus_neighbour_bottom = NodePath("../menuExit")
-focus_next = NodePath("../menuExit")
-focus_previous = NodePath("../menuExit")
-text = "New Game"
-reference_path = "res://World.tscn"
-start_focused = true
-
-[node name="menuExit" parent="." instance=ExtResource( 1 )]
-margin_left = 388.0
-margin_top = 300.0
-margin_right = 638.0
-margin_bottom = 375.0
-focus_neighbour_top = NodePath("../menuNewGame")
-focus_neighbour_bottom = NodePath("../menuNewGame")
-focus_next = NodePath("../menuNewGame")
-focus_previous = NodePath("../menuNewGame")
-text = "Exit"
-
 [node name="Audio" type="Node" parent="."]
 
 [node name="victory_sound_1" type="AudioStreamPlayer2D" parent="Audio"]
@@ -52,3 +20,51 @@ volume_db = 24.0
 position = Vector2( 512, 300 )
 stream = ExtResource( 3 )
 volume_db = 24.0
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+rect_scale = Vector2( 0.85, 0.85 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 675.0
+margin_top = 350.0
+margin_right = 925.0
+margin_bottom = 550.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="menuNewGame" parent="VBoxContainer" instance=ExtResource( 1 )]
+margin_top = 11.0
+margin_bottom = 86.0
+rect_min_size = Vector2( 250, 75 )
+focus_neighbour_top = NodePath("../menuExit")
+focus_neighbour_bottom = NodePath("../menuExit")
+focus_next = NodePath("../menuExit")
+focus_previous = NodePath("../menuExit")
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "New Game"
+reference_path = "res://Assets/GUI/CharacterSelect/CharacterSelect.tscn"
+start_focused = true
+
+[node name="menuExit" parent="VBoxContainer" instance=ExtResource( 1 )]
+margin_top = 113.0
+margin_bottom = 188.0
+rect_min_size = Vector2( 250, 75 )
+focus_neighbour_top = NodePath("../menuNewGame")
+focus_neighbour_bottom = NodePath("../menuNewGame")
+focus_next = NodePath("../menuNewGame")
+focus_previous = NodePath("../menuNewGame")
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Exit"

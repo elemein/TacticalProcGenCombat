@@ -29,12 +29,13 @@ stream = ExtResource( 2 )
 unit_db = 80.0
 
 [node name="HealthManaBar3D" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 3.8, 0 )
 pixel_size = 0.003
 
 [node name="Actions" parent="." instance=ExtResource( 5 )]
 
 [node name="Tween" type="Tween" parent="."]
+
 [connection signal="spell_cast_basic_attack" from="." to="Actions" method="_on_spell_cast_basic_attack"]
 [connection signal="spell_cast_fireball" from="." to="Actions" method="_on_spell_cast_fireball"]
 [connection signal="spell_cast_self_heal" from="." to="Actions" method="_on_spell_cast_self_heal"]

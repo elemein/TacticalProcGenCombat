@@ -18,8 +18,8 @@ ambient_light_sky_contribution = 0.0
 script = ExtResource( 5 )
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 600.0
+margin_right = 1600.0
+margin_bottom = 900.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -31,29 +31,30 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 1014.0
-margin_bottom = 590.0
+margin_right = 1590.0
+margin_bottom = 890.0
 rect_min_size = Vector2( 896, 525 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_right = 1004.0
-margin_bottom = 448.0
+margin_right = 1580.0
+margin_bottom = 648.0
 
 [node name="PlayerModel" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-margin_right = 400.0
-margin_bottom = 448.0
+margin_right = 600.0
+margin_bottom = 648.0
 
 [node name="ViewportContainer" type="ViewportContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PlayerModel"]
-margin_right = 400.0
-margin_bottom = 400.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
+margin_right = 600.0
+margin_bottom = 600.0
+rect_min_size = Vector2( 600, 600 )
+size_flags_horizontal = 2
+size_flags_vertical = 2
 
 [node name="Viewport" type="Viewport" parent="MarginContainer/VBoxContainer/HBoxContainer/PlayerModel/ViewportContainer"]
-size = Vector2( 400, 400 )
+size = Vector2( 600, 600 )
 transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 3
@@ -78,36 +79,36 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PlayerModel"]
-margin_top = 404.0
-margin_right = 400.0
-margin_bottom = 448.0
+margin_top = 604.0
+margin_right = 600.0
+margin_bottom = 648.0
 
 [node name="Left" type="TextureButton" parent="MarginContainer/VBoxContainer/HBoxContainer/PlayerModel/HBoxContainer"]
-margin_left = 61.0
-margin_right = 137.0
+margin_left = 111.0
+margin_right = 187.0
 margin_bottom = 44.0
 size_flags_horizontal = 6
 texture_normal = ExtResource( 3 )
 
 [node name="Right" type="TextureButton" parent="MarginContainer/VBoxContainer/HBoxContainer/PlayerModel/HBoxContainer"]
-margin_left = 263.0
-margin_right = 339.0
+margin_left = 413.0
+margin_right = 489.0
 margin_bottom = 44.0
 size_flags_horizontal = 6
 texture_normal = ExtResource( 6 )
 
 [node name="AbilityInfo" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-margin_left = 404.0
-margin_right = 1004.0
-margin_bottom = 448.0
+margin_left = 604.0
+margin_right = 1580.0
+margin_bottom = 648.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="AbilityBox" type="GridContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/AbilityInfo"]
-margin_left = 142.0
-margin_top = 73.0
-margin_right = 458.0
-margin_bottom = 149.0
+margin_left = 330.0
+margin_top = 123.0
+margin_right = 646.0
+margin_bottom = 199.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
 columns = 4
@@ -127,19 +128,22 @@ margin_left = 240.0
 margin_right = 316.0
 
 [node name="AbilityDescription" type="RichTextLabel" parent="MarginContainer/VBoxContainer/HBoxContainer/AbilityInfo"]
-margin_top = 226.0
-margin_right = 600.0
-margin_bottom = 448.0
+margin_left = 238.0
+margin_top = 326.0
+margin_right = 738.0
+margin_bottom = 648.0
+rect_min_size = Vector2( 500, 300 )
+size_flags_horizontal = 4
 size_flags_vertical = 7
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="LockIn" parent="MarginContainer/VBoxContainer" instance=ExtResource( 1 )]
-margin_left = 402.0
-margin_top = 452.0
-margin_right = 602.0
-margin_bottom = 527.0
+margin_left = 690.0
+margin_top = 652.0
+margin_right = 890.0
+margin_bottom = 727.0
 rect_min_size = Vector2( 200, 75 )
 size_flags_horizontal = 4
 size_flags_vertical = 2
@@ -149,10 +153,10 @@ text = "Start"
 reference_path = "res://World.tscn"
 
 [node name="StartRequirements" type="Label" parent="."]
-margin_left = 408.0
-margin_top = 550.0
-margin_right = 614.0
-margin_bottom = 564.0
+margin_left = 696.545
+margin_top = 752.165
+margin_right = 902.545
+margin_bottom = 766.165
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "Select 3 Abilities Before Starting"
