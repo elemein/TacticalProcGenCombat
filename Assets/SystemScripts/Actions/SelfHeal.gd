@@ -40,6 +40,7 @@ func use():
 	heal_user()
 
 func _on_tween_complete(_tween_object, _tween_node_path):
+	effect_tween.disconnect("tween_completed", self, "_on_tween_complete")
 	get_node(spell_name).queue_free()
 	remove_child(get_node(spell_name))
 	effect = null

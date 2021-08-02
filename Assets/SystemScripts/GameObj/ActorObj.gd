@@ -282,9 +282,11 @@ func set_mp(new_mp):
 	
 func set_attack_power(new_value):
 	stat_dict['Attack Power'] = new_value
+	Signals.emit_signal("player_attack_power_updated", new_value)
 
 func set_spell_power(new_value):
 	stat_dict['Spell Power'] = new_value
+	Signals.emit_signal("player_spell_power_updated", new_value)
 
 func set_defense(new_value):
 	stat_dict['Defense'] = new_value

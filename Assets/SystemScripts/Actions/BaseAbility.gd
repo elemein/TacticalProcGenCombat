@@ -194,7 +194,7 @@ func do_damage(amount, variance):
 	var damage_percentage = (100 - rng.randf_range(0, variance)) / 100
 	var damage_amount = floor(amount * damage_percentage)
 	
-	if is_crit == true: damage_amount * 2
+	if is_crit == true: damage_amount = damage_amount * 2
 	
 	var damaged_objects = []
 	

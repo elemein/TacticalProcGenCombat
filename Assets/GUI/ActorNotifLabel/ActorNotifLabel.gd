@@ -21,7 +21,7 @@ func heal_notif():
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
 	
-	$Tween.connect("tween_completed", self, "_on_tween_complete")
+	var _result = $Tween.connect("tween_completed", self, "_on_tween_complete")
 	$Tween.interpolate_property(self, "translation", translation, 
 		translation + Vector3(0,3.5,0), tween_time, 
 		Tween.TRANS_EXPO, Tween.EASE_OUT)
@@ -35,7 +35,7 @@ func damage_notif(is_crit):
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
 	
-	$Tween.connect("tween_completed", self, "_on_tween_complete")
+	var _result = $Tween.connect("tween_completed", self, "_on_tween_complete")
 	$Tween.interpolate_property(self, "translation", translation, 
 		translation + Vector3(0,(4 + (rng.randf_range(0,0.75))),
 		(rng.randf_range(0,1.5)-0.75)), tween_time, 
