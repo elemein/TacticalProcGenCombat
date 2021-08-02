@@ -14,7 +14,7 @@ func activate_trap(tile_objects):
 				visible = true
 				object.take_damage(trap_damage, false)
 				
-				$Tween.connect("tween_completed", self, "_on_tween_complete")
+				var _result = $Tween.connect("tween_completed", self, "_on_tween_complete")
 				$Tween.interpolate_property(self, "translation", translation, 
 					translation + Vector3(0,1,0), 1, 
 					Tween.TRANS_ELASTIC, Tween.EASE_OUT)

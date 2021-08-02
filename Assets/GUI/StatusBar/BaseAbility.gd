@@ -12,38 +12,61 @@ var icon_path_beg = "res://Assets/GUI/StatusBar/"
 var icon_path_end = "_x76.png"
 var icon_path = null
 
+
+var base_spell_cost = 0
+var base_spell_power = 0
 var spell_cost = 0
 var spell_power = 0
 var spell_button = ''
+var uses_attack_power = false
 
+
+func _ready():
+	var _result = Signals.connect("player_attack_power_updated", self, "update_attack_power")
+	_result = Signals.connect("player_spell_power_updated", self, "update_spell_power")
 
 func set_info(ability_name):
 	name = ability_name
 	match name:
 		'BasicAttackAbility':
 			icon_path = icon_path_beg + 'Basic_Attack' + icon_path_end
-			spell_cost = actions.find_node('BasicAttack').spell_cost
-			spell_power = actions.find_node('BasicAttack').attack_power
+			base_spell_cost = actions.find_node('BasicAttack').spell_cost
+			base_spell_power = actions.find_node('BasicAttack').attack_power
 			spell_button = 'Space'
+			uses_attack_power = true
 		'FireballAbility':
 			icon_path = icon_path_beg + 'Fireball' + icon_path_end
-			spell_cost = actions.find_node('Fireball').spell_cost
-			spell_power = actions.find_node('Fireball').spell_power
+			base_spell_cost = actions.find_node('Fireball').spell_cost
+			base_spell_power = actions.find_node('Fireball').spell_power
 			spell_button = 'E'
 		'DashAbility':
 			icon_path = icon_path_beg + 'Dash' + icon_path_end
-			spell_cost = actions.find_node('Dash').spell_cost
-			spell_power = actions.find_node('Dash').spell_power
+			base_spell_cost = actions.find_node('Dash').spell_cost
+			base_spell_power = actions.find_node('Dash').spell_power
 			spell_button = 'R'
 		'SelfHealAbility':
 			icon_path = icon_path_beg + 'Self_Heal' + icon_path_end
-			spell_cost = actions.find_node('SelfHeal').spell_cost
-			spell_power = actions.find_node('SelfHeal').spell_power
+			base_spell_cost = actions.find_node('SelfHeal').spell_cost
+			base_spell_power = actions.find_node('SelfHeal').spell_power
 			spell_button = 'T'
 			
 	if icon_path != null:
 		icon.texture = load(icon_path)
 		
 	button.text = spell_button
-	cost.text = str(spell_cost)
-	power.text = str(spell_power)
+	cost.text = str(base_spell_cost + spell_cost)
+	power.text = str(base_spell_power + spell_power)
+	
+func update_attack_power(val):
+	if uses_attack_power:
+		spell_power = val
+		power.text = str(base_spell_power + spell_power)
+
+func update_spell_power(val):
+	if not uses_attack_power:
+		spell_power = val
+		power.text = str(base_spell_power + spell_power)
+	
+#func update_spell_cost(val):
+#	spell_cost = val
+#	cost.text = str(base_spell_cost + spell_cost)

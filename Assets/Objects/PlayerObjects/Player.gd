@@ -44,6 +44,8 @@ func _ready():
 	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
 	
 	emit_signal("prepare_gui", start_stats)
+	Signals.emit_signal("player_attack_power_updated", start_stats['Attack Power'])
+	Signals.emit_signal("player_spell_power_updated", start_stats['Spell Power'])
 	
 	add_sub_nodes_as_children()
 
