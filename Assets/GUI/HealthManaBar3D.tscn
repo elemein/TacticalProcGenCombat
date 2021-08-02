@@ -8,7 +8,7 @@ billboard = 1
 script = ExtResource( 2 )
 
 [node name="Viewport" type="Viewport" parent="."]
-size = Vector2( 400, 137 )
+size = Vector2( 400, 87 )
 transparent_bg = true
 usage = 0
 render_target_v_flip = true
