@@ -2,7 +2,7 @@ extends Node
 
 var camera = null
 
-const TILE_OFFSET = 2.1
+const TILE_OFFSET = 2.0
 
 const NON_TRAVERSABLES = ['Wall', 'TempWall']
 const BLOCKS_VISION = ['Wall', 'TempWall']
