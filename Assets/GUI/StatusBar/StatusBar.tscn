@@ -18,8 +18,9 @@ __meta__ = {
 [node name="StatusBarContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 500.0
-margin_right = -524.0
+margin_top = 800.0
+margin_right = -1032.0
+margin_bottom = -300.0
 rect_min_size = Vector2( 500, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
