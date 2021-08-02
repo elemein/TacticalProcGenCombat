@@ -90,8 +90,9 @@ func assign_spawn_room():
 	var x = spawn_room.topleft[0]
 	var z = spawn_room.topleft[1]
 	
-	var stairs = obj_spawner.spawn_map_object('Stairs', map_object, [x,z], false)
-	stairs.connects_to = map_object.map_id + 1
+	if map_object.map_id < map_object.parent_mapset.floor_count: # if last floor, no stairs
+		var stairs = obj_spawner.spawn_map_object('Stairs', map_object, [x,z], false)
+		stairs.connects_to = map_object.map_id + 1
 	
 	spawn_treasure_in_room(spawn_room, rng.randi_range(0,1), 
 							rng.randi_range(0,1), rng.randi_range(0,1), 0)
