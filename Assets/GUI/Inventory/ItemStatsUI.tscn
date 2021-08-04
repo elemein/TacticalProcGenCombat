@@ -13,10 +13,10 @@ __meta__ = {
 }
 
 [node name="InventoryUI" type="MarginContainer" parent="."]
-margin_left = 650.0
-margin_top = 150.0
-margin_right = 800.0
-margin_bottom = 250.0
+margin_left = 850.0
+margin_top = 225.0
+margin_right = 1004.0
+margin_bottom = 325.0
 rect_min_size = Vector2( 150, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
