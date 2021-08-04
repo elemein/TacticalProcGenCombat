@@ -18,6 +18,8 @@ var base_spell_power = 0
 var spell_cost = 0
 var spell_power = 0
 var spell_button = ''
+var spell_description = ''
+var uses_any_power = true
 var uses_attack_power = false
 
 
@@ -32,22 +34,27 @@ func set_info(ability_name):
 			icon_path = icon_path_beg + 'Basic_Attack' + icon_path_end
 			base_spell_cost = actions.find_node('BasicAttack').spell_cost
 			base_spell_power = actions.find_node('BasicAttack').attack_power
+			spell_description = actions.find_node('BasicAttack').spell_description
 			spell_button = 'Space'
 			uses_attack_power = true
 		'FireballAbility':
 			icon_path = icon_path_beg + 'Fireball' + icon_path_end
 			base_spell_cost = actions.find_node('Fireball').spell_cost
 			base_spell_power = actions.find_node('Fireball').spell_power
+			spell_description = actions.find_node('Fireball').spell_description
 			spell_button = 'E'
 		'DashAbility':
 			icon_path = icon_path_beg + 'Dash' + icon_path_end
 			base_spell_cost = actions.find_node('Dash').spell_cost
 			base_spell_power = actions.find_node('Dash').spell_power
+			spell_description = actions.find_node('Dash').spell_description
 			spell_button = 'R'
+			uses_any_power = false
 		'SelfHealAbility':
 			icon_path = icon_path_beg + 'Self_Heal' + icon_path_end
 			base_spell_cost = actions.find_node('SelfHeal').spell_cost
 			base_spell_power = actions.find_node('SelfHeal').spell_power
+			spell_description = actions.find_node('SelfHeal').spell_description
 			spell_button = 'T'
 			
 	if icon_path != null:
@@ -58,11 +65,17 @@ func set_info(ability_name):
 	power.text = str(base_spell_power + spell_power)
 	
 func update_attack_power(val):
+	if not uses_any_power:
+		power.text = '-'
+		return
 	if uses_attack_power:
 		spell_power = val
 		power.text = str(base_spell_power + spell_power)
 
 func update_spell_power(val):
+	if not uses_any_power:
+		power.text = '-'
+		return
 	if not uses_attack_power:
 		spell_power = val
 		power.text = str(base_spell_power + spell_power)

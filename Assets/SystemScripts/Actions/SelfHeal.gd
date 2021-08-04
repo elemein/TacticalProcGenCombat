@@ -8,7 +8,7 @@ func _ready():
 	spell_name = 'SelfHeal'
 	anim_time = 0.6
 	spell_description = str("""Self Heal
-	Cost: {cost}\tPower: {power}
+	Cost: {cost}\tBase Power: {power}
 	
 	Heal yourself.
 	""").format({'cost': spell_cost, 'power': spell_power})

@@ -13,7 +13,7 @@ func _ready():
 	effect_start_height = 1
 	effect_end_height = 1
 	spell_description = str("""Fireball
-	Cost: {cost}\tPower: {power}
+	Cost: {cost}\tBase Power: {power}
 	
 	Throw a fireball {length} tiles in front of you.
 	""").format({'cost': spell_cost, 'power': spell_power, 'length': spell_length})

@@ -10,7 +10,7 @@ func _ready():
 	spell_length = 1
 	anim_time = 0.6
 	spell_description = str("""Basic Attack
-	Cost: {cost}\tPower: {power}
+	Cost: {cost}\tBase Power: {power}
 	
 	Attack {length} tile in front of you.
 	""").format({'cost': spell_cost, 'power': attack_power, 'length': spell_length})
