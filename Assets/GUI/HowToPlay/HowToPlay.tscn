@@ -1,0 +1,135 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/GUI/TitleScreen/menu_button.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/GUI/HowToPlay/CharacterSelect.png" type="Texture" id=2]
+[ext_resource path="res://Assets/GUI/HowToPlay/HowToPlay.gd" type="Script" id=3]
+[ext_resource path="res://Assets/GUI/HowToPlay/InGame.png" type="Texture" id=4]
+
+[node name="HowToPlay" type="Node"]
+script = ExtResource( 3 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 1580.0
+margin_bottom = 880.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_right = 1560.0
+margin_bottom = 781.0
+size_flags_vertical = 3
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CharacterSelect" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+margin_right = 1560.0
+margin_bottom = 388.0
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/CharacterSelect"]
+margin_top = 85.0
+margin_right = 518.0
+margin_bottom = 303.0
+rect_min_size = Vector2( 500, 0 )
+size_flags_horizontal = 3
+text = "1 - Use the arrows to turn the character model around
+
+2 - The character model displaying an animation (currently displays idle)
+
+3 - Select yours spells here. You need to select exactly 3 spells in order to start the game. When you hover over a spell it will show a description for it. The following border colours inidcate the status.:
+  Gray = Normal
+  Blue = Hovered
+  Red = Locked In
+  Red X = Unable to lock in when 3 others spells are locked in
+
+4 - Start the game once you have 3 spells locked in"
+autowrap = true
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxContainer/CharacterSelect"]
+margin_left = 522.0
+margin_right = 1560.0
+margin_bottom = 388.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 7
+size_flags_stretch_ratio = 2.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InGame" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+margin_top = 392.0
+margin_right = 1560.0
+margin_bottom = 781.0
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/InGame"]
+margin_top = 60.0
+margin_right = 518.0
+margin_bottom = 329.0
+rect_min_size = Vector2( 500, 0 )
+size_flags_horizontal = 3
+text = "1 - Your health and mana bar. You have passive regen for both.
+
+2 - Spell information. Shows the spell icon along with the button to use it, the mana cost, and the power of the spell. This power is combined with your player and base spell power.
+
+3 - You, your in game health bar, and an item on the ground beside you.
+
+4 - Your inventory. Use the TAB button to open this menu. Use the E button to interact with your inventory. Stats of the item are shown on the right.
+
+5 - An enemy. No one is your friend in this game.
+
+6 - Indicator to show the spell for the current turn.
+
+7 - Stairs. Find these to go to the next floor. On the third floor is the final boss."
+autowrap = true
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxContainer/InGame"]
+margin_left = 522.0
+margin_right = 1560.0
+margin_bottom = 389.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 7
+size_flags_stretch_ratio = 2.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" parent="MarginContainer/VBoxContainer" instance=ExtResource( 1 )]
+margin_left = 655.0
+margin_top = 785.0
+margin_right = 905.0
+margin_bottom = 860.0
+rect_min_size = Vector2( 250, 75 )
+focus_neighbour_top = NodePath("../menuExit")
+focus_neighbour_bottom = NodePath("../menuExit")
+focus_next = NodePath("../menuExit")
+focus_previous = NodePath("../menuExit")
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "New Game"
+reference_path = "res://Assets/GUI/CharacterSelect/CharacterSelect.tscn"
+start_focused = true
