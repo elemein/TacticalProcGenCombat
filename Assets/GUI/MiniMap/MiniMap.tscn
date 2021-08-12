@@ -26,6 +26,7 @@ margin_bottom = 69.0
 texture = ExtResource( 1 )
 
 [node name="Fox" type="TextureRect" parent="."]
+visible = false
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 69.0
@@ -33,6 +34,7 @@ margin_bottom = 69.0
 texture = ExtResource( 4 )
 
 [node name="Imp" type="TextureRect" parent="."]
+visible = false
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 69.0
@@ -40,6 +42,7 @@ margin_bottom = 69.0
 texture = ExtResource( 3 )
 
 [node name="Minotaur" type="TextureRect" parent="."]
+visible = false
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 69.0

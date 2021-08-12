@@ -14,7 +14,9 @@ ambient_light_color = Color( 1, 1, 1, 1 )
 ambient_light_energy = 0.0
 ambient_light_sky_contribution = 0.0
 
-[node name="Player" type="MeshInstance"]
+[node name="Player" type="MeshInstance" groups=[
+"player",
+]]
 script = ExtResource( 2 )
 
 [node name="Graphics" parent="." instance=ExtResource( 1 )]
