@@ -23,6 +23,7 @@ var inventory_open = false
 # object vars
 var inventory = INVENTORY.instance()
 
+var minimap_icon = "Player"
 
 func _init().("Player", start_stats):
 	pass

@@ -4,6 +4,8 @@ onready var world = get_node('/root/World')
 
 var connects_to
 
+var minimap_icon = "Stairs"
+
 func _init().('Stairs'): pass
 
 func take_stairs(tile_objects):

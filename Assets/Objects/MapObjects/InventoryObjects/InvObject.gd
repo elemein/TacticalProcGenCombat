@@ -8,6 +8,8 @@ var value
 var equippable
 var usable
 
+var minimap_icon = null
+
 func _init(item_type, item_name, item_value, equip, use).("Inv Item"):
 	inv_item_type = item_type
 	inv_item_name = item_name

@@ -19,7 +19,7 @@ var obj_spawner = GlobalVars.obj_spawner
 
 var inventory = INVENTORY.instance()
 
-var minimap_icon = 'minotaur'
+var minimap_icon = 'Minotaur'
 
 func _init().("Enemy", start_stats):
 	pass
