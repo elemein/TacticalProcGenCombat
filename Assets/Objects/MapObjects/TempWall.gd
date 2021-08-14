@@ -7,6 +7,9 @@ var anim_playing = false
 var anim_played = false
 var to_remove = false
 
+# vars for minimap
+var minimap_icon = null
+
 func _init().('TempWall'): pass
 
 func _ready():

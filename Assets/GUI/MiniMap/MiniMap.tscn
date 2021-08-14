@@ -20,6 +20,8 @@ margin_left = 5.0
 margin_top = 5.0
 margin_right = 35.0
 margin_bottom = 35.0
+custom_constants/vseparation = 1
+custom_constants/hseparation = 1
 columns = 20
 
 [node name="BaseTile" type="TextureRect" parent="."]

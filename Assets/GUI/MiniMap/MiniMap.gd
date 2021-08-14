@@ -14,6 +14,7 @@ onready var minotaur_icon = preload("res://Assets/GUI/MiniMap/EnemyMinotaur.png"
 onready var stairs_icon = preload("res://Assets/GUI/MiniMap/Stairs.png")
 onready var tile_icon = preload("res://Assets/GUI/MiniMap/Tile.png")
 onready var blank_icon = preload("res://Assets/GUI/MiniMap/Blank.png")
+onready var seen_icon = preload("res://Assets/GUI/MiniMap/Seen.png")
 
 var markers = []
 
@@ -31,7 +32,7 @@ func _ready():
 		var map_grid = player.get_parent_map().map_grid
 		for row_cnt in range(map_grid.size()):
 			var row = []
-			for tile_cnt in range(map_grid[row_cnt].size()):
+			for _tile_cnt in range(map_grid[row_cnt].size()):
 				var new_tile = base_tile.duplicate()
 				grid.add_child(new_tile)
 				new_tile.show()
@@ -45,7 +46,7 @@ func _process(_delta):
 	var map_grid = player.get_parent_map().map_grid
 	for row_cnt in range(map_grid.size()):
 		for tile_cnt in range(map_grid[row_cnt].size()):
-			var minimap_icon = "Blank"
+			var minimap_icon = blank_icon
 			var tile = markers[abs(map_grid.size() - row_cnt) - 1][tile_cnt]
 			for thing in map_grid[row_cnt][tile_cnt]:
 				match thing.minimap_icon:
@@ -53,22 +54,32 @@ func _process(_delta):
 						minimap_icon = player_icon
 					"Fox":
 						if not minimap_icon in ["Player", "Stairs"] and not thing.is_dead:
-							minimap_icon = fox_icon
+							if thing.visible:
+								minimap_icon = fox_icon
+							elif thing.was_visible:
+								minimap_icon = seen_icon
 					"Imp":
 						if not minimap_icon in ["Player", "Stairs"] and not thing.is_dead:
-							minimap_icon = imp_icon
+							if thing.visible:
+								minimap_icon = imp_icon
+							elif thing.was_visible:
+								minimap_icon = seen_icon
 					"Minotaur":
 						if not minimap_icon in ["Player", "Stairs"] and not thing.is_dead:
-							minimap_icon = minotaur_icon
+							if thing.visible:
+								minimap_icon = minotaur_icon
+							elif thing.was_visible:
+								minimap_icon = seen_icon
 					"Stairs":
-						if not minimap_icon in ["Player"]:
-							minimap_icon = stairs_icon
+						if not minimap_icon in ["Player", "Stairs"]:
+							if thing.visible or thing.was_visible:
+								minimap_icon = stairs_icon
 					"Ground":
 						if not minimap_icon in ["Player", "Stairs", "Fox", "Imp", "Minotaur"]:
-							minimap_icon = tile_icon
-					"Wall":
-						if minimap_icon == "Blank":
-							minimap_icon = blank_icon
+							if thing.visible:
+								minimap_icon = tile_icon
+							elif thing.was_visible:
+								minimap_icon = seen_icon
 					null:
 						pass
 					_:
