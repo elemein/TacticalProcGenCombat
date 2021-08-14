@@ -79,10 +79,10 @@ margin_left = 468.0
 margin_right = 568.0
 
 [node name="MiniMapContainer" type="MarginContainer" parent="."]
-margin_left = 1408.0
-margin_top = 64.0
-margin_right = 1536.0
-margin_bottom = 192.0
+margin_left = 1472.0
+margin_right = 1600.0
+margin_bottom = 128.0
+grow_horizontal = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }

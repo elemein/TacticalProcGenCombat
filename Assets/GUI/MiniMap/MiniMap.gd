@@ -5,19 +5,17 @@ export (NodePath) var player
 export var zoom = 1.5
 
 onready var grid = find_node('GridContainer')
+onready var base_tile = find_node('BaseTile')
 
-onready var player_marker = find_node('Player')
-onready var fox_marker = find_node('Fox')
-onready var imp_marker = find_node('Imp')
-onready var minotaur_marker = find_node('Minotaur')
-onready var blank_marker = find_node('Blank')
-onready var tile_marker = find_node('Tile')
-onready var stair_marker = find_node('Stairs')
+onready var player_icon = preload("res://Assets/GUI/MiniMap/Player.png")
+onready var fox_icon = preload("res://Assets/GUI/MiniMap/EnemyFox.png")
+onready var imp_icon = preload("res://Assets/GUI/MiniMap/EnemyImp.png")
+onready var minotaur_icon = preload("res://Assets/GUI/MiniMap/EnemyMinotaur.png")
+onready var stairs_icon = preload("res://Assets/GUI/MiniMap/Stairs.png")
+onready var tile_icon = preload("res://Assets/GUI/MiniMap/Tile.png")
+onready var blank_icon = preload("res://Assets/GUI/MiniMap/Blank.png")
 
-onready var icons = {"Fox": fox_marker, "Imp": imp_marker, "Minotaur": minotaur_marker, "Wall": blank_marker, "Ground": tile_marker, "Player": player_marker, "Stairs": stair_marker}
-
-var grid_scale
-var markers = {}
+var markers = []
 
 
 # Called when the node enters the scene tree for the first time.
@@ -29,22 +27,16 @@ func _ready():
 	else:
 		yield(get_tree(), "idle_frame")
 		player = get_tree().get_nodes_in_group('player')[0]
-		player_marker.rect_position = self.rect_size / 2
-		grid_scale = self.rect_size / (get_viewport_rect().size * zoom)
-		
-		
-		# CAN PROB DELETE THIS
-#		for enemy in get_tree().get_nodes_in_group('enemies'):
-#			var new_marker = icons[enemy.minimap_icon].duplicate()
-#			self.add_child(new_marker)
-#			new_marker.show()
-#			markers[enemy] = new_marker
-			
-func add_tile_to_grid(marker):
-	if marker != null:
-		var new_marker = icons[marker].duplicate()
-		grid.add_child(new_marker)
-		new_marker.show()
+				
+		var map_grid = player.get_parent_map().map_grid
+		for row_cnt in range(map_grid.size()):
+			var row = []
+			for tile_cnt in range(map_grid[row_cnt].size()):
+				var new_tile = base_tile.duplicate()
+				grid.add_child(new_tile)
+				new_tile.show()
+				row.append(new_tile)
+			markers.append(row)
 			
 func _process(_delta):
 	if player == null:
@@ -54,35 +46,31 @@ func _process(_delta):
 	for row_cnt in range(map_grid.size()):
 		for tile_cnt in range(map_grid[row_cnt].size()):
 			var minimap_icon = "Blank"
-			for thing in map_grid[tile_cnt][row_cnt]:
+			var tile = markers[abs(map_grid.size() - row_cnt) - 1][tile_cnt]
+			for thing in map_grid[row_cnt][tile_cnt]:
 				match thing.minimap_icon:
 					"Player":
-						minimap_icon = thing.minimap_icon
-					"Fox", "Imp", "Minotaur":
-						if not minimap_icon in ["Player", "Stairs"]:
-							minimap_icon = thing.minimap_icon
+						minimap_icon = player_icon
+					"Fox":
+						if not minimap_icon in ["Player", "Stairs"] and not thing.is_dead:
+							minimap_icon = fox_icon
+					"Imp":
+						if not minimap_icon in ["Player", "Stairs"] and not thing.is_dead:
+							minimap_icon = imp_icon
+					"Minotaur":
+						if not minimap_icon in ["Player", "Stairs"] and not thing.is_dead:
+							minimap_icon = minotaur_icon
 					"Stairs":
 						if not minimap_icon in ["Player"]:
-							minimap_icon = thing.minimap_icon
+							minimap_icon = stairs_icon
 					"Ground":
 						if not minimap_icon in ["Player", "Stairs", "Fox", "Imp", "Minotaur"]:
-							minimap_icon = thing.minimap_icon
+							minimap_icon = tile_icon
 					"Wall":
 						if minimap_icon == "Blank":
-							minimap_icon = thing.minimap_icon
+							minimap_icon = blank_icon
 					null:
 						pass
-				
-			add_tile_to_grid(minimap_icon)
-			
-	pass
-#
-#	var tmp = 1
-#	for enemy in markers:
-#		# 
-#		# JUST CALC WITH THE X AND Z TRANSLATIONS
-#		#
-#		var enemy_pos = Vector2(enemy.translation.x, enemy.translation.z)
-#		var player_pos = Vector2(player.translation.x, player.translation.z)
-#		var obj_pos = (enemy_pos - player_pos) 
-#		markers[enemy].rect_position = obj_pos
+					_:
+						pass
+			tile.texture = minimap_icon
