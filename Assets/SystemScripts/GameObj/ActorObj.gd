@@ -56,6 +56,9 @@ var in_turn = false
 var anim_state = "idle"
 var effect = null
 
+# vars for minimap
+var was_visible = false
+
 var stat_dict = {"Max HP" : 0, "HP" : 0, "Max MP": 0, "MP": 0, \
 				"HP Regen" : 0, "MP Regen": 0, "Attack Power" : 0, \
 				"Crit Chance" : 0, "Spell Power" : 0, "Defense" : 0, \
@@ -96,7 +99,9 @@ func set_action(action):
 
 	if object_type == 'Player': gui.set_action(proposed_action)
 
-func process_turn():	
+func process_turn():
+	if visible:
+		was_visible = true
 	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
 	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
 	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time($Actions/Attacks/BasicAttack.anim_time)

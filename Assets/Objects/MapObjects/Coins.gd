@@ -2,6 +2,8 @@ extends GameObj
 
 var value = 10
 
+var minimap_icon = null
+
 func _init().('Coins'): pass
 
 func set_gold_value(new_value):

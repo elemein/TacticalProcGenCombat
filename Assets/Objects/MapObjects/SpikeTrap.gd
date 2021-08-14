@@ -4,6 +4,8 @@ var trap_damage = 33
 
 var sprung = false
 
+var minimap_icon = null
+
 func _init().('Spike Trap'): pass
 
 func activate_trap(tile_objects):

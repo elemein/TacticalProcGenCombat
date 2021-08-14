@@ -7,7 +7,9 @@
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/NewArt/Minotaur/Minotaur.glb" type="PackedScene" id=6]
 
-[node name="Enemy" type="MeshInstance"]
+[node name="Enemy" type="MeshInstance" groups=[
+"enemies",
+]]
 script = ExtResource( 4 )
 
 [node name="Graphics" parent="." instance=ExtResource( 6 )]
