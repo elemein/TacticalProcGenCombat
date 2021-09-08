@@ -14,6 +14,4 @@ func _on_button_mouse_entered():
 	grab_focus()
 	
 func _on_button_pressed():
-	var peer = NetworkedMultiplayerENet.new()
-	peer.create_client('127.0.0.1', 7369)
-	get_tree().network_peer = peer
+	Client.connect_to_server()
