@@ -19,6 +19,16 @@ func _ready():
 	move_to_map(player, 'The Cave', 1)
 	
 	first_turn_workaround_for_player_sight()
+	
+	
+	### NETWORK
+	var peer = NetworkedMultiplayerENet.new()
+	peer.create_server(7369, 4)
+	get_tree().network_peer = peer
+	get_tree().connect("network_peer_connected", self, "_player_connected")
+
+func _player_connected(id):
+	print('player ' + str(id) + ' has connected!')
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):
 	var targ_mapset
