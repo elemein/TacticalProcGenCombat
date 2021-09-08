@@ -21,7 +21,8 @@ func _ready():
 	first_turn_workaround_for_player_sight()
 	
 	### NETWORK
-	Server.create_server()
+	if GlobalVars.peer_type == 'server': Server.create_server()
+	elif GlobalVars.peer_type == 'client': Server.request_map_from_server()
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):
 	var targ_mapset

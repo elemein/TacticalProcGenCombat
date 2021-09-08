@@ -15,3 +15,4 @@ func _on_button_mouse_entered():
 	
 func _on_button_pressed():
 	Client.connect_to_server()
+	get_tree().change_scene(reference_path)

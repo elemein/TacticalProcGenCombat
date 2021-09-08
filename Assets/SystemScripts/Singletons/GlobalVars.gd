@@ -1,6 +1,7 @@
 extends Node
 
 var camera = null
+var peer_type = null
 
 const TILE_OFFSET = 2.0
 

@@ -14,7 +14,10 @@ func _on_button_mouse_entered():
 	grab_focus()
 	
 func _on_button_pressed():
-	if reference_path != "":
+	if reference_path == 'res://Assets/GUI/CharacterSelect/CharacterSelect.tscn':
+		GlobalVars.peer_type = 'server'
+		var _result = get_tree().change_scene(reference_path)
+	elif reference_path != "":
 		var _result = get_tree().change_scene(reference_path)
 	else:
 		get_tree().quit()

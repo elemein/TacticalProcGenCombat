@@ -36,7 +36,7 @@ focus_next = NodePath("../menuExit")
 focus_previous = NodePath("../menuExit")
 size_flags_horizontal = 4
 size_flags_vertical = 6
-text = "New Game"
+text = "New Game | Host Server"
 reference_path = "res://Assets/GUI/CharacterSelect/CharacterSelect.tscn"
 start_focused = true
 
@@ -52,6 +52,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 6
 text = "Join Server"
 script = ExtResource( 3 )
+reference_path = "res://Assets/GUI/CharacterSelect/CharacterSelect.tscn"
 
 [node name="menuHowToPlay" parent="VBoxContainer" instance=ExtResource( 2 )]
 margin_top = 158.0
