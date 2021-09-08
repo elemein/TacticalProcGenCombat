@@ -22,7 +22,7 @@ func _player_connected(id):
 
 remote func request_map(requester):
 	var player_id = get_tree().get_rpc_sender_id()
-	var map_data = 'The Cave'
+	var map_data = PlayerInfo.current_map.map_grid
 	print("Sending map data to requester.")
 	rpc_id(player_id, 'receive_map_from_server', map_data)
 
