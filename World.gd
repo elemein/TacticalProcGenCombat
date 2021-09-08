@@ -13,6 +13,7 @@ var dungeon = MAPSET_CLASS.new('The Cave', 3)
 var mapsets = []
 
 func _ready():
+
 	add_child(dungeon)
 	mapsets = [dungeon]
 	
@@ -21,8 +22,15 @@ func _ready():
 	first_turn_workaround_for_player_sight()
 	
 	### NETWORK
-	if GlobalVars.peer_type == 'server': Server.create_server()
-	elif GlobalVars.peer_type == 'client': Server.request_map_from_server()
+	if GlobalVars.peer_type == 'server': 
+		Server.create_server()
+
+
+	
+	elif GlobalVars.peer_type == 'client': 
+		Server.request_map_from_server()
+	
+
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):
 	var targ_mapset

@@ -215,3 +215,16 @@ func log_enemy_death(dead_enemy):
 		var in_room = room.pos_in_room(player.get_map_pos())
 		if in_room == true:
 			room.log_enemy_death(dead_enemy)
+
+func return_map_grid_encoded_to_string():
+	var to_return = []
+	
+	for x in range(map_grid.size()):
+		to_return.append([])
+		for z in range(map_grid[0].size()):
+			to_return[x].append([])
+			for obj in range(map_grid[x][z].size()):
+				to_return[x][z].append([])
+				to_return[x][z][obj].append(map_grid[x][z][obj].get_obj_type())
+
+	return to_return
