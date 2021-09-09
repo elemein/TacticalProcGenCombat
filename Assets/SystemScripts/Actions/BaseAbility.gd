@@ -40,7 +40,7 @@ func move_check() -> bool:
 	set_target_actor_pos()
 	for target_tile in get_target_tiles():
 		for object in target_tile:
-			if object.object_type in GlobalVars.NON_TRAVERSABLES:
+			if object.get_id()['CategoryType'] in GlobalVars.NON_TRAVERSABLES:
 				return false
 	return true
 			
@@ -201,7 +201,7 @@ func do_damage(amount, variance):
 	for objects_on_tile in get_target_tiles():
 		if typeof(objects_on_tile) != TYPE_STRING:
 			for object in objects_on_tile:
-				if object.get_obj_type() in ['Enemy', 'Player']:
+				if object.get_id()['CategoryType'] in ['Enemy', 'Player']:
 					damaged_objects.append(object)
 
 	for object in damaged_objects:

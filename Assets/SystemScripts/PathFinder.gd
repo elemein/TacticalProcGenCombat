@@ -150,8 +150,8 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 	
 		var skip_tile = false
 		for object in tile_contents:
-			if object.get_obj_type() in GlobalVars.NON_TRAVERSABLES: skip_tile = true
-			if object.get_obj_type() in GlobalVars.ENEMY_TYPES:
+			if object.get_id()['CategoryType'] in GlobalVars.NON_TRAVERSABLES: skip_tile = true
+			if object.get_id()['CategoryType'] == 'Enemy':
 				if object.get_is_dead() == false:
 					if ignore_enemies == false: skip_tile = true
 		if skip_tile: continue

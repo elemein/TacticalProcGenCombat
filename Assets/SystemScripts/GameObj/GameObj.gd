@@ -1,17 +1,17 @@
 extends MeshInstance
 class_name GameObj
 
-var object_type 
+var object_identity
 var parent_mapset
 var parent_map = 'None'
 var turn_timer
 var map_pos = []
 
-func _init(obj_type):
-	object_type = obj_type
+func _init(obj_id):
+	object_identity = obj_id
 
 # Getters
-func get_obj_type(): return object_type
+func get_id(): return object_identity
 
 func get_parent_mapset(): return parent_mapset
 
@@ -23,7 +23,7 @@ func get_translation(): return translation
 
 # Setters
 func set_parent_map(map):
-	if object_type == 'Player': PlayerInfo.current_map = map
+	if object_identity['CategoryType'] == 'Player': PlayerInfo.current_map = map
 	
 	parent_map = map
 	turn_timer = map.get_turn_timer()

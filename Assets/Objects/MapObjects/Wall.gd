@@ -2,4 +2,7 @@ extends GameObj
 
 var minimap_icon = "Wall"
 
-func _init().('Wall'): pass
+var identity = {"Category": "MapObject", "CategoryType": "Wall", 
+				"Identifier": "BaseWall"}
+
+func _init().(identity): pass

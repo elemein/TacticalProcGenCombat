@@ -64,7 +64,7 @@ var stat_dict = {"Max HP" : 0, "HP" : 0, "Max MP": 0, "MP": 0, \
 				"Crit Chance" : 0, "Spell Power" : 0, "Defense" : 0, \
 				"Speed": 0, "View Range" : 0}
 
-func _init(obj_type, actor_stats).(obj_type):
+func _init(obj_id, actor_stats).(obj_id):
 	stat_dict = actor_stats
 
 	turn_anim_timer.set_one_shot(true)
@@ -97,7 +97,7 @@ func set_action(action):
 
 	ready_status = true
 
-	if object_type == 'Player': gui.set_action(proposed_action)
+	if object_identity['CategoryType'] == 'Player': gui.set_action(proposed_action)
 
 func process_turn():
 	if visible:
@@ -187,7 +187,7 @@ func take_damage(damage, is_crit):
 		if is_crit == false: display_notif(("-" + str(damage)), 'damage')
 		else: display_notif(("-" + str(damage)) + "!", 'crit damage')
 		
-		print("%s has %s HP" % [self.get_obj_type(), stat_dict['HP']])
+		print("%s has %s HP" % [self.get_id()['Identifier'], stat_dict['HP']])
 		
 		# Play a random audio effect upon getting hit
 		var num_audio_effects = audio_hit.get_children().size()
@@ -219,7 +219,7 @@ func die():
 	death_anim_timer.start()
 	$HealthManaBar3D.visible = false
 	
-	if self.object_type == 'Player':
+	if self.object_identity['CategoryType'] == 'Player':
 		var _result = get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
 	else:
 		parent_map.log_enemy_death(self)

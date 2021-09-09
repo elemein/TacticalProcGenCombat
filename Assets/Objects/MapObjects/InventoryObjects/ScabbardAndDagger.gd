@@ -1,6 +1,10 @@
 extends InvObject
 
-func _init().('Accessory', 'Scabbard and Dagger', 50, true, false):
+var identity = {"Category": "Inv Item", "CategoryType": 'Accessory' , 
+				"Identifier": 'Scabbard and Dagger', "Value": 50, 
+				"Equippable": true, "Usable": false, "Consumable": false}
+
+func _init().(identity):
 	pass
 
 var attack_power_bonus = 5

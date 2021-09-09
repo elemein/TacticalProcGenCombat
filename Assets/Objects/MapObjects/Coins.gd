@@ -4,7 +4,10 @@ var value = 10
 
 var minimap_icon = null
 
-func _init().('Coins'): pass
+var identity = {"Category": "MapObject", "CategoryType": "Coins", 
+				"Identifier": "Coins"}
+
+func _init().(identity): pass
 
 func set_gold_value(new_value):
 	value = new_value
@@ -14,6 +17,6 @@ func get_gold_value():
 
 func collect_item(tile_objects):
 	for object in tile_objects:
-		if object.get_obj_type() == 'Player':
+		if object.get_id()['CategoryType'] == 'Player':
 			object.inventory.add_to_gold(self)
 			parent_map.remove_map_object(self)

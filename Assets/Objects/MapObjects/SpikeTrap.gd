@@ -6,11 +6,14 @@ var sprung = false
 
 var minimap_icon = null
 
-func _init().('Spike Trap'): pass
+var identity = {"Category": "MapObject", "CategoryType": "Trap", 
+				"Identifier": "Spike Trap"}
+
+func _init().(identity): pass
 
 func activate_trap(tile_objects):
 	for object in tile_objects:
-		if object.get_obj_type() == 'Player':
+		if object.get_id()['CategoryType'] == 'Player':
 			if sprung == false: # only spring if not already sprung
 				sprung = true
 				visible = true

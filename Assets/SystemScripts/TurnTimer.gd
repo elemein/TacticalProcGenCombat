@@ -126,7 +126,7 @@ func check_if_actors_ready() -> bool:
 		if actor.ready_status == false: all_ready = false
 
 	for actor in actors:
-		if actor.object_type == 'Player':
+		if actor.get_id()['CategoryType'] == 'Player':
 			if actor.is_dead == false: players_alive += 1
 	if players_alive == 0:
 		all_ready = false

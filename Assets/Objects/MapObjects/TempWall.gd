@@ -10,7 +10,10 @@ var to_remove = false
 # vars for minimap
 var minimap_icon = null
 
-func _init().('TempWall'): pass
+var identity = {"Category": "MapObject", "CategoryType": "TempWall", 
+				"Identifier": "TempWall"}
+
+func _init().(identity): pass
 
 func _ready():
 	TweenNode.connect("tween_completed", self, "_on_wall_slam_down_complete")

@@ -56,7 +56,7 @@ func add_map_objects_to_tree():
 				if object.get_parent() != null:
 					object.get_parent().remove_child(object)
 				add_child(object)
-				if object.get_obj_type() == 'Enemy':
+				if object.get_id()['CategoryType'] == 'Enemy':
 					object.setup_actor()
 					current_number_of_enemies += 1
 
@@ -87,21 +87,22 @@ func print_map_grid():
 			var to_append = ''
 			
 			for object in tile:
-				match object.get_obj_type():
-					'Wall':
+				match object.get_id()['Identifier']:
+					'BaseWall':
 						if (to_append in ['X', 'E', 't','c','s', 'm']) == false: 
 							to_append = '.'
-					'Ground':
+					'BaseGround':
 						if (to_append in ['X', 'E', 't','c','s', 'm']) == false: 
 							to_append = '0'
 					'Player': to_append = 'X'
-					'Enemy': to_append = 'E'
+					'Imp': to_append = 'i'
+					'Fox': to_append = 'f'
+					'Minotaur': to_append = 'B'
 					'Spike Trap': to_append = 't'
 					'Coins': to_append = 'c'
-					'Inv Item':
-						match object.get_inv_item_name():
-							'Sword': to_append = 's'
-							'Magic Staff': to_append = 'm'
+
+					'Sword': to_append = 's'
+					'Magic Staff': to_append = 'm'
 			
 			converted_row.append(to_append)
 		print(converted_row)
@@ -126,10 +127,10 @@ func tile_in_bounds(x,z):
 func tile_available(x,z):
 	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
-			if object.get_obj_type() in GlobalVars.NON_TRAVERSABLES: return false
+			if object.get_id()['CategoryType'] in GlobalVars.NON_TRAVERSABLES: return false
 			
-			if (object.get_obj_type() in GlobalVars.ENEMY_TYPES) or \
-				(object.get_obj_type() == 'Player'):
+			if (object.get_id()['CategoryType'] == 'Enemy') or \
+				(object.get_id()['CategoryType'] == 'Player'):
 				if object.get_is_dead() == true: continue
 				else: return false
 		return true
@@ -138,7 +139,7 @@ func tile_available(x,z):
 func is_tile_wall(x,z):
 	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
-			if object.get_obj_type() in ['Wall', 'TempWall']: return true
+			if object.get_id()['CategoryType'] in ['Wall', 'TempWall']: return true
 	return false
 
 func get_map():
@@ -153,7 +154,7 @@ func hide_non_visible_from_player():
 		var objects_on_tile = get_tile_contents(tile[0], tile[1])
 		
 		for object in objects_on_tile:
-			if object.get_obj_type() != 'Spike Trap': # dont reveal traps
+			if object.get_id()['CategoryType'] != 'Trap': # dont reveal traps
 				objs_visible_to_player.append(object)
 				object.visible = true
 
@@ -225,6 +226,6 @@ func return_map_grid_encoded_to_string():
 			to_return[x].append([])
 			for obj in range(map_grid[x][z].size()):
 				to_return[x][z].append([])
-				to_return[x][z][obj].append(map_grid[x][z][obj].get_obj_type())
+				to_return[x][z][obj].append(map_grid[x][z][obj].get_id())
 
 	return to_return

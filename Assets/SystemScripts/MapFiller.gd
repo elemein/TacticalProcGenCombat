@@ -63,7 +63,7 @@ func get_random_available_tile_in_room(room) -> Array:
 		var all_clear = true
 		
 		for object in total_map[x][z]:
-			if object.get_obj_type() != 'Ground': 
+			if object.get_id()['CategoryType'] != 'Ground': 
 				all_clear = false
 		
 		if all_clear == true: tile_clear = true

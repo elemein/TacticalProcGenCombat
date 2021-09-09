@@ -1,6 +1,10 @@
 extends InvObject
 
-func _init().('Weapon', 'Magic Staff', 50, true, false):
+var identity = {"Category": "Inv Item", "CategoryType": 'Weapon' , 
+				"Identifier": 'Magic Staff', "Value": 50, 
+				"Equippable": true, "Usable": false, "Consumable": false}
+
+func _init().(identity):
 	pass
 
 var spell_power_bonus = 10

@@ -1,6 +1,10 @@
 extends InvObject
 
-func _init().('Accessory', 'Arcane Necklace', 50, true, false):
+var identity = {"Category": "Inv Item", "CategoryType": 'Accessory' , 
+				"Identifier": 'Arcane Necklace', "Value": 50, 
+				"Equippable": true, "Usable": false, "Consumable": false}
+
+func _init().(identity):
 	pass
 
 var spell_power_bonus = 5

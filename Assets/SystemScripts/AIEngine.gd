@@ -65,4 +65,4 @@ func find_players_in_viewfield():
 	for tile in viewfield:
 		var tile_objects = map.get_tile_contents(tile[0], tile[1])
 		for object in tile_objects:
-			if object.get_obj_type() == 'Player': player_pos.append(tile)
+			if object.get_id()['CategoryType'] == 'Player': player_pos.append(tile)

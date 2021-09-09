@@ -1,5 +1,8 @@
 extends GameObj
 
-func _init().('Chest'): pass
+var identity = {"Category": "MapObject", "CategoryType": "Interactable", 
+				"Identifier": "BaseChest"}
+
+func _init().(identity): pass
 
 var contents

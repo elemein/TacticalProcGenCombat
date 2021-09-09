@@ -8,13 +8,16 @@ var connects_to
 var was_visible = false
 var minimap_icon = "Stairs"
 
-func _init().('Stairs'): pass
+var identity = {"Category": "MapObject", "CategoryType": "Interactable", 
+				"Identifier": "BaseStairs"}
+
+func _init().(identity): pass
 
 func _process(_delta):
 	if visible:
 		was_visible = true
 
-func take_stairs(tile_objects):
+func interact_w_object(tile_objects):
 	for object in tile_objects:
-		if object.get_obj_type() == 'Player':
+		if object.get_id()['CategoryType'] == 'Player':
 			world.move_to_map(object, parent_mapset.get_mapset_name(), connects_to)

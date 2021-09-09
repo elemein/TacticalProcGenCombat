@@ -29,7 +29,7 @@ var map
 
 # owner vars
 var inventory_owner
-var owner_type
+var owner_id
 
 # parallel arrays
 var inventory_objects = []
@@ -51,12 +51,12 @@ func setup_inventory(owner):
 	add_child(object_action_menu)
 	object_action_menu.visible = false
 	inventory_owner = owner
-	owner_type = owner.get_obj_type()
+	owner_id = owner.get_id()
 	inventory_ui.visible = false
 	map = inventory_owner.get_parent_map()
 
 func _physics_process(_delta):
-	if owner_type == 'Player':
+	if owner_id['CategoryType'] == 'Player':
 		var turn_timer = inventory_owner.get_parent_map().get_turn_timer()
 		
 		if turn_timer.get_turn_in_process() == true: return # lock out while in turn

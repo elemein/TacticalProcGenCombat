@@ -58,7 +58,7 @@ func count_enemies_in_room():
 			var objects_on_tile = parent_map.get_tile_contents(pos_x, pos_z)
 			
 			for obj in objects_on_tile:
-				if obj.get_obj_type() in GlobalVars.ENEMY_TYPES:
+				if obj.get_id()['CategoryType'] == 'Enemy':
 					if obj.get_is_dead() == false:
 						temp_count += 1
 	enemy_count = temp_count
@@ -84,7 +84,7 @@ func unblock_exits():
 		var objects_on_tile = parent_map.get_tile_contents(exit[0], exit[1])
 		
 		for obj in objects_on_tile:
-			if obj.get_obj_type() == 'TempWall':
+			if obj.get_id()['CategoryType'] == 'TempWall':
 				obj.remove_self()
 	
 func log_enemy_death(_dead_enemy):

@@ -21,7 +21,9 @@ var inventory = INVENTORY.instance()
 
 var minimap_icon = 'Minotaur'
 
-func _init().("Enemy", start_stats):
+var identity = {"Category": "Actor", "CategoryType": "Enemy", "Identifier": "Minotaur"}
+
+func _init().(identity, start_stats):
 	pass
 
 func _ready():

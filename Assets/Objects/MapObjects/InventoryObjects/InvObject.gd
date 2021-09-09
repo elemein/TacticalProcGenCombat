@@ -10,27 +10,23 @@ var usable
 
 var minimap_icon = null
 
-func _init(item_type, item_name, item_value, equip, use).("Inv Item"):
-	inv_item_type = item_type
-	inv_item_name = item_name
-	value = item_value
-	equippable = equip
-	usable = use
+func _init(identity).(identity):
+	pass
 
 func get_gold_value():
 	return value
 
-func get_usable(): return false
+func get_usable(): return object_identity['Usable']
 
-func get_equippable(): return true
+func get_equippable(): return object_identity['Equippable']
 
-func get_inv_item_type(): return inv_item_type
+func get_inv_item_type(): return object_identity['CategoryType']
 
-func get_inv_item_name(): return inv_item_name
+func get_inv_item_name(): return object_identity['Identifier']
 
 func collect_item(tile_objects):
 	for object in tile_objects:
-		if object.get_obj_type() == 'Player':
+		if object.get_id()['CategoryType'] == 'Player':
 			item_owner = object
 			object.inventory.add_to_inventory(self)
 			parent_map.remove_map_object(self)

@@ -109,8 +109,10 @@ func check_tile_for_steppable_objects(x,z):
 	var tile_objects = actor.parent_map.get_tile_contents(x,z)
 	
 	for object in tile_objects:
-		match object.get_obj_type():
-			'Spike Trap': object.activate_trap(tile_objects)
+		match object.get_id()['CategoryType']:
+			'Trap': object.activate_trap(tile_objects)
 			'Coins': object.collect_item(tile_objects)
-			'Inv Item': object.collect_item(tile_objects)
-			'Stairs': object.take_stairs(tile_objects)
+			'Armour': object.collect_item(tile_objects)
+			'Weapon': object.collect_item(tile_objects)
+			'Accessory': object.collect_item(tile_objects)
+			'Interactable': object.interact_w_object(tile_objects)
