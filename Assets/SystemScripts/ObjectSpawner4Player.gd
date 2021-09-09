@@ -59,7 +59,8 @@ func spawn_actor(actor_name, map_pos):
 	var actor_scene
 	
 	match actor_name:
-		'PlagueDoc': actor_scene = base_pside_player
+		'PSidePlayer': actor_scene = base_pside_player
+		'PlagueDoc': actor_scene = base_dumb_actor
 	
 	var actor = create_object(actor_scene, map_pos)
 	actor.add_to_group('player')

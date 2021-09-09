@@ -21,6 +21,10 @@ func get_map_pos(): return map_pos
 
 func get_translation(): return translation
 
+
+# Updaters
+func update_id(key, new_val): object_identity[key] = new_val
+
 # Setters
 func set_id(changed_id): object_identity = changed_id
 

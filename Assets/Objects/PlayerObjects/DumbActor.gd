@@ -28,7 +28,7 @@ var minimap_icon = "Player"
 var identity = {'Category': 'Actor', 'CategoryType': 'Player', 
 				'Identifier': 'PlagueDoc', "Max HP": start_stats['Max HP'],
 				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
-				'MP': start_stats['MP'], 'Facing': 'down', 'NetID': null}
+				'MP': start_stats['MP'], 'Facing': null, 'NetID': null}
 
 func _init().(identity, start_stats):
 	pass
@@ -116,7 +116,6 @@ func smooth_move_confirm_input():
 
 func set_direction(direction):
 	set_actor_dir(direction)
-	directional_timer.start(DIRECTION_SELECT_TIME) 
 
 # Getters
 func get_inventory_open() -> bool:

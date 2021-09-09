@@ -28,7 +28,7 @@ var minimap_icon = "Player"
 var identity = {'Category': 'Actor', 'CategoryType': 'Player', 
 				'Identifier': 'PlagueDoc', "Max HP": start_stats['Max HP'],
 				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
-				'MP': start_stats['MP'], 'Facing': 'down', 'NetID': null}
+				'MP': start_stats['MP'], 'Facing': null, 'NetID': null}
 
 func _init().(identity, start_stats):
 	pass
@@ -145,53 +145,57 @@ func get_input():
 		
 		if (Input.is_action_pressed("w") && Input.is_action_pressed("a") 
 			&& direction_facing != 'upleft'):
-			set_direction('upleft')
+			Server.request_for_player_action({"Command Type": "Look", "Value": "upleft"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
 		if (Input.is_action_pressed("w") && Input.is_action_pressed("d") 
 			&& direction_facing != 'upright'): 
-			set_direction('upright')
+			Server.request_for_player_action({"Command Type": "Look", "Value": "upright"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
 		if (Input.is_action_pressed("s") && Input.is_action_pressed("a") 
 			&& direction_facing != 'downleft'): 
-			set_direction('downleft')
+			Server.request_for_player_action({"Command Type": "Look", "Value": "downleft"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
 		if (Input.is_action_pressed("s") && Input.is_action_pressed("d") 
 			&& direction_facing != 'downright'): 
-			set_direction('downright')
+			Server.request_for_player_action({"Command Type": "Look", "Value": "downright"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
 	
 	if no_of_inputs == 1:
-		if Input.is_action_pressed("w") && direction_facing != 'up': set_direction('up')
-		if Input.is_action_pressed("s") && direction_facing != 'down': set_direction('down')
-		if Input.is_action_pressed("a") && direction_facing != 'left': set_direction('left')
-		if Input.is_action_pressed("d") && direction_facing != 'right': set_direction('right')
+		if Input.is_action_pressed("w") && direction_facing != 'up':
+			Server.request_for_player_action({"Command Type": "Look", "Value": "up"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
+		if Input.is_action_pressed("s") && direction_facing != 'down': 
+			Server.request_for_player_action({"Command Type": "Look", "Value": "down"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
+		if Input.is_action_pressed("a") && direction_facing != 'left': 
+			Server.request_for_player_action({"Command Type": "Look", "Value": "left"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
+		if Input.is_action_pressed("d") && direction_facing != 'right': 
+			Server.request_for_player_action({"Command Type": "Look", "Value": "right"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
 
 	# As the move buttons are used to change direction, these need to abide
 	# to the directional timer.
 	if directional_timer.time_left == 0:
 		if no_of_inputs > 1:
 			if Input.is_action_pressed("w") && Input.is_action_pressed("a"): 
-				if check_move_action('move upleft'):
-					set_action('move upleft')
+				Server.request_for_player_action({"Command Type": "Move", "Value": "upleft"})
 			if Input.is_action_pressed("w") && Input.is_action_pressed("d"): 
-				if check_move_action('move upright'):
-					set_action('move upright')
+				Server.request_for_player_action({"Command Type": "Move", "Value": "upright"})
 			if Input.is_action_pressed("s") && Input.is_action_pressed("a"): 
-				if check_move_action('move downleft'):
-					set_action('move downleft')
+				Server.request_for_player_action({"Command Type": "Move", "Value": "downleft"})
 			if Input.is_action_pressed("s") && Input.is_action_pressed("d"): 
-				if check_move_action('move downright'):
-					set_action('move downright')
+				Server.request_for_player_action({"Command Type": "Move", "Value": "downright"})
 		
 		if no_of_inputs == 1:
 			if Input.is_action_pressed("w"): 
-				if check_move_action('move up'):
-					set_action('move up')
+				Server.request_for_player_action({"Command Type": "Move", "Value": "up"})
 			if Input.is_action_pressed("s"): 
-				if check_move_action('move down'):
-					set_action('move down')
+				Server.request_for_player_action({"Command Type": "Move", "Value": "down"})
 			if Input.is_action_pressed("a"):
-				if check_move_action('move left'):
-					set_action('move left')
+				Server.request_for_player_action({"Command Type": "Move", "Value": "left"})
 			if Input.is_action_pressed("d"): 
-				if check_move_action('move right'):
-					set_action('move right')
+				Server.request_for_player_action({"Command Type": "Move", "Value": "right"})
 	
 	# X to skip your turn.
 	if Input.is_action_pressed("x"): set_action('idle')

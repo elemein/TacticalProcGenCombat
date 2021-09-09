@@ -31,7 +31,17 @@ func unpack_map(map_data):
 				match object['Identifier']:
 					'BaseGround': plyr_play_map.add_child(GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], [x,z]))
 					'BaseWall': plyr_play_map.add_child(GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], [x,z]))
-					'PlagueDoc': plyr_play_map.add_child(GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], [x,z]))
+					'PlagueDoc': 
+						if object['NetID'] == GlobalVars.self_netID:
+							var client_player = GlobalVars.plyr_obj_spawner.spawn_actor('PSidePlayer', [x,z])
+							plyr_play_map.add_child(client_player)
+							Server.add_player_to_local_player_list(client_player)
+							client_player.update_id('NetID', GlobalVars.self_netID)
+						else:
+							var other_player = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], [x,z])
+							plyr_play_map.add_child(other_player)
+							Server.add_player_to_local_player_list(other_player)
+							other_player.update_id('NetID', object['NetID'])
 	print('Map unpacked.')
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):

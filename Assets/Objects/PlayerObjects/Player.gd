@@ -28,7 +28,7 @@ var minimap_icon = "Player"
 var identity = {'Category': 'Actor', 'CategoryType': 'Player', 
 				'Identifier': 'PlagueDoc', "Max HP": start_stats['Max HP'],
 				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
-				'MP': start_stats['MP'], 'Facing': 'down', 'NetID': 1}
+				'MP': start_stats['MP'], 'Facing': null, 'NetID': 1}
 
 func _init().(identity, start_stats):
 	pass
