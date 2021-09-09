@@ -25,17 +25,19 @@ var base_imp = preload("res://Assets/Objects/EnemyObjects/Imp.tscn")
 var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
 var base_minotaur = preload("res://Assets/Objects/EnemyObjects/Minotaur.tscn")
 
-func create_object(object_scene, map, map_pos, visibility) -> Object:
+# Actors
+var base_player = preload("res://Assets/Objects/PlayerObjects/DumbActor.tscn")
+
+func create_object(object_scene, map_pos) -> Object:
+	print('Spawning object at ' + str(map_pos) + '.')
 	var object = object_scene.instance()
 	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
-	object.visible = visibility
+	object.visible = true
 	object.set_map_pos([map_pos[0], map_pos[1]])
-	object.set_parent_map(map)
-	map.add_map_object(object)
 	
 	return object
 
-func spawn_item(item_name, map, map_pos, visibility):
+func spawn_item(item_name, map_pos):
 	var item_scene
 	
 	match item_name:
@@ -46,12 +48,23 @@ func spawn_item(item_name, map, map_pos, visibility):
 		'Body Armour': item_scene = base_armour
 		'Leather Cuirass': item_scene = base_cuirass
 			
-	var item = create_object(item_scene, map, map_pos, visibility)
+	var item = create_object(item_scene, map_pos)
 	item.add_to_group('loot')
 	
 	return item
 
-func spawn_enemy(enemy_name, map, map_pos, visibility):
+func spawn_actor(actor_name, map_pos):
+	var actor_scene
+	
+	match actor_name:
+		'PlagueDoc': actor_scene = base_player
+	
+	var actor = create_object(actor_scene, map_pos)
+	actor.add_to_group('player')
+	
+	return actor
+
+func spawn_enemy(enemy_name, map_pos):
 	var enemy_scene
 	
 	match enemy_name:
@@ -59,20 +72,20 @@ func spawn_enemy(enemy_name, map, map_pos, visibility):
 		'Imp': enemy_scene = base_imp
 		'Minotaur': enemy_scene = base_minotaur
 	
-	var enemy = create_object(enemy_scene, map, map_pos, visibility)
+	var enemy = create_object(enemy_scene, map_pos)
 	enemy.add_to_group('enemies')
 	
 	return enemy
 
-func spawn_gold(value, map, map_pos, visibility):
-	var coins = create_object(base_coins, map, map_pos, visibility)
+func spawn_gold(value, map_pos, visibility):
+	var coins = create_object(base_coins, map_pos)
 
 	coins.add_to_group('loot')
 	coins.set_gold_value(value)
 	
 	return coins
 
-func spawn_map_object(object_name, map, map_pos, visibility):
+func spawn_map_object(object_name, map_pos):
 	var object_scene
 	
 	match object_name:
@@ -81,6 +94,6 @@ func spawn_map_object(object_name, map, map_pos, visibility):
 		'BaseGround': object_scene = base_ground
 		'BaseWall': object_scene = base_wall
 			
-	var object = create_object(object_scene, map, map_pos, visibility)
+	var object = create_object(object_scene, map_pos)
 	
 	return object

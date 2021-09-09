@@ -279,10 +279,12 @@ func set_actor_dir(dir_facing):
 
 func set_hp(new_hp):
 	stat_dict['HP'] = stat_dict['Max HP'] if (new_hp > stat_dict['Max HP']) else new_hp
+	object_identity['HP'] = stat_dict['HP']
 	emit_signal("status_bar_hp", stat_dict['HP'], stat_dict['Max HP'])
 	
 func set_mp(new_mp):
 	stat_dict['MP'] = stat_dict['Max MP'] if (new_mp > stat_dict['Max MP']) else new_mp
+	object_identity['MP'] = stat_dict['MP']
 	emit_signal("status_bar_mp", stat_dict['MP'], stat_dict['Max MP'])
 	
 func set_attack_power(new_value):

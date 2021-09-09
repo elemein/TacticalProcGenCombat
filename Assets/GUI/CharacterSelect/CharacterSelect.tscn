@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Assets/GUI/TitleScreen/menu_button.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/GUI/CharacterSelect/AbilitySelectButton.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Assets/GUI/CharacterSelect/Right_Arrow.png" type="Texture" id=6]
 [ext_resource path="res://Assets/GUI/TitleScreen/disabled_button_theme.tres" type="StyleBox" id=7]
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Assets/GUI/TitleScreen/menu_button_lock_in.gd" type="Script" id=9]
 
 [sub_resource type="Environment" id=1]
 ambient_light_color = Color( 1, 1, 1, 1 )
@@ -150,7 +151,7 @@ size_flags_vertical = 2
 custom_styles/disabled = ExtResource( 7 )
 disabled = true
 text = "Start"
-reference_path = "res://World.tscn"
+script = ExtResource( 9 )
 
 [node name="StartRequirements" type="Label" parent="."]
 margin_left = 696.545

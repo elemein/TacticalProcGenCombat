@@ -21,7 +21,10 @@ var inventory = INVENTORY.instance()
 
 var minimap_icon = 'Fox'
 
-var identity = {"Category": "Actor", "CategoryType": "Enemy", "Identifier": "Imp"}
+var identity = {"Category": "Actor", "CategoryType": "Enemy", 
+				"Identifier": "Fox", "Max HP": start_stats['Max HP'],
+				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
+				'MP': start_stats['MP'], 'Facing': 'right'}
 
 func _init().(identity, start_stats):
 	pass

@@ -10,23 +10,29 @@ var player = BASE_PLAYER.instance()
 const MAPSET_CLASS = preload("res://Assets/SystemScripts/Mapset.gd")
 var dungeon = MAPSET_CLASS.new('The Cave', 3)
 
+const PLYR_PLY_MAP = preload("res://Assets/SystemScripts/PlayerPlayMap.gd")
+var plyr_play_map = PLYR_PLY_MAP.new()
+
 var mapsets = []
 
 func _ready():
+	add_child(plyr_play_map)
+	unpack_map(GlobalVars.server_map_data)
+	
+#	first_turn_workaround_for_player_sight()
 
-	add_child(dungeon)
-	mapsets = [dungeon]
-	
-	move_to_map(player, 'The Cave', 1)
-	
-	first_turn_workaround_for_player_sight()
-	
-	### NETWORK
-	if GlobalVars.peer_type == 'server': 
-		Server.create_server()
-
-	elif GlobalVars.peer_type == 'client': 
-		Server.request_map_from_server()
+func unpack_map(map_data):
+	print('Unpacking map.')
+	for x in range(map_data.size()):
+		for z in range(map_data[0].size()):
+			for obj in range(map_data[x][z].size()):
+				var object = map_data[x][z][obj][0]
+				
+				match object['Identifier']:
+					'BaseGround': plyr_play_map.add_child(GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], [x,z]))
+					'BaseWall': plyr_play_map.add_child(GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], [x,z]))
+					'PlagueDoc': plyr_play_map.add_child(GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], [x,z]))
+	print('Map unpacked.')
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):
 	var targ_mapset

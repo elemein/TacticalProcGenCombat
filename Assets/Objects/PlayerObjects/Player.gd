@@ -25,32 +25,36 @@ var inventory = INVENTORY.instance()
 
 var minimap_icon = "Player"
 
-var identity = {'Category': 'Actor', 'CategoryType': 'Player', 'Identifier': 'PlagueDoc'}
+var identity = {'Category': 'Actor', 'CategoryType': 'Player', 
+				'Identifier': 'PlagueDoc', "Max HP": start_stats['Max HP'],
+				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
+				'MP': start_stats['MP'], 'Facing': 'down'}
 
 func _init().(identity, start_stats):
 	pass
 
 func _ready():
-	directional_timer.set_one_shot(true)
-	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
-	add_child(directional_timer)
-	
-	input_smoothing_timer.set_one_shot(true)
-	input_smoothing_timer.set_wait_time(DIAGONAL_INPUT_SMOOTHING_TIME)
-	add_child(input_smoothing_timer)
-	
-	target_pos = translation
-	saved_pos = translation
-	
-	var _result = self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
-	_result = self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
-	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
-	
-	emit_signal("prepare_gui", start_stats)
-	Signals.emit_signal("player_attack_power_updated", start_stats['Attack Power'])
-	Signals.emit_signal("player_spell_power_updated", start_stats['Spell Power'])
-	
-	add_sub_nodes_as_children()
+	pass
+#	directional_timer.set_one_shot(true)
+#	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
+#	add_child(directional_timer)
+#
+#	input_smoothing_timer.set_one_shot(true)
+#	input_smoothing_timer.set_wait_time(DIAGONAL_INPUT_SMOOTHING_TIME)
+#	add_child(input_smoothing_timer)
+#
+#	target_pos = translation
+#	saved_pos = translation
+#
+#	var _result = self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
+#	_result = self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
+#	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
+#
+#	emit_signal("prepare_gui", start_stats)
+#	Signals.emit_signal("player_attack_power_updated", start_stats['Attack Power'])
+#	Signals.emit_signal("player_spell_power_updated", start_stats['Spell Power'])
+#
+#	add_sub_nodes_as_children()
 
 func add_sub_nodes_as_children():
 	add_child(mover)

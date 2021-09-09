@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Assets/GUI/TitleScreen/background.jpg" type="Texture" id=1]
 [ext_resource path="res://Assets/GUI/TitleScreen/menu_button.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Assets/GUI/TitleScreen/menu_button_join_server.gd" type="Script" id=3]
+[ext_resource path="res://Assets/GUI/TitleScreen/menu_button_new_game.gd" type="Script" id=4]
 
 [node name="MainTitleScreen" type="Node"]
 
@@ -37,8 +38,7 @@ focus_previous = NodePath("../menuExit")
 size_flags_horizontal = 4
 size_flags_vertical = 6
 text = "New Game | Host Server"
-reference_path = "res://Assets/GUI/CharacterSelect/CharacterSelect.tscn"
-start_focused = true
+script = ExtResource( 4 )
 
 [node name="menuJoinServer" parent="VBoxContainer" instance=ExtResource( 2 )]
 margin_top = 79.0

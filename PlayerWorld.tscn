@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://PlayerWorld.gd" type="Script" id=1]
+[ext_resource path="res://Assets/GUI/StatusBar/StatusBar.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/GUI/Arrow.png" type="Texture" id=3]
+[ext_resource path="res://Assets/GUI/GUI.gd" type="Script" id=4]
+[ext_resource path="res://GUI.gd" type="Script" id=7]
+
+[node name="World" type="Node"]
+script = ExtResource( 1 )
+
+[node name="GUI" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Action" type="MarginContainer" parent="GUI"]
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 140.0
+margin_bottom = 140.0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Proposed Action" type="Sprite" parent="GUI/Action"]
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 3 )
+
+[node name="StatusBar" parent="GUI" instance=ExtResource( 2 )]
+[connection signal="set_status_bars" from="GUI" to="GUI/StatusBar" method="_on_GUI_set_status_bars"]
+[connection signal="update_health_bar" from="GUI" to="GUI/StatusBar" method="_on_GUI_update_health_bar"]
+[connection signal="update_mana_bar" from="GUI" to="GUI/StatusBar" method="_on_GUI_update_mana_bar"]

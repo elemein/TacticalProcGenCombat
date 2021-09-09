@@ -24,3 +24,4 @@ func connect_to_server():
 
 func _connected_ok():
 	print("Connected to server successfully.")
+	Server.request_map_from_server()

@@ -20,15 +20,17 @@ func _player_connected(id):
 	print('player ' + str(id) + ' has connected!')
 	player_id_list.append(id)
 
-remote func send_map_to_requester(requester):
-	var player_id = get_tree().get_rpc_sender_id()
-	var map_data = PlayerInfo.current_map.return_map_grid_encoded_to_string()
-	print("Sending map data to requester.")
-	rpc_id(player_id, 'receive_map_from_server', map_data)
-
 func request_map_from_server():
 	print("Requesting map from server.")
 	rpc_id(1, "send_map_to_requester", get_instance_id())
-	
+
+remote func send_map_to_requester(requester):
+	var player_id = get_tree().get_rpc_sender_id()
+	var map_data = PlayerInfo.current_map.return_map_grid_encoded_to_string()
+	print(map_data)
+	print("Sending map data to requester.")
+	rpc_id(player_id, 'receive_map_from_server', map_data)
+
 remote func receive_map_from_server(map_data):
+	GlobalVars.server_map_data = map_data
 	print(map_data)
