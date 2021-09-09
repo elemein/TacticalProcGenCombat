@@ -13,7 +13,6 @@ var dungeon = MAPSET_CLASS.new('The Cave', 3)
 var mapsets = []
 
 func _ready():
-
 	add_child(dungeon)
 	mapsets = [dungeon]
 	

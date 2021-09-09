@@ -22,6 +22,8 @@ func get_map_pos(): return map_pos
 func get_translation(): return translation
 
 # Setters
+func set_id(changed_id): object_identity = changed_id
+
 func set_parent_map(map):
 	if object_identity['CategoryType'] == 'Player': PlayerInfo.current_map = map
 	

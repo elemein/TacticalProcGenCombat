@@ -26,7 +26,9 @@ var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
 var base_minotaur = preload("res://Assets/Objects/EnemyObjects/Minotaur.tscn")
 
 # Actors
-var base_player = preload("res://Assets/Objects/PlayerObjects/DumbActor.tscn")
+var base_player = preload("res://Assets/Objects/PlayerObjects/Player.tscn")
+var base_pside_player = preload("res://Assets/Objects/PlayerObjects/PSidePlayer.tscn")
+var base_dumb_actor = preload("res://Assets/Objects/PlayerObjects/DumbActor.tscn")
 
 func create_object(object_scene, map_pos) -> Object:
 	print('Spawning object at ' + str(map_pos) + '.')
@@ -57,7 +59,7 @@ func spawn_actor(actor_name, map_pos):
 	var actor_scene
 	
 	match actor_name:
-		'PlagueDoc': actor_scene = base_player
+		'PlagueDoc': actor_scene = base_pside_player
 	
 	var actor = create_object(actor_scene, map_pos)
 	actor.add_to_group('player')

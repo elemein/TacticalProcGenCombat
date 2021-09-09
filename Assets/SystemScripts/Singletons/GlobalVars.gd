@@ -4,6 +4,9 @@ var camera = null
 var peer_type = null
 
 var server_map_data
+var server_player
+
+var self_netID
 
 const TILE_OFFSET = 2.0
 

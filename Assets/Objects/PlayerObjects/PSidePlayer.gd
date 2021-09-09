@@ -28,7 +28,7 @@ var minimap_icon = "Player"
 var identity = {'Category': 'Actor', 'CategoryType': 'Player', 
 				'Identifier': 'PlagueDoc', "Max HP": start_stats['Max HP'],
 				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
-				'MP': start_stats['MP'], 'Facing': 'down', 'NetID': 1}
+				'MP': start_stats['MP'], 'Facing': 'down', 'NetID': null}
 
 func _init().(identity, start_stats):
 	pass
@@ -41,21 +41,19 @@ func _ready():
 	input_smoothing_timer.set_one_shot(true)
 	input_smoothing_timer.set_wait_time(DIAGONAL_INPUT_SMOOTHING_TIME)
 	add_child(input_smoothing_timer)
-
-	target_pos = translation
-	saved_pos = translation
-
-	var _result = self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
-	_result = self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
-	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
-
-	emit_signal("prepare_gui", start_stats)
-	Signals.emit_signal("player_attack_power_updated", start_stats['Attack Power'])
-	Signals.emit_signal("player_spell_power_updated", start_stats['Spell Power'])
-
-	add_sub_nodes_as_children()
-	
-	GlobalVars.server_player = self
+#
+#	target_pos = translation
+#	saved_pos = translation
+#
+#	var _result = self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
+#	_result = self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
+#	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
+#
+#	emit_signal("prepare_gui", start_stats)
+#	Signals.emit_signal("player_attack_power_updated", start_stats['Attack Power'])
+#	Signals.emit_signal("player_spell_power_updated", start_stats['Spell Power'])
+#
+#	add_sub_nodes_as_children()
 
 func add_sub_nodes_as_children():
 	add_child(mover)
@@ -120,11 +118,11 @@ func get_input():
 	smooth_diagonal_input()
 	smooth_move_confirm_input()
 	
-	if (turn_timer.get_turn_in_process() == true) or (inventory_open) or \
-	(input_smoothing_timer.time_left > 0): 
-		# We don't wanna collect input if turn in action or in inventory or
-		# while smoothing input.
-		return
+#	if (turn_timer.get_turn_in_process() == true) or (inventory_open) or \
+#	(input_smoothing_timer.time_left > 0): 
+#		# We don't wanna collect input if turn in action or in inventory or
+#		# while smoothing input.
+#		return
 	
 	if Input.is_action_just_pressed('tab'): 
 		if inventory_open: inventory_open = false

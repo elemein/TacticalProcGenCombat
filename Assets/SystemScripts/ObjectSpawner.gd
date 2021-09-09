@@ -25,6 +25,11 @@ var base_imp = preload("res://Assets/Objects/EnemyObjects/Imp.tscn")
 var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
 var base_minotaur = preload("res://Assets/Objects/EnemyObjects/Minotaur.tscn")
 
+# Actors
+var base_player = preload("res://Assets/Objects/PlayerObjects/Player.tscn")
+var base_pside_player = preload("res://Assets/Objects/PlayerObjects/PSidePlayer.tscn")
+var base_dumb_actor = preload("res://Assets/Objects/PlayerObjects/DumbActor.tscn")
+
 func create_object(object_scene, map, map_pos, visibility) -> Object:
 	var object = object_scene.instance()
 	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
@@ -50,6 +55,17 @@ func spawn_item(item_name, map, map_pos, visibility):
 	item.add_to_group('loot')
 	
 	return item
+
+func spawn_actor(actor_name, map, map_pos, visibility):
+	var actor_scene
+	
+	match actor_name:
+		'PlagueDoc': actor_scene = base_dumb_actor
+	
+	var actor = create_object(actor_scene, map, map_pos, visibility)
+	actor.add_to_group('player')
+	
+	return actor
 
 func spawn_enemy(enemy_name, map, map_pos, visibility):
 	var enemy_scene
