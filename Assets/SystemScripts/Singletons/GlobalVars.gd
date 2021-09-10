@@ -3,8 +3,11 @@ extends Node
 var camera = null
 var peer_type = null
 
+var server_mapset
 var server_map_data
 var server_player
+
+var total_mapsets = []
 
 var self_netID
 

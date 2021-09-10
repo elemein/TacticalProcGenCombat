@@ -21,7 +21,6 @@ func get_map_pos(): return map_pos
 
 func get_translation(): return translation
 
-
 # Updaters
 func update_id(key, new_val): object_identity[key] = new_val
 
@@ -31,11 +30,14 @@ func set_id(changed_id): object_identity = changed_id
 func set_parent_map(map):
 	if object_identity['CategoryType'] == 'Player': PlayerInfo.current_map = map
 	
+	object_identity['Map ID'] = map.get_map_server_id()
 	parent_map = map
 	turn_timer = map.get_turn_timer()
-	parent_mapset = map.get_parent_mapset()
+	if GlobalVars.peer_type == 'server': parent_mapset = map.get_parent_mapset()
 
-func set_map_pos(new_pos): map_pos = new_pos
+func set_map_pos(new_pos): 
+	object_identity['Position'] = new_pos
+	map_pos = new_pos
 
 func set_translation(new_translation): translation = new_translation 
 

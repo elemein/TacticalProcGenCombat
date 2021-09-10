@@ -11,7 +11,8 @@ var to_remove = false
 var minimap_icon = null
 
 var identity = {"Category": "MapObject", "CategoryType": "TempWall", 
-				"Identifier": "TempWall"}
+				"Identifier": "TempWall", 'Map ID': null, 
+				'Position': [0,0], 'Instance ID': get_instance_id()}
 
 func _init().(identity): pass
 

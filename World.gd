@@ -16,6 +16,10 @@ func _ready():
 	add_child(dungeon)
 	mapsets = [dungeon]
 	
+	for mapset in mapsets:
+		for level in mapset.floors:
+			GlobalVars.total_mapsets.append(mapset.floors[level])
+	
 	move_to_map(player, 'The Cave', 1)
 	
 	first_turn_workaround_for_player_sight()

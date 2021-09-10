@@ -29,7 +29,6 @@ func find_view_field(x, z):
 	pos_x = x
 	pos_z = z
 	pos = [x, z]
-#	print(pos)
 	
 	form_vision_boundaries()
 
@@ -40,8 +39,6 @@ func find_view_field(x, z):
 			if (tile in visible_tiles) == false:
 				visible_tiles.append(tile)
 
-#	print('visible tiles')
-#	print(visible_tiles)
 	return visible_tiles
 
 func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - SS

@@ -22,26 +22,54 @@ func _ready():
 #	first_turn_workaround_for_player_sight()
 
 func unpack_map(map_data):
+	GlobalVars.total_mapsets.append(plyr_play_map)
+	plyr_play_map.set_map_server_id(map_data[0])
+	map_data = map_data[1]
+	var map_grid = []
+	
+	GlobalVars.server_mapset = plyr_play_map
 	print('Unpacking map.')
 	for x in range(map_data.size()):
+		map_grid.append([])
 		for z in range(map_data[0].size()):
+			map_grid[x].append([])
 			for obj in range(map_data[x][z].size()):
 				var object = map_data[x][z][obj][0]
 				
 				match object['Identifier']:
-					'BaseGround': plyr_play_map.add_child(GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], [x,z]))
-					'BaseWall': plyr_play_map.add_child(GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], [x,z]))
+					'BaseGround': 
+						var ground = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], [x,z])
+						plyr_play_map.add_child(ground)
+						ground.update_id('Instance ID', object['Instance ID'])
+						ground.set_parent_map(plyr_play_map)
+						ground.update_id('Map ID', plyr_play_map.get_map_server_id())
+						map_grid[x][z].append(ground)
+					'BaseWall': 
+						var wall = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], [x,z])
+						plyr_play_map.add_child(wall)
+						wall.update_id('Instance ID', object['Instance ID'])
+						wall.set_parent_map(plyr_play_map)
+						wall.update_id('Map ID', plyr_play_map.get_map_server_id())
+						map_grid[x][z].append(wall)
 					'PlagueDoc': 
 						if object['NetID'] == GlobalVars.self_netID:
 							var client_player = GlobalVars.plyr_obj_spawner.spawn_actor('PSidePlayer', [x,z])
 							plyr_play_map.add_child(client_player)
 							Server.add_player_to_local_player_list(client_player)
 							client_player.update_id('NetID', GlobalVars.self_netID)
+							client_player.update_id('Instance ID', object['Instance ID'])
+							client_player.update_id('Map ID', plyr_play_map.get_map_server_id())
+							map_grid[x][z].append(client_player)
 						else:
 							var other_player = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], [x,z])
 							plyr_play_map.add_child(other_player)
 							Server.add_player_to_local_player_list(other_player)
 							other_player.update_id('NetID', object['NetID'])
+							other_player.update_id('Instance ID', object['Instance ID'])
+							other_player.update_id('Map ID', plyr_play_map.get_map_server_id())
+							map_grid[x][z].append(other_player)
+	
+	plyr_play_map.set_map_grid(map_grid)
 	print('Map unpacked.')
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):

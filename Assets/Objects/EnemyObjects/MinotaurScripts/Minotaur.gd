@@ -24,7 +24,8 @@ var minimap_icon = 'Minotaur'
 var identity = {"Category": "Actor", "CategoryType": "Enemy", 
 				"Identifier": "Minotaur", "Max HP": start_stats['Max HP'],
 				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
-				'MP': start_stats['MP'], 'Facing': 'right'}
+				'MP': start_stats['MP'], 'Map ID': null, 'Position': [0,0], 
+				'Facing': 'right', 'Instance ID': get_instance_id()}
 
 func _init().(identity, start_stats):
 	pass

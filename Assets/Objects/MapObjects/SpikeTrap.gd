@@ -7,7 +7,8 @@ var sprung = false
 var minimap_icon = null
 
 var identity = {"Category": "MapObject", "CategoryType": "Trap", 
-				"Identifier": "Spike Trap"}
+				"Identifier": "Spike Trap", 'Map ID': null, 
+				'Position': [0,0], 'Instance ID': get_instance_id()}
 
 func _init().(identity): pass
 
@@ -26,6 +27,5 @@ func activate_trap(tile_objects):
 				$Tween.start()
 
 func _on_tween_complete(_tween_object, _tween_node_path):
-	print('tween completed')
 	parent_map.remove_map_object(self)
 	self.queue_free()

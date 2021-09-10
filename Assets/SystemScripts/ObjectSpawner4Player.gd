@@ -31,7 +31,6 @@ var base_pside_player = preload("res://Assets/Objects/PlayerObjects/PSidePlayer.
 var base_dumb_actor = preload("res://Assets/Objects/PlayerObjects/DumbActor.tscn")
 
 func create_object(object_scene, map_pos) -> Object:
-	print('Spawning object at ' + str(map_pos) + '.')
 	var object = object_scene.instance()
 	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
 	object.visible = true

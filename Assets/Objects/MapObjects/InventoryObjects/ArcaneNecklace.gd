@@ -2,7 +2,8 @@ extends InvObject
 
 var identity = {"Category": "Inv Item", "CategoryType": 'Accessory' , 
 				"Identifier": 'Arcane Necklace', "Value": 50, 
-				"Equippable": true, "Usable": false, "Consumable": false}
+				"Equippable": true, "Usable": false, "Consumable": false,
+				'Map ID': null, 'Position': [0,0], 'Instance ID': get_instance_id()}
 
 func _init().(identity):
 	pass

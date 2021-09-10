@@ -20,6 +20,7 @@ var player
 var parent_mapset
 var map_name = ''
 var map_id = 1
+var map_server_id 
 var map_grid = []
 var rooms
 
@@ -37,6 +38,7 @@ func _init(name, id, type):
 	map_type = type
 
 func _ready():
+	map_server_id = get_instance_id()
 	rng.randomize()
 	turn_timer.set_map(self)
 	add_child(turn_timer)
@@ -205,6 +207,8 @@ func get_parent_mapset() -> Object: return parent_mapset
 func get_map_name() -> String: return map_name
 
 func get_map_type() -> String: return map_type
+
+func get_map_server_id(): return map_server_id
 
 # Setters
 func set_parent_mapset(mapset): parent_mapset = mapset

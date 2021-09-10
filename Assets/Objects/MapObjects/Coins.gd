@@ -5,7 +5,8 @@ var value = 10
 var minimap_icon = null
 
 var identity = {"Category": "MapObject", "CategoryType": "Coins", 
-				"Identifier": "Coins"}
+				"Identifier": "Coins", 'Map ID': null, 
+				'Position': [0,0], 'Instance ID': get_instance_id()}
 
 func _init().(identity): pass
 

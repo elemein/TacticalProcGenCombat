@@ -160,6 +160,7 @@ func create_floor():
 			var wall = base_wall.instance()
 			wall.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, z * GlobalVars.TILE_OFFSET)
 			wall.visible = false
+			wall.set_map_pos([x,z])
 			
 			total_map[x].append([wall])
 
@@ -265,6 +266,7 @@ func create_rooms():
 				var ground = base_block.instance()
 				ground.translation = Vector3((x) * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, (z) * GlobalVars.TILE_OFFSET)
 				ground.visible = false
+				ground.set_map_pos([x,z])
 				
 				total_map[x][z][0] = ground
 			
@@ -302,6 +304,7 @@ func connect_leaves(leaf1, leaf2):
 				var ground = base_block.instance()
 				ground.translation = Vector3((i) * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, (j) * GlobalVars.TILE_OFFSET)
 				ground.visible = false
+				ground.set_map_pos([x,z])
 				total_map[i][j][0] = ground 
 
 func check_if_path_may_need_extension(x, z, split_type):
@@ -330,6 +333,7 @@ func clear_deadends():
 					var wall = base_wall.instance()
 					wall.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, z * GlobalVars.TILE_OFFSET)
 					wall.visible = false
+					wall.set_map_pos([x,z])
 					
 					total_map[x][z][0] = wall
 
