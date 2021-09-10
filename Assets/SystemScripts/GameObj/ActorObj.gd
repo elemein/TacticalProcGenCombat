@@ -99,6 +99,9 @@ func set_action(action):
 
 	if object_identity['CategoryType'] == 'Player': gui.set_action(proposed_action)
 
+func move_actor_in_facing_dir(amount):
+	mover.move_actor(amount)
+
 func process_turn():
 	if visible:
 		was_visible = true
@@ -113,9 +116,11 @@ func process_turn():
 
 	# Sets target positions for move and basic attack.
 	if proposed_action.split(" ")[0] == 'move':
-		set_actor_dir(proposed_action.split(" ")[1])
+#		set_actor_dir(proposed_action.split(" ")[1])
 		if check_move_action(proposed_action) == true:
-			mover.move_actor(1)
+#			mover.move_actor(1)
+			print([object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]}])
+			Server.object_action_event(object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]})
 	
 	elif proposed_action == 'idle':
 		target_pos = map_pos

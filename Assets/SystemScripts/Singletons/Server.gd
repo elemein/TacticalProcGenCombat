@@ -18,12 +18,17 @@ func create_server():
 
 func identity_update(updated_identity):
 	# MUST DO TWICE, AS RPC ONLY GOES TO CLIENTS, NOT THE SERVER TOO!
-	receive_identity_update(updated_identity)
 	rpc('receive_identity_update', updated_identity)
+	receive_identity_update(updated_identity)
 
 func object_action_event(object_id, action):
-	receive_object_action_event(object_id, action)
-	rpc('receive_object_action_event', object_id, action)
+	var orig_object_id = object_id.duplicate(true)
+	var orig_action = action.duplicate(true)
+	
+	rpc('receive_object_action_event', orig_object_id, orig_action)
+	receive_object_action_event(orig_object_id, orig_action)
+	
+	Server.identity_update(object_id)
 	
 remote func receive_object_action_event(object_id, action):
 	# determine map
@@ -33,18 +38,24 @@ remote func receive_object_action_event(object_id, action):
 	
 	# determine object
 	var object
-	var tile_objs = map.get_tile_contents(object_id['Position'][0], object_id['Position'][1])
+	var x = object_id['Position'][0]
+	var z = object_id['Position'][1]
+	var tile_objs = map.get_tile_contents(x, z)
+	print(tile_objs)
 	for obj in tile_objs:
 		if obj.get_id()['Instance ID'] == object_id['Instance ID']:
 			object = obj
+	
+	print(object_id)
 	
 	# determine action
 	match action['Command Type']:
 		'Look':
 			object.set_direction(action['Value'])
+			object.update_id('Facing', action['Value'])
 		'Move':
-			object.set_action("move %s" % [action['Value']])
-	
+			object.set_direction(action['Value'])
+			object.move_actor_in_facing_dir(1)
 
 # SERVER SIDE COMMANDS FUNCS
 remote func send_map_to_requester(requester):
@@ -73,16 +84,12 @@ remote func query_for_action(requester, request):
 		'Look':
 			if player_turn_timer.get_time_left() == 0:
 				Server.object_action_event(player_identity, request)
-				player_obj.update_id('Facing', request['Value'])
-				Server.identity_update(player_identity)
 			else:
 				print('Discarding illegal look request from ' + str(player_id))
 		
 		'Move':
 			if player_turn_timer.get_time_left() == 0:
-				Server.object_action_event(player_identity, request)
-				player_obj.update_id('Facing', request['Value'])
-				Server.identity_update(player_identity)
+				player_obj.set_action("move %s" % [request['Value']])
 			else:
 				print('Discarding illegal move request from ' + str(player_id))
 
@@ -108,6 +115,7 @@ func _player_disconnected(id):
 		if player.get_id()['NetID'] == id:
 			player.get_parent_map().remove_map_object(player)
 			player_list.erase(player)
+			player.get_parent_map().get_turn_timer().remove_from_timer_group(player)
 
 # CLIENT SIDE FUNCS ------------------------------
 func request_map_from_server():
