@@ -77,7 +77,10 @@ func request_map_from_server():
 	rpc_id(1, "send_map_to_requester", get_instance_id())
 
 func request_for_player_action(request):
-	rpc_id(1, "query_for_action", GlobalVars.self_netID, request)
+	if GlobalVars.self_netID == 1:
+		query_for_action(GlobalVars.self_netID, request)
+	else:	
+		rpc_id(1, "query_for_action", GlobalVars.self_netID, request)
 
 remote func receive_map_from_server(map_data):
 	GlobalVars.server_map_data = map_data

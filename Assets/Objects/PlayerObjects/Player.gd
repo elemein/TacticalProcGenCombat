@@ -147,22 +147,34 @@ func get_input():
 		
 		if (Input.is_action_pressed("w") && Input.is_action_pressed("a") 
 			&& direction_facing != 'upleft'):
-			set_direction('upleft')
+			Server.request_for_player_action({"Command Type": "Look", "Value": "upleft"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
 		if (Input.is_action_pressed("w") && Input.is_action_pressed("d") 
 			&& direction_facing != 'upright'): 
-			set_direction('upright')
+			Server.request_for_player_action({"Command Type": "Look", "Value": "upright"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
 		if (Input.is_action_pressed("s") && Input.is_action_pressed("a") 
 			&& direction_facing != 'downleft'): 
-			set_direction('downleft')
+			Server.request_for_player_action({"Command Type": "Look", "Value": "downleft"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
 		if (Input.is_action_pressed("s") && Input.is_action_pressed("d") 
 			&& direction_facing != 'downright'): 
-			set_direction('downright')
+			Server.request_for_player_action({"Command Type": "Look", "Value": "downright"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
 	
 	if no_of_inputs == 1:
-		if Input.is_action_pressed("w") && direction_facing != 'up': set_direction('up')
-		if Input.is_action_pressed("s") && direction_facing != 'down': set_direction('down')
-		if Input.is_action_pressed("a") && direction_facing != 'left': set_direction('left')
-		if Input.is_action_pressed("d") && direction_facing != 'right': set_direction('right')
+		if Input.is_action_pressed("w") && direction_facing != 'up': 
+			Server.request_for_player_action({"Command Type": "Look", "Value": "up"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
+		if Input.is_action_pressed("s") && direction_facing != 'down': 
+			Server.request_for_player_action({"Command Type": "Look", "Value": "down"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
+		if Input.is_action_pressed("a") && direction_facing != 'left': 
+			Server.request_for_player_action({"Command Type": "Look", "Value": "left"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
+		if Input.is_action_pressed("d") && direction_facing != 'right': 
+			Server.request_for_player_action({"Command Type": "Look", "Value": "right"})
+			directional_timer.start(DIRECTION_SELECT_TIME)
 
 	# As the move buttons are used to change direction, these need to abide
 	# to the directional timer.
