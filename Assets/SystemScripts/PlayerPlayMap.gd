@@ -21,8 +21,7 @@ func get_turn_timer(): return turn_timer
 func set_map_grid(new_grid): map_grid = new_grid
 
 func get_tile_contents(x,z):
-	if !tile_in_bounds(x,z): 
-		return 'Out of Bounds'
+	if !tile_in_bounds(x,z): return 'Out of Bounds'
 	
 	return map_grid[x][z]
 

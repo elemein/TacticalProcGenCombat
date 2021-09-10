@@ -41,12 +41,12 @@ remote func receive_object_action_event(object_id, action):
 	var x = object_id['Position'][0]
 	var z = object_id['Position'][1]
 	var tile_objs = map.get_tile_contents(x, z)
-	print(tile_objs)
+
 	for obj in tile_objs:
 		if obj.get_id()['Instance ID'] == object_id['Instance ID']:
 			object = obj
 	
-	print(object_id)
+	print("%s(%s) does: %s" % [object_id['Identifier'], object_id['Instance ID'], action])
 	
 	# determine action
 	match action['Command Type']:
