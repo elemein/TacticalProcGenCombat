@@ -33,8 +33,8 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          if [ -z $(find . -name "*.gd" -exec grep -H "warning-ignore3" {} \;) ]; then
-            find . -name "*.gd" -exec grep -H "warning-ignore3" {} \;
+          if [ -z $(find . -name "*.gd" -exec grep -H "warning-ignore" {} \;) ]; then
+            find . -name "*.gd" -exec grep -H "warning-ignore" {} \;
             echo "::debug::No warnings ignored"
           else
             exit 1
