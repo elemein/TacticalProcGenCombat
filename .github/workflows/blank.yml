@@ -40,7 +40,7 @@ jobs:
             for line in $(find . -name "*.gd" -exec grep -nH "warning-ignore" {} \;); do
               if [ cut -c 1 <<< $line == "." ]; then
                 printf "$line"
-              else:
+              else
                 echo $line
               fi
             done
