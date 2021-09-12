@@ -10,9 +10,7 @@ func create_server():
 	GlobalVars.peer_type = 'server'
 	peer.create_server(port, max_players)
 	get_tree().network_peer = peer
-# warning-ignore:return_value_discarded
 	get_tree().connect("network_peer_connected", self, "_player_connected")
-# warning-ignore:return_value_discarded
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	print("Server opened successfully on port " + str(port))
 	player_list.append(GlobalVars.server_player)
