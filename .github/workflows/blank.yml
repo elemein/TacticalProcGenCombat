@@ -37,7 +37,7 @@ jobs:
             echo "::debug::No warnings ignored"
           else
             for line in $(find . -name "*.gd" -exec grep -H "warning-ignore" {} \;); do
-              echo "::error $line::Warning Ignored"
+              echo "::error THIS IS MY ERROR$line::Warning Ignored"
             done
             exit 1
           fi
