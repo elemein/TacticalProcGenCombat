@@ -25,7 +25,6 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - continue-on-error: false
 
       #       # Runs a single command using the runners shell
 #       - name: Run a one-line script
@@ -37,3 +36,4 @@ jobs:
           echo "::error +::Something went wrong"
           #error
           echo 'SEARCH FOR THIS'
+        continue-on-error: false
