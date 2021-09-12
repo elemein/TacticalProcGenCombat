@@ -34,7 +34,7 @@ jobs:
       - name: Check for Ignored Warnings
         run: |
           if [ -z "$(find . -name "*.gd" -exec grep -H "warning-ignore" {} \;)" ]; then
-            echo "::debug::No warnings ignored"
+            echo "No warnings ignored"
           else
             echo "::group::Warnings Found"
             for line in $(find . -name "*.gd" -exec grep -nH "warning-ignore" {} \;); do
