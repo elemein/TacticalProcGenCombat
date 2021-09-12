@@ -36,9 +36,11 @@ jobs:
           if [ -z "$(find . -name "*.gd" -exec grep -H "warning-ignore" {} \;)" ]; then
             echo "::debug::No warnings ignored"
           else
+            echo "::group::Warnings Found"
             for line in $(find . -name "*.gd" -exec grep -H "warning-ignore" {} \;); do
-              echo "::error THIS IS MY ERROR$line::Warning Ignored"
+              echo $line
             done
+            echo "::endgroup::"
             exit 1
           fi
         continue-on-error: false
