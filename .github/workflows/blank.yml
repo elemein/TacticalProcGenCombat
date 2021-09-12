@@ -34,7 +34,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           which find
-          if [ -z $(find . -name "*.gd" -exec grep -H "warning-ignore3") ]; then
+          if [ -z $(find . -name "*.gd" -exec grep -H "warning-ignore3" {} \;) ]; then
             echo "::set-output No warnings ignored"
           else
             exit 1
