@@ -34,4 +34,5 @@ jobs:
       - name: Run a multi-line script
         run: |
           echo "::error +::Something went wrong"
+          error
           echo 'SEARCH FOR THIS'
