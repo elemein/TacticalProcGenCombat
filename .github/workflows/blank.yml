@@ -36,3 +36,4 @@ jobs:
           echo "::error +::Something went wrong"
           #error
           echo 'SEARCH FOR THIS'
+        if: ${{ failure() }}
