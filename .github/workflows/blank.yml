@@ -25,8 +25,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - continue-on-error: false
 
-#       # Runs a single command using the runners shell
+      #       # Runs a single command using the runners shell
 #       - name: Run a one-line script
 #         run: echo 'Working directory pwd'
 
@@ -36,4 +37,3 @@ jobs:
           echo "::error +::Something went wrong"
           #error
           echo 'SEARCH FOR THIS'
-        if: ${{ failure() }}
