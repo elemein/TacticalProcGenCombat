@@ -41,7 +41,7 @@ jobs:
               if [ $(cut -c 1 <<< "$line") = "." ]; then
                 printf "$line"
               else
-                echo $line
+                echo " " $line
               fi
             done
             echo "::endgroup::"
