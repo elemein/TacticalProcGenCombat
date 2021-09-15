@@ -8,8 +8,10 @@ onready var ability_3 = find_node('Ability3')
 onready var ability_info = find_node('AbilityInfo')
 onready var status_bar_container = find_node('StatusBarContainer')
 
-signal set_health_bar(hp_current, hp_max)
-signal set_mana_bar(mp_current, mp_max)
+onready var health_bar = find_node('Health').find_node('ProgressBar2D')
+onready var health_text = find_node('Health').find_node('StatIndicator')
+onready var mana_bar = find_node('Mana').find_node('ProgressBar2D')
+onready var mana_text = find_node('Mana').find_node('StatIndicator')
 
 var ability_info_size = null
 
@@ -35,12 +37,15 @@ func _on_GUI_set_status_bars(stats):
 
 
 func _on_GUI_update_health_bar(hp, max_hp):
-	emit_signal("set_health_bar", hp, max_hp)
+	health_bar.value = hp
+	health_bar.max_value = max_hp
+	health_text.text = str(hp) + '/' + str(max_hp)
 
 
 func _on_GUI_update_mana_bar(mp, max_mp):
-	emit_signal("set_mana_bar", mp, max_mp)
-
+	mana_bar.value = mp
+	mana_bar.max_value = max_mp
+	mana_text.text = str(mp) + '/' + str(max_mp)
 
 func _on_Ability1_mouse_entered():
 	update_ability_info_panel(ability_1)

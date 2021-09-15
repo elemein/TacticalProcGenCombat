@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Basic_Attack.png-ef85caa9aedd295400c0a3cb60febbb2.stex"
+path="res://.import/Self_Heal.png-b902525e395ffa28000356b2868eb115.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/GUI/Basic_Attack.png"
-dest_files=[ "res://.import/Basic_Attack.png-ef85caa9aedd295400c0a3cb60febbb2.stex" ]
+source_file="res://Assets/GUI/ActionIcon/Self_Heal.png"
+dest_files=[ "res://.import/Self_Heal.png-b902525e395ffa28000356b2868eb115.stex" ]
 
 [params]
 

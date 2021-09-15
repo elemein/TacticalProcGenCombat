@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Arrow.png-07b06b9adac9a1a4f5fbbea0bd341b33.stex"
+path="res://.import/Unequip_Item.png-5951492b06ca6cf0fd7e4b95350285a7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/GUI/Arrow.png"
-dest_files=[ "res://.import/Arrow.png-07b06b9adac9a1a4f5fbbea0bd341b33.stex" ]
+source_file="res://Assets/GUI/ActionIcon/Unequip_Item.png"
+dest_files=[ "res://.import/Unequip_Item.png-5951492b06ca6cf0fd7e4b95350285a7.stex" ]
 
 [params]
 

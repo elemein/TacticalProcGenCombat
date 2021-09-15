@@ -1,9 +1,5 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://Assets/GUI/StatusBar/ProgressBar2D.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Assets/GUI/StatusBar/HealthBar2D.gd" type="Script" id=2]
 
 [node name="HealthBar2D" instance=ExtResource( 1 )]
-script = ExtResource( 2 )
-
-[connection signal="set_health_bar" from="." to="ProgressBar2D" method="_on_HealthBar2D_set_health_bar"]
