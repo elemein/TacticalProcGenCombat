@@ -8,7 +8,7 @@ func _ready():
 	attack_power = 10
 	spell_cost = 0
 	spell_length = 1
-	anim_time = 0.6
+	anim_time = 0.1
 	spell_description = str("""Basic Attack
 	Cost: {cost}\tBase Power: {power}
 	
