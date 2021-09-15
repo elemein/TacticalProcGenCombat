@@ -1,14 +1,14 @@
 extends MarginContainer
 
-var blank_action = preload("res://Assets/GUI/Blank_Action.png")
-var movement_arrow = preload("res://Assets/GUI/Arrow.png")
-var basic_attack = preload("res://Assets/GUI/Basic_Attack.png")
-var fireball = preload("res://Assets/GUI/Fireball.png")
-var drop_item = preload("res://Assets/GUI/Drop_Item.png")
-var equip_item = preload("res://Assets/GUI/Equip_Item.png")
-var unequip_item = preload("res://Assets/GUI/Unequip_Item.png")
-var dash = preload("res://Assets/GUI/Dash.png")
-var self_heal = preload("res://Assets/GUI/Self_Heal.png")
+var blank_action = preload("res://Assets/GUI/ActionIcon/Blank_Action.png")
+var movement_arrow = preload("res://Assets/GUI/ActionIcon/Arrow.png")
+var basic_attack = preload("res://Assets/GUI/ActionIcon/Basic_Attack.png")
+var fireball = preload("res://Assets/GUI/ActionIcon/Fireball.png")
+var drop_item = preload("res://Assets/GUI/ActionIcon/Drop_Item.png")
+var equip_item = preload("res://Assets/GUI/ActionIcon/Equip_Item.png")
+var unequip_item = preload("res://Assets/GUI/ActionIcon/Unequip_Item.png")
+var dash = preload("res://Assets/GUI/ActionIcon/Dash.png")
+var self_heal = preload("res://Assets/GUI/ActionIcon/Self_Heal.png")
 
 onready var action_holder = get_node("/root/World/GUI/Action/Proposed Action")
 

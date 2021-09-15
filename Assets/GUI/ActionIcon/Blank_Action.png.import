@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Dash.png-90aea0fe852a30271fffff986b11f46d.stex"
+path="res://.import/Blank_Action.png-732f136eb1021d7c1f105f17f5466c7b.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/GUI/Dash.png"
-dest_files=[ "res://.import/Dash.png-90aea0fe852a30271fffff986b11f46d.stex" ]
+source_file="res://Assets/GUI/ActionIcon/Blank_Action.png"
+dest_files=[ "res://.import/Blank_Action.png-732f136eb1021d7c1f105f17f5466c7b.stex" ]
 
 [params]
 

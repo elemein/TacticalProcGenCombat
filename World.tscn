@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Assets/GUI/StatusBar/StatusBar.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Assets/GUI/Arrow.png" type="Texture" id=3]
+[ext_resource path="res://Assets/GUI/ActionIcon/Arrow.png" type="Texture" id=3]
 [ext_resource path="res://Assets/GUI/GUI.gd" type="Script" id=4]
 [ext_resource path="res://World.gd" type="Script" id=6]
 [ext_resource path="res://GUI.gd" type="Script" id=7]
@@ -32,6 +32,7 @@ scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 3 )
 
 [node name="StatusBar" parent="GUI" instance=ExtResource( 2 )]
+
 [connection signal="set_status_bars" from="GUI" to="GUI/StatusBar" method="_on_GUI_set_status_bars"]
 [connection signal="update_health_bar" from="GUI" to="GUI/StatusBar" method="_on_GUI_update_health_bar"]
 [connection signal="update_mana_bar" from="GUI" to="GUI/StatusBar" method="_on_GUI_update_mana_bar"]

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Drop_Item.png-a644c32d393a1590c86932f8097f7d8f.stex"
+path="res://.import/Basic_Attack.png-9e1eca7ce47a0ad8666034e949a26cdd.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/GUI/Drop_Item.png"
-dest_files=[ "res://.import/Drop_Item.png-a644c32d393a1590c86932f8097f7d8f.stex" ]
+source_file="res://Assets/GUI/ActionIcon/Basic_Attack.png"
+dest_files=[ "res://.import/Basic_Attack.png-9e1eca7ce47a0ad8666034e949a26cdd.stex" ]
 
 [params]
 

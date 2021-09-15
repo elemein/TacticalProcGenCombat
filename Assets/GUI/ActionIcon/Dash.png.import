@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Equip_Item.png-5ae5941ea3367f433b9704f753bfc2bf.stex"
+path="res://.import/Dash.png-a81af9f715349286093190978a296c69.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/GUI/Equip_Item.png"
-dest_files=[ "res://.import/Equip_Item.png-5ae5941ea3367f433b9704f753bfc2bf.stex" ]
+source_file="res://Assets/GUI/ActionIcon/Dash.png"
+dest_files=[ "res://.import/Dash.png-a81af9f715349286093190978a296c69.stex" ]
 
 [params]
 

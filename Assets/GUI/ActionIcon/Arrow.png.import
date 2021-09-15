@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Self_Heal.png-c8aac4dc2d8c925b234e6367a9069919.stex"
+path="res://.import/Arrow.png-1eec7d754c96b51f680b0e9a48b02cec.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/GUI/Self_Heal.png"
-dest_files=[ "res://.import/Self_Heal.png-c8aac4dc2d8c925b234e6367a9069919.stex" ]
+source_file="res://Assets/GUI/ActionIcon/Arrow.png"
+dest_files=[ "res://.import/Arrow.png-1eec7d754c96b51f680b0e9a48b02cec.stex" ]
 
 [params]
 
