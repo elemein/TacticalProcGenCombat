@@ -60,9 +60,9 @@ func _physics_process(_delta):
 			if ready_status == false:
 				decide_next_action()
 		
-		if in_turn == true:
-			if proposed_action.split(" ")[0] == 'move':
-				mover.set_actor_translation()
+#		if in_turn == true:
+#			if proposed_action.split(" ")[0] == 'move':
+#				mover.set_actor_translation()
 				
 		if proposed_action != '' && in_turn == true:
 			if proposed_action == 'idle':

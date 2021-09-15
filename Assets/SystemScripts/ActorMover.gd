@@ -5,11 +5,18 @@ var direction_facing
 var target_pos
 var turn_timer
 
+onready var parent_tween = get_node("../Tween")
+
 # Initiliaztion functions
 func set_actor(setter):
 	actor = setter
 	target_pos = actor.get_translation()
 	turn_timer = actor.get_parent_map().get_turn_timer()
+
+func move_actor_translation():
+	# ANIM TIMER FOR MOVE IS 0.35
+	parent_tween.interpolate_property(actor, "translation", actor.get_translation(), target_pos, 0.35, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	parent_tween.start()
 
 func set_actor_translation():
 	var interp_mod = actor.get_turn_anim_timer().time_left / actor.get_turn_anim_timer().get_wait_time()
@@ -103,6 +110,7 @@ func move_actor(amount):
 
 	map_pos = actor.parent_map.move_on_map(actor, map_pos, target_tile)
 	actor.set_map_pos(map_pos)
+	move_actor_translation()
 	check_tile_for_steppable_objects(map_pos[0], map_pos[1])
 
 func check_tile_for_steppable_objects(x,z):

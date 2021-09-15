@@ -17,7 +17,7 @@ func create_server():
 	GlobalVars.self_netID = 1
 
 func identity_update(updated_identity):
-	# MUST DO TWICE, AS RPC ONLY GOES TO CLIENTS, NOT THE SERVER TOO!
+	# THIS SHOULD BE REMOVED, AS ACTUAL ACTION COMMANDS THEMSELVES SHOULD UPDATE IDENTITY
 	rpc('receive_identity_update', updated_identity)
 	receive_identity_update(updated_identity)
 
@@ -27,8 +27,6 @@ func object_action_event(object_id, action):
 	
 	rpc('receive_object_action_event', orig_object_id, orig_action)
 	receive_object_action_event(orig_object_id, orig_action)
-	
-	Server.identity_update(object_id)
 	
 remote func receive_object_action_event(object_id, action):
 	# determine map
@@ -56,6 +54,7 @@ remote func receive_object_action_event(object_id, action):
 		'Move':
 			object.set_direction(action['Value'])
 			object.move_actor_in_facing_dir(1)
+			object.update_id('Position', object.get_map_pos())
 
 # SERVER SIDE COMMANDS FUNCS
 remote func send_map_to_requester(requester):
