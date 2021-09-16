@@ -27,7 +27,25 @@ func get_tile_contents(x,z):
 
 func tile_in_bounds(x,z):
 	return (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size())
-	
+
+func tile_available(x,z):
+	if tile_in_bounds(x,z): 
+		for object in map_grid[x][z]:
+			if object.get_id()['CategoryType'] in GlobalVars.NON_TRAVERSABLES: return false
+			
+			if (object.get_id()['CategoryType'] == 'Enemy') or \
+				(object.get_id()['CategoryType'] == 'Player'):
+				if object.get_is_dead() == true: continue
+				else: return false
+		return true
+	return false
+
+func is_tile_wall(x,z):
+	if tile_in_bounds(x,z): 
+		for object in map_grid[x][z]:
+			if object.get_id()['CategoryType'] in ['Wall', 'TempWall']: return true
+	return false
+
 func move_on_map(object, old_pos, new_pos):
 	map_grid[new_pos[0]][new_pos[1]].append(object)
 	map_grid[old_pos[0]][old_pos[1]].erase(object)

@@ -4,9 +4,6 @@ extends Node
 # with the new one. This isnt desirable behaviour as it completely prevents backtracking.
 # Have this sorted for v0.1
 
-const BASE_PLAYER = preload("res://Assets/Objects/PlayerObjects/Player.tscn")
-var player = BASE_PLAYER.instance()
-
 const MAPSET_CLASS = preload("res://Assets/SystemScripts/Mapset.gd")
 var dungeon = MAPSET_CLASS.new('The Cave', 3)
 
@@ -19,7 +16,7 @@ func _ready():
 	add_child(plyr_play_map)
 	unpack_map(GlobalVars.server_map_data)
 	
-#	first_turn_workaround_for_player_sight()
+	first_turn_workaround_for_player_sight()
 
 func unpack_map(map_data):
 	GlobalVars.total_mapsets.append(plyr_play_map)
@@ -59,6 +56,7 @@ func unpack_map(map_data):
 							client_player.update_id('NetID', GlobalVars.self_netID)
 							client_player.update_id('Instance ID', object['Instance ID'])
 							client_player.update_id('Map ID', plyr_play_map.get_map_server_id())
+							client_player.set_map_pos(client_player.get_id()['Position'])
 							map_grid[x][z].append(client_player)
 							
 							GlobalVars.self_instanceObj = client_player
@@ -113,7 +111,7 @@ func move_to_map(object, mapset_name, target_map_id):
 	first_turn_workaround_for_player_sight()
 	
 func first_turn_workaround_for_player_sight():
-	player.viewfield = player.view_finder.find_view_field(player.get_map_pos()[0], player.get_map_pos()[1])
-	player.resolve_viewfield_to_screen()
+	GlobalVars.self_instanceObj.find_viewfield()
+	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
 	
 #	player.get_parent_map().hide_non_visible_from_player()

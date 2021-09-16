@@ -33,7 +33,7 @@ var base_dumb_actor = preload("res://Assets/Objects/PlayerObjects/DumbActor.tscn
 func create_object(object_scene, map_pos) -> Object:
 	var object = object_scene.instance()
 	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
-	object.visible = true
+	object.visible = false
 	object.set_map_pos([map_pos[0], map_pos[1]])
 	
 	return object

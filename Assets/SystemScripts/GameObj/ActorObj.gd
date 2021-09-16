@@ -154,7 +154,8 @@ func end_turn():
 	proposed_action = ''
 	in_turn = false
 	ready_status = false
-	
+
+func find_viewfield():
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
 
 func resolve_viewfield_to_screen():

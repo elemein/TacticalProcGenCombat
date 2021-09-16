@@ -27,7 +27,15 @@ func object_action_event(object_id, action):
 	
 	rpc('receive_object_action_event', orig_object_id, orig_action)
 	receive_object_action_event(orig_object_id, orig_action)
-	
+
+func resolve_all_viewfields():
+	resolve_viewfield()
+	rpc('resolve_viewfield')
+
+remote func resolve_viewfield():
+	GlobalVars.self_instanceObj.find_viewfield()
+	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
+
 remote func receive_object_action_event(object_id, action):
 	# determine map
 	var map

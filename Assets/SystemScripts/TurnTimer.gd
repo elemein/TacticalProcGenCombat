@@ -105,9 +105,9 @@ func end_turn():
 	turn_counter += 1
 	map.print_map_grid()
 	
-	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
-	
 	map.check_what_room_player_is_in()
+	
+	Server.resolve_all_viewfields()
 
 func _physics_process(_delta):
 	if turn_in_process:
