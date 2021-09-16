@@ -306,3 +306,9 @@ func set_spell_power(new_value):
 
 func set_defense(new_value):
 	stat_dict['Defense'] = new_value
+
+func set_graphics(graphics_node):
+	remove_child($Graphics)
+	add_child(graphics_node)
+	model = graphics_node
+	anim = graphics_node.find_node("AnimationPlayer")
