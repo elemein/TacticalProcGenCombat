@@ -4,7 +4,7 @@
 [ext_resource path="res://Assets/GUI/HealthManaBar3D.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Assets/Audio/PlayerAudio/hit_basic_attack_player_1.wav" type="AudioStream" id=3]
 [ext_resource path="res://Assets/Audio/PlayerAudio/hit_basic_attack_player_2.wav" type="AudioStream" id=4]
-[ext_resource path="res://Assets/Objects/PlayerObjects/Lantern.gd" type="Script" id=5]
+[ext_resource path="res://Assets/Objects/Effects/Lantern/LanternLight.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/Objects/PlayerObjects/DumbActor.gd" type="Script" id=6]
 [ext_resource path="res://Assets/NewArt/Gull.tscn" type="PackedScene" id=8]
 
@@ -37,12 +37,7 @@ pixel_size = 0.003
 
 [node name="Actions" parent="." instance=ExtResource( 1 )]
 
-[node name="OmniLight" type="OmniLight" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.37372, 0 )
-light_color = Color( 0.882353, 0.788235, 0.607843, 1 )
-omni_range = 15.0
-omni_attenuation = 0.999999
-script = ExtResource( 5 )
+[node name="OmniLight" parent="." instance=ExtResource( 5 )]
 
 [node name="Tween" type="Tween" parent="."]
 
