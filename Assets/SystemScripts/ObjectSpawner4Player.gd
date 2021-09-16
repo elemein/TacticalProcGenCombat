@@ -69,15 +69,23 @@ func spawn_actor(actor_name, map_pos):
 	match actor_name:
 		'PSidePlayer': actor_scene = base_pside_player
 		'PlagueDoc': actor_scene = base_dumb_actor
+		'Fox': actor_scene = base_dumb_actor
+		'Imp': actor_scene = base_dumb_actor
 	
 	var actor = create_object(actor_scene, map_pos)
 	
 	match actor_name:
 		'PlagueDoc':
 			#Replacing the placeholder graphics with intended:
-			actor.set_graphics(imp_graphics.instance())
+			actor.set_graphics(plague_doc_graphics.instance())
 			actor.add_child(lantern_light_effect.instance())
 			actor.add_to_group('player')
+		'Fox':
+			actor.set_graphics(fox_graphics.instance())
+			actor.add_to_group('enemies')
+		'Imp':
+			actor.set_graphics(imp_graphics.instance())
+			actor.add_to_group('enemies')
 	
 	return actor
 

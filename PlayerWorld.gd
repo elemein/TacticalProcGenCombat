@@ -68,6 +68,20 @@ func unpack_map(map_data):
 							other_player.update_id('Instance ID', object['Instance ID'])
 							other_player.update_id('Map ID', plyr_play_map.get_map_server_id())
 							map_grid[x][z].append(other_player)
+					'Fox':
+						var fox = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], [x,z])
+						plyr_play_map.add_child(fox)
+						fox.update_id('Instance ID', object['Instance ID'])
+						fox.set_parent_map(plyr_play_map)
+						fox.update_id('Map ID', plyr_play_map.get_map_server_id())
+						map_grid[x][z].append(fox)
+					'Imp':
+						var imp = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], [x,z])
+						plyr_play_map.add_child(imp)
+						imp.update_id('Instance ID', object['Instance ID'])
+						imp.set_parent_map(plyr_play_map)
+						imp.update_id('Map ID', plyr_play_map.get_map_server_id())
+						map_grid[x][z].append(imp)
 	
 	plyr_play_map.set_map_grid(map_grid)
 	print('Map unpacked.')
