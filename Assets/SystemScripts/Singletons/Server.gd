@@ -106,7 +106,9 @@ func _player_connected(id):
 	
 	new_player.get_parent_map().get_turn_timer().add_to_timer_group(new_player)
 	
-	rpc_id(id, "receive_id_from_server", id)
+	var instance_id = new_player.get_id()['Instance ID']
+	
+	rpc_id(id, "receive_id_from_server", id, instance_id)
 
 func _player_disconnected(id):
 	print('Goodbye player ' + str(id) + '.')
@@ -130,8 +132,9 @@ func request_for_player_action(request):
 remote func receive_map_from_server(map_id, map_data):
 	GlobalVars.server_map_data = [map_id, map_data]
 
-remote func receive_id_from_server(id):
-	GlobalVars.self_netID = id
+remote func receive_id_from_server(net_id, instance_id):
+	GlobalVars.self_netID = net_id
+	GlobalVars.self_instanceID = instance_id
 
 remote func receive_identity_update(updated_identity):
 	var old_identity

@@ -10,6 +10,7 @@ var server_player
 var total_mapsets = []
 
 var self_netID
+var self_instanceID
 
 const TILE_OFFSET = 2.0
 

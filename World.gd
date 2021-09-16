@@ -20,6 +20,8 @@ func _ready():
 		for level in mapset.floors:
 			GlobalVars.total_mapsets.append(mapset.floors[level])
 	
+	GlobalVars.self_instanceID = player.get_id()['Instance ID']
+	
 	move_to_map(player, 'The Cave', 1)
 	
 	first_turn_workaround_for_player_sight()
