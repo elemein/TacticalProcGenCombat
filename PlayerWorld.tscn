@@ -2,9 +2,12 @@
 
 [ext_resource path="res://PlayerWorld.gd" type="Script" id=1]
 [ext_resource path="res://Assets/GUI/StatusBar/StatusBar.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Assets/GUI/Arrow.png" type="Texture" id=3]
 [ext_resource path="res://Assets/GUI/GUI.gd" type="Script" id=4]
 [ext_resource path="res://GUI.gd" type="Script" id=7]
+
+[sub_resource type="StreamTexture" id=1]
+flags = 4
+load_path = "res://.import/Arrow.png-07b06b9adac9a1a4f5fbbea0bd341b33.stex"
 
 [node name="World" type="Node"]
 script = ExtResource( 1 )
@@ -29,7 +32,7 @@ __meta__ = {
 
 [node name="Proposed Action" type="Sprite" parent="GUI/Action"]
 scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 3 )
+texture = SubResource( 1 )
 
 [node name="StatusBar" parent="GUI" instance=ExtResource( 2 )]
 

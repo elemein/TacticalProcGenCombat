@@ -29,11 +29,21 @@ func _ready():
 	_result = ability_3.connect("mouse_exited", self, "_on_mouse_exited")
 	ability_info.visible = false
 	ability_info_size = ability_info.get_size()
+	
+	yield(get_tree(), "idle_frame")
+	for player in Server.player_list:
+		if player.identity['NetID'] == GlobalVars.self_netID:
+			_on_GUI_set_status_bars(player.start_stats)
 
 
 func _on_GUI_set_status_bars(stats):
-	emit_signal("set_health_bar", stats['HP'], stats['Max HP'])
-	emit_signal("set_mana_bar", stats['MP'], stats['Max MP'])
+	health_bar.value = stats['HP']
+	health_bar.max_value = stats['Max HP']
+	health_text.text = str(stats['HP']) + '/' + str(stats['Max HP'])
+	
+	mana_bar.value = stats['MP']
+	mana_bar.max_value = stats['Max MP']
+	mana_text.text = str(stats['MP']) + '/' + str(stats['Max MP'])
 
 
 func _on_GUI_update_health_bar(hp, max_hp):
