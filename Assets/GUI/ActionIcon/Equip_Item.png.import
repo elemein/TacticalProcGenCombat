@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Fireball.png-f0ae7f5a43b2977642013cf1c1b7a307.stex"
+path="res://.import/Equip_Item.png-5a45f4c72e7bfd0d7f50a96392d40c6a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/GUI/Fireball.png"
-dest_files=[ "res://.import/Fireball.png-f0ae7f5a43b2977642013cf1c1b7a307.stex" ]
+source_file="res://Assets/GUI/ActionIcon/Equip_Item.png"
+dest_files=[ "res://.import/Equip_Item.png-5a45f4c72e7bfd0d7f50a96392d40c6a.stex" ]
 
 [params]
 
