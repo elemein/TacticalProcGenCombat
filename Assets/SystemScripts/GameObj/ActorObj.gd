@@ -157,6 +157,9 @@ func end_turn():
 	
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
 
+func resolve_viewfield_to_screen():
+	view_finder.resolve_viewfield()
+
 # Movement related functions.
 func check_move_action(move):
 	return mover.check_move_action(move)

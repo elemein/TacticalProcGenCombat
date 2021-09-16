@@ -21,6 +21,7 @@ func _ready():
 			GlobalVars.total_mapsets.append(mapset.floors[level])
 	
 	GlobalVars.self_instanceID = player.get_id()['Instance ID']
+	GlobalVars.self_instanceObj = player
 	
 	move_to_map(player, 'The Cave', 1)
 	
@@ -72,5 +73,7 @@ func move_to_map(object, mapset_name, target_map_id):
 	first_turn_workaround_for_player_sight()
 	
 func first_turn_workaround_for_player_sight():
-	player.viewfield = player.view_finder.find_view_field(player.get_map_pos()[0], player.get_map_pos()[1])	
-	player.get_parent_map().hide_non_visible_from_player()
+	player.viewfield = player.view_finder.find_view_field(player.get_map_pos()[0], player.get_map_pos()[1])
+	player.resolve_viewfield_to_screen()
+	
+#	player.get_parent_map().hide_non_visible_from_player()

@@ -15,6 +15,8 @@ var actor
 var vision_boundaries = []
 var visible_tiles = []
 
+var objs_visible_to_player_last_turn = []
+
 func set_actor(setter):
 	actor = setter
 
@@ -83,3 +85,29 @@ func form_vision_boundaries():
 		for x in range(-view_range, view_range +1):
 			if ([pos_x + x, pos_z + z] in vision_boundaries) == false :
 				vision_boundaries.append([pos_x + x, pos_z + z])
+
+func resolve_viewfield():
+	var viewfield = actor.get_viewfield()
+	var objs_visible_to_player = []
+	
+	# catalog what ought to be in view
+	for tile in viewfield: 
+		var objects_on_tile = actor.get_parent_map().get_tile_contents(tile[0], tile[1])
+		
+		for object in objects_on_tile:
+			if object.get_id()['CategoryType'] != 'Trap': # dont reveal traps
+				objs_visible_to_player.append(object)
+				object.visible = true
+
+	# check what was in vision last turn
+	# if its not in the seen objects, turn off visible
+	for object in objs_visible_to_player_last_turn:
+		if not (object in objs_visible_to_player):
+			object.visible = false
+	
+	# save what was in vision
+	objs_visible_to_player_last_turn = objs_visible_to_player
+	
+func hide_all():
+	for object in objs_visible_to_player_last_turn:
+		object.visible = false

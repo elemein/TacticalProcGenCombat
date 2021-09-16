@@ -60,6 +60,8 @@ func unpack_map(map_data):
 							client_player.update_id('Instance ID', object['Instance ID'])
 							client_player.update_id('Map ID', plyr_play_map.get_map_server_id())
 							map_grid[x][z].append(client_player)
+							
+							GlobalVars.self_instanceObj = client_player
 						else:
 							var other_player = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], [x,z])
 							plyr_play_map.add_child(other_player)
@@ -111,5 +113,7 @@ func move_to_map(object, mapset_name, target_map_id):
 	first_turn_workaround_for_player_sight()
 	
 func first_turn_workaround_for_player_sight():
-	player.viewfield = player.view_finder.find_view_field(player.get_map_pos()[0], player.get_map_pos()[1])	
-	player.get_parent_map().hide_non_visible_from_player()
+	player.viewfield = player.view_finder.find_view_field(player.get_map_pos()[0], player.get_map_pos()[1])
+	player.resolve_viewfield_to_screen()
+	
+#	player.get_parent_map().hide_non_visible_from_player()

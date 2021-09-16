@@ -105,7 +105,7 @@ func end_turn():
 	turn_counter += 1
 	map.print_map_grid()
 	
-	map.hide_non_visible_from_player()
+	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
 	
 	map.check_what_room_player_is_in()
 

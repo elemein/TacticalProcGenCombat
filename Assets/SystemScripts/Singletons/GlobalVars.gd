@@ -11,6 +11,7 @@ var total_mapsets = []
 
 var self_netID
 var self_instanceID
+var self_instanceObj
 
 const TILE_OFFSET = 2.0
 
