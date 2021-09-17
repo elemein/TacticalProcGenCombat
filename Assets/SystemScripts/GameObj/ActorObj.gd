@@ -107,7 +107,9 @@ func process_turn():
 		was_visible = true
 	if proposed_action.split(" ")[0] == 'move': turn_anim_timer.set_wait_time(0.35)
 	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
-	elif proposed_action == 'basic attack': turn_anim_timer.set_wait_time($Actions/Attacks/BasicAttack.anim_time)
+	elif proposed_action == 'basic attack': 
+		turn_anim_timer.set_wait_time($Actions/Attacks/BasicAttack.anim_time)
+		Server.object_action_event(object_identity, {"Command Type": "Basic Attack", "Value": get_direction_facing()})
 	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time($Actions/Attacks/Fireball.anim_time)
 	elif proposed_action == 'self heal': turn_anim_timer.set_wait_time($Actions/SelfHeal.anim_time)
 	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.6)
@@ -124,9 +126,6 @@ func process_turn():
 	
 	elif proposed_action == 'idle':
 		target_pos = map_pos
-	
-	elif proposed_action == 'basic attack':
-		emit_signal("spell_cast_basic_attack")
 	
 	elif proposed_action == 'fireball':
 		emit_signal("spell_cast_fireball")
@@ -147,6 +146,12 @@ func process_turn():
 	set_mp(stat_dict['MP'] + stat_dict['MP Regen'])
 
 	in_turn = true
+
+func perform_action(action):
+	match action['Command Type']:
+		'Basic Attack':
+			emit_signal("spell_cast_basic_attack")
+			
 
 func end_turn():
 	target_pos = translation

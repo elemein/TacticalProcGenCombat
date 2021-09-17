@@ -8,7 +8,7 @@ func _ready():
 	attack_power = 10
 	spell_cost = 0
 	spell_length = 1
-	anim_time = 0.1
+	anim_time = 0.25
 	spell_description = str("""Basic Attack
 	Cost: {cost}\tBase Power: {power}
 	
@@ -21,7 +21,6 @@ func _on_Actions_spell_cast_basic_attack():
 func use():
 	map = parent.get_parent_map()
 	
-	parent.set_mp(parent.get_mp() - spell_cost)
 	play_audio()
 
 	set_target_actor_pos()
@@ -31,9 +30,10 @@ func use():
 	effect_tween.interpolate_property(parent, "translation", saved_actor_pos, target_actor_pos, anim_time/2, Tween.TRANS_SINE, Tween.EASE_OUT)
 	effect_tween.start()
 
-	set_attack_power()
-
-	do_damage(spell_final_attack_power, damage_variance)
+	if GlobalVars.peer_type == 'server':
+		parent.set_mp(parent.get_mp() - spell_cost)
+		set_attack_power()
+		do_damage(spell_final_attack_power, damage_variance)
 
 # Move back
 func _on_tween_complete(_tween_object, _tween_node_path):

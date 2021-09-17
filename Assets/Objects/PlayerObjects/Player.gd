@@ -210,7 +210,8 @@ func get_input():
 	
 	# Basic attacks only need one press.
 	if 'BasicAttackAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("space"): set_action('basic attack')
+		if Input.is_action_pressed("space"): 
+			Server.request_for_player_action({"Command Type": "Basic Attack", "Value": get_direction_facing()})
 	
 	# Skills will need two presses to confirm.
 	if 'FireballAbility' in PlayerInfo.abilities:
