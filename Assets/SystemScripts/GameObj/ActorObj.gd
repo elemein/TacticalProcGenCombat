@@ -196,14 +196,15 @@ func take_damage(damage, is_crit):
 		var damage_multiplier = 100 / (100+float(stat_dict['Defense']))
 		damage = floor(damage * damage_multiplier)
 		damage = floor(damage)
-		stat_dict['HP'] -= damage
+		
+		Server.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": -damage})
+		
+#		stat_dict['HP'] -= damage
 		
 		if is_crit: 
 			Server.actor_notif_event(object_identity, ("-" + str(damage)) + "!", 'crit damage')
-#			display_notif(("-" + str(damage)) + "!", 'crit damage')
 		else: 
 			Server.actor_notif_event(object_identity, ("-" + str(damage)), 'damage')
-#			display_notif(("-" + str(damage)), 'damage')
 		
 		print("%s has %s HP" % [self.get_id()['Identifier'], stat_dict['HP']])
 		

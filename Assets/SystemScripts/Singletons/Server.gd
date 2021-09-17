@@ -36,6 +36,17 @@ remote func resolve_viewfield():
 	GlobalVars.self_instanceObj.find_viewfield()
 	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
 
+func update_actor_stat(object_id, stat_update):
+	rpc('receive_actor_stat_update', object_id, stat_update)
+	receive_actor_stat_update(object_id, stat_update)
+
+remote func receive_actor_stat_update(object_id, stat_update):
+	var object = get_object_from_identity(object_id)
+	
+	match stat_update['Stat']:
+		'HP':
+			object.set_hp(object_id['HP'] + stat_update['Modifier'])
+
 func actor_notif_event(object_id, notif_text, notif_type):
 	rpc('receive_actor_notif_event', object_id, notif_text, notif_type)
 	receive_actor_notif_event(object_id, notif_text, notif_type)
