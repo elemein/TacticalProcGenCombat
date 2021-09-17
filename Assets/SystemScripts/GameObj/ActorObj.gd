@@ -198,8 +198,12 @@ func take_damage(damage, is_crit):
 		damage = floor(damage)
 		stat_dict['HP'] -= damage
 		
-		if is_crit == false: display_notif(("-" + str(damage)), 'damage')
-		else: display_notif(("-" + str(damage)) + "!", 'crit damage')
+		if is_crit: 
+			Server.actor_notif_event(object_identity, ("-" + str(damage)) + "!", 'crit damage')
+#			display_notif(("-" + str(damage)) + "!", 'crit damage')
+		else: 
+			Server.actor_notif_event(object_identity, ("-" + str(damage)), 'damage')
+#			display_notif(("-" + str(damage)), 'damage')
 		
 		print("%s has %s HP" % [self.get_id()['Identifier'], stat_dict['HP']])
 		

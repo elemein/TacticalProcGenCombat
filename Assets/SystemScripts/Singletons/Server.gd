@@ -36,6 +36,30 @@ remote func resolve_viewfield():
 	GlobalVars.self_instanceObj.find_viewfield()
 	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
 
+func actor_notif_event(object_id, notif_text, notif_type):
+	rpc('receive_actor_notif_event', object_id, notif_text, notif_type)
+	receive_actor_notif_event(object_id, notif_text, notif_type)
+
+remote func receive_actor_notif_event(object_id, notif_text, notif_type):
+	var object = get_object_from_identity(object_id)
+	
+	object.display_notif(notif_text, notif_type)
+
+func get_object_from_identity(object_id):
+	var map
+	for child_map in GlobalVars.total_mapsets:
+		if child_map.get_map_server_id() == object_id['Map ID']: map = child_map
+	# determine object
+	var object
+	var x = object_id['Position'][0]
+	var z = object_id['Position'][1]
+	var tile_objs = map.get_tile_contents(x, z)
+
+	for obj in tile_objs:
+		if obj.get_id()['Instance ID'] == object_id['Instance ID']:
+			object = obj
+	return object
+
 remote func receive_object_action_event(object_id, action):
 	# determine map
 	var map
