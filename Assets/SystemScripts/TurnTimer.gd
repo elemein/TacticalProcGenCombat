@@ -107,6 +107,10 @@ func end_turn():
 	
 	map.check_what_room_player_is_in()
 	
+	for actor in actors:
+		if actor.get_id()['CategoryType'] == 'Enemy':
+			actor.find_viewfield()
+			
 	Server.resolve_all_viewfields()
 
 func _physics_process(_delta):

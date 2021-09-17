@@ -39,14 +39,12 @@ func unpack_map(map_data):
 						plyr_play_map.add_child(ground)
 						ground.update_id('Instance ID', object['Instance ID'])
 						ground.set_parent_map(plyr_play_map)
-						ground.update_id('Map ID', plyr_play_map.get_map_server_id())
 						map_grid[x][z].append(ground)
 					'BaseWall': 
 						var wall = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], [x,z])
 						plyr_play_map.add_child(wall)
 						wall.update_id('Instance ID', object['Instance ID'])
 						wall.set_parent_map(plyr_play_map)
-						wall.update_id('Map ID', plyr_play_map.get_map_server_id())
 						map_grid[x][z].append(wall)
 					'PlagueDoc': 
 						if object['NetID'] == GlobalVars.self_netID:
@@ -55,7 +53,6 @@ func unpack_map(map_data):
 							Server.add_player_to_local_player_list(client_player)
 							client_player.update_id('NetID', GlobalVars.self_netID)
 							client_player.update_id('Instance ID', object['Instance ID'])
-							client_player.update_id('Map ID', plyr_play_map.get_map_server_id())
 							client_player.set_map_pos(client_player.get_id()['Position'])
 							map_grid[x][z].append(client_player)
 							
@@ -66,21 +63,18 @@ func unpack_map(map_data):
 							Server.add_player_to_local_player_list(other_player)
 							other_player.update_id('NetID', object['NetID'])
 							other_player.update_id('Instance ID', object['Instance ID'])
-							other_player.update_id('Map ID', plyr_play_map.get_map_server_id())
 							map_grid[x][z].append(other_player)
 					'Fox':
 						var fox = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], [x,z])
 						plyr_play_map.add_child(fox)
 						fox.update_id('Instance ID', object['Instance ID'])
 						fox.set_parent_map(plyr_play_map)
-						fox.update_id('Map ID', plyr_play_map.get_map_server_id())
 						map_grid[x][z].append(fox)
 					'Imp':
 						var imp = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], [x,z])
 						plyr_play_map.add_child(imp)
 						imp.update_id('Instance ID', object['Instance ID'])
 						imp.set_parent_map(plyr_play_map)
-						imp.update_id('Map ID', plyr_play_map.get_map_server_id())
 						map_grid[x][z].append(imp)
 	
 	plyr_play_map.set_map_grid(map_grid)

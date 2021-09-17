@@ -35,6 +35,7 @@ func _ready():
 	stat_dict['Speed'] = rng.randi_range(5,15)
 
 func setup_actor():
+	object_identity['Map ID'] = get_parent_map().get_map_server_id()
 	turn_timer.add_to_timer_group(self)
 	translation.x = map_pos[0] * GlobalVars.TILE_OFFSET
 	translation.z = map_pos[1] * GlobalVars.TILE_OFFSET
@@ -75,7 +76,7 @@ func _physics_process(_delta):
 		handle_animations()
 
 func decide_next_action():
-	ai_engine.run_engine()
+		ai_engine.run_engine()
 
 func add_loot_to_inventory():
 	var loot_seed = rng.randi_range(1, 100)
@@ -100,3 +101,6 @@ func drop_loot():
 	
 	# drop items
 	loot_dropped = true
+
+func set_direction(direction):
+	set_actor_dir(direction)

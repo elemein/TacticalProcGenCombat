@@ -147,33 +147,6 @@ func is_tile_wall(x,z):
 func get_map():
 	return map_grid
 
-#func hide_non_visible_from_player():
-#	var viewfield = player.get_viewfield()
-#	var objs_visible_to_player = []
-#
-#	# catalog what ought to be in view
-#	for tile in viewfield: 
-#		var objects_on_tile = get_tile_contents(tile[0], tile[1])
-#
-#		for object in objects_on_tile:
-#			if object.get_id()['CategoryType'] != 'Trap': # dont reveal traps
-#				objs_visible_to_player.append(object)
-#				object.visible = true
-#
-#	# check what was in vision last turn
-#	# if its not in the seen objects, turn off visible
-#	for object in objs_visible_to_player_last_turn:
-#		if not (object in objs_visible_to_player):
-#			object.visible = false
-#
-#	# save what was in vision
-#	objs_visible_to_player_last_turn = objs_visible_to_player
-
-
-#func hide_all():
-#	for object in objs_visible_to_player_last_turn:
-#		object.visible = false
-
 func add_map_object(object):
 	var tile = object.get_map_pos()
 	
