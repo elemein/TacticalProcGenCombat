@@ -6,8 +6,6 @@ const INPUT_CONFIRMATION_SMOOTHING_TIME = 0.1
 
 const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
 
-signal prepare_gui(stats)
-
 var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 				"HP Regen" : 1, "MP Regen": 6, "Attack Power" : 10, \
 				"Crit Chance": 5, "Spell Power" : 20, "Defense" : 0, \
@@ -42,14 +40,6 @@ func _ready():
 	input_smoothing_timer.set_one_shot(true)
 	input_smoothing_timer.set_wait_time(DIAGONAL_INPUT_SMOOTHING_TIME)
 	add_child(input_smoothing_timer)
-
-#	var _result = self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
-#	_result = self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
-#	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
-#
-#	emit_signal("prepare_gui", start_stats)
-#	Signals.emit_signal("player_attack_power_updated", start_stats['Attack Power'])
-#	Signals.emit_signal("player_spell_power_updated", start_stats['Spell Power'])
 
 	if GlobalVars.peer_type == 'client': set_parent_map(GlobalVars.server_mapset)
 	elif GlobalVars.peer_type == 'server': set_parent_map(get_parent())

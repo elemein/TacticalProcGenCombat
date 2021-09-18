@@ -1,31 +1,16 @@
 extends Node
 
 # Attacks
-var basic_attack = null
-var fireball = null
+onready var basic_attack = find_node('BasicAttack')
+onready var fireball = find_node('Fireball')
 
-var self_heal = null
-var dash = null
+onready var self_heal = find_node('SelfHeal')
+onready var dash = find_node('Dash')
 
 # Inventory Actions
-var drop_item = null
-var equip_item = null
-var unequip_item = null
-
-
-
-func _ready():
-	# Attacks
-	basic_attack = find_node('BasicAttack')
-	fireball = find_node('Fireball')
-
-	self_heal = find_node('SelfHeal')
-	dash = find_node('Dash')
-
-	# Inventory Actions
-	drop_item = find_node('DropItem')
-	equip_item = find_node('EquipItem')
-	unequip_item = find_node('UnequipItem')
+onready var drop_item = find_node('DropItem')
+onready var equip_item = find_node('EquipItem')
+onready var unequip_item = find_node('UnequipItem')
 
 
 # Attacks

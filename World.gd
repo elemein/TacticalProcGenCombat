@@ -28,11 +28,14 @@ func _ready():
 	first_turn_workaround_for_player_sight()
 	
 	### NETWORK
-	if GlobalVars.peer_type == 'server': 
+	if GlobalVars.peer_type == 'server' and GlobalVars.self_netID != 1: 
 		Server.create_server()
 
 	elif GlobalVars.peer_type == 'client': 
 		Server.request_map_from_server()
+		
+	else:
+		Server.player_list.append(GlobalVars.server_player)
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):
 	var targ_mapset

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/health.png-af4eb4655dfbbda9691c7e2664942567.s3tc.stex"
-path.etc2="res://.import/health.png-af4eb4655dfbbda9691c7e2664942567.etc2.stex"
+path.s3tc="res://.import/health.png-39d864ff59263be0cf922c05618a5529.s3tc.stex"
+path.etc2="res://.import/health.png-39d864ff59263be0cf922c05618a5529.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Assets/GUI/health.png"
-dest_files=[ "res://.import/health.png-af4eb4655dfbbda9691c7e2664942567.s3tc.stex", "res://.import/health.png-af4eb4655dfbbda9691c7e2664942567.etc2.stex" ]
+source_file="res://Assets/GUI/FloatingResourceBar/health.png"
+dest_files=[ "res://.import/health.png-39d864ff59263be0cf922c05618a5529.s3tc.stex", "res://.import/health.png-39d864ff59263be0cf922c05618a5529.etc2.stex" ]
 
 [params]
 

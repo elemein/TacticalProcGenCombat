@@ -71,6 +71,7 @@ Server="*res://Assets/SystemScripts/Singletons/Server.gd"
 [debug]
 
 gdscript/completion/autocomplete_setters_and_getters=true
+gdscript/warnings/return_value_discarded=false
 
 [display]
 

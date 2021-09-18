@@ -105,7 +105,7 @@ remote func receive_object_action_event(object_id, action):
 			object.perform_action(action)
 
 # SERVER SIDE COMMANDS FUNCS
-remote func send_map_to_requester(requester):
+remote func send_map_to_requester(_requester):
 	var player_id = get_tree().get_rpc_sender_id()
 	var map_data = PlayerInfo.current_map.return_map_grid_encoded_to_string()
 	var map_id = PlayerInfo.current_map.get_map_server_id()
@@ -117,14 +117,14 @@ remote func query_for_action(requester, request):
 	var player_id = requester
 	var player_obj
 	var player_identity
-	var player_map
+#	var player_map
 	var player_turn_timer
 	
 	for player in player_list:
 		if player.get_id()['NetID'] == player_id:
 			player_obj = player
 			player_identity = player.get_id()
-			player_map = player.get_parent_map()
+#			player_map = player.get_parent_map()
 			player_turn_timer = player.get_parent_map().get_turn_timer()
 	
 	match request['Command Type']:
@@ -191,13 +191,13 @@ remote func receive_id_from_server(net_id, instance_id):
 	GlobalVars.self_instanceID = instance_id
 
 remote func receive_identity_update(updated_identity):
-	var old_identity
+#	var old_identity
 	var player_obj
 	
 	for player in player_list:
 		if player.get_id()['NetID'] == updated_identity['NetID']:
 			player_obj = player
-			old_identity = player.get_id()
+#			old_identity = player.get_id()
 	
 	player_obj.set_id(updated_identity)
 

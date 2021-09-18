@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/mana.png-bcbeda1f7095ebc4755b7ef2f1c8a11c.s3tc.stex"
-path.etc2="res://.import/mana.png-bcbeda1f7095ebc4755b7ef2f1c8a11c.etc2.stex"
+path.s3tc="res://.import/mana.png-7ef89f19eae746b2fdeb36f152ae17dc.s3tc.stex"
+path.etc2="res://.import/mana.png-7ef89f19eae746b2fdeb36f152ae17dc.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Assets/GUI/mana.png"
-dest_files=[ "res://.import/mana.png-bcbeda1f7095ebc4755b7ef2f1c8a11c.s3tc.stex", "res://.import/mana.png-bcbeda1f7095ebc4755b7ef2f1c8a11c.etc2.stex" ]
+source_file="res://Assets/GUI/FloatingResourceBar/mana.png"
+dest_files=[ "res://.import/mana.png-7ef89f19eae746b2fdeb36f152ae17dc.s3tc.stex", "res://.import/mana.png-7ef89f19eae746b2fdeb36f152ae17dc.etc2.stex" ]
 
 [params]
 

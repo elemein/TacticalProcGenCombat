@@ -102,7 +102,7 @@ func spawn_enemy(enemy_name, map_pos):
 	
 	return enemy
 
-func spawn_gold(value, map_pos, visibility):
+func spawn_gold(value, map_pos, _visibility):
 	var coins = create_object(base_coins, map_pos)
 
 	coins.add_to_group('loot')
