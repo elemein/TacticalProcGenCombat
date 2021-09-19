@@ -267,7 +267,7 @@ func create_rooms():
 				ground.translation = Vector3((x) * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, (z) * GlobalVars.TILE_OFFSET)
 				ground.visible = false
 				ground.set_map_pos([x,z])
-				
+
 				total_map[x][z][0] = ground
 			
 func join_rooms():

@@ -31,9 +31,7 @@ func _ready():
 	ability_info_size = ability_info.get_size()
 	
 	yield(get_tree(), "idle_frame")
-	for player in Server.player_list:
-		if player.identity['NetID'] == GlobalVars.self_netID:
-			_on_GUI_set_status_bars(player.start_stats)
+	_on_GUI_set_status_bars(GlobalVars.self_instanceObj.start_stats)
 
 
 func _on_GUI_set_status_bars(stats):

@@ -45,9 +45,6 @@ func set_texture_unrotated(action):
 	action_holder.rotation_degrees = 0
 	action_holder.set_texture(action)
 
-func _physics_process(_delta):
-	pass
-
 func clear_action():
 	action_holder.rotation_degrees = 0
 	action_holder.set_texture(blank_action)

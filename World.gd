@@ -13,15 +13,15 @@ var dungeon = MAPSET_CLASS.new('The Cave', 3)
 var mapsets = []
 
 func _ready():
+	GlobalVars.self_instanceID = player.get_id()['Instance ID']
+	GlobalVars.self_instanceObj = player
+	
 	add_child(dungeon)
 	mapsets = [dungeon]
 	
 	for mapset in mapsets:
 		for level in mapset.floors:
 			GlobalVars.total_mapsets.append(mapset.floors[level])
-	
-	GlobalVars.self_instanceID = player.get_id()['Instance ID']
-	GlobalVars.self_instanceObj = player
 	
 	move_to_map(player, 'The Cave', 1)
 	
