@@ -1,7 +1,7 @@
 extends MarginContainer
 
 
-export (NodePath) var player
+export (NodePath) var player = null
 export var zoom = 1.5
 
 onready var grid = find_node('GridContainer')
@@ -15,6 +15,7 @@ onready var stairs_icon = preload("res://Assets/GUI/MiniMap/Stairs.png")
 onready var tile_icon = preload("res://Assets/GUI/MiniMap/Tile.png")
 onready var blank_icon = preload("res://Assets/GUI/MiniMap/Blank.png")
 onready var seen_icon = preload("res://Assets/GUI/MiniMap/Seen.png")
+onready var co_op_player = preload("res://Assets/GUI/MiniMap/CoOpPlayer.png")
 
 var markers = []
 
