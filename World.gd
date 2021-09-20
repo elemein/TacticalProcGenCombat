@@ -27,6 +27,11 @@ func _ready():
 	
 	first_turn_workaround_for_player_sight()
 	
+	# Put the player on the first floor and clean up the garbage
+	var player_child = dungeon.get_node('Floor1/Player')
+	player_child.get_parent().remove_child(player_child)
+	dungeon.get_node('Floor1/Players').add_child(player_child)
+	
 	### NETWORK
 	if GlobalVars.peer_type == 'server' and GlobalVars.self_netID != 1: 
 		Server.create_server()
