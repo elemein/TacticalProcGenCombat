@@ -99,8 +99,7 @@ func set_action(action):
 
 	if object_identity['CategoryType'] == 'Player': gui.set_action(proposed_action)
 
-func move_actor_in_facing_dir(amount):
-	mover.move_actor(amount)
+
 
 func process_turn():
 	if visible:
@@ -130,7 +129,7 @@ func process_turn():
 	elif proposed_action == 'fireball':
 		emit_signal("spell_cast_fireball")
 	elif proposed_action == 'dash':
-		emit_signal("spell_cast_dash")
+		Server.object_action_event(object_identity, {"Command Type": "Dash"})
 	elif proposed_action == 'self heal':
 		Server.object_action_event(object_identity, {"Command Type": "Self Heal"})
 		
@@ -157,6 +156,8 @@ func perform_action(action):
 	match action['Command Type']:
 		'Basic Attack': emit_signal("spell_cast_basic_attack")
 		
+		'Dash': emit_signal("spell_cast_dash")
+		
 		'Self Heal': emit_signal("spell_cast_self_heal")
 
 func end_turn():
@@ -176,7 +177,7 @@ func resolve_viewfield_to_screen():
 func check_move_action(move):
 	return mover.check_move_action(move)
 
-func manual_move_char(amount):
+func move_actor_in_facing_dir(amount):
 	mover.move_actor(amount)
 
 # Animations related functions.

@@ -58,6 +58,14 @@ remote func query_for_action(requester, request):
 				player_obj.set_action("idle")
 			else: print('Discarding illegal idle request from ' + str(player_id))
 
+		'Dash':
+			if (player_turn_timer.get_time_left() == 0):
+				if (player_obj.get_mp() > player_obj.find_node("Dash").spell_cost):
+					player_obj.set_action("dash")
+				else: 
+					player_obj.find_node("Dash").out_of_mana.play()
+			else: print('Discarding illegal dash request from ' + str(player_id))
+
 		'Self Heal':
 			if (player_turn_timer.get_time_left() == 0):
 				if (player_obj.get_mp() > player_obj.find_node("SelfHeal").spell_cost):
@@ -93,6 +101,9 @@ remote func receive_object_action_event(object_id, action):
 			object.set_direction(action['Value'])
 			object.update_id('Facing', action['Value'])
 			object.perform_action(action)
+		'Dash':
+			object.perform_action(action)
+			object.update_id('Position', object.get_map_pos())
 		'Self Heal':
 			object.perform_action(action)
 		'Die':

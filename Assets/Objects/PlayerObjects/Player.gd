@@ -218,7 +218,8 @@ func get_input():
 	if 'FireballAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("e"): set_action('fireball')
 	if 'DashAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("r"): set_action('dash')
+		if Input.is_action_pressed("r"): 
+			Server.request_for_player_action({"Command Type": "Dash"})
 	if 'SelfHealAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("t"): 
 			Server.request_for_player_action({"Command Type": "Self Heal"})
