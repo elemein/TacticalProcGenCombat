@@ -16,6 +16,21 @@ func create_server():
 	player_list.append(GlobalVars.server_player)
 	GlobalVars.self_netID = 1
 
+# How turns work, from input:
+# Input (for ex. basic attack)
+# Input > request_for_player_action(request)
+# Request goes to server > query_for_action(requester, request)
+# Server checks if that move is allowed. If so: > requester.set_action(action)
+# THEN
+# TurnTimer goes to > process_turn() when all actors are ready.
+# actor.process_turn() > object_action_event(object_id, action)
+# object_action_event(object_id, action) > receive_object_action_event(object_id, action)
+# Parse through what the action was and who did it
+# actor.set_direction & object.update_id('Facing', action['Value']), if required
+# object.perform_action(action) > actor.emit_signal(spell_cast_basic_attack)
+# actor's appropriate action then happens, with most code run by server and
+# client, but some is only serverside, such as changing stats and issuing notifs.
+
 # OBJECT ACTION COMMANDS ------------------------------
 # Query server for permission to perform action.
 func request_for_player_action(request):
