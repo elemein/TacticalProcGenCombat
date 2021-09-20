@@ -124,8 +124,8 @@ func process_turn():
 			print([object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]}])
 			Server.object_action_event(object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]})
 	
-	elif proposed_action == 'idle':
-		target_pos = map_pos
+	elif proposed_action == 'idle': 
+		Server.object_action_event(object_identity, {"Command Type": "Idle"})
 	
 	elif proposed_action == 'fireball':
 		emit_signal("spell_cast_fireball")
@@ -140,12 +140,15 @@ func process_turn():
 		emit_signal("action_equip_item")
 	elif proposed_action == 'unequip item':
 		emit_signal("action_unequip_item")
-		
+
+	turn_regen()
+
+	in_turn = true
+
+func turn_regen():
 	# Apply any regen effects
 	set_hp(stat_dict['HP'] + stat_dict['HP Regen'])
 	set_mp(stat_dict['MP'] + stat_dict['MP Regen'])
-
-	in_turn = true
 
 func perform_action(action):
 	match action['Command Type']:

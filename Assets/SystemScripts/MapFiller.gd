@@ -8,7 +8,7 @@ const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
 var pathfinder = PATHFINDER.new()
 
 const Y_OFFSET = -0.3
-const AVG_NO_OF_ENEMIES_PER_ROOM = 2
+const AVG_NO_OF_ENEMIES_PER_ROOM = 0
 const NUMBER_OF_TRAPS = 5
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
@@ -72,7 +72,7 @@ func get_random_available_tile_in_room(room) -> Array:
 	
 func find_smallest_room():
 	var smallest_room
-	var smallest_room_area = 99999
+	var smallest_room_area = INF
 	
 	for room in rooms:
 		if room.area < smallest_room_area: 

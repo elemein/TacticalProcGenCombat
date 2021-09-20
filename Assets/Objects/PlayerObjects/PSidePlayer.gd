@@ -189,7 +189,8 @@ func get_input():
 				Server.request_for_player_action({"Command Type": "Move", "Value": "right"})
 	
 	# X to skip your turn.
-	if Input.is_action_pressed("x"): set_action('idle')
+	if Input.is_action_pressed("x"): 
+		Server.request_for_player_action({"Command Type": "Idle"})
 	
 	# Basic attacks only need one press.
 	if 'BasicAttackAbility' in PlayerInfo.abilities:

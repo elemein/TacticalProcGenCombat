@@ -94,6 +94,8 @@ remote func receive_object_action_event(object_id, action):
 			object.update_id('Facing', action['Value'])
 			object.move_actor_in_facing_dir(1)
 			object.update_id('Position', object.get_map_pos())
+		'Idle':
+			pass
 		'Basic Attack':
 			object.set_direction(action['Value'])
 			object.update_id('Facing', action['Value'])
@@ -142,6 +144,12 @@ remote func query_for_action(requester, request):
 				player_obj.set_action("basic attack")
 			else:
 				print('Discarding illegal basic attack request from ' + str(player_id))
+		
+		'Idle':
+			if player_turn_timer.get_time_left() == 0:
+				player_obj.set_action("idle")
+			else:
+				print('Discarding illegal idle request from ' + str(player_id))
 
 # SERVER SIDE SIGNAL FUNCS ----------------------
 func _player_connected(id):
