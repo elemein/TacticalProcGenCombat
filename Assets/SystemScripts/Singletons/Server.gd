@@ -23,10 +23,12 @@ func object_action_event(object_id, action):
 	rpc('receive_object_action_event', orig_object_id, orig_action)
 	receive_object_action_event(orig_object_id, orig_action)
 
+# VISION RELATED COMMANDS ------------------------------
+# Prompt to get everyone to review their vision.
 func resolve_all_viewfields():
 	resolve_viewfield()
 	rpc('resolve_viewfield')
-
+# Resolve your viewfield and render it to screen.
 remote func resolve_viewfield():
 	GlobalVars.self_instanceObj.find_viewfield()
 	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
@@ -41,6 +43,8 @@ remote func receive_actor_stat_update(object_id, stat_update):
 	match stat_update['Stat']:
 		'HP':
 			object.set_hp(object_id['HP'] + stat_update['Modifier'])
+		'MP':
+			object.set_mp(object_id['MP'] + stat_update['Modifier'])
 
 func actor_notif_event(object_id, notif_text, notif_type):
 	rpc('receive_actor_notif_event', object_id, notif_text, notif_type)

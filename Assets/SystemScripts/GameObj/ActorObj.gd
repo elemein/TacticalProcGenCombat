@@ -147,8 +147,11 @@ func process_turn():
 
 func turn_regen():
 	# Apply any regen effects
-	set_hp(stat_dict['HP'] + stat_dict['HP Regen'])
-	set_mp(stat_dict['MP'] + stat_dict['MP Regen'])
+	Server.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": stat_dict['HP Regen']})
+	Server.update_actor_stat(object_identity, {"Stat": "MP", "Modifier": stat_dict['MP Regen']})
+	
+#	set_hp(stat_dict['HP'] + stat_dict['HP Regen'])
+#	set_mp(stat_dict['MP'] + stat_dict['MP Regen'])
 
 func perform_action(action):
 	match action['Command Type']:
