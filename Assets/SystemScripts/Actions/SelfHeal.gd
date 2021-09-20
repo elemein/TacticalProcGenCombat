@@ -22,9 +22,6 @@ func _on_Actions_spell_cast_self_heal():
 func use():
 	map = parent.get_parent_map()
 	
-	# Update mana
-	parent.set_mp(parent.get_mp() - spell_cost)
-	
 	play_audio()
 	
 	create_spell_instance()
@@ -37,7 +34,9 @@ func use():
 	
 	set_power()
 
-	heal_user()
+	if GlobalVars.peer_type == 'server':
+		Server.update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})
+		heal_user()
 
 func _on_tween_complete(_tween_object, _tween_node_path):
 	effect_tween.disconnect("tween_completed", self, "_on_tween_complete")

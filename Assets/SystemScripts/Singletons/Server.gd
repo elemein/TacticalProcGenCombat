@@ -16,13 +16,6 @@ func create_server():
 	player_list.append(GlobalVars.server_player)
 	GlobalVars.self_netID = 1
 
-func object_action_event(object_id, action):
-	var orig_object_id = object_id.duplicate(true)
-	var orig_action = action.duplicate(true)
-	
-	rpc('receive_object_action_event', orig_object_id, orig_action)
-	receive_object_action_event(orig_object_id, orig_action)
-
 # VISION RELATED COMMANDS ------------------------------
 # Prompt to get everyone to review their vision.
 func resolve_all_viewfields():
@@ -32,11 +25,14 @@ func resolve_all_viewfields():
 remote func resolve_viewfield():
 	GlobalVars.self_instanceObj.find_viewfield()
 	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
+# ------------------------------------------------------
 
+# CHANGING STAT COMMANDS -------------------------------
+# Prompt to all clients to change a given actor's stat.
 func update_actor_stat(object_id, stat_update):
 	rpc('receive_actor_stat_update', object_id, stat_update)
 	receive_actor_stat_update(object_id, stat_update)
-
+# Find the stat and adjust it.
 remote func receive_actor_stat_update(object_id, stat_update):
 	var object = get_object_from_identity(object_id)
 	
@@ -45,47 +41,72 @@ remote func receive_actor_stat_update(object_id, stat_update):
 			object.set_hp(object_id['HP'] + stat_update['Modifier'])
 		'MP':
 			object.set_mp(object_id['MP'] + stat_update['Modifier'])
+# ------------------------------------------------------
 
+# NOTIF COMMANDS ---------------------------------------
+# Prompt to all clients to display a notif.
 func actor_notif_event(object_id, notif_text, notif_type):
 	rpc('receive_actor_notif_event', object_id, notif_text, notif_type)
 	receive_actor_notif_event(object_id, notif_text, notif_type)
-
+# Get the object and display the notif.
 remote func receive_actor_notif_event(object_id, notif_text, notif_type):
 	var object = get_object_from_identity(object_id)
-	
 	object.display_notif(notif_text, notif_type)
+# -----------------------------------------------------
 
-func get_object_from_identity(object_id):
-	var map
-	for child_map in GlobalVars.total_mapsets:
-		if child_map.get_map_server_id() == object_id['Map ID']: map = child_map
-	# determine object
-	var object
-	var x = object_id['Position'][0]
-	var z = object_id['Position'][1]
-	var tile_objs = map.get_tile_contents(x, z)
+# OBJECT ACTION COMMANDS ------------------------------
+# Query server for permission to perform action.
+remote func query_for_action(requester, request):
+	var player_id = requester
+	var player_obj
+	var player_identity
+	var player_turn_timer
+	
+	for player in player_list:
+		if player.get_id()['NetID'] == player_id:
+			player_obj = player
+			player_identity = player.get_id()
+#			player_map = player.get_parent_map()
+			player_turn_timer = player.get_parent_map().get_turn_timer()
+	
+	match request['Command Type']:
+		'Look':
+			if player_turn_timer.get_time_left() == 0:
+				Server.object_action_event(player_identity, request)
+			else: print('Discarding illegal look request from ' + str(player_id))
+		
+		'Move':
+			if player_turn_timer.get_time_left() == 0:
+				player_obj.set_action("move %s" % [request['Value']])
+			else: print('Discarding illegal move request from ' + str(player_id))
+				
+		'Basic Attack':
+			if player_turn_timer.get_time_left() == 0:
+				player_obj.set_action("basic attack")
+			else: print('Discarding illegal basic attack request from ' + str(player_id))
+		
+		'Idle':
+			if player_turn_timer.get_time_left() == 0:
+				player_obj.set_action("idle")
+			else: print('Discarding illegal idle request from ' + str(player_id))
 
-	for obj in tile_objs:
-		if obj.get_id()['Instance ID'] == object_id['Instance ID']:
-			object = obj
-	return object
-
+		'Self Heal':
+			if (player_turn_timer.get_time_left() == 0):
+				if (player_obj.get_mp() > player_obj.find_node("SelfHeal").spell_cost):
+					player_obj.set_action("self heal")
+				else: 
+					player_obj.find_node("SelfHeal").out_of_mana.play()
+			else: print('Discarding illegal heal request from ' + str(player_id))
+# Duplicate the object's resources to send out, and prompt all clients to receive command.
+func object_action_event(object_id, action):
+	var orig_object_id = object_id.duplicate(true)
+	var orig_action = action.duplicate(true)
+	
+	rpc('receive_object_action_event', orig_object_id, orig_action)
+	receive_object_action_event(orig_object_id, orig_action)
+# Parse action of object and run required actions to perform action.
 remote func receive_object_action_event(object_id, action):
-	# determine map
-	var map
-	for child_map in GlobalVars.total_mapsets:
-		if child_map.get_map_server_id() == object_id['Map ID']: map = child_map
-	
-	# determine object
-	var object
-	var x = object_id['Position'][0]
-	var z = object_id['Position'][1]
-	var tile_objs = map.get_tile_contents(x, z)
-
-	for obj in tile_objs:
-		if obj.get_id()['Instance ID'] == object_id['Instance ID']:
-			object = obj
-	
+	var object = get_object_from_identity(object_id)
 	print("%s(%s) does: %s" % [object_id['Identifier'], object_id['Instance ID'], action])
 	
 	# determine action
@@ -104,8 +125,11 @@ remote func receive_object_action_event(object_id, action):
 			object.set_direction(action['Value'])
 			object.update_id('Facing', action['Value'])
 			object.perform_action(action)
+		'Self Heal':
+			object.perform_action(action)
 		'Die':
 			object.die()
+# -----------------------------------------------------
 
 # SERVER SIDE COMMANDS FUNCS
 remote func send_map_to_requester(_requester):
@@ -115,45 +139,6 @@ remote func send_map_to_requester(_requester):
 	print(map_data)
 	print("Sending map data to requester.")
 	rpc_id(player_id, 'receive_map_from_server', map_id, map_data)
-
-remote func query_for_action(requester, request):
-	var player_id = requester
-	var player_obj
-	var player_identity
-#	var player_map
-	var player_turn_timer
-	
-	for player in player_list:
-		if player.get_id()['NetID'] == player_id:
-			player_obj = player
-			player_identity = player.get_id()
-#			player_map = player.get_parent_map()
-			player_turn_timer = player.get_parent_map().get_turn_timer()
-	
-	match request['Command Type']:
-		'Look':
-			if player_turn_timer.get_time_left() == 0:
-				Server.object_action_event(player_identity, request)
-			else:
-				print('Discarding illegal look request from ' + str(player_id))
-		
-		'Move':
-			if player_turn_timer.get_time_left() == 0:
-				player_obj.set_action("move %s" % [request['Value']])
-			else:
-				print('Discarding illegal move request from ' + str(player_id))
-				
-		'Basic Attack':
-			if player_turn_timer.get_time_left() == 0:
-				player_obj.set_action("basic attack")
-			else:
-				print('Discarding illegal basic attack request from ' + str(player_id))
-		
-		'Idle':
-			if player_turn_timer.get_time_left() == 0:
-				player_obj.set_action("idle")
-			else:
-				print('Discarding illegal idle request from ' + str(player_id))
 
 # SERVER SIDE SIGNAL FUNCS ----------------------
 func _player_connected(id):
@@ -207,3 +192,18 @@ func get_player_obj_from_netid(netid):
 	for player in player_list:
 		if player.get_id()['NetID'] == netid:
 			return player
+
+func get_object_from_identity(object_id):
+	var map
+	for child_map in GlobalVars.total_mapsets:
+		if child_map.get_map_server_id() == object_id['Map ID']: map = child_map
+	# determine object
+	var object
+	var x = object_id['Position'][0]
+	var z = object_id['Position'][1]
+	var tile_objs = map.get_tile_contents(x, z)
+
+	for obj in tile_objs:
+		if obj.get_id()['Instance ID'] == object_id['Instance ID']:
+			object = obj
+	return object

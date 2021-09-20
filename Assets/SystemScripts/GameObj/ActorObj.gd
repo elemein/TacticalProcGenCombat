@@ -132,7 +132,7 @@ func process_turn():
 	elif proposed_action == 'dash':
 		emit_signal("spell_cast_dash")
 	elif proposed_action == 'self heal':
-		emit_signal("spell_cast_self_heal")
+		Server.object_action_event(object_identity, {"Command Type": "Self Heal"})
 		
 	elif proposed_action == 'drop item':
 		emit_signal("action_drop_item")
@@ -155,9 +155,9 @@ func turn_regen():
 
 func perform_action(action):
 	match action['Command Type']:
-		'Basic Attack':
-			emit_signal("spell_cast_basic_attack")
-			
+		'Basic Attack': emit_signal("spell_cast_basic_attack")
+		
+		'Self Heal': emit_signal("spell_cast_self_heal")
 
 func end_turn():
 	target_pos = translation

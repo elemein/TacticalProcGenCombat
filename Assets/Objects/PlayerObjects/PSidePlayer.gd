@@ -203,7 +203,8 @@ func get_input():
 	if 'DashAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("r"): set_action('dash')
 	if 'SelfHealAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("t"): set_action('self heal')
+		if Input.is_action_pressed("t"): 
+			Server.request_for_player_action({"Command Type": "Self Heal"})
 
 func set_direction(direction):
 	set_actor_dir(direction)
