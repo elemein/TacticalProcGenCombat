@@ -37,10 +37,19 @@ func reset_vars():
 	ai_state = 'idle'
 
 func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
-	var path_info = pathfinder.solve(actor, actor.get_parent_map(), actor.get_map_pos(), player_pos[0])
+	var possible_paths = []
+	for x in range(player_pos.size()):
+		possible_paths.append(pathfinder.solve(actor, actor.get_parent_map(), actor.get_map_pos(), player_pos[x]))
 	
-	dist_from_player = path_info[0]
-	path = path_info[1]
+	var lowest_path_cost = INF
+	var lowest_path
+	for path in possible_paths:
+		if path[0] < lowest_path_cost:
+			lowest_path_cost = path[0]
+			lowest_path = path[1]
+	
+	dist_from_player = lowest_path_cost
+	path = lowest_path
 
 func determine_direction_of_path():
 	var curr_pos = actor.get_map_pos()
