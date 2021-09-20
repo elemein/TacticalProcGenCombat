@@ -16,46 +16,14 @@ func create_server():
 	player_list.append(GlobalVars.server_player)
 	GlobalVars.self_netID = 1
 
-# VISION RELATED COMMANDS ------------------------------
-# Prompt to get everyone to review their vision.
-func resolve_all_viewfields():
-	resolve_viewfield()
-	rpc('resolve_viewfield')
-# Resolve your viewfield and render it to screen.
-remote func resolve_viewfield():
-	GlobalVars.self_instanceObj.find_viewfield()
-	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
-# ------------------------------------------------------
-
-# CHANGING STAT COMMANDS -------------------------------
-# Prompt to all clients to change a given actor's stat.
-func update_actor_stat(object_id, stat_update):
-	rpc('receive_actor_stat_update', object_id, stat_update)
-	receive_actor_stat_update(object_id, stat_update)
-# Find the stat and adjust it.
-remote func receive_actor_stat_update(object_id, stat_update):
-	var object = get_object_from_identity(object_id)
-	
-	match stat_update['Stat']:
-		'HP':
-			object.set_hp(object_id['HP'] + stat_update['Modifier'])
-		'MP':
-			object.set_mp(object_id['MP'] + stat_update['Modifier'])
-# ------------------------------------------------------
-
-# NOTIF COMMANDS ---------------------------------------
-# Prompt to all clients to display a notif.
-func actor_notif_event(object_id, notif_text, notif_type):
-	rpc('receive_actor_notif_event', object_id, notif_text, notif_type)
-	receive_actor_notif_event(object_id, notif_text, notif_type)
-# Get the object and display the notif.
-remote func receive_actor_notif_event(object_id, notif_text, notif_type):
-	var object = get_object_from_identity(object_id)
-	object.display_notif(notif_text, notif_type)
-# -----------------------------------------------------
-
 # OBJECT ACTION COMMANDS ------------------------------
 # Query server for permission to perform action.
+func request_for_player_action(request):
+	if GlobalVars.self_netID == 1:
+		query_for_action(GlobalVars.self_netID, request)
+	else:	
+		rpc_id(1, "query_for_action", GlobalVars.self_netID, request)
+# Server handles query for action.
 remote func query_for_action(requester, request):
 	var player_id = requester
 	var player_obj
@@ -131,7 +99,50 @@ remote func receive_object_action_event(object_id, action):
 			object.die()
 # -----------------------------------------------------
 
-# SERVER SIDE COMMANDS FUNCS
+# CHANGING STAT COMMANDS -------------------------------
+# Prompt to all clients to change a given actor's stat.
+func update_actor_stat(object_id, stat_update):
+	rpc('receive_actor_stat_update', object_id, stat_update)
+	receive_actor_stat_update(object_id, stat_update)
+# Find the stat and adjust it.
+remote func receive_actor_stat_update(object_id, stat_update):
+	var object = get_object_from_identity(object_id)
+	
+	match stat_update['Stat']:
+		'HP':
+			object.set_hp(object_id['HP'] + stat_update['Modifier'])
+		'MP':
+			object.set_mp(object_id['MP'] + stat_update['Modifier'])
+# ------------------------------------------------------
+
+# NOTIF COMMANDS ---------------------------------------
+# Prompt to all clients to display a notif.
+func actor_notif_event(object_id, notif_text, notif_type):
+	rpc('receive_actor_notif_event', object_id, notif_text, notif_type)
+	receive_actor_notif_event(object_id, notif_text, notif_type)
+# Get the object and display the notif.
+remote func receive_actor_notif_event(object_id, notif_text, notif_type):
+	var object = get_object_from_identity(object_id)
+	object.display_notif(notif_text, notif_type)
+# -----------------------------------------------------
+
+# VISION RELATED COMMANDS ------------------------------
+# Prompt to get everyone to review their vision.
+func resolve_all_viewfields():
+	resolve_viewfield()
+	rpc('resolve_viewfield')
+# Resolve your viewfield and render it to screen.
+remote func resolve_viewfield():
+	GlobalVars.self_instanceObj.find_viewfield()
+	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
+# ------------------------------------------------------
+
+# MAP ACTION COMMANDS ---------------------------------
+# Request map from server.
+func request_map_from_server():
+	print("Requesting map from server.")
+	rpc_id(1, "send_map_to_requester", get_instance_id())
+# Send map to requester.
 remote func send_map_to_requester(_requester):
 	var player_id = get_tree().get_rpc_sender_id()
 	var map_data = PlayerInfo.current_map.return_map_grid_encoded_to_string()
@@ -139,6 +150,11 @@ remote func send_map_to_requester(_requester):
 	print(map_data)
 	print("Sending map data to requester.")
 	rpc_id(player_id, 'receive_map_from_server', map_id, map_data)
+# Receive map from server.
+remote func receive_map_from_server(map_id, map_data):
+	GlobalVars.server_map_data = [map_id, map_data]
+# ------------------------------------------------------
+
 
 # SERVER SIDE SIGNAL FUNCS ----------------------
 func _player_connected(id):
@@ -167,19 +183,6 @@ func _player_disconnected(id):
 			player.get_parent_map().get_turn_timer().remove_from_timer_group(player)
 
 # CLIENT SIDE FUNCS ------------------------------
-func request_map_from_server():
-	print("Requesting map from server.")
-	rpc_id(1, "send_map_to_requester", get_instance_id())
-
-func request_for_player_action(request):
-	if GlobalVars.self_netID == 1:
-		query_for_action(GlobalVars.self_netID, request)
-	else:	
-		rpc_id(1, "query_for_action", GlobalVars.self_netID, request)
-
-remote func receive_map_from_server(map_id, map_data):
-	GlobalVars.server_map_data = [map_id, map_data]
-
 remote func receive_id_from_server(net_id, instance_id):
 	GlobalVars.self_netID = net_id
 	GlobalVars.self_instanceID = instance_id
