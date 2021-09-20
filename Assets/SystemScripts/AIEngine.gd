@@ -36,7 +36,7 @@ func reset_vars():
 	dist_from_player = 0
 	ai_state = 'idle'
 
-func pathfind(): # ONLY WORKS FOR SINGLE PLAYERS FOR NOW
+func pathfind(): # ENEMIES WILL PATHFIND TO PLAYER WITH LOWEST DISTANCE.
 	var possible_paths = []
 	for x in range(player_pos.size()):
 		possible_paths.append(pathfinder.solve(actor, actor.get_parent_map(), actor.get_map_pos(), player_pos[x]))
