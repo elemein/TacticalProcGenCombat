@@ -218,14 +218,15 @@ func take_damage(damage, is_crit):
 		emit_signal("status_bar_hp", stat_dict['HP'], stat_dict['Max HP'])
 
 		if stat_dict['HP'] <= 0:
-			die()
+			Server.object_action_event(object_identity, {"Command Type": "Die"})
 
 func die():
 	death_anim_timer.set_one_shot(true)
 	death_anim_timer.set_wait_time(DEATH_ANIM_TIME)
 	add_child(death_anim_timer)
 	is_dead = true
-	turn_timer.remove_from_timer_group(self)
+	
+	if GlobalVars.peer_type == 'server': turn_timer.remove_from_timer_group(self)
 	
 	proposed_action = 'idle'
 	
@@ -241,7 +242,7 @@ func die():
 	if self.object_identity['CategoryType'] == 'Player':
 		var _result = get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
 	else:
-		parent_map.log_enemy_death(self)
+		if GlobalVars.peer_type == 'server': parent_map.log_enemy_death(self)
 
 func play_death_anim():
 	if death_anim_timer.time_left > 0.75:

@@ -16,11 +16,6 @@ func create_server():
 	player_list.append(GlobalVars.server_player)
 	GlobalVars.self_netID = 1
 
-func identity_update(updated_identity):
-	# THIS SHOULD BE REMOVED, AS ACTUAL ACTION COMMANDS THEMSELVES SHOULD UPDATE IDENTITY
-	rpc('receive_identity_update', updated_identity)
-	receive_identity_update(updated_identity)
-
 func object_action_event(object_id, action):
 	var orig_object_id = object_id.duplicate(true)
 	var orig_action = action.duplicate(true)
@@ -103,6 +98,8 @@ remote func receive_object_action_event(object_id, action):
 			object.set_direction(action['Value'])
 			object.update_id('Facing', action['Value'])
 			object.perform_action(action)
+		'Die':
+			object.die()
 
 # SERVER SIDE COMMANDS FUNCS
 remote func send_map_to_requester(_requester):
@@ -189,17 +186,6 @@ remote func receive_map_from_server(map_id, map_data):
 remote func receive_id_from_server(net_id, instance_id):
 	GlobalVars.self_netID = net_id
 	GlobalVars.self_instanceID = instance_id
-
-remote func receive_identity_update(updated_identity):
-#	var old_identity
-	var player_obj
-	
-	for player in player_list:
-		if player.get_id()['NetID'] == updated_identity['NetID']:
-			player_obj = player
-#			old_identity = player.get_id()
-	
-	player_obj.set_id(updated_identity)
 
 # SERVER UTILITY FUNCTIONS ---
 func add_player_to_local_player_list(player):

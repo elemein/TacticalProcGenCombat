@@ -37,13 +37,13 @@ func unpack_map(map_data):
 					'BaseGround': 
 						var ground = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], [x,z])
 						plyr_play_map.add_child(ground)
-						ground.update_id('Instance ID', object['Instance ID'])
+						ground.set_id(object)
 						ground.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(ground)
 					'BaseWall': 
 						var wall = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], [x,z])
 						plyr_play_map.add_child(wall)
-						wall.update_id('Instance ID', object['Instance ID'])
+						wall.set_id(object)
 						wall.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(wall)
 					'PlagueDoc': 
@@ -67,13 +67,13 @@ func unpack_map(map_data):
 					'Fox':
 						var fox = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], [x,z])
 						plyr_play_map.add_child(fox)
-						fox.update_id('Instance ID', object['Instance ID'])
+						fox.set_id(object)
 						fox.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(fox)
 					'Imp':
 						var imp = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], [x,z])
 						plyr_play_map.add_child(imp)
-						imp.update_id('Instance ID', object['Instance ID'])
+						imp.set_id(object)
 						imp.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(imp)
 	
