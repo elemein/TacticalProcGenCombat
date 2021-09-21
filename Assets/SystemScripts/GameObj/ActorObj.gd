@@ -127,7 +127,7 @@ func process_turn():
 		Server.object_action_event(object_identity, {"Command Type": "Idle"})
 	
 	elif proposed_action == 'fireball':
-		emit_signal("spell_cast_fireball")
+		Server.object_action_event(object_identity, {"Command Type": "Fireball"})
 	elif proposed_action == 'dash':
 		Server.object_action_event(object_identity, {"Command Type": "Dash"})
 	elif proposed_action == 'self heal':
@@ -155,6 +155,8 @@ func turn_regen():
 func perform_action(action):
 	match action['Command Type']:
 		'Basic Attack': emit_signal("spell_cast_basic_attack")
+		
+		'Fireball': emit_signal("spell_cast_fireball")
 		
 		'Dash': emit_signal("spell_cast_dash")
 		

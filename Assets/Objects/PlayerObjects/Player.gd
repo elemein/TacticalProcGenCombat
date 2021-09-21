@@ -216,7 +216,8 @@ func get_input():
 	
 	# Skills will need two presses to confirm.
 	if 'FireballAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("e"): set_action('fireball')
+		if Input.is_action_pressed("e"): 
+			Server.request_for_player_action({"Command Type": "Fireball"})
 	if 'DashAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("r"): 
 			Server.request_for_player_action({"Command Type": "Dash"})

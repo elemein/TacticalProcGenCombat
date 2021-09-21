@@ -23,8 +23,9 @@ func create_server():
 # Server checks if that move is allowed. If so: > requester.set_action(action)
 # THEN
 # TurnTimer goes to > process_turn() when all actors are ready.
-# actor.process_turn() > object_action_event(object_id, action)
-# object_action_event(object_id, action) > receive_object_action_event(object_id, action)
+# actor.process_turn() > object_action_event(object_id, action) 
+# object_action_event(object_id, action) > actor.perform_action(action) > 
+# receive_object_action_event(object_id, action)
 # Parse through what the action was and who did it
 # actor.set_direction & object.update_id('Facing', action['Value']), if required
 # object.perform_action(action) > actor.emit_signal(spell_cast_basic_attack)
@@ -73,6 +74,14 @@ remote func query_for_action(requester, request):
 				player_obj.set_action("idle")
 			else: print('Discarding illegal idle request from ' + str(player_id))
 
+		'Fireball':
+			if (player_turn_timer.get_time_left() == 0):
+				if (player_obj.get_mp() > player_obj.find_node("Fireball").spell_cost):
+					player_obj.set_action("fireball")
+				else: 
+					player_obj.find_node("Fireball").out_of_mana.play()
+			else: print('Discarding illegal fireball request from ' + str(player_id))
+
 		'Dash':
 			if (player_turn_timer.get_time_left() == 0):
 				if (player_obj.get_mp() > player_obj.find_node("Dash").spell_cost):
@@ -115,6 +124,8 @@ remote func receive_object_action_event(object_id, action):
 		'Basic Attack':
 			object.set_direction(action['Value'])
 			object.update_id('Facing', action['Value'])
+			object.perform_action(action)
+		'Fireball':
 			object.perform_action(action)
 		'Dash':
 			object.perform_action(action)
