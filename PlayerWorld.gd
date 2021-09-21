@@ -10,6 +10,8 @@ var dungeon = MAPSET_CLASS.new('The Cave', 3)
 const PLYR_PLY_MAP = preload("res://Assets/SystemScripts/PlayerPlayMap.gd")
 var plyr_play_map = PLYR_PLY_MAP.new()
 
+const PSIDE_ROOM_CLASS = preload("res://Assets/SystemScripts/PSideRoom.gd")
+
 var mapsets = []
 
 func _ready():
@@ -78,6 +80,37 @@ func unpack_map(map_data):
 						map_grid[x][z].append(imp)
 	
 	plyr_play_map.set_map_grid(map_grid)
+	
+	# Unpack room data.
+	var map_rooms = GlobalVars.server_map_data[2]
+	for room in map_rooms:
+		var curr_room = PSIDE_ROOM_CLASS.new()
+		
+		curr_room.parent_map = plyr_play_map
+		curr_room.parent_id = plyr_play_map.get_map_server_id()
+		curr_room.id = room.id
+		curr_room.type = room.type
+		
+		curr_room.split = room.split
+		curr_room.center = room.center
+		
+		curr_room.x = room.x
+		curr_room.z = room.z
+		curr_room.w = room.w
+		curr_room.l = room.l
+		curr_room.area = room.area
+		
+		curr_room.topleft = room.topleft
+		curr_room.topright = room.topright
+		curr_room.bottomleft = room.bottomleft
+		curr_room.bottomright = room.bottomright
+		
+		curr_room.enemy_count = room.enemy_count
+		curr_room.exits = room.exits
+		curr_room.distance_to_spawn = room.distance_to_spawn
+		
+		plyr_play_map.rooms.append(curr_room)
+	
 	print('Map unpacked.')
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):

@@ -206,3 +206,35 @@ func return_map_grid_encoded_to_string():
 				to_return[x][z][obj].append(map_grid[x][z][obj].get_id())
 
 	return to_return
+
+func return_rooms_encoded_to_dict():
+	var to_return = []
+	
+	for room in rooms:
+		var dict_to_add = {}
+		
+		dict_to_add['parent_map_id'] = room.parent_map.map_server_id
+		dict_to_add['id'] = room.id
+		dict_to_add['type'] = room.type
+
+		dict_to_add['split'] = room.split
+		dict_to_add['center'] = room.center
+		
+		dict_to_add['x'] = room.x
+		dict_to_add['z'] = room.z
+		dict_to_add['w'] = room.w
+		dict_to_add['l'] = room.l
+		dict_to_add['area'] = room.area
+		
+		dict_to_add['topleft'] = room.topleft
+		dict_to_add['topright'] = room.topright
+		dict_to_add['bottomleft'] = room.bottomleft
+		dict_to_add['bottomright'] = room.bottomright
+		
+		dict_to_add['enemy_count'] = room.enemy_count
+		dict_to_add['exits'] = room.exits
+		dict_to_add['distance_to_spawn'] = room.distance_to_spawn
+		
+		to_return.append(dict_to_add)
+		
+	return to_return

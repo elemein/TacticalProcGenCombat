@@ -6,6 +6,7 @@ var PSIDE_TURN_TIMER = preload("res://Assets/SystemScripts/PSideTurnTimer.gd")
 var turn_timer = PSIDE_TURN_TIMER.new()
 var map_grid
 var map_server_id
+var rooms = []
 
 func _init():
 	pass
