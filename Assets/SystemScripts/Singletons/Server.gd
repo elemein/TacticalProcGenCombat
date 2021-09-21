@@ -175,6 +175,28 @@ remote func resolve_viewfield():
 # ------------------------------------------------------
 
 # MAP ACTION COMMANDS ---------------------------------
+#
+func map_object_event(map_id, map_action):
+	rpc('receive_map_object_event', map_id, map_action)
+	receive_map_object_event(map_id, map_action)
+#
+remote func receive_map_object_event(map_id, map_action):
+	print([map_id, map_action])
+	match map_action['Scope']:
+		"Room":
+			var room
+			for map in GlobalVars.total_mapsets:
+				if map_id == map.get_map_server_id():
+					for each_room in map.rooms:
+						if each_room.id == map_action['Room ID']:
+							room = each_room
+			
+			match map_action['Action']:
+				'Block Exits':
+					room.block_exits()
+				'Unblock Exits':
+					room.unblock_exits()
+
 # Request map from server.
 func request_map_from_server():
 	print("Requesting map from server.")

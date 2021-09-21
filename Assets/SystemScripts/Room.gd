@@ -44,7 +44,7 @@ func pos_in_room(pos):
 					if exits_blocked == false:
 						count_enemies_in_room()
 						if enemy_count > 0:
-							block_exits()
+							Server.map_object_event(parent_map.get_map_server_id(), {"Scope": "Room", "Room ID": id, "Action": "Block Exits"})
 			
 			return true
 	#else
@@ -92,7 +92,7 @@ func log_enemy_death(_dead_enemy):
 	
 	if enemy_count <= 0: 
 		room_cleared = true
-		unblock_exits()
+		Server.map_object_event(parent_map.get_map_server_id(), {"Scope": "Room", "Room ID": id, "Action": "Unblock Exits"})
 		
 		if type == 'Exit Room':
 			var _result = GlobalVars.get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')

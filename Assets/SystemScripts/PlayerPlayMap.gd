@@ -56,3 +56,16 @@ func move_on_map(object, old_pos, new_pos):
 func set_map_server_id(server_id): map_server_id = server_id
 
 func get_map_server_id(): return map_server_id
+
+func add_map_object(object):
+	var tile = object.get_map_pos()
+	
+	map_grid[tile[0]][tile[1]].append(object)
+	add_child(object)
+
+func remove_from_map_grid_but_keep_node(object):
+	var tile = object.get_map_pos()
+	map_grid[tile[0]][tile[1]].erase(object)
+	
+func remove_from_map_tree(object):
+	remove_child(object)
