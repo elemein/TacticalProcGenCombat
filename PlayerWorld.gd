@@ -53,6 +53,12 @@ func unpack_map(map_data):
 						wall.set_id(object)
 						wall.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(wall)
+					'BaseStairs':
+						var stairs = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
+						plyr_play_map.add_child(stairs)
+						stairs.set_id(object)
+						stairs.set_parent_map(plyr_play_map)
+						map_grid[x][z].append(stairs)
 					'PlagueDoc': 
 						if object['NetID'] == GlobalVars.self_netID:
 							var client_player = GlobalVars.plyr_obj_spawner.spawn_actor('PSidePlayer', plyr_play_map, [x,z], false)

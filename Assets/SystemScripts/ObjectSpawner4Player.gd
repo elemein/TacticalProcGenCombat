@@ -117,7 +117,7 @@ func spawn_map_object(object_name, map, map_pos, visibility):
 	
 	match object_name:
 		'TempWall': object_scene = base_tempwall
-		'Stairs': object_scene = base_stairs
+		'BaseStairs': object_scene = base_stairs
 		'BaseGround': object_scene = base_ground
 		'BaseWall': object_scene = base_wall
 			
