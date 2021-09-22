@@ -56,22 +56,6 @@ func add_sub_nodes_as_children():
 func _physics_process(_delta):
 	if is_dead == false:
 		get_input()
-		
-#		if in_turn == true:
-#			# Change position based on time tickdown.
-#			if proposed_action.split(" ")[0] == 'move' or proposed_action == 'dash':
-#				mover.set_actor_translation()
-			
-		if proposed_action != '' && in_turn == true:
-			if proposed_action == 'idle':
-				anim_state = "idle"
-			else:
-				anim_state = "walk"
-		else:
-			anim_state = "idle"
-
-#	handle_animations()
-			
 
 func smooth_diagonal_input():
 	match direction_facing:

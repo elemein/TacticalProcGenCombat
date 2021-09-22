@@ -60,6 +60,9 @@ var stat_dict = {"Max HP" : 0, "HP" : 0, "Max MP": 0, "MP": 0, \
 				"Crit Chance" : 0, "Spell Power" : 0, "Defense" : 0, \
 				"Speed": 0, "View Range" : 0}
 
+func _ready():
+	play_anim('idle')
+
 func _init(obj_id, actor_stats).(obj_id):
 	stat_dict = actor_stats
 
@@ -187,18 +190,9 @@ func check_move_action(move):
 func move_actor_in_facing_dir(amount):
 	mover.move_actor(amount)
 
-# Animations related functions.
-func handle_animations():
-	match anim_state:
-		'idle':
-			play_anim("idle")
-		'walk':
-			play_anim("run")
-
 func play_anim(name):
-	if anim.current_animation == name:
-		return
-	anim.play(name)
+	if anim.current_animation == name: return
+	else: anim.play(name)
 
 func display_notif(notif_text, notif_type):
 	var new_notif = ACTOR_NOTIF_LABEL.instance()

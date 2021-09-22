@@ -17,6 +17,8 @@ func move_actor_translation():
 	# ANIM TIMER FOR MOVE IS 0.35
 	var walk_time = 0.35
 	parent_tween.interpolate_property(actor, "translation", actor.get_translation(), target_pos, walk_time, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	
+	# handles animation
 	actor.play_anim('run')
 	parent_tween.interpolate_callback(actor, walk_time, "play_anim", 'idle')
 	parent_tween.start()

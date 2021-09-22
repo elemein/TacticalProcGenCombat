@@ -59,20 +59,6 @@ func _physics_process(_delta):
 		if turn_timer.get_turn_in_process() == false: # We don't wanna decide a turn if timer isn't 0.
 			if ready_status == false:
 				decide_next_action()
-		
-#		if in_turn == true:
-#			if proposed_action.split(" ")[0] == 'move':
-#				mover.set_actor_translation()
-				
-		if proposed_action != '' && in_turn == true:
-			if proposed_action == 'idle':
-				anim_state = "idle"
-			else:
-				anim_state = "walk"
-		else:
-			anim_state = "idle"
-
-#		handle_animations()
 
 func decide_next_action():
 	ai_engine.run_engine()

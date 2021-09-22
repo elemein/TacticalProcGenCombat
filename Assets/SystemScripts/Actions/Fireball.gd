@@ -33,6 +33,11 @@ func use():
 	
 	effect_tween.connect("tween_completed", self, "_on_tween_complete")
 	effect_tween.interpolate_property(effect, "translation", effect.translation, target_spell_pos, anim_time, Tween.TRANS_QUAD, Tween.EASE_OUT)
+
+	# Handles Anim
+	parent.play_anim('run')
+	effect_tween.interpolate_callback(parent, anim_time, "play_anim", 'idle')
+
 	effect_tween.start()
 	
 	if GlobalVars.peer_type == 'server':
