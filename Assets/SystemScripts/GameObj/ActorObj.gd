@@ -245,14 +245,17 @@ func die():
 
 	play_death_anim()
 	
-	if self.object_identity['CategoryType'] == 'Player':
-		var _result = get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
+	if object_identity['Instance ID'] == GlobalVars.self_instanceID:
+		tween.interpolate_callback(self, 2, 'move_to_death_screen')
 	else:
 		if GlobalVars.peer_type == 'server': parent_map.log_enemy_death(self)
 
+func move_to_death_screen():
+	get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
+
 func play_death_anim():
 	var peak = Vector3(model.translation.x, 2, model.translation.z)
-	var ground = Vector3(model.translation.x, model.translation.y, model.translation.z)
+	var ground = Vector3(model.translation.x, model.translation.y + 0.2, model.translation.z)
 	var fall_rot = Vector3(-90, model.rotation_degrees.y, model.rotation_degrees.z)
 	
 	# Move up and down, to simulate impact.
