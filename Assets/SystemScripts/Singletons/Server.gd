@@ -271,3 +271,5 @@ func get_object_from_identity(object_id):
 		if obj.get_id()['Instance ID'] == object_id['Instance ID']:
 			object = obj
 	return object
+
+func get_player_list() -> Array: return player_list

@@ -28,7 +28,7 @@ func _ready():
 	first_turn_workaround_for_player_sight()
 	
 	# Put the player on the first floor and clean up the garbage
-	var player_child = dungeon.get_node('Floor1/Player')
+	var player_child = dungeon.get_node('Floor1/Players/Player')
 	player_child.get_parent().remove_child(player_child)
 	dungeon.get_node('Floor1/Players').add_child(player_child)
 	
@@ -60,16 +60,21 @@ func get_mapset_from_name(mapset_name):
 		if mapset.get_mapset_name() == mapset_name:
 			return mapset
 
-func move_to_map(object, mapset_name, target_map_id):
-	var targ_map = return_map_w_mapset_and_id(mapset_name, target_map_id)
-	
+func remove_obj_from_old_map(object):
 	var curr_map = object.get_parent_map()
 	if typeof(curr_map) != TYPE_STRING:
+		curr_map.get_turn_timer().remove_from_timer_group(object)
 		curr_map.remove_map_object(object)
-		curr_map.get_parent_mapset().get_floors().erase(curr_map.get_map_name())
-		curr_map.queue_free() # remove the old map so it doesnt overlap and mess shit up with the new one
+		
+#		curr_map.get_parent_mapset().get_floors().erase(curr_map.get_map_name())
+#		curr_map.queue_free() # remove the old map so it doesnt overlap and mess shit up with the new one
 		
 		object.set_action('idle') # prevents using the last map's move action on the next map
+
+func move_to_map(object, mapset_name, target_map_id):
+	remove_obj_from_old_map(object)
+	
+	var targ_map = return_map_w_mapset_and_id(mapset_name, target_map_id)
 	
 	object.set_parent_map(targ_map)
 
@@ -83,5 +88,3 @@ func move_to_map(object, mapset_name, target_map_id):
 func first_turn_workaround_for_player_sight():
 	player.viewfield = player.view_finder.find_view_field(player.get_map_pos()[0], player.get_map_pos()[1])
 	player.resolve_viewfield_to_screen()
-	
-#	player.get_parent_map().hide_non_visible_from_player()

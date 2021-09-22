@@ -13,8 +13,6 @@ var turn_timer = TIMER_SCENE.instance()
 var rng = RandomNumberGenerator.new()
 
 var in_view_objects = []
-#var objs_visible_to_player_last_turn = []
-var player
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
 var parent_mapset
@@ -63,13 +61,20 @@ func add_map_objects_to_tree():
 					current_number_of_enemies += 1
 
 func place_player_on_map(object):
-	player = object # caches player for future funcs
+	var player = object # caches player for future funcs
 	
 	for room in rooms:
 		if room['type'] == 'Player Spawn':
 			var tile = [room.center[0], room.center[1]]
 			map_grid[tile[0]][tile[1]].append(object)
-			add_child(player)
+			
+			# WORKAROUND
+			var players_node = get_node('Players')
+			if players_node != null:
+				players_node.add_child(player)
+			else:
+				add_child(player)
+				
 			turn_timer.add_to_timer_group(player)
 			return tile
 
@@ -158,7 +163,7 @@ func remove_map_object(object):
 	var tile = object.get_map_pos()
 	
 	map_grid[tile[0]][tile[1]].erase(object)
-	remove_child(object)
+	object.get_parent().remove_child(object)
 
 func remove_from_map_grid_but_keep_node(object):
 	var tile = object.get_map_pos()
@@ -169,8 +174,9 @@ func remove_from_map_tree(object):
 # -----------------------------------------
 
 func check_what_room_player_is_in():
-	for room in rooms:
-		room.pos_in_room(player.get_map_pos())
+	for player in Server.get_player_list():
+		for room in rooms:
+			room.pos_in_room(player.get_map_pos())
 
 # Getters
 func get_turn_timer() -> Object: return turn_timer
@@ -190,7 +196,7 @@ func log_enemy_death(dead_enemy):
 	current_number_of_enemies -= 1
 	
 	for room in rooms:
-		var in_room = room.pos_in_room(player.get_map_pos())
+		var in_room = room.pos_in_room(dead_enemy.get_map_pos())
 		if in_room == true:
 			room.log_enemy_death(dead_enemy)
 
