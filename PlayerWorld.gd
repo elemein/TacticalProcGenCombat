@@ -43,26 +43,22 @@ func unpack_map(map_data):
 				match object['Identifier']:
 					'BaseGround': 
 						var ground = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
-						plyr_play_map.add_child(ground)
 						ground.set_id(object)
 						ground.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(ground)
 					'BaseWall': 
 						var wall = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
-						plyr_play_map.add_child(wall)
 						wall.set_id(object)
 						wall.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(wall)
 					'BaseStairs':
 						var stairs = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
-						plyr_play_map.add_child(stairs)
 						stairs.set_id(object)
 						stairs.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(stairs)
 					'PlagueDoc': 
 						if object['NetID'] == GlobalVars.self_netID:
 							var client_player = GlobalVars.plyr_obj_spawner.spawn_actor('PSidePlayer', plyr_play_map, [x,z], false)
-							plyr_play_map.add_child(client_player)
 							Server.add_player_to_local_player_list(client_player)
 							client_player.update_id('NetID', GlobalVars.self_netID)
 							client_player.update_id('Instance ID', object['Instance ID'])
@@ -72,20 +68,17 @@ func unpack_map(map_data):
 							GlobalVars.self_instanceObj = client_player
 						else:
 							var other_player = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
-							plyr_play_map.add_child(other_player)
 							Server.add_player_to_local_player_list(other_player)
 							other_player.update_id('NetID', object['NetID'])
 							other_player.update_id('Instance ID', object['Instance ID'])
 							map_grid[x][z].append(other_player)
 					'Fox':
 						var fox = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
-						plyr_play_map.add_child(fox)
 						fox.set_id(object)
 						fox.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(fox)
 					'Imp':
 						var imp = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
-						plyr_play_map.add_child(imp)
 						imp.set_id(object)
 						imp.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(imp)

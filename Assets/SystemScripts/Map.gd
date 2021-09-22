@@ -175,8 +175,9 @@ func remove_from_map_tree(object):
 
 func check_what_room_player_is_in():
 	for player in Server.get_player_list():
-		for room in rooms:
-			room.pos_in_room(player.get_map_pos())
+		if player.get_id()['Map ID'] == get_map_server_id():
+			for room in rooms:
+				room.pos_in_room(player.get_map_pos())
 
 # Getters
 func get_turn_timer() -> Object: return turn_timer

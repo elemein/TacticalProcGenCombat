@@ -79,7 +79,7 @@ func _physics_process(_delta):
 		else:
 			anim_state = "idle"
 
-	handle_animations()
+#	handle_animations()
 			
 
 func smooth_diagonal_input():

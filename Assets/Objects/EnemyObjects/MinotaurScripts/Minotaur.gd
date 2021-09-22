@@ -72,7 +72,7 @@ func _physics_process(_delta):
 		else:
 			anim_state = "idle"
 
-		handle_animations()
+#		handle_animations()
 
 func decide_next_action():
 	ai_engine.run_engine()
