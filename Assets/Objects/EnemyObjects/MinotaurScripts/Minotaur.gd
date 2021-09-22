@@ -53,7 +53,6 @@ func setup_actor():
 
 func _physics_process(_delta):
 	if is_dead:
-		play_death_anim()
 		if loot_dropped == false: drop_loot()
 
 	else:

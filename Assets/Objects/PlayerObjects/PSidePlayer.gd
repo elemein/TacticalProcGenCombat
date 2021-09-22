@@ -54,10 +54,6 @@ func add_sub_nodes_as_children():
 	inventory.setup_inventory(self)
 
 func _physics_process(_delta):
-	if is_dead: 
-		play_death_anim()
-		if death_anim_timer.time_left > 0: mover.set_actor_translation()
-		
 	if is_dead == false:
 		get_input()
 		

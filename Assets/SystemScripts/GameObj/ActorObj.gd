@@ -1,8 +1,6 @@
 extends GameObj
 class_name ActorObj
 
-const DEATH_ANIM_TIME = 1
-
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 
@@ -12,6 +10,7 @@ onready var model = $Graphics
 onready var anim = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI/Action")
 onready var actions = $Actions
+onready var tween = $Tween
 
 # Sound effects
 onready var audio_hit = $Audio/Hit
@@ -32,9 +31,6 @@ signal status_bar_mp(mp, max_mp)
 var mover = ACTOR_MOVER.new()
 var view_finder = VIEW_FINDER.new()
 
-#death vars
-var death_anim_timer = Timer.new()
-var death_anim_info = []
 var is_dead = false
 
 var viewfield = []
@@ -239,23 +235,15 @@ func take_damage(damage, is_crit):
 			Server.object_action_event(object_identity, {"Command Type": "Die"})
 
 func die():
-	death_anim_timer.set_one_shot(true)
-	death_anim_timer.set_wait_time(DEATH_ANIM_TIME)
-	add_child(death_anim_timer)
 	is_dead = true
 	
 	if GlobalVars.peer_type == 'server': turn_timer.remove_from_timer_group(self)
 	
 	proposed_action = 'idle'
 	
-	var rise = Vector3(model.translation.x, 2, model.translation.z)
-	var fall = Vector3(model.translation.x, 0.2, model.translation.z)
-	var fall_rot = Vector3(-90, model.rotation_degrees.y, model.rotation_degrees.z)
-	
-	death_anim_info = [rise, fall, fall_rot]
-	
-	death_anim_timer.start()
 	$HealthManaBar3D.visible = false
+
+	play_death_anim()
 	
 	if self.object_identity['CategoryType'] == 'Player':
 		var _result = get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
@@ -263,11 +251,18 @@ func die():
 		if GlobalVars.peer_type == 'server': parent_map.log_enemy_death(self)
 
 func play_death_anim():
-	if death_anim_timer.time_left > 0.75:
-		model.translation = (model.translation.linear_interpolate(death_anim_info[0], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
-	if death_anim_timer.time_left < 0.75 && death_anim_timer.time_left != 0:
-		model.translation = (model.translation.linear_interpolate(death_anim_info[1], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
-		model.rotation_degrees = (model.rotation_degrees.linear_interpolate(death_anim_info[2], (DEATH_ANIM_TIME-death_anim_timer.time_left))) 
+	var peak = Vector3(model.translation.x, 2, model.translation.z)
+	var ground = Vector3(model.translation.x, model.translation.y, model.translation.z)
+	var fall_rot = Vector3(-90, model.rotation_degrees.y, model.rotation_degrees.z)
+	
+	# Move up and down, to simulate impact.
+	tween.interpolate_property(model, "translation", ground, peak, 0.5, Tween.TRANS_QUAD, Tween.EASE_OUT)
+	tween.interpolate_property(model, "translation", peak, ground, 0.2, Tween.TRANS_QUAD, Tween.EASE_IN, 0.5)
+	
+	# Cause fall over.
+	tween.interpolate_property(model, "rotation_degrees", model.rotation_degrees, fall_rot, 0.7, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	
+	tween.start()
 
 # Getters
 func get_hp(): return stat_dict['HP']
