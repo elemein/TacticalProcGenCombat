@@ -111,7 +111,7 @@ func end_turn():
 		if actor.get_id()['CategoryType'] == 'Enemy':
 			actor.find_viewfield()
 			
-	Server.resolve_all_viewfields()
+	Server.resolve_all_viewfields(map)
 
 func _physics_process(_delta):
 	if turn_in_process:

@@ -102,7 +102,10 @@ func object_action_event(object_id, action):
 	var orig_object_id = object_id.duplicate(true)
 	var orig_action = action.duplicate(true)
 	
-	rpc('receive_object_action_event', orig_object_id, orig_action)
+	for player in player_list:
+		if object_id['Map ID'] == player.get_id()['Map ID']:
+			rpc_id(player.get_id()['NetID'], 'receive_object_action_event', orig_object_id, orig_action)
+	
 	receive_object_action_event(orig_object_id, orig_action)
 # Parse action of object and run required actions to perform action.
 remote func receive_object_action_event(object_id, action):
@@ -139,7 +142,10 @@ remote func receive_object_action_event(object_id, action):
 # CHANGING STAT COMMANDS -------------------------------
 # Prompt to all clients to change a given actor's stat.
 func update_actor_stat(object_id, stat_update):
-	rpc('receive_actor_stat_update', object_id, stat_update)
+	for player in player_list:
+		if object_id['Map ID'] == player.get_id()['Map ID']:
+			rpc_id(player.get_id()['NetID'], 'receive_actor_stat_update', object_id, stat_update)
+	
 	receive_actor_stat_update(object_id, stat_update)
 # Find the stat and adjust it.
 remote func receive_actor_stat_update(object_id, stat_update):
@@ -155,7 +161,10 @@ remote func receive_actor_stat_update(object_id, stat_update):
 # NOTIF COMMANDS ---------------------------------------
 # Prompt to all clients to display a notif.
 func actor_notif_event(object_id, notif_text, notif_type):
-	rpc('receive_actor_notif_event', object_id, notif_text, notif_type)
+	for player in player_list:
+		if object_id['Map ID'] == player.get_id()['Map ID']:
+			rpc_id(player.get_id()['NetID'], 'receive_actor_notif_event', object_id, notif_text, notif_type)	
+
 	receive_actor_notif_event(object_id, notif_text, notif_type)
 # Get the object and display the notif.
 remote func receive_actor_notif_event(object_id, notif_text, notif_type):
@@ -165,9 +174,12 @@ remote func receive_actor_notif_event(object_id, notif_text, notif_type):
 
 # VISION RELATED COMMANDS ------------------------------
 # Prompt to get everyone to review their vision.
-func resolve_all_viewfields():
+func resolve_all_viewfields(map):
+	for player in player_list:
+		if map.get_map_server_id() == player.get_id()['Map ID']:
+			rpc_id(player.get_id()['NetID'], 'resolve_viewfield')
+	
 	resolve_viewfield()
-	rpc('resolve_viewfield')
 # Resolve your viewfield and render it to screen.
 remote func resolve_viewfield():
 	GlobalVars.self_instanceObj.find_viewfield()
@@ -177,7 +189,10 @@ remote func resolve_viewfield():
 # MAP ACTION COMMANDS ---------------------------------
 #
 func map_object_event(map_id, map_action):
-	rpc('receive_map_object_event', map_id, map_action)
+	for player in player_list:
+		if map_id == player.get_id()['Map ID']:
+			rpc_id(player.get_id()['NetID'], 'receive_map_object_event', map_id, map_action)
+
 	receive_map_object_event(map_id, map_action)
 #
 remote func receive_map_object_event(map_id, map_action):

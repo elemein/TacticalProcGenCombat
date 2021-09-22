@@ -111,7 +111,9 @@ func move_actor(amount):
 	map_pos = actor.parent_map.move_on_map(actor, map_pos, target_tile)
 	actor.set_map_pos(map_pos)
 	move_actor_translation()
-	check_tile_for_steppable_objects(map_pos[0], map_pos[1])
+	
+	if GlobalVars.peer_type == 'server':
+		check_tile_for_steppable_objects(map_pos[0], map_pos[1])
 
 func check_tile_for_steppable_objects(x,z):
 	var tile_objects = actor.parent_map.get_tile_contents(x,z)
