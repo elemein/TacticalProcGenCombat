@@ -41,8 +41,6 @@ func _ready():
 			markers.append(row)
 			
 func _process(_delta):
-	pass
-	
 	if player == null:
 		return
 #	player_marker.rect_rotation = player.rotation + PI / 2
