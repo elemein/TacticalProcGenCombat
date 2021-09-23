@@ -16,12 +16,17 @@ var mapsets = []
 
 func _ready():
 	add_child(plyr_play_map)
+	GlobalVars.total_mapsets.append(plyr_play_map)
 	unpack_map(GlobalVars.server_map_data)
 	
 	first_turn_workaround_for_player_sight()
 
+func clear_play_map():
+	for child in plyr_play_map.get_children():
+		plyr_play_map.remove_child(child)
+		child.queue_free()
+
 func unpack_map(map_data):
-	GlobalVars.total_mapsets.append(plyr_play_map)
 	plyr_play_map.set_map_server_id(map_data[0])
 	map_data = map_data[1]
 	var map_grid = []
@@ -116,6 +121,7 @@ func unpack_map(map_data):
 		plyr_play_map.rooms.append(curr_room)
 	
 	print('Map unpacked.')
+	Server.notify_server_map_loaded(plyr_play_map.get_map_server_id())
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):
 	var targ_mapset

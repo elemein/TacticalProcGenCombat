@@ -211,6 +211,34 @@ remote func receive_map_object_event(map_id, map_action):
 					room.block_exits()
 				'Unblock Exits':
 					room.unblock_exits()
+#
+func move_client_to_map(client_obj, map):
+	rpc_id(client_obj.get_id()['NetID'], 'prepare_for_map_change', map.get_map_server_id())
+	client_obj.get_parent_map().get_turn_timer().remove_from_timer_group(client_obj)
+	client_obj.update_id('Map ID', 0)
+#
+remote func prepare_for_map_change(map_id):
+	GlobalVars.self_instanceObj.update_id('Map ID', 0)
+	
+	var world = get_node("/root/World")
+	world.clear_play_map()
+	
+	rpc_id(1, "send_requested_map_to_requester", GlobalVars.self_instanceObj.get_id()['NetID'], map_id)
+#
+remote func send_requested_map_to_requester(requester_id, requested_map_id):
+	var map
+	for mapset in get_node('/root/World').mapsets:
+		for flr in mapset.floors.values():
+			if requested_map_id == flr.get_map_server_id(): map = flr
+	
+	var player_id = requester_id
+	var map_id = requested_map_id
+	var map_data = map.return_map_grid_encoded_to_string()
+	var map_rooms = map.return_rooms_encoded_to_dict()
+	var map_dict = {"Map ID": map_id, "Grid Data": map_data, "Room Data": map_rooms}
+	print(map_data)
+	print("Sending map data to requester.")
+	rpc_id(player_id, 'receive_requested_map_from_server', map_dict)
 
 # Request map from server.
 func request_map_from_server():
@@ -229,6 +257,22 @@ remote func send_map_to_requester(_requester):
 # Receive map from server.
 remote func receive_map_from_server(map_dict):
 	GlobalVars.server_map_data = [map_dict['Map ID'], map_dict['Grid Data'], map_dict['Room Data']]
+#
+remote func receive_requested_map_from_server(map_dict):
+	GlobalVars.server_map_data = [map_dict['Map ID'], map_dict['Grid Data'], map_dict['Room Data']]
+	unpack_new_map()
+#
+func unpack_new_map():
+	get_node('/root/World').unpack_map(GlobalVars.server_map_data)
+
+func notify_server_map_loaded(map_id):
+	rpc_id(1, 'receive_client_has_loaded', GlobalVars.self_instanceObj.get_id()['NetID'], map_id)
+	
+remote func receive_client_has_loaded(client_id, map_id):
+	var client_obj = get_player_obj_from_netid(client_id)
+	client_obj.update_id('Map ID', map_id)
+	
+	
 # ------------------------------------------------------
 
 
