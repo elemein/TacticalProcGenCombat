@@ -187,6 +187,26 @@ remote func resolve_viewfield():
 	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
 # ------------------------------------------------------
 
+# ---
+func remove_object_from_map(map_id, object):
+	var map = get_map_from_map_id(map_id)
+	
+	for player in player_list:
+		if map_id == player.get_id()['Map ID']:
+			rpc_id(player.get_id()['NetID'], 'receive_remove_object_from_map', object.get_id()['Position'], object.get_id()['Instance ID'])
+
+remote func receive_remove_object_from_map(item_pos, item_instance_id):
+	var x = item_pos[0]
+	var z = item_pos[1]
+	
+	var map = GlobalVars.self_instanceObj.get_parent_map()
+	var tile_contents = map.get_tile_contents(x,z)
+	for obj in tile_contents:
+		if obj.get_id()['Instance ID'] == item_instance_id:
+			map.remove_map_object(obj)
+# ---
+
+
 # MAP ACTION COMMANDS ---------------------------------
 #
 func map_object_event(map_id, map_action):

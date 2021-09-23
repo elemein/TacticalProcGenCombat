@@ -164,6 +164,8 @@ func remove_map_object(object):
 	
 	map_grid[tile[0]][tile[1]].erase(object)
 	object.get_parent().remove_child(object)
+	
+	Server.remove_object_from_map(get_map_server_id(), object)
 
 func remove_from_map_grid_but_keep_node(object):
 	var tile = object.get_map_pos()
