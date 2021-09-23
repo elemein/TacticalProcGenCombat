@@ -77,7 +77,7 @@ func spawn_actor(actor_name, map, map_pos, visibility):
 	
 	match actor_name:
 		'PlagueDoc':
-			#Replacing the placeholder graphics with intended:a
+			#Replacing the placeholder graphics with intended:
 			actor.set_graphics(plague_doc_graphics.instance())
 			actor.add_child(lantern_light_effect.instance())
 			actor.add_to_group('player')

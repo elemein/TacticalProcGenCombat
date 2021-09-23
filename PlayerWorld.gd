@@ -48,11 +48,13 @@ func unpack_map(map_data):
 				match object['Identifier']:
 					'BaseGround': 
 						var ground = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
+						ground.translation.y = 0 # on server, these are spawned at 0
 						ground.set_id(object)
 						ground.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(ground)
 					'BaseWall': 
 						var wall = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
+						wall.translation.y = 0 # on server, these are spawned at 0
 						wall.set_id(object)
 						wall.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(wall)
@@ -87,6 +89,36 @@ func unpack_map(map_data):
 						imp.set_id(object)
 						imp.set_parent_map(plyr_play_map)
 						map_grid[x][z].append(imp)
+					'Sword':
+						var sword = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
+						sword.set_id(object)
+						sword.set_parent_map(plyr_play_map)
+						map_grid[x][z].append(sword)
+					'Magic Staff':
+						var staff = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
+						staff.set_id(object)
+						staff.set_parent_map(plyr_play_map)
+						map_grid[x][z].append(staff)
+					'Scabbard and Dagger':
+						var scabbard_and_dagger = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
+						scabbard_and_dagger.set_id(object)
+						scabbard_and_dagger.set_parent_map(plyr_play_map)
+						map_grid[x][z].append(scabbard_and_dagger)
+					'Arcane Necklace':
+						var necklace = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
+						necklace.set_id(object)
+						necklace.set_parent_map(plyr_play_map)
+						map_grid[x][z].append(necklace)
+					'Leather Cuirass':
+						var cuirass = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
+						cuirass.set_id(object)
+						cuirass.set_parent_map(plyr_play_map)
+						map_grid[x][z].append(cuirass)
+					'Body Armour':
+						var armour = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
+						armour.set_id(object)
+						armour.set_parent_map(plyr_play_map)
+						map_grid[x][z].append(armour)
 	
 	plyr_play_map.set_map_grid(map_grid)
 	
