@@ -276,7 +276,24 @@ remote func receive_client_has_loaded(client_id, map_id):
 	map.get_turn_timer().add_to_timer_group(client_obj)
 	
 	rpc_id(client_id, 'resolve_viewfield')
+
+func spawn_object_in_map(map, object):
+	for player in player_list:
+		if map.get_map_server_id() == player.get_id()['Map ID']:
+			rpc_id(player.get_id()['NetID'], 'receive_spawn_object_in_map', object.get_id())
+
+remote func receive_spawn_object_in_map(object_id):
+	var x = object_id['Position'][0]
+	var z = object_id['Position'][1]
 	
+	match object_id['Identifier']:
+		'PlagueDoc': 
+			var other_player = GlobalVars.plyr_obj_spawner.spawn_actor(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
+			other_player.update_id('NetID', object_id['NetID'])
+			other_player.update_id('Instance ID', object_id['Instance ID'])
+			GlobalVars.self_instanceObj.get_parent_map().map_grid[x][z].append(other_player)
+	
+	resolve_viewfield()
 # ------------------------------------------------------
 
 

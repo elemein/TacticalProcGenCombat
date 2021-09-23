@@ -83,6 +83,8 @@ func move_to_map(object, mapset_name, target_map_id):
 	
 	first_turn_workaround_for_player_sight()
 	
+	Server.spawn_object_in_map(targ_map, object)
+	
 	if object.get_id()['NetID'] != 1:
 		Server.move_client_to_map(object, targ_map)
 	

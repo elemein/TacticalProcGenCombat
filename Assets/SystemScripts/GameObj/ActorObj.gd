@@ -98,8 +98,6 @@ func set_action(action):
 
 	if object_identity['CategoryType'] == 'Player': gui.set_action(proposed_action)
 
-
-
 func process_turn():
 	if visible:
 		was_visible = true
