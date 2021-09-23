@@ -149,13 +149,14 @@ func update_actor_stat(object_id, stat_update):
 	receive_actor_stat_update(object_id, stat_update)
 # Find the stat and adjust it.
 remote func receive_actor_stat_update(object_id, stat_update):
-	var object = get_object_from_identity(object_id)
-	
-	match stat_update['Stat']:
-		'HP':
-			object.set_hp(object_id['HP'] + stat_update['Modifier'])
-		'MP':
-			object.set_mp(object_id['MP'] + stat_update['Modifier'])
+	if object_id['Map ID'] != 0:
+		var object = get_object_from_identity(object_id)
+		
+		match stat_update['Stat']:
+			'HP':
+				object.set_hp(object_id['HP'] + stat_update['Modifier'])
+			'MP':
+				object.set_mp(object_id['MP'] + stat_update['Modifier'])
 # ------------------------------------------------------
 
 # NOTIF COMMANDS ---------------------------------------
@@ -213,9 +214,9 @@ remote func receive_map_object_event(map_id, map_action):
 					room.unblock_exits()
 #
 func move_client_to_map(client_obj, map):
-	rpc_id(client_obj.get_id()['NetID'], 'prepare_for_map_change', map.get_map_server_id())
-	client_obj.get_parent_map().get_turn_timer().remove_from_timer_group(client_obj)
+	get_map_from_map_id(client_obj.get_id()['Map ID']).get_turn_timer().remove_from_timer_group(client_obj)
 	client_obj.update_id('Map ID', 0)
+	rpc_id(client_obj.get_id()['NetID'], 'prepare_for_map_change', map.get_map_server_id())
 #
 remote func prepare_for_map_change(map_id):
 	GlobalVars.self_instanceObj.update_id('Map ID', 0)
@@ -271,7 +272,10 @@ func notify_server_map_loaded(map_id):
 remote func receive_client_has_loaded(client_id, map_id):
 	var client_obj = get_player_obj_from_netid(client_id)
 	client_obj.update_id('Map ID', map_id)
+	var map = get_map_from_map_id(map_id)
+	map.get_turn_timer().add_to_timer_group(client_obj)
 	
+	rpc_id(client_id, 'resolve_viewfield')
 	
 # ------------------------------------------------------
 
@@ -288,7 +292,7 @@ func _player_connected(id):
 	new_player.update_id('NetID', id)
 	player_list.append(new_player)
 	
-	new_player.get_parent_map().get_turn_timer().add_to_timer_group(new_player)
+#	new_player.get_parent_map().get_turn_timer().add_to_timer_group(new_player)
 	
 	var instance_id = new_player.get_id()['Instance ID']
 	
@@ -310,6 +314,13 @@ remote func receive_id_from_server(net_id, instance_id):
 # SERVER UTILITY FUNCTIONS ---
 func add_player_to_local_player_list(player):
 	player_list.append(player)
+
+func get_map_from_map_id(mapid):
+	var map
+	for mapset in get_node('/root/World').mapsets:
+		for flr in mapset.floors.values():
+			if mapid == flr.get_map_server_id(): map = flr
+	return map
 
 func get_player_obj_from_netid(netid):
 	for player in player_list:
