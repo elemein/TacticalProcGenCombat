@@ -43,50 +43,36 @@ func _ready():
 func _process(_delta):
 	if player == null:
 		return
-#	player_marker.rect_rotation = player.rotation + PI / 2
+	
+	var map_grid = player.get_parent_map().map_grid
+	for row_cnt in range(map_grid.size()):
+		for tile_cnt in range(map_grid[row_cnt].size()):
+			var minimap_icon = blank_icon
+			var tile = markers[abs(map_grid.size() - row_cnt) - 1][tile_cnt]
+			for thing in map_grid[row_cnt][tile_cnt]:
+				match thing.get_id()['CategoryType']:
+					"Player":
+						if player == thing:
+							minimap_icon = player_icon
+						else:
+							minimap_icon = co_op_player
+						break
+					"Enemy":
+						if thing.visible:
+							match thing.get_id()['Identifier']:
+								"Imp":
+									minimap_icon = imp_icon
+								"Fox":
+									minimap_icon = fox_icon
+								"Minotaur":
+									minimap_icon = minotaur_icon
+						elif thing.was_visible and not thing.is_dead:
+							minimap_icon = seen_icon
+						break
+					"Ground":
+						if thing.was_visible or thing.visible:
+							match thing.get_id()['Identifier']:
+								"BaseGround":
+									minimap_icon = tile_icon
+			tile.texture = minimap_icon
 
-#	var map_grid = player.get_parent_map().map_grid
-#	for row_cnt in range(map_grid.size()):
-#		for tile_cnt in range(map_grid[row_cnt].size()):
-#			var minimap_icon = blank_icon
-#			var tile = markers[abs(map_grid.size() - row_cnt) - 1][tile_cnt]
-#			for thing in map_grid[row_cnt][tile_cnt]:
-#				match thing.minimap_icon:
-#					"Player":
-#						if player == thing:
-#							minimap_icon = player_icon
-#						else:
-#							minimap_icon = co_op_player
-#					"Fox":
-#						if not minimap_icon in ["Player", "Stairs"] and not thing.is_dead:
-#							if thing.visible:
-#								minimap_icon = fox_icon
-#							elif thing.was_visible:
-#								minimap_icon = seen_icon
-#					"Imp":
-#						if not minimap_icon in ["Player", "Stairs"] and not thing.is_dead:
-#							if thing.visible:
-#								minimap_icon = imp_icon
-#							elif thing.was_visible:
-#								minimap_icon = seen_icon
-#					"Minotaur":
-#						if not minimap_icon in ["Player", "Stairs"] and not thing.is_dead:
-#							if thing.visible:
-#								minimap_icon = minotaur_icon
-#							elif thing.was_visible:
-#								minimap_icon = seen_icon
-#					"Stairs":
-#						if not minimap_icon in ["Player", "Stairs"]:
-#							if thing.visible or thing.was_visible:
-#								minimap_icon = stairs_icon
-#					"Ground":
-#						if not minimap_icon in ["Player", "Stairs", "Fox", "Imp", "Minotaur"]:
-#							if thing.visible:
-#								minimap_icon = tile_icon
-#							elif thing.was_visible:
-#								minimap_icon = seen_icon
-#					null:
-#						pass
-#					_:
-#						pass
-#			tile.texture = minimap_icon
