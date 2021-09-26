@@ -4,9 +4,6 @@ extends Node
 # with the new one. This isnt desirable behaviour as it completely prevents backtracking.
 # Have this sorted for v0.1
 
-const MAPSET_CLASS = preload("res://Assets/SystemScripts/Mapset.gd")
-var dungeon = MAPSET_CLASS.new('The Cave', 3)
-
 const PLYR_PLY_MAP = preload("res://Assets/SystemScripts/PlayerPlayMap.gd")
 var plyr_play_map = PLYR_PLY_MAP.new()
 
@@ -44,81 +41,45 @@ func unpack_map(map_data):
 		for z in range(map_data[0].size()):
 			for obj in range(map_data[x][z].size()):
 				var object = map_data[x][z][obj][0]
+				var new_object = null
 				
 				match object['Identifier']:
 					'BaseGround': 
-						var ground = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
-						ground.translation.y = 0 # on server, these are spawned at 0
-						ground.set_id(object)
-						ground.set_parent_map(plyr_play_map)
-						map_grid[x][z].append(ground)
+						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
+						new_object.translation.y = 0 # on server, these are spawned at 0
 					'BaseWall': 
-						var wall = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
-						wall.translation.y = 0 # on server, these are spawned at 0
-						wall.set_id(object)
-						wall.set_parent_map(plyr_play_map)
-						map_grid[x][z].append(wall)
+						new_object = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
+						new_object.translation.y = 0 # on server, these are spawned at 0
 					'BaseStairs':
-						var stairs = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
-						stairs.set_id(object)
-						stairs.set_parent_map(plyr_play_map)
-						map_grid[x][z].append(stairs)
+						new_object = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
 					'PlagueDoc': 
 						if object['NetID'] == GlobalVars.self_netID:
-							var client_player = GlobalVars.plyr_obj_spawner.spawn_actor('PSidePlayer', plyr_play_map, [x,z], false)
-							Server.add_player_to_local_player_list(client_player)
-							client_player.update_id('NetID', GlobalVars.self_netID)
-							client_player.update_id('Instance ID', object['Instance ID'])
-							client_player.set_map_pos(client_player.get_id()['Position'])
-							map_grid[x][z].append(client_player)
+							new_object = GlobalVars.plyr_obj_spawner.spawn_actor('PSidePlayer', plyr_play_map, [x,z], false)
+							Server.add_player_to_local_player_list(new_object)
+							new_object.update_id('NetID', GlobalVars.self_netID)
+							new_object.update_id('Instance ID', object['Instance ID'])
+							new_object.set_map_pos(new_object.get_id()['Position'])
 							
-							GlobalVars.self_instanceObj = client_player
+							GlobalVars.self_instanceObj = new_object
 						else:
-							var other_player = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
-							Server.add_player_to_local_player_list(other_player)
-							other_player.update_id('NetID', object['NetID'])
-							other_player.update_id('Instance ID', object['Instance ID'])
-							map_grid[x][z].append(other_player)
-					'Fox':
-						var fox = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
-						fox.set_id(object)
-						fox.set_parent_map(plyr_play_map)
-						map_grid[x][z].append(fox)
-					'Imp':
-						var imp = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
-						imp.set_id(object)
-						imp.set_parent_map(plyr_play_map)
-						map_grid[x][z].append(imp)
-					'Sword':
-						var sword = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
-						sword.set_id(object)
-						sword.set_parent_map(plyr_play_map)
-						map_grid[x][z].append(sword)
-					'Magic Staff':
-						var staff = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
-						staff.set_id(object)
-						staff.set_parent_map(plyr_play_map)
-						map_grid[x][z].append(staff)
-					'Scabbard and Dagger':
-						var scabbard_and_dagger = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
-						scabbard_and_dagger.set_id(object)
-						scabbard_and_dagger.set_parent_map(plyr_play_map)
-						map_grid[x][z].append(scabbard_and_dagger)
-					'Arcane Necklace':
-						var necklace = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
-						necklace.set_id(object)
-						necklace.set_parent_map(plyr_play_map)
-						map_grid[x][z].append(necklace)
-					'Leather Cuirass':
-						var cuirass = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
-						cuirass.set_id(object)
-						cuirass.set_parent_map(plyr_play_map)
-						map_grid[x][z].append(cuirass)
-					'Body Armour':
-						var armour = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
-						armour.set_id(object)
-						armour.set_parent_map(plyr_play_map)
-						map_grid[x][z].append(armour)
+							new_object = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
+							Server.add_player_to_local_player_list(new_object)
+							new_object.update_id('NetID', object['NetID'])
+							new_object.update_id('Instance ID', object['Instance ID'])
+					_:
+						match object['CategoryType']:
+							'Enemy':
+								new_object = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
+							'Weapon', 'Accessory':
+								new_object = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
+							'Trap', 'Coins':
+								pass
+							_:
+								pass
+				if new_object != null:
+					new_object.set_id(object)
+					new_object.set_parent_map(plyr_play_map)
+
 	
 	plyr_play_map.set_map_grid(map_grid)
 	
