@@ -98,7 +98,7 @@ func unpack_map(map_data):
 			plyr_play_map.remove_child(child)
 			floor_node.add_child(child)
 	var map_dict = {'Dungeon Floor %d' % [floor_num]: floor_node}
-	map_set.organize_map_nodes(map_dict)
+	map_set.organize_map_nodes(map_dict, floor_num)
 	
 	# Unpack room data.
 	var map_rooms = GlobalVars.server_map_data[2]
@@ -131,6 +131,9 @@ func unpack_map(map_data):
 		plyr_play_map.rooms.append(curr_room)
 	
 	print('Map unpacked.')
+	for player in Server.player_list:
+		if player.object_identity['NetID'] == GlobalVars.self_netID:
+			GlobalVars.server_player = player
 	Server.notify_server_map_loaded(plyr_play_map.get_map_server_id())
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):

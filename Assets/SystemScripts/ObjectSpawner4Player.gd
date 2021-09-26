@@ -73,6 +73,7 @@ func spawn_actor(actor_name, map, map_pos, visibility):
 		'PlagueDoc': actor_scene = base_dumb_actor
 		'Fox': actor_scene = base_dumb_actor
 		'Imp': actor_scene = base_dumb_actor
+		'Minotaur': actor_scene = base_dumb_actor
 	
 	var actor = create_object(actor_scene, map, map_pos, visibility)
 	
@@ -87,6 +88,9 @@ func spawn_actor(actor_name, map, map_pos, visibility):
 			actor.add_to_group('enemies')
 		'Imp':
 			actor.set_graphics(imp_graphics.instance())
+			actor.add_to_group('enemies')
+		'Minotaur':
+			actor.set_graphics(minotaur_graphics.instance())
 			actor.add_to_group('enemies')
 	
 	return actor

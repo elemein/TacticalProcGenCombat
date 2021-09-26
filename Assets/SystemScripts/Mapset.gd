@@ -24,10 +24,12 @@ func _ready():
 			var floor_name = 'Dungeon Floor %d' % [flr_no]
 			var map_type = 'Normal Floor' if flr_no < floor_count else 'End Floor'
 			floors[floor_name] = map_generator.generate(self, floor_name, flr_no, map_type)
-	organize_map_nodes(floors)
+	organize_map_nodes(floors, null)
 
-func organize_map_nodes(floors):
+func organize_map_nodes(floors, floor_num):
 	for flr_no in range(1, floors.size()+1):
+		if floor_num != null:
+			flr_no = floor_num
 		var floor_name = 'Dungeon Floor %d' % [flr_no]
 		var floor_object = floors[floor_name]
 		add_child(floor_object)

@@ -41,10 +41,10 @@ func _ready():
 			markers.append(row)
 			
 func _process(_delta):
-	if player == null:
+	if GlobalVars.server_player == null or GlobalVars.server_player.get_parent() == null:
 		return
 	
-	var map_grid = player.get_parent_map().map_grid
+	var map_grid = GlobalVars.server_player.get_parent_map().map_grid
 	for row_cnt in range(map_grid.size()):
 		for tile_cnt in range(map_grid[row_cnt].size()):
 			var minimap_icon = blank_icon
@@ -52,7 +52,7 @@ func _process(_delta):
 			for thing in map_grid[row_cnt][tile_cnt]:
 				match thing.get_id()['CategoryType']:
 					"Player":
-						if player == thing:
+						if thing.get_id()['NetID'] == GlobalVars.self_netID:
 							minimap_icon = player_icon
 						else:
 							minimap_icon = co_op_player
