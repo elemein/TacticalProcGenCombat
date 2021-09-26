@@ -5,6 +5,7 @@ var peer_type = null
 
 var server_mapset
 var server_map_data
+var server_map_name
 var server_player
 
 var total_mapsets = []

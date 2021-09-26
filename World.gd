@@ -4,11 +4,13 @@ extends Node
 # with the new one. This isnt desirable behaviour as it completely prevents backtracking.
 # Have this sorted for v0.1
 
+var map_name = 'The Cave'
+
 const BASE_PLAYER = preload("res://Assets/Objects/PlayerObjects/Player.tscn")
 var player = BASE_PLAYER.instance()
 
 const MAPSET_CLASS = preload("res://Assets/SystemScripts/Mapset.gd")
-var dungeon = MAPSET_CLASS.new('The Cave', 3)
+var dungeon = MAPSET_CLASS.new(map_name, 3)
 
 var mapsets = []
 
@@ -23,7 +25,7 @@ func _ready():
 		for level in mapset.floors:
 			GlobalVars.total_mapsets.append(mapset.floors[level])
 	
-	move_to_map(player, 'The Cave', 1)
+	move_to_map(player, map_name, 1)
 	
 	first_turn_workaround_for_player_sight()
 	
@@ -34,6 +36,8 @@ func _ready():
 	
 	### NETWORK
 	if GlobalVars.peer_type == 'server' and GlobalVars.self_netID != 1: 
+		GlobalVars.server_map_name = map_name
+		player_child.name = 'Player1'
 		Server.create_server()
 
 	elif GlobalVars.peer_type == 'client': 

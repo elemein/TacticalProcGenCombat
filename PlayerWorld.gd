@@ -3,6 +3,10 @@ extends Node
 # When traversing maps, the previous map is destroyed so that it does not interfere
 # with the new one. This isnt desirable behaviour as it completely prevents backtracking.
 # Have this sorted for v0.1
+onready var blank_node = preload("res://Assets/SystemScripts/blank_node.tscn")
+
+const MAPSET = preload("res://Assets/SystemScripts/Mapset.gd")
+var map_set = MAPSET.new(null, null)
 
 const PLYR_PLY_MAP = preload("res://Assets/SystemScripts/PlayerPlayMap.gd")
 var plyr_play_map = PLYR_PLY_MAP.new()
@@ -10,8 +14,10 @@ var plyr_play_map = PLYR_PLY_MAP.new()
 const PSIDE_ROOM_CLASS = preload("res://Assets/SystemScripts/PSideRoom.gd")
 
 var mapsets = []
+var floor_num = 0
 
 func _ready():
+	plyr_play_map.name = GlobalVars.server_map_name
 	add_child(plyr_play_map)
 	GlobalVars.total_mapsets.append(plyr_play_map)
 	unpack_map(GlobalVars.server_map_data)
@@ -24,6 +30,7 @@ func clear_play_map():
 		child.queue_free()
 
 func unpack_map(map_data):
+	floor_num += 1
 	plyr_play_map.set_map_server_id(map_data[0])
 	map_data = map_data[1]
 	var map_grid = []
@@ -79,9 +86,19 @@ func unpack_map(map_data):
 				if new_object != null:
 					new_object.set_id(object)
 					new_object.set_parent_map(plyr_play_map)
-
 	
 	plyr_play_map.set_map_grid(map_grid)
+	
+	# Organize Nodes
+	var floor_node = blank_node.instance()
+	plyr_play_map.add_child(floor_node)
+	floor_node.name = 'Floor%d' % [floor_num]
+	for child in plyr_play_map.get_children():
+		if not 'Floor' in child.name:
+			plyr_play_map.remove_child(child)
+			floor_node.add_child(child)
+	var map_dict = {'Dungeon Floor %d' % [floor_num]: floor_node}
+	map_set.organize_map_nodes(map_dict)
 	
 	# Unpack room data.
 	var map_rooms = GlobalVars.server_map_data[2]

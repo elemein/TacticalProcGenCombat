@@ -272,12 +272,14 @@ remote func send_map_to_requester(_requester):
 	var map_data = PlayerInfo.current_map.return_map_grid_encoded_to_string()
 	var map_rooms = PlayerInfo.current_map.return_rooms_encoded_to_dict()
 	var map_dict = {"Map ID": map_id, "Grid Data": map_data, "Room Data": map_rooms}
+	var map_name = GlobalVars.server_map_name
 	print(map_data)
 	print("Sending map data to requester.")
-	rpc_id(player_id, 'receive_map_from_server', map_dict)
+	rpc_id(player_id, 'receive_map_from_server', map_dict, map_name)
 # Receive map from server.
-remote func receive_map_from_server(map_dict):
+remote func receive_map_from_server(map_dict, map_name):
 	GlobalVars.server_map_data = [map_dict['Map ID'], map_dict['Grid Data'], map_dict['Room Data']]
+	GlobalVars.server_map_name = map_name
 #
 remote func receive_requested_map_from_server(map_dict):
 	GlobalVars.server_map_data = [map_dict['Map ID'], map_dict['Grid Data'], map_dict['Room Data']]
@@ -326,12 +328,15 @@ func _player_connected(id):
 	spawn_to_pos[1] += 1
 	
 	var new_player = GlobalVars.obj_spawner.spawn_actor('PlagueDoc', spawn_to_map, spawn_to_pos, true)
+	new_player.get_parent().remove_child(new_player)
+	GlobalVars.server_player.get_parent().add_child(new_player)
 	new_player.update_id('NetID', id)
 	player_list.append(new_player)
 	
 #	new_player.get_parent_map().get_turn_timer().add_to_timer_group(new_player)
 	
 	var instance_id = new_player.get_id()['Instance ID']
+	new_player.name = 'Player%d' % instance_id
 	
 	rpc_id(id, "receive_id_from_server", id, instance_id)
 
