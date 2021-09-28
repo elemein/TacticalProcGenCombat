@@ -19,6 +19,7 @@ var floor_num = 0
 func _ready():
 	plyr_play_map.name = GlobalVars.server_map_name
 	add_child(plyr_play_map)
+	mapsets = [plyr_play_map]
 	GlobalVars.total_mapsets.append(plyr_play_map)
 	unpack_map(GlobalVars.server_map_data)
 	

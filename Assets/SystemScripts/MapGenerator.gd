@@ -30,11 +30,13 @@ var tree = {}
 var leaves = []
 var leaf_id = 0
 var rooms = []
+var map_id
 
 var total_map = []
 
 func generate(parent_mapset, name, id, type):
 	reset_map_gen_vars()
+	map_id = id
 	var map_to_return = MAP_CLASS.new(name, id, type)
 	
 	map_to_return.set_parent_mapset(parent_mapset)

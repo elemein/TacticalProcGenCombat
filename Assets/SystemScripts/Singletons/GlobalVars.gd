@@ -14,6 +14,8 @@ var self_netID
 var self_instanceID
 var self_instanceObj
 
+var in_loading = false
+
 const TILE_OFFSET = 2.0
 
 const NON_TRAVERSABLES = ['Wall', 'TempWall']

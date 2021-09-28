@@ -5,8 +5,6 @@ extends Node
 # ALL mapgen shit. The map should contain the map; it shouldnt generate itself.
 # Revealing and hiding things from the player.
 
-const Y_OFFSET = -0.3
-
 const TIMER_SCENE = preload("res://Assets/Objects/TurnTimer.tscn")
 var turn_timer = TIMER_SCENE.instance()
 
@@ -61,7 +59,7 @@ func add_map_objects_to_tree():
 					current_number_of_enemies += 1
 
 func place_player_on_map(object):
-	var player = object # caches player for future funcs
+	var player = object
 	
 	for room in rooms:
 		if room['type'] == 'Player Spawn':
@@ -165,7 +163,8 @@ func remove_map_object(object):
 	map_grid[tile[0]][tile[1]].erase(object)
 	object.get_parent().remove_child(object)
 	
-	Server.remove_object_from_map(get_map_server_id(), object)
+	Server.object_action_event(object.get_id(), {"Command Type": "Remove From Map"})
+#	Server.remove_object_from_map(get_map_server_id(), object)
 
 func remove_from_map_grid_but_keep_node(object):
 	var tile = object.get_map_pos()

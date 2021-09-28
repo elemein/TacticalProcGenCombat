@@ -15,6 +15,7 @@ func _ready():
 	pass # Replace with function body.
 
 func connect_to_server():
+	GlobalVars.in_loading = true
 	GlobalVars.peer_type = 'client'
 	var peer = NetworkedMultiplayerENet.new()
 	peer.create_client(server_ip, server_port)

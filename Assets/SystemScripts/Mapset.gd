@@ -55,6 +55,9 @@ func organize_map_floor(floor_object):
 			if asset.name == 'TurnTimer':
 				organization_nodes['Logic'].add_child(asset)
 			else:
+				if GlobalVars.peer_type == 'server':
+					asset.update_id('Map ID', floor_object.get_map_server_id())
+				
 				match asset.object_identity['Category']:
 					'Inv Item':
 						organization_nodes['Objects'].add_child(asset)

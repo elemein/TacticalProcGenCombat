@@ -6,6 +6,8 @@ var max_players = 32
 
 var player_list = []
 
+var sync_queue = []
+
 func create_server():
 	GlobalVars.peer_type = 'server'
 	peer.create_server(port, max_players)
@@ -109,6 +111,10 @@ func object_action_event(object_id, action):
 	receive_object_action_event(orig_object_id, orig_action)
 # Parse action of object and run required actions to perform action.
 remote func receive_object_action_event(object_id, action):
+	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+		sync_queue.push_back({"ObjectID": object_id, "Action": action})
+		return
+	
 	var object = get_object_from_identity(object_id)
 	print("%s(%s) does: %s" % [object_id['Identifier'], object_id['Instance ID'], action])
 	
@@ -137,6 +143,11 @@ remote func receive_object_action_event(object_id, action):
 			object.perform_action(action)
 		'Die':
 			object.die()
+		'Remove From Map':
+			var map = get_map_from_map_id(object.get_id()['Map ID'])
+			map.remove_map_object(object)
+			
+			
 # -----------------------------------------------------
 
 # CHANGING STAT COMMANDS -------------------------------
@@ -188,12 +199,12 @@ remote func resolve_viewfield():
 # ------------------------------------------------------
 
 # ---
-func remove_object_from_map(map_id, object):
-	var map = get_map_from_map_id(map_id)
-	
-	for player in player_list:
-		if map_id == player.get_id()['Map ID']:
-			rpc_id(player.get_id()['NetID'], 'receive_remove_object_from_map', object.get_id()['Position'], object.get_id()['Instance ID'])
+#func remove_object_from_map(map_id, object):
+#	var map = get_map_from_map_id(map_id)
+#
+#	for player in player_list:
+#		if map_id == player.get_id()['Map ID']:
+#			rpc_id(player.get_id()['NetID'], 'receive_remove_object_from_map', object.get_id()['Position'], object.get_id()['Instance ID'])
 
 remote func receive_remove_object_from_map(item_pos, item_instance_id):
 	var x = item_pos[0]
@@ -239,6 +250,7 @@ func move_client_to_map(client_obj, map):
 	rpc_id(client_obj.get_id()['NetID'], 'prepare_for_map_change', map.get_map_server_id())
 #
 remote func prepare_for_map_change(map_id):
+	GlobalVars.in_loading = true
 	GlobalVars.self_instanceObj.update_id('Map ID', 0)
 	
 	var world = get_node("/root/World")
@@ -290,6 +302,8 @@ func unpack_new_map():
 
 func notify_server_map_loaded(map_id):
 	rpc_id(1, 'receive_client_has_loaded', GlobalVars.self_instanceObj.get_id()['NetID'], map_id)
+	GlobalVars.in_loading = false
+	sync_from_sync_queue()
 	
 remote func receive_client_has_loaded(client_id, map_id):
 	var client_obj = get_player_obj_from_netid(client_id)
@@ -360,6 +374,8 @@ func add_player_to_local_player_list(player):
 func get_map_from_map_id(mapid):
 	var map
 	for mapset in get_node('/root/World').mapsets:
+		if GlobalVars.peer_type == 'client': return mapset
+		
 		for flr in mapset.floors.values():
 			if mapid == flr.get_map_server_id(): map = flr
 	return map
@@ -385,3 +401,8 @@ func get_object_from_identity(object_id):
 	return object
 
 func get_player_list() -> Array: return player_list
+
+func sync_from_sync_queue():
+	while sync_queue.size() > 0:
+		var action = sync_queue.pop_front()
+		receive_object_action_event(action['ObjectID'], action['Action'])
