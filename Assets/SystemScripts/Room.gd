@@ -48,6 +48,7 @@ func check_if_locking(map_player_list):
 	if !(type in ['Enemy', 'Exit Room']): return
 	if exits_blocked == true: return
 	if enemy_count <= 0: return
+	if map_player_list.size() == 0: return
 	
 	var all_players_in_room = true
 	for player in map_player_list:
