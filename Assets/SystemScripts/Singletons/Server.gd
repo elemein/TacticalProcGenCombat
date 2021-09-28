@@ -112,7 +112,7 @@ func object_action_event(object_id, action):
 # Parse action of object and run required actions to perform action.
 remote func receive_object_action_event(object_id, action):
 	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
-		sync_queue.push_back({"ObjectID": object_id, "Action": action})
+		sync_queue.push_back({"Event Type": "Action", "ObjectID": object_id, "Action": action})
 		return
 	
 	var object = get_object_from_identity(object_id)
@@ -160,6 +160,9 @@ func update_actor_stat(object_id, stat_update):
 	receive_actor_stat_update(object_id, stat_update)
 # Find the stat and adjust it.
 remote func receive_actor_stat_update(object_id, stat_update):
+	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+		sync_queue.push_back({"Event Type": "Stat Update", "ObjectID": object_id, "Update": stat_update})
+		return
 	if object_id['Map ID'] != 0:
 		var object = get_object_from_identity(object_id)
 		
@@ -180,6 +183,10 @@ func actor_notif_event(object_id, notif_text, notif_type):
 	receive_actor_notif_event(object_id, notif_text, notif_type)
 # Get the object and display the notif.
 remote func receive_actor_notif_event(object_id, notif_text, notif_type):
+	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+		sync_queue.push_back({"Event Type": "Notification", "ObjectID": object_id, "Notif Text": notif_text, "Notif Type": notif_type})
+		return
+
 	var object = get_object_from_identity(object_id)
 	object.display_notif(notif_text, notif_type)
 # -----------------------------------------------------
@@ -194,29 +201,10 @@ func resolve_all_viewfields(map):
 	resolve_viewfield()
 # Resolve your viewfield and render it to screen.
 remote func resolve_viewfield():
-	GlobalVars.self_instanceObj.find_viewfield()
-	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
+	if GlobalVars.in_loading == false:
+		GlobalVars.self_instanceObj.find_viewfield()
+		GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
 # ------------------------------------------------------
-
-# ---
-#func remove_object_from_map(map_id, object):
-#	var map = get_map_from_map_id(map_id)
-#
-#	for player in player_list:
-#		if map_id == player.get_id()['Map ID']:
-#			rpc_id(player.get_id()['NetID'], 'receive_remove_object_from_map', object.get_id()['Position'], object.get_id()['Instance ID'])
-
-remote func receive_remove_object_from_map(item_pos, item_instance_id):
-	var x = item_pos[0]
-	var z = item_pos[1]
-	
-	var map = GlobalVars.self_instanceObj.get_parent_map()
-	var tile_contents = map.get_tile_contents(x,z)
-	for obj in tile_contents:
-		if obj.get_id()['Instance ID'] == item_instance_id:
-			map.remove_map_object(obj)
-# ---
-
 
 # MAP ACTION COMMANDS ---------------------------------
 #
@@ -228,6 +216,11 @@ func map_object_event(map_id, map_action):
 	receive_map_object_event(map_id, map_action)
 #
 remote func receive_map_object_event(map_id, map_action):
+	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+		sync_queue.push_back({"Event Type": "Map Event", "MapID": map_id, "Map Action": map_action})
+		return
+	
+	
 	print([map_id, map_action])
 	match map_action['Scope']:
 		"Room":
@@ -302,7 +295,6 @@ func unpack_new_map():
 
 func notify_server_map_loaded(map_id):
 	rpc_id(1, 'receive_client_has_loaded', GlobalVars.self_instanceObj.get_id()['NetID'], map_id)
-	GlobalVars.in_loading = false
 	sync_from_sync_queue()
 	
 remote func receive_client_has_loaded(client_id, map_id):
@@ -403,6 +395,16 @@ func get_object_from_identity(object_id):
 func get_player_list() -> Array: return player_list
 
 func sync_from_sync_queue():
+	GlobalVars.in_loading = false
 	while sync_queue.size() > 0:
-		var action = sync_queue.pop_front()
-		receive_object_action_event(action['ObjectID'], action['Action'])
+		var event = sync_queue.pop_front()
+		
+		match event['Event Type']:
+			'Action':
+				receive_object_action_event(event['ObjectID'], event['Action'])
+			'Stat Update':
+				receive_actor_stat_update(event['ObjectID'], event['Update'])
+			'Notification':
+				receive_actor_notif_event(event['ObjectID'], event['Notif Text'], event['Notif Type'])
+			'Map Event':
+				receive_map_object_event(event['MapID'], event['Map Action'])
