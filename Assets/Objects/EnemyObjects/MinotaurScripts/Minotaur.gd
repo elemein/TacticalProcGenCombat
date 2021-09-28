@@ -79,10 +79,12 @@ func add_loot_to_inventory():
 	
 func drop_loot():
 	if loot_to_drop[0] == 'Gold':
-		obj_spawner.spawn_gold(inventory.get_gold_total(), parent_map, map_pos, true)
+		var gold = obj_spawner.spawn_gold(inventory.get_gold_total(), parent_map, map_pos, true)
+		Server.object_action_event(gold.get_id(), {"Command Type": "Spawn On Map"})
 		inventory.subtract_from_gold(inventory.get_gold_total())
 	else:
-		obj_spawner.spawn_item(loot_to_drop[0], parent_map, map_pos, true)
+		var loot = obj_spawner.spawn_item(loot_to_drop[0], parent_map, map_pos, true)
+		Server.object_action_event(loot.get_id(), {"Command Type": "Spawn On Map"})
 	
 	# drop items
 	loot_dropped = true

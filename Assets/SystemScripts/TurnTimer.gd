@@ -105,7 +105,7 @@ func end_turn():
 	turn_counter += 1
 	map.print_map_grid()
 	
-	map.check_what_room_player_is_in()
+	map.check_for_map_events()
 	
 	for actor in actors:
 		if actor.get_id()['CategoryType'] == 'Enemy':

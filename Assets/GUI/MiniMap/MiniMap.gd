@@ -41,38 +41,39 @@ func _ready():
 			markers.append(row)
 			
 func _process(_delta):
-	if GlobalVars.server_player == null or GlobalVars.server_player.get_parent() == null:
-		return
-	
-	var map_grid = GlobalVars.server_player.get_parent_map().map_grid
-	for row_cnt in range(map_grid.size()):
-		for tile_cnt in range(map_grid[row_cnt].size()):
-			var minimap_icon = blank_icon
-			var tile = markers[abs(map_grid.size() - row_cnt) - 1][tile_cnt]
-			for thing in map_grid[row_cnt][tile_cnt]:
-				match thing.get_id()['CategoryType']:
-					"Player":
-						if thing.get_id()['NetID'] == GlobalVars.self_netID:
-							minimap_icon = player_icon
-						else:
-							minimap_icon = co_op_player
-						break
-					"Enemy":
-						if thing.visible:
-							match thing.get_id()['Identifier']:
-								"Imp":
-									minimap_icon = imp_icon
-								"Fox":
-									minimap_icon = fox_icon
-								"Minotaur":
-									minimap_icon = minotaur_icon
-						elif thing.was_visible and not thing.is_dead:
-							minimap_icon = seen_icon
-						break
-					"Ground":
-						if thing.was_visible or thing.visible:
-							match thing.get_id()['Identifier']:
-								"BaseGround":
-									minimap_icon = tile_icon
-			tile.texture = minimap_icon
+	pass
+#	if GlobalVars.server_player == null or GlobalVars.server_player.get_parent() == null:
+#		return
+#
+#	var map_grid = GlobalVars.server_player.get_parent_map().map_grid
+#	for row_cnt in range(map_grid.size()):
+#		for tile_cnt in range(map_grid[row_cnt].size()):
+#			var minimap_icon = blank_icon
+#			var tile = markers[abs(map_grid.size() - row_cnt) - 1][tile_cnt]
+#			for thing in map_grid[row_cnt][tile_cnt]:
+#				match thing.get_id()['CategoryType']:
+#					"Player":
+#						if thing.get_id()['NetID'] == GlobalVars.self_netID:
+#							minimap_icon = player_icon
+#						else:
+#							minimap_icon = co_op_player
+#						break
+#					"Enemy":
+#						if thing.visible:
+#							match thing.get_id()['Identifier']:
+#								"Imp":
+#									minimap_icon = imp_icon
+#								"Fox":
+#									minimap_icon = fox_icon
+#								"Minotaur":
+#									minimap_icon = minotaur_icon
+#						elif thing.was_visible and not thing.is_dead:
+#							minimap_icon = seen_icon
+#						break
+#					"Ground":
+#						if thing.was_visible or thing.visible:
+#							match thing.get_id()['Identifier']:
+#								"BaseGround":
+#									minimap_icon = tile_icon
+#			tile.texture = minimap_icon
 

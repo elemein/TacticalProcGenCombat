@@ -162,9 +162,6 @@ func remove_map_object(object):
 	
 	map_grid[tile[0]][tile[1]].erase(object)
 	object.get_parent().remove_child(object)
-	
-	Server.object_action_event(object.get_id(), {"Command Type": "Remove From Map"})
-#	Server.remove_object_from_map(get_map_server_id(), object)
 
 func remove_from_map_grid_but_keep_node(object):
 	var tile = object.get_map_pos()
@@ -174,11 +171,16 @@ func remove_from_map_tree(object):
 	remove_child(object)
 # -----------------------------------------
 
-func check_what_room_player_is_in():
+func check_for_map_events():
+	
+	var relevant_player_list = []
 	for player in Server.get_player_list():
 		if player.get_id()['Map ID'] == get_map_server_id():
-			for room in rooms:
-				room.pos_in_room(player.get_map_pos())
+			relevant_player_list.append(player)
+	
+	# Check if rooms should lock:
+	for room in rooms:
+		room.check_if_locking(relevant_player_list)
 
 # Getters
 func get_turn_timer() -> Object: return turn_timer

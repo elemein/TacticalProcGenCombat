@@ -36,6 +36,8 @@ func unpack_map(map_data):
 	map_data = map_data[1]
 	var map_grid = []
 	
+	Server.player_list = []
+	
 	GlobalVars.server_mapset = plyr_play_map
 	print('Unpacking map.')
 	
@@ -80,7 +82,9 @@ func unpack_map(map_data):
 								new_object = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
 							'Weapon', 'Accessory':
 								new_object = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
-							'Trap', 'Coins':
+							'Coins':
+								new_object = GlobalVars.plyr_obj_spawner.spawn_gold(object['Gold Value'], plyr_play_map, [x,z], false)
+							'Trap':
 								pass
 							_:
 								pass

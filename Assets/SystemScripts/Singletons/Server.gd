@@ -106,7 +106,8 @@ func object_action_event(object_id, action):
 	
 	for player in player_list:
 		if object_id['Map ID'] == player.get_id()['Map ID']:
-			rpc_id(player.get_id()['NetID'], 'receive_object_action_event', orig_object_id, orig_action)
+			if player.get_id()['NetID'] != 1:
+				rpc_id(player.get_id()['NetID'], 'receive_object_action_event', orig_object_id, orig_action)
 	
 	receive_object_action_event(orig_object_id, orig_action)
 # Parse action of object and run required actions to perform action.
@@ -146,7 +147,9 @@ remote func receive_object_action_event(object_id, action):
 		'Remove From Map':
 			var map = get_map_from_map_id(object.get_id()['Map ID'])
 			map.remove_map_object(object)
-			
+		'Spawn On Map': # Only for client. Server must spawn objects directly.
+			if GlobalVars.peer_type == 'client':
+				spawn_object_in_map(object_id)
 			
 # -----------------------------------------------------
 
@@ -155,7 +158,8 @@ remote func receive_object_action_event(object_id, action):
 func update_actor_stat(object_id, stat_update):
 	for player in player_list:
 		if object_id['Map ID'] == player.get_id()['Map ID']:
-			rpc_id(player.get_id()['NetID'], 'receive_actor_stat_update', object_id, stat_update)
+			if player.get_id()['NetID'] != 1:
+				rpc_id(player.get_id()['NetID'], 'receive_actor_stat_update', object_id, stat_update)
 	
 	receive_actor_stat_update(object_id, stat_update)
 # Find the stat and adjust it.
@@ -178,7 +182,8 @@ remote func receive_actor_stat_update(object_id, stat_update):
 func actor_notif_event(object_id, notif_text, notif_type):
 	for player in player_list:
 		if object_id['Map ID'] == player.get_id()['Map ID']:
-			rpc_id(player.get_id()['NetID'], 'receive_actor_notif_event', object_id, notif_text, notif_type)	
+			if player.get_id()['NetID'] != 1:
+				rpc_id(player.get_id()['NetID'], 'receive_actor_notif_event', object_id, notif_text, notif_type)	
 
 	receive_actor_notif_event(object_id, notif_text, notif_type)
 # Get the object and display the notif.
@@ -196,7 +201,8 @@ remote func receive_actor_notif_event(object_id, notif_text, notif_type):
 func resolve_all_viewfields(map):
 	for player in player_list:
 		if map.get_map_server_id() == player.get_id()['Map ID']:
-			rpc_id(player.get_id()['NetID'], 'resolve_viewfield')
+			if player.get_id()['NetID'] != 1:
+				rpc_id(player.get_id()['NetID'], 'resolve_viewfield')
 	
 	resolve_viewfield()
 # Resolve your viewfield and render it to screen.
@@ -211,7 +217,8 @@ remote func resolve_viewfield():
 func map_object_event(map_id, map_action):
 	for player in player_list:
 		if map_id == player.get_id()['Map ID']:
-			rpc_id(player.get_id()['NetID'], 'receive_map_object_event', map_id, map_action)
+			if player.get_id()['NetID'] != 1:
+				rpc_id(player.get_id()['NetID'], 'receive_map_object_event', map_id, map_action)
 
 	receive_map_object_event(map_id, map_action)
 #
@@ -219,7 +226,6 @@ remote func receive_map_object_event(map_id, map_action):
 	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
 		sync_queue.push_back({"Event Type": "Map Event", "MapID": map_id, "Map Action": map_action})
 		return
-	
 	
 	print([map_id, map_action])
 	match map_action['Scope']:
@@ -305,22 +311,29 @@ remote func receive_client_has_loaded(client_id, map_id):
 	
 	rpc_id(client_id, 'resolve_viewfield')
 
-func spawn_object_in_map(map, object):
-	for player in player_list:
-		if map.get_map_server_id() == player.get_id()['Map ID']:
-			rpc_id(player.get_id()['NetID'], 'receive_spawn_object_in_map', object.get_id())
-
-remote func receive_spawn_object_in_map(object_id):
+remote func spawn_object_in_map(object_id):
 	var x = object_id['Position'][0]
 	var z = object_id['Position'][1]
 	
 	match object_id['Identifier']:
 		'PlagueDoc': 
 			var other_player = GlobalVars.plyr_obj_spawner.spawn_actor(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
-			other_player.update_id('NetID', object_id['NetID'])
-			other_player.update_id('Instance ID', object_id['Instance ID'])
+			other_player.set_id(object_id)
 			GlobalVars.self_instanceObj.get_parent_map().map_grid[x][z].append(other_player)
+		
+		'Spike Trap':
+			var trap = GlobalVars.plyr_obj_spawner.spawn_map_object(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
+			trap.set_id(object_id)
+		
+		'Coins':
+			var obj = GlobalVars.plyr_obj_spawner.spawn_gold(object_id['Gold Value'], get_map_from_map_id(object_id['Map ID']), object_id['Position'], true)
+			obj.set_id(object_id)
 	
+	match object_id['Category']:
+		'Inv Item':
+			var obj = GlobalVars.plyr_obj_spawner.spawn_item(object_id['Identifier'], get_map_from_map_id(object_id['Map ID']), object_id['Position'], true)
+			obj.set_id(object_id)
+			
 	resolve_viewfield()
 # ------------------------------------------------------
 
@@ -353,6 +366,7 @@ func _player_disconnected(id):
 			player.get_parent_map().remove_map_object(player)
 			player_list.erase(player)
 			player.get_parent_map().get_turn_timer().remove_from_timer_group(player)
+			player.queue_free()
 
 # CLIENT SIDE FUNCS ------------------------------
 remote func receive_id_from_server(net_id, instance_id):

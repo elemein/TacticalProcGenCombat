@@ -30,7 +30,8 @@ func set_id(changed_id): object_identity = changed_id
 func set_parent_map(map):
 	if object_identity['CategoryType'] == 'Player': 
 		PlayerInfo.current_map = map
-		object_identity['Map ID'] = map.get_map_server_id()
+	
+	object_identity['Map ID'] = map.get_map_server_id()
 	
 	parent_map = map
 	turn_timer = map.get_turn_timer()

@@ -29,4 +29,4 @@ func collect_item(tile_objects):
 		if object.get_id()['CategoryType'] == 'Player':
 			item_owner = object
 			object.inventory.add_to_inventory(self)
-			parent_map.remove_map_object(self)
+			Server.object_action_event(object_identity, {"Command Type": "Remove From Map"})

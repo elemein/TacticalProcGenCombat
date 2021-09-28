@@ -124,6 +124,7 @@ func spawn_map_object(object_name, map, map_pos, visibility):
 		'BaseStairs': object_scene = base_stairs
 		'BaseGround': object_scene = base_ground
 		'BaseWall': object_scene = base_wall
+		'Spike Trap': object_scene = base_spiketrap
 			
 	var object = create_object(object_scene, map, map_pos, visibility)
 	

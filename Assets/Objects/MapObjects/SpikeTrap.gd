@@ -16,6 +16,7 @@ func activate_trap(tile_objects):
 	for object in tile_objects:
 		if object.get_id()['CategoryType'] == 'Player':
 			if sprung == false: # only spring if not already sprung
+				Server.object_action_event(object_identity, {"Command Type": "Spawn On Map"})
 				sprung = true
 				visible = true
 				object.take_damage(trap_damage, false)
@@ -27,5 +28,4 @@ func activate_trap(tile_objects):
 				$Tween.start()
 
 func _on_tween_complete(_tween_object, _tween_node_path):
-	parent_map.remove_map_object(self)
-	self.queue_free()
+	Server.object_action_event(object_identity, {"Command Type": "Remove From Map"})
