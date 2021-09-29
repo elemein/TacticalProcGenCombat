@@ -87,10 +87,10 @@ func move_to_map(object, mapset_name, target_map_id):
 	
 	first_turn_workaround_for_player_sight()
 	
-	Server.object_action_event(object.get_id(), {"Command Type": "Spawn On Map"})
-	
 	if object.get_id()['NetID'] != 1:
 		Server.move_client_to_map(object, targ_map)
+	
+	Server.object_action_event(object.get_id(), {"Command Type": "Spawn On Map"})
 	
 func first_turn_workaround_for_player_sight():
 	player.viewfield = player.view_finder.find_view_field(player.get_map_pos()[0], player.get_map_pos()[1])

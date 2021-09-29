@@ -149,7 +149,8 @@ remote func receive_object_action_event(object_id, action):
 			map.remove_map_object(object)
 		'Spawn On Map': # Only for client. Server must spawn objects directly.
 			if GlobalVars.peer_type == 'client':
-				spawn_object_in_map(object_id)
+				if object_id['Instance ID'] != GlobalVars.self_instanceID:
+					spawn_object_in_map(object_id)
 			
 # -----------------------------------------------------
 
@@ -245,12 +246,10 @@ remote func receive_map_object_event(map_id, map_action):
 #
 func move_client_to_map(client_obj, map):
 	get_map_from_map_id(client_obj.get_id()['Map ID']).get_turn_timer().remove_from_timer_group(client_obj)
-	client_obj.update_id('Map ID', 0)
 	rpc_id(client_obj.get_id()['NetID'], 'prepare_for_map_change', map.get_map_server_id())
 #
 remote func prepare_for_map_change(map_id):
 	GlobalVars.in_loading = true
-	GlobalVars.self_instanceObj.update_id('Map ID', 0)
 	
 	var world = get_node("/root/World")
 	world.clear_play_map()
