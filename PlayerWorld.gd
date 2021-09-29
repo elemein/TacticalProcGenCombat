@@ -80,7 +80,7 @@ func unpack_map(map_data):
 						match object['CategoryType']:
 							'Enemy':
 								new_object = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
-							'Weapon', 'Accessory':
+							'Weapon', 'Accessory', 'Armour':
 								new_object = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
 							'Coins':
 								new_object = GlobalVars.plyr_obj_spawner.spawn_gold(object['Gold Value'], plyr_play_map, [x,z], false)

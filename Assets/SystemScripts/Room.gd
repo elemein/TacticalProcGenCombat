@@ -69,7 +69,7 @@ func count_enemies_in_room():
 					if obj.get_is_dead() == false:
 						temp_count += 1
 	enemy_count = temp_count
-	print("Enemies detected in room: " + str(enemy_count))
+#	print("Enemies detected in room: " + str(enemy_count))
 
 func block_exits():
 	for exit in exits:

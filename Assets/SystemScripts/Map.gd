@@ -214,6 +214,7 @@ func return_map_grid_encoded_to_string():
 			for obj in range(map_grid[x][z].size()):
 				to_return[x][z].append([])
 				to_return[x][z][obj].append(map_grid[x][z][obj].get_id())
+#				print(map_grid[x][z][obj].get_id()['Identifier'])
 
 	return to_return
 
