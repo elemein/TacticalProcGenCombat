@@ -41,10 +41,14 @@ var lantern_light_effect = preload("res://Assets/Objects/Effects/Lantern/Lantern
 
 func create_object(object_scene, map, map_pos, visibility) -> Object:
 	var object = object_scene.instance()
-	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
 	object.visible = visibility
+	
+	# If the map/map_pos = 'Inventory' (i.e. a string), do not designate a map.
+	if typeof(map) == TYPE_STRING: return object
+		
 	object.set_map_pos([map_pos[0], map_pos[1]])
 	object.set_parent_map(map)
+	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
 	map.add_map_object(object)
 	
 	return object

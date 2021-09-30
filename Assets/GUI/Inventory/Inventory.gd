@@ -211,6 +211,12 @@ func make_action_option_list() -> Array:
 
 func build_inv_from_list(inv_list):
 	for item in inv_list:
+		if GlobalVars.peer_type == 'client':
+			var new_item = GlobalVars.obj_spawner.\
+			spawn_item(item['Identifier'], 'Inventory', 'Inventory', false)
+			new_item.set_id(item)
+			inventory_objects.append(new_item)
+		
 		var new_object = INVENTORY_OBJECT.instance()
 		inventory_ui_slots.add_child(new_object)
 		ui_objects.append(new_object)
@@ -223,6 +229,7 @@ func reset_inv_ui():
 		inventory_ui_slots.remove_child(item)
 		item.queue_free()
 
+	inventory_objects = []
 	ui_objects = []
 
 func add_to_inventory(object):

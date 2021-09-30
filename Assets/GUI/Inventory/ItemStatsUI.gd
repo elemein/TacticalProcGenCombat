@@ -19,6 +19,7 @@ func show_stat_window():
 	item_stats = []
 	var inventory_objects = get_parent().inventory_objects
 	var inv_selector_index = get_parent().inv_selector_index
+	
 	if inventory_objects.size() > 0:
 		for stat_info in inventory_objects[inv_selector_index].get_stats():
 			var amount = stat_info[0]
