@@ -61,24 +61,26 @@ func _physics_process(_delta):
 		
 		if turn_timer.get_turn_in_process() == true: return # lock out while in turn
 		
-		if Input.is_action_just_pressed("tab"):
-			if inventory_ui.visible == false: open_inv_ui()
-			else: close_inv_ui()
-		
-		if inventory_ui.visible == true:
-			if inventory_objects.size() > 0:
-				if Input.is_action_just_pressed("w"):
-					if !object_action_menu_open: move_inv_selector(-1)
-					elif object_action_menu_open: move_actmenu_selector(-1)
-				if Input.is_action_just_pressed("s"):
-					if !object_action_menu_open: move_inv_selector(1)
-					elif object_action_menu_open: move_actmenu_selector(1)
-				if Input.is_action_just_pressed("e"):
-					if !object_action_menu_open: open_object_action_menu()
-					elif object_action_menu_open: handle_action_menu()
-				if Input.is_action_just_pressed("q"):
-					if !object_action_menu_open: close_inv_ui()
-					elif object_action_menu_open: close_object_action_menu()
+		if is_players_inventory():
+			if Input.is_action_just_pressed("tab"):
+				Server.request_for_inventory()
+			
+			if inventory_ui.visible == true:
+				if inventory_objects.size() > 0:
+					if Input.is_action_just_pressed("w"):
+						if !object_action_menu_open: move_inv_selector(-1)
+						elif object_action_menu_open: move_actmenu_selector(-1)
+					if Input.is_action_just_pressed("s"):
+						if !object_action_menu_open: move_inv_selector(1)
+						elif object_action_menu_open: move_actmenu_selector(1)
+					if Input.is_action_just_pressed("e"):
+						if !object_action_menu_open: open_object_action_menu()
+						elif object_action_menu_open: handle_action_menu()
+					if Input.is_action_just_pressed("q"):
+						if !object_action_menu_open: close_inv_ui()
+						elif object_action_menu_open: close_object_action_menu()
+
+func is_players_inventory(): return inventory_owner.get_id()['Instance ID'] == GlobalVars.self_instanceID
 
 func handle_action_menu():
 	match object_action_menu.get_node("MenuHolder").get_children()[actmenu_selector_index].text:
@@ -207,18 +209,26 @@ func make_action_option_list() -> Array:
 	
 	return optionlist
 
+func build_inv_from_list(inv_list):
+	for item in inv_list:
+		var new_object = INVENTORY_OBJECT.instance()
+		inventory_ui_slots.add_child(new_object)
+		ui_objects.append(new_object)
+		new_object.set_object_text(item['Identifier'])
+		new_object.set_object_type(item['CategoryType'])
+#		new_object.set_equipped(false)
+
+func reset_inv_ui():
+	for item in inventory_ui_slots.get_children():
+		inventory_ui_slots.remove_child(item)
+		item.queue_free()
+
+	ui_objects = []
+
 func add_to_inventory(object):
 	inventory_objects.append(object)
-	
-	var new_object = INVENTORY_OBJECT.instance()
-	inventory_ui_slots.add_child(new_object)
-	ui_objects.append(new_object)
-	new_object.set_object_text(object.get_inv_item_name())
-	new_object.set_object_type(object.get_inv_item_type())
-	new_object.set_equipped(false)
 
 func remove_from_inventory(object):
-	
 	var idx = -1
 	
 	for item in inventory_objects:
@@ -327,3 +337,9 @@ func get_inventory_objects() -> Array:
 
 func get_item_to_act_on() -> Object:
 	return item_to_act_on
+
+func return_inventory_as_list():
+	var to_return = []
+	for item in inventory_objects:
+		to_return.append(item.get_id())
+	return to_return
