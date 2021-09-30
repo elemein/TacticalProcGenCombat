@@ -94,6 +94,8 @@ func get_input():
 #		# We don't wanna collect input if turn in action or in inventory or
 #		# while smoothing input.
 #		return
+
+	if inventory_open: return
 	
 	if Input.is_action_just_pressed('tab'): 
 		if inventory_open: inventory_open = false
