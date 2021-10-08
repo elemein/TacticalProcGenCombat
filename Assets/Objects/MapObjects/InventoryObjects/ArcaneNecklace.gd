@@ -8,13 +8,18 @@ var identity = {"Category": "Inv Item", "CategoryType": 'Accessory' ,
 func _init().(identity):
 	pass
 
+func _ready():
+	inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/ArcaneNecklace_x76.png")
+
 var spell_power_bonus = 5
 
 func equip_object():
 	item_owner.set_spell_power(item_owner.get_spell_power() + spell_power_bonus)
+	item_owner.inventory[self]['equipped'] = true
 
 func unequip_object():
 	item_owner.set_spell_power(item_owner.get_spell_power() - spell_power_bonus)
+	item_owner.inventory[self]['equipped'] = false
 	
 func get_stats():
 	return [[5, "spl pwr"]]

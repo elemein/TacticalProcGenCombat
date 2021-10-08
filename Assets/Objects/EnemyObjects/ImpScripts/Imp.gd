@@ -1,7 +1,6 @@
 extends ActorObj
 
 const IMP_AI = preload("res://Assets/Objects/EnemyObjects/ImpScripts/ImpAI.gd")
-const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
 
 var rng = RandomNumberGenerator.new()
 
@@ -16,8 +15,6 @@ var loot_dropped = false
 # object vars
 var ai_engine = IMP_AI.new()
 var obj_spawner = GlobalVars.obj_spawner
-
-var inventory = INVENTORY.instance()
 
 var minimap_icon = 'Imp'
 
@@ -46,9 +43,6 @@ func setup_actor():
 	add_child(mover)
 	mover.set_actor(self)
 	
-	add_child(inventory)
-	inventory.setup_inventory(self)
-	
 	add_loot_to_inventory()
 
 func _physics_process(_delta):
@@ -67,7 +61,7 @@ func add_loot_to_inventory():
 	var loot_seed = rng.randi_range(1, 100)
 	
 	if loot_seed <= 49: # Gold Spawn 
-		inventory.add_to_gold(rng.randi_range(1,50))
+		gold += rng.randi_range(1,50)
 		loot_to_drop.append('Gold') 
 		
 	elif (50 <= loot_seed) and (loot_seed <= 59): loot_to_drop.append("Sword")
@@ -79,9 +73,9 @@ func add_loot_to_inventory():
 	
 func drop_loot():
 	if loot_to_drop[0] == 'Gold':
-		var gold = obj_spawner.spawn_gold(inventory.get_gold_total(), parent_map, map_pos, true)
-		Server.object_action_event(gold.get_id(), {"Command Type": "Spawn On Map"})
-		inventory.subtract_from_gold(inventory.get_gold_total())
+		var gold_obj = obj_spawner.spawn_gold(gold, parent_map, map_pos, true)
+		Server.object_action_event(gold_obj.get_id(), {"Command Type": "Spawn On Map"})
+		gold = 0
 	else:
 		var loot = obj_spawner.spawn_item(loot_to_drop[0], parent_map, map_pos, true)
 		Server.object_action_event(loot.get_id(), {"Command Type": "Spawn On Map"})

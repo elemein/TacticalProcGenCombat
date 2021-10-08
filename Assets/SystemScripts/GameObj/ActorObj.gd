@@ -59,6 +59,8 @@ var stat_dict = {"Max HP" : 0, "HP" : 0, "Max MP": 0, "MP": 0, \
 				"HP Regen" : 0, "MP Regen": 0, "Attack Power" : 0, \
 				"Crit Chance" : 0, "Spell Power" : 0, "Defense" : 0, \
 				"Speed": 0, "View Range" : 0}
+var inventory = {}
+var gold = 0
 
 func _ready():
 	play_anim('idle')
@@ -331,3 +333,9 @@ func set_graphics(graphics_node):
 	add_child(graphics_node)
 	model = graphics_node
 	anim = graphics_node.find_node("AnimationPlayer")
+	
+func equip_item(item):
+	inventory[item]['equipped'] = true
+
+func unequip_item(item):
+	inventory[item]['equipped'] = false

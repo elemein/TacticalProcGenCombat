@@ -4,8 +4,6 @@ const DIRECTION_SELECT_TIME = 0.27
 const DIAGONAL_INPUT_SMOOTHING_TIME = 0.1
 const INPUT_CONFIRMATION_SMOOTHING_TIME = 0.1
 
-const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
-
 var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 				"HP Regen" : 1, "MP Regen": 6, "Attack Power" : 10, \
 				"Crit Chance": 5, "Spell Power" : 20, "Defense" : 0, \
@@ -17,9 +15,6 @@ var input_smoothing_timer = Timer.new()
 
 # inventory vars
 var inventory_open = false
-
-# object vars
-var inventory = INVENTORY.instance()
 
 var minimap_icon = "Player"
 

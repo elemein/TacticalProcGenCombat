@@ -4,8 +4,6 @@ const DIRECTION_SELECT_TIME = 0.27
 const DIAGONAL_INPUT_SMOOTHING_TIME = 0.1
 const INPUT_CONFIRMATION_SMOOTHING_TIME = 0.1
 
-const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
-
 signal prepare_gui(stats)
 
 var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
@@ -16,12 +14,6 @@ var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 # movement and positioning related vars
 var directional_timer = Timer.new()
 var input_smoothing_timer = Timer.new()
-
-# inventory vars
-var inventory_open = false
-
-# object vars
-var inventory = INVENTORY.instance()
 
 var minimap_icon = "Player"
 
@@ -58,9 +50,6 @@ func _ready():
 func add_sub_nodes_as_children():
 	add_child(mover)
 	mover.set_actor(self)
-	
-	add_child(inventory)
-	inventory.setup_inventory(self)
 
 func _physics_process(_delta):
 	if is_dead == false:
@@ -97,16 +86,6 @@ func smooth_move_confirm_input():
 func get_input():
 	smooth_diagonal_input()
 	smooth_move_confirm_input()
-	
-	if (turn_timer.get_turn_in_process() == true) or (inventory_open) or \
-	(input_smoothing_timer.time_left > 0): 
-		# We don't wanna collect input if turn in action or in inventory or
-		# while smoothing input.
-		return
-	
-	if Input.is_action_just_pressed('tab'): 
-		if inventory_open: inventory_open = false
-		elif !inventory_open: inventory_open = true
 	
 	var no_of_inputs = 0
 	
@@ -207,18 +186,4 @@ func get_input():
 
 func set_direction(direction):
 	set_actor_dir(direction)
-	directional_timer.start(DIRECTION_SELECT_TIME) 
-
-# Getters
-func get_inventory_open() -> bool:
-	return inventory_open
-
-func get_inventory_object() -> Object:
-	return inventory
-
-func get_item_to_drop() -> Object:
-	return inventory.get_item_to_drop()
-
-#Setters
-func set_inventory_open(state):
-	inventory_open = state
+	directional_timer.start(DIRECTION_SELECT_TIME)
