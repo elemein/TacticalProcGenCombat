@@ -7,6 +7,9 @@ var identity = {"Category": "Inv Item", "CategoryType": 'Weapon' ,
 
 func _init().(identity):
 	pass
+	
+func _ready():
+	inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/MagicStaff_x76.png")
 
 var spell_power_bonus = 10
 

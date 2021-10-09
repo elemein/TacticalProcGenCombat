@@ -7,6 +7,9 @@ var identity = {"Category": "Inv Item", "CategoryType": 'Armour' ,
 
 func _init().(identity):
 	pass
+	
+func _ready():
+	inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.png")
 
 var defense_bonus = 10
 var attack_power_bonus = 5

@@ -45,6 +45,7 @@ func _ready():
 		
 	else:
 		Server.player_list.append(GlobalVars.server_player)
+	Signals.emit_signal("world_loaded")
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):
 	var targ_mapset

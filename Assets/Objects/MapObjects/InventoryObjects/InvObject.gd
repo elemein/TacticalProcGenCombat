@@ -9,7 +9,7 @@ var equippable
 var usable
 
 var minimap_icon = null
-var inventory_icon = preload('res://Assets/GUI/NewInventory/ItemPlaceholder.png')
+var inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/placeholder_x76.png")
 
 func _init(identity).(identity):
 	pass
