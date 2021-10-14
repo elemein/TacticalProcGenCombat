@@ -59,8 +59,9 @@ var stat_dict = {"Max HP" : 0, "HP" : 0, "Max MP": 0, "MP": 0, \
 				"HP Regen" : 0, "MP Regen": 0, "Attack Power" : 0, \
 				"Crit Chance" : 0, "Spell Power" : 0, "Defense" : 0, \
 				"Speed": 0, "View Range" : 0}
-var inventory = {}
-var gold = 0
+var inventory : Dictionary = {}
+var __server_inventory : Dictionary = {}
+var gold : int = 0
 
 func _ready():
 	play_anim('idle')
@@ -339,3 +340,18 @@ func equip_item(item):
 
 func unequip_item(item):
 	inventory[item]['equipped'] = false
+	
+func build_inv_from_server(inventory):
+	for item in inventory:
+		if not item.object_id in __server_inventory:
+			if GlobalVars.peer_type == 'client':
+				
+				# Create the item
+				var new_item = GlobalVars.obj_spawner.\
+				spawn_item(inventory[item]['description'], 'Inventory', 'Inventory', false)
+				__server_inventory[item.object_id] = new_item
+				
+				# Add to the player's inventory
+				GlobalVars.server_player.inventory[new_item] = {'equipped': false, 'description': new_item['identity']['Identifier']}
+				new_item.item_owner = GlobalVars.server_player
+				

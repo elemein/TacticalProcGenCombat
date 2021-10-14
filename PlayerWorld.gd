@@ -24,6 +24,7 @@ func _ready():
 	unpack_map(GlobalVars.server_map_data)
 	
 	first_turn_workaround_for_player_sight()
+	Signals.emit_signal("world_loaded")
 
 func clear_play_map():
 	for child in plyr_play_map.get_children():

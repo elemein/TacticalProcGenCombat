@@ -155,18 +155,14 @@ remote func receive_object_action_event(object_id, action):
 # -----------------------------------------------------
 
 func request_for_inventory():
-	if GlobalVars.self_instanceObj.inventory.inventory_ui.visible == false:
-		if GlobalVars.self_netID == 1:
-			send_inventory_to_requester(GlobalVars.self_instanceObj.get_id())
-		else:	
-			rpc_id(1, "send_inventory_to_requester", GlobalVars.self_instanceObj.get_id())
-	else:
-		GlobalVars.self_instanceObj.inventory.reset_inv_ui()
-		GlobalVars.self_instanceObj.inventory.close_inv_ui()
+	if GlobalVars.self_netID == 1:
+		send_inventory_to_requester(GlobalVars.self_instanceObj.get_id())
+	else:	
+		rpc_id(1, "send_inventory_to_requester", GlobalVars.self_instanceObj.get_id())
 
 remote func send_inventory_to_requester(requester_id):
 	var inventory_owner = instance_from_id(requester_id['Instance ID'])
-	var inventory = inventory_owner.inventory.return_inventory_as_list()
+	var inventory = inventory_owner.inventory
 
 	if requester_id['NetID'] == 1:
 		receive_inventory_from_server(inventory)
@@ -176,8 +172,7 @@ remote func send_inventory_to_requester(requester_id):
 remote func receive_inventory_from_server(inventory):
 	for item in inventory:
 		print(item)
-	GlobalVars.self_instanceObj.inventory.build_inv_from_list(inventory)
-	GlobalVars.self_instanceObj.inventory.open_inv_ui()
+	GlobalVars.self_instanceObj.build_inv_from_server(inventory)
 
 # CHANGING STAT COMMANDS -------------------------------
 # Prompt to all clients to change a given actor's stat.
