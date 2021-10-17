@@ -12,14 +12,6 @@ func _ready():
 	inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/MagicStaff_x76.png")
 
 var spell_power_bonus = 10
-
-func equip_object():
-	item_owner.set_spell_power(item_owner.get_spell_power() + spell_power_bonus)
-	item_owner.inventory[self]['equipped'] = true
-
-func unequip_object():
-	item_owner.set_spell_power(item_owner.get_spell_power() - spell_power_bonus)
-	item_owner.inventory[self]['equipped'] = false
 	
 func get_stats():
 	return [[spell_power_bonus, "spl pwr"]]

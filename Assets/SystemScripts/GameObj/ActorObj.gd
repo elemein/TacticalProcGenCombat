@@ -60,6 +60,7 @@ var stat_dict = {"Max HP" : 0, "HP" : 0, "Max MP": 0, "MP": 0, \
 				"Crit Chance" : 0, "Spell Power" : 0, "Defense" : 0, \
 				"Speed": 0, "View Range" : 0}
 var inventory : Dictionary = {}
+var selected_item : InvObject = null
 var __server_inventory : Dictionary = {}
 var gold : int = 0
 
@@ -133,12 +134,15 @@ func process_turn():
 	elif proposed_action == 'self heal':
 		Server.object_action_event(object_identity, {"Command Type": "Self Heal"})
 		
-	elif proposed_action == 'drop item':
-		emit_signal("action_drop_item")
-	elif proposed_action == 'equip item':
-		emit_signal("action_equip_item")
-	elif proposed_action == 'unequip item':
-		emit_signal("action_unequip_item")
+#	elif proposed_action == 'drop item':
+#		Server.request_for_player_action({"Command Type": "Drop Item", "Value": selected_item})
+##		emit_signal("action_drop_item")
+#	elif proposed_action == 'equip item':
+#		Server.request_for_player_action({"Command Type": "Equip Item", "Value": selected_item})
+##		emit_signal("action_equip_item")
+#	elif proposed_action == 'unequip item':
+#		Server.request_for_player_action({"Command Type": "Enequip Item", "Value": selected_item})
+##		emit_signal("action_unequip_item")
 
 	turn_regen()
 
@@ -335,11 +339,18 @@ func set_graphics(graphics_node):
 	model = graphics_node
 	anim = graphics_node.find_node("AnimationPlayer")
 	
-func equip_item(item):
-	inventory[item]['equipped'] = true
+func equip_item(item : InvObject):
+	# Unequip different item from same category
+	for existing_item in inventory:
+		if inventory[existing_item]['equipped'] \
+		and existing_item.get_id()['CategoryType'] == item.get_id()['CategoryType']:
+			inventory[existing_item]['equipped'] = false
+			existing_item.unequip_item()
+	
+	item.equip_item()
 
-func unequip_item(item):
-	inventory[item]['equipped'] = false
+func unequip_item(item : InvObject):
+	item.unequip_item()
 	
 func build_inv_from_server(inventory):
 	for item in inventory:
@@ -352,6 +363,6 @@ func build_inv_from_server(inventory):
 				__server_inventory[item.object_id] = new_item
 				
 				# Add to the player's inventory
-				GlobalVars.server_player.inventory[new_item] = {'equipped': false, 'description': new_item['identity']['Identifier']}
+				GlobalVars.server_player.inventory[new_item] = {'equipped': false, 'description': new_item['identity']['Identifier'], 'server_id': item}
 				new_item.item_owner = GlobalVars.server_player
 				

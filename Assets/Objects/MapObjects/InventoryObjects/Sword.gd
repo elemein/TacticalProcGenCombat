@@ -12,14 +12,6 @@ func _ready():
 	inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/sword_x76.png")
 
 var attack_power_bonus = 20
-
-func equip_object():
-	item_owner.set_attack_power(item_owner.get_attack_power() + attack_power_bonus)
-	item_owner.inventory[self]['equipped'] = true
-
-func unequip_object():
-	item_owner.set_attack_power(item_owner.get_attack_power() - attack_power_bonus)
-	item_owner.inventory[self]['equipped'] = false
 	
 func get_stats():
 	return [[attack_power_bonus, "atk pwr"]]

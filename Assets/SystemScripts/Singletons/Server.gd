@@ -44,7 +44,7 @@ func request_for_player_action(request):
 # Server handles query for action.
 remote func query_for_action(requester, request):
 	var player_id = requester
-	var player_obj
+	var player_obj : ActorObj
 	var player_identity
 	var player_turn_timer
 	
@@ -99,6 +99,18 @@ remote func query_for_action(requester, request):
 				else: 
 					player_obj.find_node("SelfHeal").out_of_mana.play()
 			else: print('Discarding illegal heal request from ' + str(player_id))
+			
+		'Drop Item':
+			if (player_turn_timer.get_time_left() == 0):
+				var item = player_obj.inventory  # Get the item based on the ID given
+				player_obj.drop_item(instance_from_id(request['Value']))
+		'Equip Item':
+			if (player_turn_timer.get_time_left() == 0):
+				player_obj.equip_item(instance_from_id(request['Value']))
+		'Unequip Item':
+			if (player_turn_timer.get_time_left() == 0):
+				player_obj.unequip_item(instance_from_id(request['Value']))
+	
 # Duplicate the object's resources to send out, and prompt all clients to receive command.
 func object_action_event(object_id, action):
 	var orig_object_id = object_id.duplicate(true)
