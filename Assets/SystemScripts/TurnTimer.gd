@@ -56,6 +56,12 @@ func _on_Turn_Delay_Timer_timeout():
 		turn_delay_timer.start()
 		
 		Signals.emit_signal("round_start")
+	
+	# Send the state of the game to the player after every turn
+	for remote_player in Server.player_list:
+		if remote_player.get_id()['NetID'] != 1:
+			Server.send_inventory_to_requester(remote_player.get_id())
+			Server.update_all_actor_stats(remote_player.get_id())
 
 func wait_for_actor_anims_and_delay_timer_to_end():
 	var all_done = true

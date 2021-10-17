@@ -102,14 +102,19 @@ remote func query_for_action(requester, request):
 			
 		'Drop Item':
 			if (player_turn_timer.get_time_left() == 0):
-				var item = player_obj.inventory  # Get the item based on the ID given
-				player_obj.drop_item(instance_from_id(request['Value']))
+				player_obj.selected_item = instance_from_id(request['Value'])
+				player_obj.set_action('drop item')
+			else: print('Discarding drop item request from ' + str(player_id))
 		'Equip Item':
 			if (player_turn_timer.get_time_left() == 0):
-				player_obj.equip_item(instance_from_id(request['Value']))
+				player_obj.selected_item = instance_from_id(request['Value'])
+				player_obj.set_action('equip item')
+			else: print('Discarding equip item request from ' + str(player_id))
 		'Unequip Item':
 			if (player_turn_timer.get_time_left() == 0):
-				player_obj.unequip_item(instance_from_id(request['Value']))
+				player_obj.selected_item = instance_from_id(request['Value'])
+				player_obj.set_action('unequip item')
+			else: print('Discarding unequip item request from ' + str(player_id))
 	
 # Duplicate the object's resources to send out, and prompt all clients to receive command.
 func object_action_event(object_id, action):

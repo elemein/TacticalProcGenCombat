@@ -134,15 +134,12 @@ func process_turn():
 	elif proposed_action == 'self heal':
 		Server.object_action_event(object_identity, {"Command Type": "Self Heal"})
 		
-#	elif proposed_action == 'drop item':
-#		Server.request_for_player_action({"Command Type": "Drop Item", "Value": selected_item})
-##		emit_signal("action_drop_item")
-#	elif proposed_action == 'equip item':
-#		Server.request_for_player_action({"Command Type": "Equip Item", "Value": selected_item})
-##		emit_signal("action_equip_item")
-#	elif proposed_action == 'unequip item':
-#		Server.request_for_player_action({"Command Type": "Enequip Item", "Value": selected_item})
-##		emit_signal("action_unequip_item")
+	elif proposed_action == 'drop item':
+		selected_item.drop_item()
+	elif proposed_action == 'equip item':
+		selected_item.equip_item()
+	elif proposed_action == 'unequip item':
+		selected_item.unequip_item()
 
 	turn_regen()
 
@@ -351,7 +348,7 @@ func equip_item(item : InvObject):
 
 func unequip_item(item : InvObject):
 	item.unequip_item()
-	
+
 func build_inv_from_server(inventory):
 	for item in inventory:
 		if not item.object_id in __server_inventory:
@@ -363,6 +360,17 @@ func build_inv_from_server(inventory):
 				__server_inventory[item.object_id] = new_item
 				
 				# Add to the player's inventory
-				GlobalVars.server_player.inventory[new_item] = {'equipped': false, 'description': new_item['identity']['Identifier'], 'server_id': item}
+				GlobalVars.server_player.inventory[new_item] = {'equipped': inventory[item]['equipped'], 'description': new_item['identity']['Identifier'], 'server_id': item.object_id}
 				new_item.item_owner = GlobalVars.server_player
-				
+		else:
+			GlobalVars.server_player.inventory[__server_inventory[item.object_id]]['equipped'] = inventory[item]['equipped']
+			
+	# Remove items no longer in inventory
+	var server_item_ids = []
+	for server_item_id in inventory:
+		server_item_ids.append(server_item_id.object_id)
+	for item in GlobalVars.server_player.inventory:
+		var server_id = GlobalVars.server_player.inventory[item]['server_id']
+		if not server_id in server_item_ids:
+			GlobalVars.server_player.inventory.erase(item)
+			__server_inventory.erase(server_id)
