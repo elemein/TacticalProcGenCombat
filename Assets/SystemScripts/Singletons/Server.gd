@@ -187,9 +187,17 @@ remote func send_inventory_to_requester(requester_id):
 		rpc_id(requester_id['NetID'], "receive_inventory_from_server", inventory)
 
 remote func receive_inventory_from_server(inventory):
-	for item in inventory:
-		print(item)
 	GlobalVars.self_instanceObj.build_inv_from_server(inventory)
+	
+# CHANGING STAT COMMANDS -------------------------------
+# This is a duplicate from below. More bandwidth but easier to maintain
+func update_all_actor_stats(object_id):
+	for player in player_list:
+		if not player.get_id()['NetID'] == 1 and object_id['Map ID'] == player.get_id()['Map ID']:
+			rpc_id(player.get_id()['NetID'], 'receive_update_all_actor_stats', object_id, player.stat_dict)
+remote func receive_update_all_actor_stats(object_id, new_stat_dict):
+	var object = get_object_from_identity(object_id)
+	object.stat_dict = new_stat_dict
 
 # CHANGING STAT COMMANDS -------------------------------
 # Prompt to all clients to change a given actor's stat.
