@@ -139,30 +139,30 @@ func get_input():
 		if no_of_inputs > 1:
 			if Input.is_action_pressed("w") && Input.is_action_pressed("a"): 
 				if check_move_action('move upleft'):
-					set_action('move upleft')
+					Server.request_for_player_action({"Command Type": "Move", "Value": "upleft"})
 			if Input.is_action_pressed("w") && Input.is_action_pressed("d"): 
 				if check_move_action('move upright'):
-					set_action('move upright')
+					Server.request_for_player_action({"Command Type": "Move", "Value": "upright"})
 			if Input.is_action_pressed("s") && Input.is_action_pressed("a"): 
 				if check_move_action('move downleft'):
-					set_action('move downleft')
+					Server.request_for_player_action({"Command Type": "Move", "Value": "downleft"})
 			if Input.is_action_pressed("s") && Input.is_action_pressed("d"): 
 				if check_move_action('move downright'):
-					set_action('move downright')
+					Server.request_for_player_action({"Command Type": "Move", "Value": "downright"})
 		
 		if no_of_inputs == 1:
 			if Input.is_action_pressed("w"): 
 				if check_move_action('move up'):
-					set_action('move up')
+					Server.request_for_player_action({"Command Type": "Move", "Value": "up"})
 			if Input.is_action_pressed("s"): 
 				if check_move_action('move down'):
-					set_action('move down')
+					Server.request_for_player_action({"Command Type": "Move", "Value": "down"})
 			if Input.is_action_pressed("a"):
 				if check_move_action('move left'):
-					set_action('move left')
+					Server.request_for_player_action({"Command Type": "Move", "Value": "left"})
 			if Input.is_action_pressed("d"): 
 				if check_move_action('move right'):
-					set_action('move right')
+					Server.request_for_player_action({"Command Type": "Move", "Value": "right"})
 	
 	# X to skip your turn.
 	if Input.is_action_pressed("x"): 
