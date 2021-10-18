@@ -81,7 +81,7 @@ remote func query_for_action(requester, request):
 				if (player_obj.get_mp() > player_obj.find_node("Fireball").spell_cost):
 					player_obj.set_action("fireball")
 				else: 
-					player_obj.find_node("Fireball").out_of_mana.play()
+					send_action_request_confirm(player_obj.get_id(), "DenyOOM")
 			else: print('Discarding illegal fireball request from ' + str(player_id))
 
 		'Dash':
@@ -89,7 +89,7 @@ remote func query_for_action(requester, request):
 				if (player_obj.get_mp() > player_obj.find_node("Dash").spell_cost):
 					player_obj.set_action("dash")
 				else: 
-					player_obj.find_node("Dash").out_of_mana.play()
+					send_action_request_confirm(player_obj.get_id(), "DenyOOM")
 			else: print('Discarding illegal dash request from ' + str(player_id))
 
 		'Self Heal':
@@ -97,7 +97,7 @@ remote func query_for_action(requester, request):
 				if (player_obj.get_mp() > player_obj.find_node("SelfHeal").spell_cost):
 					player_obj.set_action("self heal")
 				else: 
-					player_obj.find_node("SelfHeal").out_of_mana.play()
+					send_action_request_confirm(player_obj.get_id(), "DenyOOM")
 			else: print('Discarding illegal heal request from ' + str(player_id))
 			
 		'Drop Item':
@@ -115,7 +115,20 @@ remote func query_for_action(requester, request):
 				player_obj.selected_item = instance_from_id(request['Value'])
 				player_obj.set_action('unequip item')
 			else: print('Discarding unequip item request from ' + str(player_id))
+
+func send_action_request_confirm(actor_id, response):
+	if actor_id['NetID'] == 1:
+		receive_action_request_confirm(actor_id, response)
+	else:
+		rpc_id(actor_id['NetID'], "receive_action_request_confirm", actor_id, response)
+
+remote func receive_action_request_confirm(actor_id, response):
+	match response:
+		'DenyOOM':
+			var player_obj = get_player_obj_from_netid(actor_id['NetID'])
+			player_obj.find_node("SelfHeal").out_of_mana.play()
 	
+
 # Duplicate the object's resources to send out, and prompt all clients to receive command.
 func object_action_event(object_id, action):
 	var orig_object_id = object_id.duplicate(true)
