@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/LeatherCuirass.png-4492136587addd4e3d71f495eca1058f.stex"
+path="res://.import/LeatherCuirass_x76.png-067862c31a5e66cd911ffa8b95b9484a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.png"
-dest_files=[ "res://.import/LeatherCuirass.png-4492136587addd4e3d71f495eca1058f.stex" ]
+source_file="res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass_x76.png"
+dest_files=[ "res://.import/LeatherCuirass_x76.png-067862c31a5e66cd911ffa8b95b9484a.stex" ]
 
 [params]
 
