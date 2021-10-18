@@ -21,8 +21,16 @@ func connect_to_server():
 	peer.create_client(server_ip, server_port)
 	get_tree().network_peer = peer
 	get_tree().connect("connected_to_server", self, "_connected_ok")
+	get_tree().connect("connection_failed", self, "_connected_fail")
 	print("Connecting to server.")
 
 func _connected_ok():
 	print("Connected to server successfully.")
+	get_node('/root/IPInputScreen/MarginContainer/VBoxContainer/JoinServer').on_successful_connect()
 	Server.request_map_from_server()
+
+func _connected_fail():
+	print("Failed to connect to server.")
+	get_node('/root/IPInputScreen/MarginContainer/VBoxContainer/JoinServer').on_unsuccessful_connect()
+
+func set_server_ip(target_ip): server_ip = target_ip

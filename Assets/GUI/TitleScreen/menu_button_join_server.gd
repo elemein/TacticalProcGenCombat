@@ -14,7 +14,5 @@ func _on_button_mouse_entered():
 	grab_focus()
 	
 func _on_button_pressed():
-	GlobalVars.peer_type = 'server'
-	Client.connect_to_server()
-	reference_path = 'res://Assets/GUI/CharacterSelect/CharacterSelect.tscn'
+	reference_path = 'res://Assets/GUI/IPInputScreen/IPInputScreen.tscn'
 	var _result = get_tree().change_scene(reference_path)
