@@ -144,6 +144,12 @@ func process_turn():
 	turn_regen()
 
 	in_turn = true
+	
+	# Send the state of the game to the player after every turn
+	for remote_player in Server.player_list:
+		if remote_player.get_id()['NetID'] != 1:
+			Server.send_inventory_to_requester(self.get_id())
+			Server.update_all_actor_stats(self.get_id())
 
 func turn_regen():
 	# Apply any regen effects
