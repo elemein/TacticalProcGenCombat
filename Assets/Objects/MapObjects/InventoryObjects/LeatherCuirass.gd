@@ -6,21 +6,11 @@ var identity = {"Category": "Inv Item", "CategoryType": 'Armour' ,
 				'Map ID': null, 'Position': [0,0], 'Instance ID': get_instance_id()}
 
 func _init().(identity):
-	pass
+	inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass_x76.png")
 
 var defense_bonus = 10
 var attack_power_bonus = 5
 var spell_power_bonus = 5
-
-func equip_object():
-	item_owner.set_defense(item_owner.get_defense() + defense_bonus)
-	item_owner.set_attack_power(item_owner.get_attack_power() + attack_power_bonus)
-	item_owner.set_spell_power(item_owner.get_spell_power() + spell_power_bonus)
-
-func unequip_object():
-	item_owner.set_defense(item_owner.get_defense() - defense_bonus)
-	item_owner.set_attack_power(item_owner.get_attack_power() - attack_power_bonus)
-	item_owner.set_spell_power(item_owner.get_spell_power() - spell_power_bonus)
 	
 func get_stats():
 	return [[10, "def"], [5, "atk pwr"], [5, "spl pwr"]]

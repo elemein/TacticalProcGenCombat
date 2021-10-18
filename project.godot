@@ -94,6 +94,10 @@ enabled=PoolStringArray(  )
 
 singletons=[  ]
 
+[global]
+
+console=false
+
 [input]
 
 w={

@@ -21,5 +21,5 @@ func get_gold_value():
 func collect_item(tile_objects):
 	for object in tile_objects:
 		if object.get_id()['CategoryType'] == 'Player':
-			object.inventory.add_to_gold(self)
+			object.gold += value
 			Server.object_action_event(object_identity, {"Command Type": "Remove From Map"})

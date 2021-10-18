@@ -4,8 +4,6 @@ const DIRECTION_SELECT_TIME = 0.27
 const DIAGONAL_INPUT_SMOOTHING_TIME = 0.1
 const INPUT_CONFIRMATION_SMOOTHING_TIME = 0.1
 
-const INVENTORY = preload("res://Assets/GUI/Inventory/Inventory.tscn")
-
 var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 				"HP Regen" : 1, "MP Regen": 6, "Attack Power" : 10, \
 				"Crit Chance": 5, "Spell Power" : 20, "Defense" : 0, \
@@ -16,10 +14,7 @@ var directional_timer = Timer.new()
 var input_smoothing_timer = Timer.new()
 
 # inventory vars
-var inventory_open = false
-
-# object vars
-var inventory = INVENTORY.instance()
+#var inventory_open = false
 
 var minimap_icon = "Player"
 
@@ -50,8 +45,8 @@ func add_sub_nodes_as_children():
 	add_child(mover)
 	mover.set_actor(self)
 	
-	add_child(inventory)
-	inventory.setup_inventory(self)
+#	add_child(inventory)
+#	inventory.setup_inventory(self)
 
 func smooth_diagonal_input():
 	match direction_facing:
@@ -85,15 +80,15 @@ func set_direction(direction):
 	set_actor_dir(direction)
 
 # Getters
-func get_inventory_open() -> bool:
-	return inventory_open
-
-func get_inventory_object() -> Object:
-	return inventory
-
-func get_item_to_drop() -> Object:
-	return inventory.get_item_to_drop()
-
-#Setters
-func set_inventory_open(state):
-	inventory_open = state
+#func get_inventory_open() -> bool:
+#	return inventory_open
+#
+#func get_inventory_object() -> Object:
+#	return inventory
+#
+#func get_item_to_drop() -> Object:
+#	return inventory.get_item_to_drop()
+#
+##Setters
+#func set_inventory_open(state):
+#	inventory_open = state

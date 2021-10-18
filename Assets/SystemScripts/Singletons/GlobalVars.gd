@@ -6,13 +6,13 @@ var peer_type = null
 var server_mapset
 var server_map_data
 var server_map_name
-var server_player
+var server_player : ActorObj
 
 var total_mapsets = []
 
-var self_netID
+var self_netID : int
 var self_instanceID
-var self_instanceObj
+var self_instanceObj : ActorObj
 
 var in_loading = false
 

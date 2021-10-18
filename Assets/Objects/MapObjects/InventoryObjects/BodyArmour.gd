@@ -6,15 +6,9 @@ var identity = {"Category": "Inv Item", "CategoryType": 'Armour' ,
 				'Map ID': null, 'Position': [0,0], 'Instance ID': get_instance_id()}
 
 func _init().(identity):
-	pass
+	inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour_x76.png")
 
 var defense_bonus = 30
-
-func equip_object():
-	item_owner.set_defense(item_owner.get_defense() + defense_bonus)
-
-func unequip_object():
-	item_owner.set_defense(item_owner.get_defense() - defense_bonus)
 	
 func get_stats():
 	return [[30, "def"]]

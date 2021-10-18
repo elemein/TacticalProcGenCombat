@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Assets/GUI/StatusBar/HealthBar2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/GUI/StatusBar/ManaBar2D.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Assets/GUI/StatusBar/BaseAbility.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/GUI/MiniMap/MiniMap.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Assets/GUI/NewInventory/Inventory.tscn" type="PackedScene" id=7]
 
 [node name="StatusBar" type="Control"]
 anchor_right = 1.0
@@ -92,3 +93,9 @@ margin_right = 128.0
 margin_bottom = 128.0
 grow_horizontal = 0
 grow_vertical = 0
+
+[node name="Inventory" parent="." instance=ExtResource( 7 )]
+margin_left = 471.0
+margin_top = 305.0
+margin_right = 1129.0
+margin_bottom = 595.0

@@ -44,7 +44,7 @@ func request_for_player_action(request):
 # Server handles query for action.
 remote func query_for_action(requester, request):
 	var player_id = requester
-	var player_obj
+	var player_obj : ActorObj
 	var player_identity
 	var player_turn_timer
 	
@@ -99,6 +99,23 @@ remote func query_for_action(requester, request):
 				else: 
 					player_obj.find_node("SelfHeal").out_of_mana.play()
 			else: print('Discarding illegal heal request from ' + str(player_id))
+			
+		'Drop Item':
+			if (player_turn_timer.get_time_left() == 0):
+				player_obj.selected_item = instance_from_id(request['Value'])
+				player_obj.set_action('drop item')
+			else: print('Discarding drop item request from ' + str(player_id))
+		'Equip Item':
+			if (player_turn_timer.get_time_left() == 0):
+				player_obj.selected_item = instance_from_id(request['Value'])
+				player_obj.set_action('equip item')
+			else: print('Discarding equip item request from ' + str(player_id))
+		'Unequip Item':
+			if (player_turn_timer.get_time_left() == 0):
+				player_obj.selected_item = instance_from_id(request['Value'])
+				player_obj.set_action('unequip item')
+			else: print('Discarding unequip item request from ' + str(player_id))
+	
 # Duplicate the object's resources to send out, and prompt all clients to receive command.
 func object_action_event(object_id, action):
 	var orig_object_id = object_id.duplicate(true)
@@ -155,18 +172,14 @@ remote func receive_object_action_event(object_id, action):
 # -----------------------------------------------------
 
 func request_for_inventory():
-	if GlobalVars.self_instanceObj.inventory.inventory_ui.visible == false:
-		if GlobalVars.self_netID == 1:
-			send_inventory_to_requester(GlobalVars.self_instanceObj.get_id())
-		else:	
-			rpc_id(1, "send_inventory_to_requester", GlobalVars.self_instanceObj.get_id())
-	else:
-		GlobalVars.self_instanceObj.inventory.reset_inv_ui()
-		GlobalVars.self_instanceObj.inventory.close_inv_ui()
+	if GlobalVars.self_netID == 1:
+		send_inventory_to_requester(GlobalVars.self_instanceObj.get_id())
+	else:	
+		rpc_id(1, "send_inventory_to_requester", GlobalVars.self_instanceObj.get_id())
 
 remote func send_inventory_to_requester(requester_id):
 	var inventory_owner = instance_from_id(requester_id['Instance ID'])
-	var inventory = inventory_owner.inventory.return_inventory_as_list()
+	var inventory = inventory_owner.inventory
 
 	if requester_id['NetID'] == 1:
 		receive_inventory_from_server(inventory)
@@ -174,10 +187,18 @@ remote func send_inventory_to_requester(requester_id):
 		rpc_id(requester_id['NetID'], "receive_inventory_from_server", inventory)
 
 remote func receive_inventory_from_server(inventory):
-	for item in inventory:
-		print(item)
-	GlobalVars.self_instanceObj.inventory.build_inv_from_list(inventory)
-	GlobalVars.self_instanceObj.inventory.open_inv_ui()
+	if not GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+		GlobalVars.self_instanceObj.build_inv_from_server(inventory)
+	
+# CHANGING STAT COMMANDS -------------------------------
+# This is a duplicate from below. More bandwidth but easier to maintain
+func update_all_actor_stats(object_id):
+	for player in player_list:
+		if not player.get_id()['NetID'] == 1 and object_id['Map ID'] == player.get_id()['Map ID']:
+			rpc_id(player.get_id()['NetID'], 'receive_update_all_actor_stats', object_id, player.stat_dict)
+remote func receive_update_all_actor_stats(object_id, new_stat_dict):
+	var object = get_object_from_identity(object_id)
+	object.stat_dict = new_stat_dict
 
 # CHANGING STAT COMMANDS -------------------------------
 # Prompt to all clients to change a given actor's stat.

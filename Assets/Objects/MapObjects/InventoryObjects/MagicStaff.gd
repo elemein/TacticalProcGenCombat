@@ -6,15 +6,9 @@ var identity = {"Category": "Inv Item", "CategoryType": 'Weapon' ,
 				'Map ID': null, 'Position': [0,0], 'Instance ID': get_instance_id()}
 
 func _init().(identity):
-	pass
+	inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/MagicStaff_x76.png")
 
 var spell_power_bonus = 10
-
-func equip_object():
-	item_owner.set_spell_power(item_owner.get_spell_power() + spell_power_bonus)
-
-func unequip_object():
-	item_owner.set_spell_power(item_owner.get_spell_power() - spell_power_bonus)
 	
 func get_stats():
 	return [[spell_power_bonus, "spl pwr"]]

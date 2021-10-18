@@ -4,6 +4,9 @@ extends Node
 signal player_attack_power_updated(val)
 signal player_spell_power_updated(val)
 
+signal round_start()
+signal world_loaded()
+
 # Below will never be called but have it here to remove warnings
 func _to_string():
 	emit_signal("player_attack_power_updated", 0)

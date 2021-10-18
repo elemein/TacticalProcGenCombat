@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.gd" type="Script" id=1]
 [ext_resource path="res://Assets/SystemScripts/Actions/Fireball.gd" type="Script" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Assets/SystemScripts/Actions/UnequipItem.gd" type="Script" id=9]
 [ext_resource path="res://Assets/SystemScripts/Actions/Dash.gd" type="Script" id=10]
 [ext_resource path="res://Assets/SystemScripts/Actions/SelfHeal.gd" type="Script" id=11]
+[ext_resource path="res://Assets/SystemScripts/Actions/Inventory.gd" type="Script" id=12]
 
 [node name="Actions" type="Node"]
 script = ExtResource( 1 )
@@ -65,11 +66,14 @@ script = ExtResource( 10 )
 stream = ExtResource( 6 )
 unit_db = 80.0
 
-[node name="DropItem" type="Node" parent="."]
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource( 12 )
+
+[node name="DropItem" type="Node" parent="Inventory"]
 script = ExtResource( 7 )
 
-[node name="EquipItem" type="Node" parent="."]
+[node name="EquipItem" type="Node" parent="Inventory"]
 script = ExtResource( 8 )
 
-[node name="UnequipItem" type="Node" parent="."]
+[node name="UnequipItem" type="Node" parent="Inventory"]
 script = ExtResource( 9 )

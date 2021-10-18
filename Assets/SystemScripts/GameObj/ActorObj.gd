@@ -59,6 +59,10 @@ var stat_dict = {"Max HP" : 0, "HP" : 0, "Max MP": 0, "MP": 0, \
 				"HP Regen" : 0, "MP Regen": 0, "Attack Power" : 0, \
 				"Crit Chance" : 0, "Spell Power" : 0, "Defense" : 0, \
 				"Speed": 0, "View Range" : 0}
+var inventory : Dictionary = {}
+var selected_item : InvObject = null
+var __server_inventory : Dictionary = {}
+var gold : int = 0
 
 func _ready():
 	play_anim('idle')
@@ -131,15 +135,21 @@ func process_turn():
 		Server.object_action_event(object_identity, {"Command Type": "Self Heal"})
 		
 	elif proposed_action == 'drop item':
-		emit_signal("action_drop_item")
+		selected_item.drop_item()
 	elif proposed_action == 'equip item':
-		emit_signal("action_equip_item")
+		selected_item.equip_item()
 	elif proposed_action == 'unequip item':
-		emit_signal("action_unequip_item")
+		selected_item.unequip_item()
 
 	turn_regen()
 
 	in_turn = true
+	
+	# Send the state of the game to the player after every turn
+	for remote_player in Server.player_list:
+		if remote_player.get_id()['NetID'] != 1:
+			Server.send_inventory_to_requester(remote_player.get_id())
+			Server.update_all_actor_stats(remote_player.get_id())
 
 func turn_regen():
 	# Apply any regen effects
@@ -331,3 +341,42 @@ func set_graphics(graphics_node):
 	add_child(graphics_node)
 	model = graphics_node
 	anim = graphics_node.find_node("AnimationPlayer")
+	
+func equip_item(item : InvObject):
+	# Unequip different item from same category
+	for existing_item in inventory:
+		if inventory[existing_item]['equipped'] \
+		and existing_item.get_id()['CategoryType'] == item.get_id()['CategoryType']:
+			inventory[existing_item]['equipped'] = false
+			existing_item.unequip_item()
+	
+	item.equip_item()
+
+func unequip_item(item : InvObject):
+	item.unequip_item()
+
+func build_inv_from_server(inventory):
+	for item in inventory:
+		if not item.object_id in __server_inventory:
+			if GlobalVars.peer_type == 'client':
+				
+				# Create the item
+				var new_item = GlobalVars.obj_spawner.\
+				spawn_item(inventory[item]['description'], 'Inventory', 'Inventory', false)
+				__server_inventory[item.object_id] = new_item
+				
+				# Add to the player's inventory
+				GlobalVars.server_player.inventory[new_item] = {'equipped': inventory[item]['equipped'], 'description': new_item['identity']['Identifier'], 'server_id': item.object_id, 'item': new_item}
+				new_item.item_owner = GlobalVars.server_player
+		else:
+			GlobalVars.server_player.inventory[__server_inventory[item.object_id]]['equipped'] = inventory[item]['equipped']
+			
+	# Remove items no longer in inventory
+	var server_item_ids = []
+	for server_item_id in inventory:
+		server_item_ids.append(server_item_id.object_id)
+	for item in GlobalVars.server_player.inventory:
+		var server_id = GlobalVars.server_player.inventory[item]['server_id']
+		if not server_id in server_item_ids:
+			GlobalVars.server_player.inventory.erase(item)
+			__server_inventory.erase(server_id)
