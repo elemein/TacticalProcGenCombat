@@ -187,7 +187,8 @@ remote func send_inventory_to_requester(requester_id):
 		rpc_id(requester_id['NetID'], "receive_inventory_from_server", inventory)
 
 remote func receive_inventory_from_server(inventory):
-	GlobalVars.self_instanceObj.build_inv_from_server(inventory)
+	if not GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+		GlobalVars.self_instanceObj.build_inv_from_server(inventory)
 	
 # CHANGING STAT COMMANDS -------------------------------
 # This is a duplicate from below. More bandwidth but easier to maintain

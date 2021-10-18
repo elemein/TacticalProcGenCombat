@@ -148,8 +148,8 @@ func process_turn():
 	# Send the state of the game to the player after every turn
 	for remote_player in Server.player_list:
 		if remote_player.get_id()['NetID'] != 1:
-			Server.send_inventory_to_requester(self.get_id())
-			Server.update_all_actor_stats(self.get_id())
+			Server.send_inventory_to_requester(remote_player.get_id())
+			Server.update_all_actor_stats(remote_player.get_id())
 
 func turn_regen():
 	# Apply any regen effects
@@ -366,7 +366,7 @@ func build_inv_from_server(inventory):
 				__server_inventory[item.object_id] = new_item
 				
 				# Add to the player's inventory
-				GlobalVars.server_player.inventory[new_item] = {'equipped': inventory[item]['equipped'], 'description': new_item['identity']['Identifier'], 'server_id': item.object_id}
+				GlobalVars.server_player.inventory[new_item] = {'equipped': inventory[item]['equipped'], 'description': new_item['identity']['Identifier'], 'server_id': item.object_id, 'item': new_item}
 				new_item.item_owner = GlobalVars.server_player
 		else:
 			GlobalVars.server_player.inventory[__server_inventory[item.object_id]]['equipped'] = inventory[item]['equipped']

@@ -103,45 +103,48 @@ func _input(event):
 				option_menu.visible = false
 			
 func _process(_delta):
-	# Set the items for the current inventory tab
-	for item_index in 8:
-		var item_node = item_tab_dict[active_inventory_tab][item_index]
-		
-		if GlobalVars.server_player.inventory.keys().size() > item_index:
-			var player_item = GlobalVars.server_player.inventory.keys()[item_index]
+	if not GlobalVars.in_loading:
+		# Set the items for the current inventory tab
+		for item_index in 8:
+			var item_node = item_tab_dict[active_inventory_tab][item_index]
 			
-			if active_inventory_tab.name in ['All', player_item.get_id()['CategoryType']]:
-				item_node['Label'].text = player_item.get_id()['Identifier'].replace(' ', '\n')
-				item_node['Icon'].texture = player_item.inventory_icon
-				if GlobalVars.server_player.inventory[player_item]['equipped']:
-					item_node['Equipped'].visible = true
+			if GlobalVars.server_player.inventory.keys().size() > item_index:
+				var player_item = GlobalVars.server_player.inventory.keys()[item_index]
+				
+				if active_inventory_tab.name in ['All', player_item.get_id()['CategoryType']]:
+					item_node['Label'].text = player_item.get_id()['Identifier'].replace(' ', '\n')
+					item_node['Icon'].texture = player_item.inventory_icon
+					if GlobalVars.server_player.inventory[player_item]['equipped']:
+						item_node['Equipped'].visible = true
+					else:
+						item_node['Equipped'].visible = false
 				else:
+					item_node['Label'].text = ''
+					item_node['Icon'].texture = item_blank
 					item_node['Equipped'].visible = false
 			else:
-				item_node['Label'].text = ''
-				item_node['Icon'].texture = item_blank
-				item_node['Equipped'].visible = false
-		else:
-				item_node['Label'].text = ''
-				item_node['Icon'].texture = item_blank
-				item_node['Equipped'].visible = false
+					item_node['Label'].text = ''
+					item_node['Icon'].texture = item_blank
+					item_node['Equipped'].visible = false
 
-	# Set blank icons and names for any empty spot
-	for placeholder_item in item_tab_dict[active_inventory_tab].values():
-		if placeholder_item['Icon'].texture == item_placeholder_icon:
-			placeholder_item['Label'].text = ''
-			placeholder_item['Icon'].texture = item_blank
-			
-	# Set the equipped items icon for whatever was last selected
-	var empty_categories = item_categories.duplicate()
-	for item in GlobalVars.server_player.inventory:
-		if GlobalVars.server_player.inventory[item]['equipped']:
-			icon_types[item.get_id()['CategoryType']].texture = local_item.inventory_icon
-			empty_categories.erase(item.get_id()['CategoryType'])
-	for empty_slot in empty_categories:
-		icon_types[empty_slot].texture = item_placeholder_icon
-	
-	update_player_stats()
+		# Set blank icons and names for any empty spot
+		for placeholder_item in item_tab_dict[active_inventory_tab].values():
+			if placeholder_item['Icon'].texture == item_placeholder_icon:
+				placeholder_item['Label'].text = ''
+				placeholder_item['Icon'].texture = item_blank
+				
+		# Set the equipped items icon for whatever was last selected
+		var empty_categories = item_categories.duplicate()
+		for category in item_categories:
+			for item in GlobalVars.server_player.inventory:
+				if item.get_id()['CategoryType'] == category and GlobalVars.server_player.inventory[item]['equipped']:
+					icon_types[category].texture = item.inventory_icon
+					empty_categories.erase(category)
+					
+		for empty_slot in empty_categories:
+			icon_types[empty_slot].texture = item_placeholder_icon
+		
+		update_player_stats()
 		
 func item_selected(num):
 	var player_item
@@ -178,7 +181,9 @@ func update_player_stats():
 	player_stats_label.text = player_stats_label.text.strip_edges()
 	
 func option_action(index):
-	var server_item_id = GlobalVars.server_player.inventory[local_item]['server_id']
+	var server_item_id = GlobalVars.server_player.inventory[local_item].get('server_id')
+	if not server_item_id:
+		server_item_id = local_item.get_id()['Instance ID']
 	if not GlobalVars.server_player.in_turn:
 		match index:
 			0:  # equip item
