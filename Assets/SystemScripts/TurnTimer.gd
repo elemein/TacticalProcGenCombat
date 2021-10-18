@@ -100,9 +100,9 @@ func sort_actors_by_speed():
 			highest_speed -= 1
 
 func end_turn():
-	gui.clear_action()
 	for actor in actors:
 		actor.end_turn()
+	Server.update_round_for_players_in_map(map)
 	turn_in_process = false
 	turn_counter += 1
 	map.print_map_grid()

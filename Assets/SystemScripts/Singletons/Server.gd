@@ -63,12 +63,15 @@ remote func query_for_action(requester, request):
 		
 		'Move':
 			if player_turn_timer.get_time_left() == 0:
-				player_obj.set_action("move %s" % [request['Value']])
+				var move_action = "move %s" % [request['Value']]
+				player_obj.set_action(move_action)
+				send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Move", "SubOption": move_action})
 			else: print('Discarding illegal move request from ' + str(player_id))
 				
 		'Basic Attack':
 			if player_turn_timer.get_time_left() == 0:
 				player_obj.set_action("basic attack")
+				send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Basic Attack"})
 			else: print('Discarding illegal basic attack request from ' + str(player_id))
 		
 		'Idle':
@@ -80,40 +83,46 @@ remote func query_for_action(requester, request):
 			if (player_turn_timer.get_time_left() == 0):
 				if (player_obj.get_mp() > player_obj.find_node("Fireball").spell_cost):
 					player_obj.set_action("fireball")
+					send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Fireball"})
 				else: 
-					send_action_request_confirm(player_obj.get_id(), "DenyOOM")
+					send_action_request_confirm(player_obj.get_id(), {"Condition": "Deny", "Option": "Play OOM"})
 			else: print('Discarding illegal fireball request from ' + str(player_id))
 
 		'Dash':
 			if (player_turn_timer.get_time_left() == 0):
 				if (player_obj.get_mp() > player_obj.find_node("Dash").spell_cost):
 					player_obj.set_action("dash")
+					send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Dash"})
 				else: 
-					send_action_request_confirm(player_obj.get_id(), "DenyOOM")
+					send_action_request_confirm(player_obj.get_id(), {"Condition": "Deny", "Option": "Play OOM"})
 			else: print('Discarding illegal dash request from ' + str(player_id))
 
 		'Self Heal':
 			if (player_turn_timer.get_time_left() == 0):
 				if (player_obj.get_mp() > player_obj.find_node("SelfHeal").spell_cost):
 					player_obj.set_action("self heal")
+					send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Self Heal"})
 				else: 
-					send_action_request_confirm(player_obj.get_id(), "DenyOOM")
+					send_action_request_confirm(player_obj.get_id(), {"Condition": "Deny", "Option": "Play OOM"})
 			else: print('Discarding illegal heal request from ' + str(player_id))
 			
 		'Drop Item':
 			if (player_turn_timer.get_time_left() == 0):
 				player_obj.selected_item = instance_from_id(request['Value'])
 				player_obj.set_action('drop item')
+				send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Drop Item"})
 			else: print('Discarding drop item request from ' + str(player_id))
 		'Equip Item':
 			if (player_turn_timer.get_time_left() == 0):
 				player_obj.selected_item = instance_from_id(request['Value'])
 				player_obj.set_action('equip item')
+				send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Equip Item"})
 			else: print('Discarding equip item request from ' + str(player_id))
 		'Unequip Item':
 			if (player_turn_timer.get_time_left() == 0):
 				player_obj.selected_item = instance_from_id(request['Value'])
 				player_obj.set_action('unequip item')
+				send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Unequip Item"})
 			else: print('Discarding unequip item request from ' + str(player_id))
 
 func send_action_request_confirm(actor_id, response):
@@ -123,11 +132,36 @@ func send_action_request_confirm(actor_id, response):
 		rpc_id(actor_id['NetID'], "receive_action_request_confirm", actor_id, response)
 
 remote func receive_action_request_confirm(actor_id, response):
-	match response:
-		'DenyOOM':
-			var player_obj = get_player_obj_from_netid(actor_id['NetID'])
-			player_obj.find_node("SelfHeal").out_of_mana.play()
+	var gui = get_node("/root/World/GUI/Action")
+	var player_obj = get_player_obj_from_netid(actor_id['NetID'])
 	
+	match response["Condition"]:
+		'Allow':
+			match response["Option"]:
+				"Basic Attack":gui.set_action('basic attack')
+				"Move":
+					match response["SubOption"]:
+						'move up': gui.set_action('move up')
+						'move down': gui.set_action('move down')
+						'move left': gui.set_action('move left')
+						'move right': gui.set_action('move right')
+						
+						'move upleft': gui.set_action('move upleft')
+						'move upright': gui.set_action('move upright')
+						'move downleft': gui.set_action('move downleft')
+						'move downright': gui.set_action('move downright')
+						
+				"Drop Item": gui.set_action('drop item')
+				"Equip Item": gui.set_action('equip item')
+				"Unequip Item": gui.set_action('unequip item') 
+				"Fireball": gui.set_action('fireball')
+				"Dash": gui.set_action('dash')
+				"Self Heal": gui.set_action('self heal')
+		
+		'Deny':
+			match response["Option"]:
+				"Play OOM": player_obj.find_node("SelfHeal").out_of_mana.play()
+
 
 # Duplicate the object's resources to send out, and prompt all clients to receive command.
 func object_action_event(object_id, action):
@@ -183,6 +217,19 @@ remote func receive_object_action_event(object_id, action):
 					spawn_object_in_map(object_id)
 			
 # -----------------------------------------------------
+
+func update_round_for_players_in_map(map):
+	var map_id = map.get_map_server_id()
+	for player in player_list:
+		if player.get_id()['Map ID'] == map_id:
+			if player.get_id()['NetID'] == 1:
+				receive_round_update()
+			else:
+				rpc_id(player.get_id()['NetID'], 'receive_round_update')
+
+remote func receive_round_update():
+	var gui = get_node("/root/World/GUI/Action")
+	gui.clear_action()
 
 func request_for_inventory():
 	if GlobalVars.self_netID == 1:

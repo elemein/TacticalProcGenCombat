@@ -100,7 +100,7 @@ func set_action(action):
 
 	ready_status = true
 
-	if object_identity['CategoryType'] == 'Player': gui.set_action(proposed_action)
+#	if object_identity['CategoryType'] == 'Player': gui.set_action(proposed_action)
 
 func process_turn():
 	if visible:
