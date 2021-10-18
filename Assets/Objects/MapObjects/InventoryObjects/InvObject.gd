@@ -58,6 +58,7 @@ func unequip_item():
 	
 func drop_item():
 	unequip_item()
+	set_parent_map(item_owner.get_parent_map())
 	set_map_pos_and_translation(item_owner.get_map_pos())
 	PlayerInfo.current_map.add_map_object(self)
 	item_owner.inventory.erase(self)

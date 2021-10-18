@@ -197,8 +197,9 @@ func update_all_actor_stats(object_id):
 		if not player.get_id()['NetID'] == 1 and object_id['Map ID'] == player.get_id()['Map ID']:
 			rpc_id(player.get_id()['NetID'], 'receive_update_all_actor_stats', object_id, player.stat_dict)
 remote func receive_update_all_actor_stats(object_id, new_stat_dict):
-	var object = get_object_from_identity(object_id)
-	object.stat_dict = new_stat_dict
+	if not GlobalVars.in_loading:
+		var object = get_object_from_identity(object_id)
+		object.stat_dict = new_stat_dict
 
 # CHANGING STAT COMMANDS -------------------------------
 # Prompt to all clients to change a given actor's stat.
