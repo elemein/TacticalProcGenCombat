@@ -1,5 +1,7 @@
 extends Node
 
+var loading_screen = preload('res://Assets/GUI/LoadingScreen/LoadingScreen.tscn')
+
 var camera = null
 var peer_type = null
 
@@ -26,3 +28,11 @@ var obj_spawner = OBJ_SPAWNER.new()
 
 const PLAYER_OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner4Player.gd")
 var plyr_obj_spawner = PLAYER_OBJ_SPAWNER.new()
+
+func set_loading(state): 
+	in_loading = state
+	if in_loading:
+		add_child(loading_screen.instance())
+	else:
+		var to_remove = get_node('/root/GlobalVars/LoadingScreen')
+		remove_child(to_remove)
