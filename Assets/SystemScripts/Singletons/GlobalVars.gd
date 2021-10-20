@@ -29,6 +29,10 @@ var obj_spawner = OBJ_SPAWNER.new()
 const PLAYER_OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner4Player.gd")
 var plyr_obj_spawner = PLAYER_OBJ_SPAWNER.new()
 
+var default_settings = {
+	'Server IP': ''
+}
+
 func set_loading(state): 
 	in_loading = state
 	if in_loading:
