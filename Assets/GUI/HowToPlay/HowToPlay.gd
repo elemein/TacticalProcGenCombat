@@ -1,14 +1,25 @@
 extends Node
 
+onready var tab_container : TabContainer = find_node('TabContainer')
 
-onready var texture_rect = find_node('TextureRect')
+var num_of_tabs
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	texture_rect.texture.get_data().resize(800, 450)
+	num_of_tabs = len(tab_container.get_children())
 
+func _on_Prev_pressed():
+	if tab_container.current_tab == 0:
+		tab_container.current_tab = num_of_tabs - 1
+	else:
+		tab_container.current_tab -= 1
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _on_Next_pressed():
+	if tab_container.current_tab == num_of_tabs - 1:
+		tab_container.current_tab = 0
+	else:
+		tab_container.current_tab += 1
+
+func _on_MainMenu_pressed():
+	get_tree().change_scene("res://Assets/GUI/TitleScreen/MainTitleScreen.tscn")
+
