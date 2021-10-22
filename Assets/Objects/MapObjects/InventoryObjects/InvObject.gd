@@ -28,9 +28,10 @@ func get_inv_item_name(): return object_identity['Identifier']
 func collect_item(tile_objects):
 	for object in tile_objects:
 		if object.get_id()['CategoryType'] == 'Player':
-			item_owner = object
-			object.inventory[self] = {'equipped': false, 'description': self.get_id()['Identifier']}
-			Server.object_action_event(object_identity, {"Command Type": "Remove From Map"})
+			if len(object.inventory) < 8:
+				item_owner = object
+				object.inventory[self] = {'equipped': false, 'description': self.get_id()['Identifier']}
+				Server.object_action_event(object_identity, {"Command Type": "Remove From Map"})
 			
 func equip_item():
 	for stat_type in ['spell_power_bonus', 'defense_bonus', 'attack_power_bonus']:
