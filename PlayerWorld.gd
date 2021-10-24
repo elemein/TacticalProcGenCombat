@@ -77,6 +77,10 @@ func unpack_map(map_data):
 							Server.add_player_to_local_player_list(new_object)
 							new_object.update_id('NetID', object['NetID'])
 							new_object.update_id('Instance ID', object['Instance ID'])
+							new_object.play_anim('idle')
+							
+							if not new_object in Server.player_list:
+								Server.player_list.append(new_object)
 					_:
 						match object['CategoryType']:
 							'Enemy':

@@ -417,6 +417,7 @@ func notify_server_map_loaded(map_id):
 remote func receive_client_has_loaded(client_id, map_id):
 	var client_obj = get_player_obj_from_netid(client_id)
 	client_obj.update_id('Map ID', map_id)
+	client_obj.play_anim('idle')
 	var map = get_map_from_map_id(map_id)
 	map.get_turn_timer().add_to_timer_group(client_obj)
 	
@@ -430,6 +431,7 @@ remote func spawn_object_in_map(object_id):
 		'PlagueDoc': 
 			var other_player = GlobalVars.plyr_obj_spawner.spawn_actor(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
 			other_player.set_id(object_id)
+			other_player.play_anim('idle')
 			GlobalVars.self_instanceObj.get_parent_map().map_grid[x][z].append(other_player)
 		
 		'Spike Trap':
@@ -448,7 +450,6 @@ remote func spawn_object_in_map(object_id):
 	resolve_viewfield()
 # ------------------------------------------------------
 
-
 # SERVER SIDE SIGNAL FUNCS ----------------------
 func _player_connected(id):
 	print('Player ' + str(id) + ' has connected!')
@@ -462,11 +463,9 @@ func _player_connected(id):
 	GlobalVars.server_player.get_parent().add_child(new_player)
 	new_player.update_id('NetID', id)
 	player_list.append(new_player)
-	
-#	new_player.get_parent_map().get_turn_timer().add_to_timer_group(new_player)
-	
 	var instance_id = new_player.get_id()['Instance ID']
 	new_player.name = 'Player%d' % instance_id
+	new_player.play_anim('idle')
 	
 	rpc_id(id, "receive_id_from_server", id, instance_id)
 
