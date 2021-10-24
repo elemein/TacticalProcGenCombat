@@ -102,4 +102,4 @@ func log_enemy_death(_dead_enemy):
 		Server.map_object_event(parent_map.get_map_server_id(), {"Scope": "Room", "Room ID": id, "Action": "Unblock Exits"})
 		
 		if type == 'Exit Room':
-			var _result = GlobalVars.get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
+			Server.map_object_event(parent_map.get_map_server_id(), {"Scope": "Map", "Action": "Victory"})

@@ -350,6 +350,11 @@ remote func receive_map_object_event(map_id, map_action):
 					room.block_exits()
 				'Unblock Exits':
 					room.unblock_exits()
+		
+		"Map":
+			match map_action['Action']:
+				'Victory':
+					var _result = GlobalVars.get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
 #
 func move_client_to_map(client_obj, map):
 	get_map_from_map_id(client_obj.get_id()['Map ID']).get_turn_timer().remove_from_timer_group(client_obj)
