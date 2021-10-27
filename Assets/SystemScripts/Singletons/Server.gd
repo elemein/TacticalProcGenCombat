@@ -141,6 +141,9 @@ func send_action_request_confirm(actor_id, response):
 		rpc_id(actor_id['NetID'], "receive_action_request_confirm", actor_id, response)
 
 remote func receive_action_request_confirm(actor_id, response):
+	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+		sync_queue.push_back({"Event Type": "Action Confirm", "Actor Id": actor_id, "Response": response})
+		return
 	var gui = get_node("/root/World/GUI/Action")
 	var player_obj = get_player_obj_from_netid(actor_id['NetID'])
 	
@@ -540,3 +543,5 @@ func sync_from_sync_queue():
 				receive_actor_notif_event(event['ObjectID'], event['Notif Text'], event['Notif Type'])
 			'Map Event':
 				receive_map_object_event(event['MapID'], event['Map Action'])
+			'Action Confirm':
+				receive_action_request_confirm(event['Actor Id'], event['Response'])
