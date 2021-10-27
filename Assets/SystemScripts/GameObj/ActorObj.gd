@@ -7,7 +7,7 @@ const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 const ACTOR_NOTIF_LABEL = preload("res://Assets/GUI/ActorNotifLabel/ActorNotifLabel.tscn")
 
 onready var model = $Graphics
-onready var anim = $Graphics/AnimationPlayer
+onready var anim : AnimationPlayer = $Graphics/AnimationPlayer
 onready var gui = get_node("/root/World/GUI/Action")
 onready var actions = $Actions
 onready var tween = $Tween
@@ -65,7 +65,7 @@ var __server_inventory : Dictionary = {}
 var gold : int = 0
 
 func _ready():
-	play_anim('idle')
+	play_anim('idle', true)
 
 func _init(obj_id, actor_stats).(obj_id):
 	stat_dict = actor_stats
@@ -135,11 +135,11 @@ func process_turn():
 		Server.object_action_event(object_identity, {"Command Type": "Self Heal"})
 		
 	elif proposed_action == 'drop item':
-		selected_item.drop_item()
+		drop_item(selected_item)
 	elif proposed_action == 'equip item':
-		selected_item.equip_item()
+		equip_item(selected_item)
 	elif proposed_action == 'unequip item':
-		selected_item.unequip_item()
+		unequip_item(selected_item)
 
 	turn_regen()
 
@@ -198,8 +198,8 @@ func check_move_action(move):
 func move_actor_in_facing_dir(amount):
 	mover.move_actor(amount)
 
-func play_anim(name):
-	if anim.current_animation == name: return
+func play_anim(name, forced=false):
+	if anim.current_animation == name and not forced: return
 	else: anim.play(name)
 
 func display_notif(notif_text, notif_type):
@@ -341,6 +341,10 @@ func set_graphics(graphics_node):
 	add_child(graphics_node)
 	model = graphics_node
 	anim = graphics_node.find_node("AnimationPlayer")
+	
+
+func drop_item(item : InvObject):
+	item.drop_item()
 	
 func equip_item(item : InvObject):
 	# Unequip different item from same category

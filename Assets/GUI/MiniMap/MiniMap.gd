@@ -27,7 +27,7 @@ func _ready():
 		var _result = get_tree().change_scene("res://World.tscn")
 		self.queue_free()
 	else:
-		yield(get_tree(), "idle_frame")
+		yield(Signals, "world_loaded")
 		player = GlobalVars.self_instanceObj
 
 		var map_grid = player.get_parent_map().map_grid
