@@ -69,10 +69,12 @@ func remove_obj_from_old_map(object):
 	var curr_map = object.get_parent_map()
 	if typeof(curr_map) != TYPE_STRING:
 		curr_map.get_turn_timer().remove_from_timer_group(object)
-		curr_map.remove_map_object(object)
+#		curr_map.remove_map_object(object)
 		
 #		curr_map.get_parent_mapset().get_floors().erase(curr_map.get_map_name())
 #		curr_map.queue_free() # remove the old map so it doesnt overlap and mess shit up with the new one
+		
+		Server.object_action_event(object.get_id(), {"Command Type": "Remove From Map"})
 		
 		object.set_action('idle') # prevents using the last map's move action on the next map
 
