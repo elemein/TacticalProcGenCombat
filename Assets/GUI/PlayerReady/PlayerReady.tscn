@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Assets/GUI/PlayerReady/PlayerReady.gd" type="Script" id=1]
+
+[node name="VBox" type="VBoxContainer"]
+margin_right = 142.0
+margin_bottom = 14.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerStatus" type="HBoxContainer" parent="."]
+margin_right = 169.0
+margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Name" type="Label" parent="PlayerStatus"]
+margin_right = 100.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 100, 0 )
+text = "Player1"
+
+[node name="Status" type="Label" parent="PlayerStatus"]
+margin_left = 104.0
+margin_right = 169.0
+margin_bottom = 14.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "Not Ready"

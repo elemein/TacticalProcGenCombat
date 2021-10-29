@@ -99,6 +99,8 @@ func set_action(action):
 			else: return
 
 	ready_status = true
+	
+	Server.update_all_actor_stats(get_id())
 
 #	if object_identity['CategoryType'] == 'Player': gui.set_action(proposed_action)
 
@@ -184,6 +186,10 @@ func end_turn():
 	proposed_action = ''
 	in_turn = false
 	ready_status = false
+	
+	# Send the state of the game to the player after round end
+	for remote_player in Server.player_list:
+		Server.update_all_actor_stats(get_id())
 
 func find_viewfield():
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
