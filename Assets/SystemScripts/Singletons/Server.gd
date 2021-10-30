@@ -65,28 +65,24 @@ remote func query_for_action(requester, request):
 			if player_turn_timer.get_time_left() == 0:
 				var move_action = "move %s" % [request['Value']]
 				player_obj.set_action(move_action)
-				actor_notif_event(player_obj.get_id(), 'Ready!', 'ready')
 				send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Move", "SubOption": move_action})
 			else: print('Discarding illegal move request from ' + str(player_id))
 				
 		'Basic Attack':
 			if player_turn_timer.get_time_left() == 0:
 				player_obj.set_action("basic attack")
-				actor_notif_event(player_obj.get_id(), 'Ready!', 'ready')
 				send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Basic Attack"})
 			else: print('Discarding illegal basic attack request from ' + str(player_id))
 		
 		'Idle':
 			if player_turn_timer.get_time_left() == 0:
 				player_obj.set_action("idle")
-				actor_notif_event(player_obj.get_id(), 'Ready!', 'ready')
 			else: print('Discarding illegal idle request from ' + str(player_id))
 
 		'Fireball':
 			if (player_turn_timer.get_time_left() == 0):
 				if (player_obj.get_mp() > player_obj.find_node("Fireball").spell_cost):
 					player_obj.set_action("fireball")
-					actor_notif_event(player_obj.get_id(), 'Ready!', 'ready')
 					send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Fireball"})
 				else: 
 					send_action_request_confirm(player_obj.get_id(), {"Condition": "Deny", "Option": "Play OOM"})
@@ -96,7 +92,6 @@ remote func query_for_action(requester, request):
 			if (player_turn_timer.get_time_left() == 0):
 				if (player_obj.get_mp() > player_obj.find_node("Dash").spell_cost):
 					player_obj.set_action("dash")
-					actor_notif_event(player_obj.get_id(), 'Ready!', 'ready')
 					send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Dash"})
 				else: 
 					send_action_request_confirm(player_obj.get_id(), {"Condition": "Deny", "Option": "Play OOM"})
@@ -106,7 +101,6 @@ remote func query_for_action(requester, request):
 			if (player_turn_timer.get_time_left() == 0):
 				if (player_obj.get_mp() > player_obj.find_node("SelfHeal").spell_cost):
 					player_obj.set_action("self heal")
-					actor_notif_event(player_obj.get_id(), 'Ready!', 'ready')
 					send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Self Heal"})
 				else: 
 					send_action_request_confirm(player_obj.get_id(), {"Condition": "Deny", "Option": "Play OOM"})
@@ -116,21 +110,18 @@ remote func query_for_action(requester, request):
 			if (player_turn_timer.get_time_left() == 0):
 				player_obj.selected_item = instance_from_id(request['Value'])
 				player_obj.set_action('drop item')
-				actor_notif_event(player_obj.get_id(), 'Ready!', 'ready')
 				send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Drop Item"})
 			else: print('Discarding drop item request from ' + str(player_id))
 		'Equip Item':
 			if (player_turn_timer.get_time_left() == 0):
 				player_obj.selected_item = instance_from_id(request['Value'])
 				player_obj.set_action('equip item')
-				actor_notif_event(player_obj.get_id(), 'Ready!', 'ready')
 				send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Equip Item"})
 			else: print('Discarding equip item request from ' + str(player_id))
 		'Unequip Item':
 			if (player_turn_timer.get_time_left() == 0):
 				player_obj.selected_item = instance_from_id(request['Value'])
 				player_obj.set_action('unequip item')
-				actor_notif_event(player_obj.get_id(), 'Ready!', 'ready')
 				send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Unequip Item"})
 			else: print('Discarding unequip item request from ' + str(player_id))
 
@@ -263,14 +254,17 @@ remote func receive_inventory_from_server(inventory):
 	
 # CHANGING STAT COMMANDS -------------------------------
 # This is a duplicate from below. More bandwidth but easier to maintain
-func update_all_actor_stats(object_id):
+func update_all_actor_stats(object: ActorObj):
+	var object_id = object.get_id()
 	for player in player_list:
-		if not player.get_id()['NetID'] == 1 and object_id['Map ID'] == player.get_id()['Map ID']:
-			rpc_id(player.get_id()['NetID'], 'receive_update_all_actor_stats', object_id, player.stat_dict)
-remote func receive_update_all_actor_stats(object_id, new_stat_dict):
+		if object_id['Map ID'] == player.get_id()['Map ID']:
+			rpc_id(player.get_id()['NetID'], 'receive_update_all_actor_stats', object_id, object.stat_dict, object.ready_status)
+			
+remote func receive_update_all_actor_stats(object_id, new_stat_dict, ready_status):
 	if not GlobalVars.in_loading:
 		var object = get_object_from_identity(object_id)
 		object.stat_dict = new_stat_dict
+		object.ready_status = ready_status
 
 # CHANGING STAT COMMANDS -------------------------------
 # Prompt to all clients to change a given actor's stat.
