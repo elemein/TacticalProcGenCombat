@@ -10,6 +10,8 @@ var server_map_data
 var server_map_name
 var server_player : ActorObj
 
+var client_state
+
 var total_mapsets = []
 
 var self_netID : int
@@ -36,6 +38,7 @@ var default_settings = {
 func set_loading(state): 
 	in_loading = state
 	if in_loading:
+		client_state = 'loading'
 		add_child(loading_screen.instance())
 	else:
 		var to_remove = get_node('/root/GlobalVars/LoadingScreen')

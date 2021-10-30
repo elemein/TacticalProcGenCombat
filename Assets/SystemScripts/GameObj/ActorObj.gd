@@ -259,6 +259,8 @@ func die():
 		if GlobalVars.peer_type == 'server': parent_map.log_enemy_death(self)
 
 func move_to_death_screen():
+	if GlobalVars.self_netID != 1:
+		Server.peer.disconnect_peer(1)
 	get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
 
 func play_death_anim():

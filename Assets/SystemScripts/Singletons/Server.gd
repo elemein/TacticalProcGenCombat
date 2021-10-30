@@ -132,7 +132,7 @@ func send_action_request_confirm(actor_id, response):
 		rpc_id(actor_id['NetID'], "receive_action_request_confirm", actor_id, response)
 
 remote func receive_action_request_confirm(actor_id, response):
-	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		sync_queue.push_back({"Event Type": "Action Confirm", "Actor Id": actor_id, "Response": response})
 		return
 	var gui = get_node("/root/World/GUI/Action")
@@ -178,7 +178,7 @@ func object_action_event(object_id, action):
 	receive_object_action_event(orig_object_id, orig_action)
 # Parse action of object and run required actions to perform action.
 remote func receive_object_action_event(object_id, action):
-	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		sync_queue.push_back({"Event Type": "Action", "ObjectID": object_id, "Action": action})
 		return
 	
@@ -249,7 +249,7 @@ remote func send_inventory_to_requester(requester_id):
 		rpc_id(requester_id['NetID'], "receive_inventory_from_server", inventory)
 
 remote func receive_inventory_from_server(inventory):
-	if not GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+	if not GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		GlobalVars.self_instanceObj.build_inv_from_server(inventory)
 	
 # CHANGING STAT COMMANDS -------------------------------
@@ -261,7 +261,7 @@ func update_all_actor_stats(object: ActorObj):
 			rpc_id(player.get_id()['NetID'], 'receive_update_all_actor_stats', object_id, object.stat_dict, object.ready_status)
 			
 remote func receive_update_all_actor_stats(object_id, new_stat_dict, ready_status):
-	if not GlobalVars.in_loading:
+	if not GlobalVars.client_state != 'ingame':
 		var object = get_object_from_identity(object_id)
 		
 		if object == null: return
@@ -280,7 +280,7 @@ func update_actor_stat(object_id, stat_update):
 	receive_actor_stat_update(object_id, stat_update)
 # Find the stat and adjust it.
 remote func receive_actor_stat_update(object_id, stat_update):
-	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		sync_queue.push_back({"Event Type": "Stat Update", "ObjectID": object_id, "Update": stat_update})
 		return
 	if object_id['Map ID'] != 0:
@@ -304,7 +304,7 @@ func actor_notif_event(object_id, notif_text, notif_type):
 	receive_actor_notif_event(object_id, notif_text, notif_type)
 # Get the object and display the notif.
 remote func receive_actor_notif_event(object_id, notif_text, notif_type):
-	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		sync_queue.push_back({"Event Type": "Notification", "ObjectID": object_id, "Notif Text": notif_text, "Notif Type": notif_type})
 		return
 
@@ -323,7 +323,7 @@ func resolve_all_viewfields(map):
 	resolve_viewfield()
 # Resolve your viewfield and render it to screen.
 remote func resolve_viewfield():
-	if GlobalVars.in_loading == false:
+	if GlobalVars.client_state == 'ingame':
 		GlobalVars.self_instanceObj.find_viewfield()
 		GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
 # ------------------------------------------------------
@@ -339,7 +339,7 @@ func map_object_event(map_id, map_action):
 	receive_map_object_event(map_id, map_action)
 #
 remote func receive_map_object_event(map_id, map_action):
-	if GlobalVars.in_loading: # If the client is loading, we don't want to change the map being loaded.
+	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		sync_queue.push_back({"Event Type": "Map Event", "MapID": map_id, "Map Action": map_action})
 		return
 	
@@ -362,6 +362,8 @@ remote func receive_map_object_event(map_id, map_action):
 		"Map":
 			match map_action['Action']:
 				'Victory':
+					if GlobalVars.self_netID != 1:
+						peer.disconnect_peer(1)
 					var _result = GlobalVars.get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
 #
 func move_client_to_map(client_obj, map):
@@ -441,7 +443,8 @@ remote func spawn_object_in_map(object_id):
 			other_player.set_id(object_id)
 			other_player.play_anim('idle')
 			GlobalVars.self_instanceObj.get_parent_map().map_grid[x][z].append(other_player)
-		
+			self.player_list.append(other_player)
+			
 		'Spike Trap':
 			var trap = GlobalVars.plyr_obj_spawner.spawn_map_object(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
 			trap.set_id(object_id)

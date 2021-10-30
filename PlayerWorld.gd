@@ -29,6 +29,10 @@ func _ready():
 func clear_play_map():
 	for child in plyr_play_map.get_children():
 		plyr_play_map.remove_child(child)
+		
+		if not child.get('object_identity') == null and child.get_id()['Identifier'] == 'PlagueDoc':
+			Server.player_list.erase(child)
+			
 		child.queue_free()
 
 func unpack_map(map_data):

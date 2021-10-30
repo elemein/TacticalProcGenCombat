@@ -166,5 +166,6 @@ __meta__ = {
 }
 
 [node name="Actions" parent="." instance=ExtResource( 8 )]
+
 [connection signal="button_down" from="MarginContainer/VBoxContainer/HBoxContainer/PlayerModel/HBoxContainer/Left" to="MarginContainer/VBoxContainer" method="_on_Left_button_down"]
 [connection signal="button_down" from="MarginContainer/VBoxContainer/HBoxContainer/PlayerModel/HBoxContainer/Right" to="MarginContainer/VBoxContainer" method="_on_Right_button_down"]
