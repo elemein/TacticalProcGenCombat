@@ -230,6 +230,8 @@ func update_round_for_players_in_map(map):
 				rpc_id(player.get_id()['NetID'], 'receive_round_update')
 
 remote func receive_round_update():
+	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
+		return
 	var gui = get_node("/root/World/GUI/Action")
 	gui.clear_action()
 
@@ -363,7 +365,7 @@ remote func receive_map_object_event(map_id, map_action):
 			match map_action['Action']:
 				'Victory':
 					if GlobalVars.self_netID != 1:
-						peer.disconnect_peer(1)
+						peer.disconnect_peer(1, true)
 					var _result = GlobalVars.get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
 #
 func move_client_to_map(client_obj, map):
