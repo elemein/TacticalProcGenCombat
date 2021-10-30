@@ -100,7 +100,7 @@ func set_action(action):
 
 	ready_status = true
 	
-	Server.update_all_actor_stats(get_id())
+	Server.update_all_actor_stats(self)
 
 #	if object_identity['CategoryType'] == 'Player': gui.set_action(proposed_action)
 
@@ -151,7 +151,7 @@ func process_turn():
 	for remote_player in Server.player_list:
 		if remote_player.get_id()['NetID'] != 1:
 			Server.send_inventory_to_requester(remote_player.get_id())
-			Server.update_all_actor_stats(remote_player.get_id())
+			Server.update_all_actor_stats(remote_player)
 
 func turn_regen():
 	# Apply any regen effects
@@ -189,7 +189,7 @@ func end_turn():
 	
 	# Send the state of the game to the player after round end
 	for remote_player in Server.player_list:
-		Server.update_all_actor_stats(get_id())
+		Server.update_all_actor_stats(self)
 
 func find_viewfield():
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
