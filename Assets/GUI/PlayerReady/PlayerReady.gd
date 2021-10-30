@@ -12,8 +12,9 @@ func _ready():
 	setup_player_status_list()
 	
 func _process(_delta):
-	setup_player_status_list()
-	remove_old_players()
+	if not GlobalVars.in_loading:
+		remove_old_players()
+		setup_player_status_list()
 	
 func setup_player_status_list():
 	for player in Server.player_list:

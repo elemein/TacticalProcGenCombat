@@ -444,7 +444,7 @@ remote func spawn_object_in_map(object_id):
 			other_player.play_anim('idle')
 			GlobalVars.self_instanceObj.get_parent_map().map_grid[x][z].append(other_player)
 			self.player_list.append(other_player)
-			
+
 		'Spike Trap':
 			var trap = GlobalVars.plyr_obj_spawner.spawn_map_object(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
 			trap.set_id(object_id)
