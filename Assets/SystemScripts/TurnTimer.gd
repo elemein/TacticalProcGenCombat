@@ -54,8 +54,6 @@ func _on_Turn_Delay_Timer_timeout():
 		
 		actor_idx += 1
 		turn_delay_timer.start()
-		
-		Signals.emit_signal("round_start")
 
 func wait_for_actor_anims_and_delay_timer_to_end():
 	var all_done = true

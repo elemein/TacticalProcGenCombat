@@ -263,6 +263,9 @@ func update_all_actor_stats(object: ActorObj):
 remote func receive_update_all_actor_stats(object_id, new_stat_dict, ready_status):
 	if not GlobalVars.in_loading:
 		var object = get_object_from_identity(object_id)
+		
+		if object == null: return
+		
 		object.stat_dict = new_stat_dict
 		object.ready_status = ready_status
 
