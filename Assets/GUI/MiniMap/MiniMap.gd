@@ -41,7 +41,7 @@ func _ready():
 			markers.append(row)
 			
 func _process(_delta):
-	if GlobalVars.in_loading \
+	if GlobalVars.client_state == 'loading' \
 			or GlobalVars.server_player == null \
 			or GlobalVars.server_player.get_parent() == null:
 		return

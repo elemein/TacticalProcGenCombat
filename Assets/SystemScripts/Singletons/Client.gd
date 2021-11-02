@@ -23,7 +23,7 @@ func _ready():
 	option_buttons.visible = false
 
 func connect_to_server():
-	GlobalVars.set_loading(true)
+	GlobalVars.client_state = 'loading'
 	GlobalVars.peer_type = 'client'
 	var peer = NetworkedMultiplayerENet.new()
 	peer.create_client(server_ip, server_port)
@@ -37,12 +37,11 @@ func _connected_ok():
 	print("Connected to server successfully.")
 	get_node('/root/IPInputScreen/MarginContainer/VBoxContainer/JoinServer').on_successful_connect()
 	Server.request_map_from_server()
-	GlobalVars.set_loading(false)
+	GlobalVars.client_state = 'character select'
 
 func _connected_fail():
 	print("Failed to connect to server.")
 	get_node('/root/IPInputScreen/MarginContainer/VBoxContainer/JoinServer').on_unsuccessful_connect()
-	GlobalVars.set_loading(false)
 
 func set_server_ip(target_ip): server_ip = target_ip
 

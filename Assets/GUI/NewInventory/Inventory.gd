@@ -103,7 +103,7 @@ func _input(event):
 				option_menu.visible = false
 			
 func _process(_delta):
-	if not GlobalVars.in_loading and GlobalVars.server_player != null:
+	if not GlobalVars.client_state == 'loading' and GlobalVars.server_player != null:
 		# Set the items for the current inventory tab
 		for item_index in 8:
 			var item_node = item_tab_dict[active_inventory_tab][item_index]

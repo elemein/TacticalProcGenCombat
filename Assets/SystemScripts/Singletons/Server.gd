@@ -380,7 +380,7 @@ func move_client_to_map(client_obj, map):
 	rpc_id(client_obj.get_id()['NetID'], 'prepare_for_map_change', map.get_map_server_id())
 #
 remote func prepare_for_map_change(map_id):
-	GlobalVars.set_loading(true)
+	GlobalVars.client_state = 'loading'
 	
 	var world = get_node("/root/World")
 	world.clear_play_map()
@@ -540,7 +540,6 @@ func get_object_from_identity(object_id):
 func get_player_list() -> Array: return player_list
 
 func sync_from_sync_queue():
-	GlobalVars.set_loading(false)
 	while sync_queue.size() > 0:
 		var event = sync_queue.pop_front()
 		
@@ -555,3 +554,5 @@ func sync_from_sync_queue():
 				receive_map_object_event(event['MapID'], event['Map Action'])
 			'Action Confirm':
 				receive_action_request_confirm(event['Actor Id'], event['Response'])
+	
+	GlobalVars.client_state = 'ingame'

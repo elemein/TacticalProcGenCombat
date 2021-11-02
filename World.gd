@@ -1,9 +1,5 @@
 extends Node
 
-# When traversing maps, the previous map is destroyed so that it does not interfere
-# with the new one. This isnt desirable behaviour as it completely prevents backtracking.
-# Have this sorted for v0.1
-
 var map_name = 'The Cave'
 
 const MAPSET_CLASS = preload("res://Assets/SystemScripts/Mapset.gd")
@@ -23,9 +19,6 @@ func _ready():
 
 	elif GlobalVars.peer_type == 'client': 
 		Server.request_map_from_server()
-		
-	else:
-		Server.player_list.append(GlobalVars.server_player)
 	
 	Signals.emit_signal("world_loaded")
 
@@ -36,6 +29,7 @@ func create_server_player_and_spawn_to_map():
 			first_floor = mapset.floors['Dungeon Floor 1']
 	
 	var first_floor_start_tile = first_floor.get_map_start_tile()
+	
 	var server_player = GlobalVars.obj_spawner.spawn_actor('Player', \
 						first_floor, first_floor_start_tile, true)
 						

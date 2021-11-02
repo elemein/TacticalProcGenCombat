@@ -12,6 +12,7 @@ var server_map_data
 var server_map_name
 var server_player : ActorObj
 
+# Possible states: ['ingame', 'loading', 'character select']
 var client_state
 
 var total_mapsets = []
@@ -20,8 +21,6 @@ var total_maps = []
 var self_netID : int
 var self_instanceID
 var self_instanceObj : ActorObj
-
-var in_loading = false
 
 const TILE_OFFSET = 2.0
 
@@ -37,12 +36,3 @@ var default_settings = {
 
 func _ready():
 	rng.randomize()
-
-func set_loading(state): 
-	in_loading = state
-	if in_loading:
-		client_state = 'loading'
-		add_child(loading_screen.instance())
-	else:
-		var to_remove = get_node('/root/GlobalVars/LoadingScreen')
-		remove_child(to_remove)
