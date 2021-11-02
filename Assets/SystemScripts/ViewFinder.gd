@@ -103,7 +103,7 @@ func resolve_viewfield():
 	# if its not in the seen objects, turn off visible
 	for object in objs_visible_to_player_last_turn:
 		if not (object in objs_visible_to_player):
-			if is_instance_valid(object): 
+			if is_instance_valid(object):
 				object.visible = false
 	
 	# save what was in vision

@@ -103,7 +103,7 @@ func _input(event):
 				option_menu.visible = false
 			
 func _process(_delta):
-	if not GlobalVars.in_loading:
+	if not GlobalVars.in_loading and GlobalVars.server_player != null:
 		# Set the items for the current inventory tab
 		for item_index in 8:
 			var item_node = item_tab_dict[active_inventory_tab][item_index]
@@ -192,11 +192,13 @@ func option_action(index):
 					set_option_menu(true)
 					Server.request_for_player_action({"Command Type": "Equip Item", "Value": server_item_id})
 					visible = false
+
 				# unequip item
 				else:
 					set_option_menu(false)
 					Server.request_for_player_action({"Command Type": "Unequip Item", "Value": server_item_id})
 					visible = false
+
 			1:  # drop item
 				Server.request_for_player_action({"Command Type": "Drop Item", "Value": server_item_id})
 				option_menu.visible = false

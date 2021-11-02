@@ -18,11 +18,11 @@ func _process(_delta):
 	
 func setup_player_status_list():
 	for player in Server.player_list:
-		
+
 		if GlobalVars.self_instanceObj.get_parent_map() == player.get_parent_map():
-		
+
 			player = player as ActorObj
-			
+
 			# Add new player to the list
 			if not player in player_slots:
 				var new_player_node = example_node.duplicate()
@@ -33,10 +33,10 @@ func setup_player_status_list():
 					'status': new_player_node.get_node('Status')
 				}
 				new_player_node.visible = true
-				
+
 			# Set the name of the player to the name of the player object
 			player_slots[player]['name'].text = player.name
-			
+
 			# Set the ready status
 			if not player.ready_status:
 				player_slots[player]['status'].text = 'Not Ready'
@@ -47,8 +47,8 @@ func setup_player_status_list():
 			
 func remove_old_players():
 	for player in player_slots:
-		if !(GlobalVars.self_instanceObj.get_parent_map() == player.get_parent_map()) \
-			or !(player in Server.player_list):
+		if not player in Server.player_list or \
+				not GlobalVars.self_instanceObj.get_parent_map() == player.get_parent_map():
 			remove_child(player_slots[player]['node'])
 			player_slots[player]['node'].queue_free()
 			player_slots.erase(player)

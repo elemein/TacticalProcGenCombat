@@ -183,9 +183,9 @@ remote func receive_object_action_event(object_id, action):
 		return
 	
 	var object = get_object_from_identity(object_id)
-	
+
 	if object == null: return
-	
+
 	print("%s(%s) does: %s" % [object_id['Identifier'], object_id['Instance ID'], action])
 	
 	# determine action
@@ -216,11 +216,9 @@ remote func receive_object_action_event(object_id, action):
 		'Remove From Map':
 			var map = get_map_from_map_id(object.get_id()['Map ID'])
 			map.remove_map_object(object)
-			
 			if GlobalVars.self_netID != 1:
 				if object.get_id()['Identifier'] == 'PlagueDoc':
 					self.player_list.erase(object)
-				
 		'Spawn On Map': # Only for client. Server must spawn objects directly.
 			if GlobalVars.peer_type == 'client':
 				if object_id['Instance ID'] != GlobalVars.self_instanceID:
@@ -494,14 +492,11 @@ func _player_disconnected(id):
 	for player in player_list:
 		if player.get_id()['NetID'] == id:
 			Server.object_action_event(player.get_id(), {"Command Type": "Remove From Map"})
-			
+
 #			player.get_parent_map().remove_map_object(player)
 			player_list.erase(player)
 			player.get_parent_map().get_turn_timer().remove_from_timer_group(player)
 			player.queue_free()
-
-func _peer_disconnected(id):
-	print("ID " + str(id) + " has disconnected.")
 
 # CLIENT SIDE FUNCS ------------------------------
 remote func receive_id_from_server(net_id, instance_id):
@@ -530,6 +525,7 @@ func get_object_from_identity(object_id):
 	var map
 	for child_map in GlobalVars.total_mapsets:
 		if child_map.get_map_server_id() == object_id['Map ID']: map = child_map
+
 	# determine object
 	var object
 	var x = object_id['Position'][0]
