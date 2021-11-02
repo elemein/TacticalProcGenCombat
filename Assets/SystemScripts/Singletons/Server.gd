@@ -356,7 +356,7 @@ remote func receive_map_object_event(map_id, map_action):
 	match map_action['Scope']:
 		"Room":
 			var room
-			for map in GlobalVars.total_mapsets:
+			for map in GlobalVars.total_maps:
 				if map_id == map.get_map_server_id():
 					for each_room in map.rooms:
 						if each_room.id == map_action['Room ID']:
@@ -523,7 +523,7 @@ func get_player_obj_from_netid(netid):
 
 func get_object_from_identity(object_id):
 	var map
-	for child_map in GlobalVars.total_mapsets:
+	for child_map in GlobalVars.total_maps:
 		if child_map.get_map_server_id() == object_id['Map ID']: map = child_map
 
 	# determine object

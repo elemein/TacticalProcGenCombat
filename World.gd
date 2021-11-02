@@ -22,8 +22,9 @@ func _ready():
 	mapsets = [dungeon]
 	
 	for mapset in mapsets:
+		GlobalVars.total_mapsets.append(mapset)
 		for level in mapset.floors:
-			GlobalVars.total_mapsets.append(mapset.floors[level])
+			GlobalVars.total_maps.append(mapset.floors[level])
 	
 	move_to_map(player, map_name, 1)
 	
@@ -69,10 +70,6 @@ func remove_obj_from_old_map(object):
 	var curr_map = object.get_parent_map()
 	if typeof(curr_map) != TYPE_STRING:
 		curr_map.get_turn_timer().remove_from_timer_group(object)
-#		curr_map.remove_map_object(object)
-		
-#		curr_map.get_parent_mapset().get_floors().erase(curr_map.get_map_name())
-#		curr_map.queue_free() # remove the old map so it doesnt overlap and mess shit up with the new one
 		
 		Server.object_action_event(object.get_id(), {"Command Type": "Remove From Map"})
 		

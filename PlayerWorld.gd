@@ -17,7 +17,7 @@ func _ready():
 	plyr_play_map.name = GlobalVars.server_map_name
 	add_child(plyr_play_map)
 	mapsets = [plyr_play_map]
-	GlobalVars.total_mapsets.append(plyr_play_map)
+	GlobalVars.total_maps.append(plyr_play_map)
 	unpack_map(GlobalVars.server_map_data)
 	
 	GlobalVars.self_instanceObj.find_and_render_viewfield()

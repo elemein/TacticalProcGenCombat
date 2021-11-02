@@ -15,6 +15,7 @@ var server_player : ActorObj
 var client_state
 
 var total_mapsets = []
+var total_maps = []
 
 var self_netID : int
 var self_instanceID
