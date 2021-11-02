@@ -1,8 +1,5 @@
 extends Node
 
-# When traversing maps, the previous map is destroyed so that it does not interfere
-# with the new one. This isnt desirable behaviour as it completely prevents backtracking.
-# Have this sorted for v0.1
 onready var blank_node = preload("res://Assets/SystemScripts/blank_node.tscn")
 
 const MAPSET = preload("res://Assets/SystemScripts/Mapset.gd")
@@ -23,7 +20,7 @@ func _ready():
 	GlobalVars.total_mapsets.append(plyr_play_map)
 	unpack_map(GlobalVars.server_map_data)
 	
-	first_turn_workaround_for_player_sight()
+	GlobalVars.self_instanceObj.find_and_render_viewfield()
 	Signals.emit_signal("world_loaded")
 
 func clear_play_map():
@@ -189,10 +186,4 @@ func move_to_map(object, mapset_name, target_map_id):
 	
 	targ_map.print_map_grid()
 	
-	first_turn_workaround_for_player_sight()
-	
-func first_turn_workaround_for_player_sight():
-	GlobalVars.self_instanceObj.find_viewfield()
-	GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
-	
-#	player.get_parent_map().hide_non_visible_from_player()
+	object.find_and_render_viewfield()

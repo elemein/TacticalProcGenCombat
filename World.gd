@@ -27,7 +27,7 @@ func _ready():
 	
 	move_to_map(player, map_name, 1)
 	
-	first_turn_workaround_for_player_sight()
+	GlobalVars.self_instanceObj.find_and_render_viewfield()
 	
 	# Put the player on the first floor and clean up the garbage
 	var player_child = dungeon.get_node('Floor1/Players/Player')
@@ -88,13 +88,9 @@ func move_to_map(object, mapset_name, target_map_id):
 	
 	targ_map.print_map_grid()
 	
-	first_turn_workaround_for_player_sight()
+	object.find_and_render_viewfield()
 	
 	if object.get_id()['NetID'] != 1:
 		Server.move_client_to_map(object, targ_map)
 	
 	Server.object_action_event(object.get_id(), {"Command Type": "Spawn On Map"})
-	
-func first_turn_workaround_for_player_sight():
-	player.viewfield = player.view_finder.find_view_field(player.get_map_pos()[0], player.get_map_pos()[1])
-	player.resolve_viewfield_to_screen()

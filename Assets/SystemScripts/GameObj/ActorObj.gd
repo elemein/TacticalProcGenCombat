@@ -191,11 +191,16 @@ func end_turn():
 	for remote_player in Server.player_list:
 		Server.update_all_actor_stats(self)
 
+# View related functions.
 func find_viewfield():
 	viewfield = view_finder.find_view_field(map_pos[0], map_pos[1])
 
 func resolve_viewfield_to_screen():
 	view_finder.resolve_viewfield()
+
+func find_and_render_viewfield():
+	find_viewfield()
+	resolve_viewfield_to_screen()
 
 # Movement related functions.
 func check_move_action(move):
