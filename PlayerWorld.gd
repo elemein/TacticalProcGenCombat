@@ -76,6 +76,7 @@ func unpack_map(map_data):
 							new_object.set_map_pos(new_object.get_id()['Position'])
 							
 							GlobalVars.self_instanceObj = new_object
+							GlobalVars.self_instanceObj.connect_to_status_bars()
 						else:
 							new_object = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
 							Server.add_player_to_local_player_list(new_object)

@@ -189,6 +189,15 @@ func set_direction(direction):
 	set_actor_dir(direction)
 	directional_timer.start(DIRECTION_SELECT_TIME) 
 
+func connect_to_status_bars():
+	var _result = self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
+	_result = self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
+	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
+
+	emit_signal("prepare_gui", start_stats)
+	Signals.emit_signal("player_attack_power_updated", start_stats['Attack Power'])
+	Signals.emit_signal("player_spell_power_updated", start_stats['Spell Power'])
+
 # Getters
 #func get_inventory_open() -> bool:
 #	return inventory_open
