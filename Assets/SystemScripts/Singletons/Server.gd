@@ -184,7 +184,7 @@ remote func receive_object_action_event(object_id, action):
 	
 	var object = get_object_from_identity(object_id)
 
-	if object == null: return
+	if object == null and action['Command Type'] != 'Spawn On Map': return
 
 	print("%s(%s) does: %s" % [object_id['Identifier'], object_id['Instance ID'], action])
 	
