@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Assets/GUI/StatusBar/HealthBar2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/GUI/StatusBar/ManaBar2D.tscn" type="PackedScene" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://Assets/GUI/StatusBar/BaseAbility.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/GUI/MiniMap/MiniMap.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Assets/GUI/NewInventory/Inventory.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Assets/GUI/PlayerReady/PlayerReady.tscn" type="PackedScene" id=8]
 
 [node name="StatusBar" type="Control"]
 anchor_right = 1.0
@@ -44,37 +46,37 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBox container" type="HBoxContainer" parent="StatusBarContainer"]
+[node name="BottomLeft" type="HBoxContainer" parent="StatusBarContainer"]
 margin_right = 568.0
 margin_bottom = 100.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="StatusBarContainer/HBox container"]
+[node name="StatusBars" type="VBoxContainer" parent="StatusBarContainer/BottomLeft"]
 margin_right = 256.0
 margin_bottom = 100.0
 
-[node name="HealthBar2D" parent="StatusBarContainer/HBox container/VBoxContainer" instance=ExtResource( 1 )]
+[node name="Health" parent="StatusBarContainer/BottomLeft/StatusBars" instance=ExtResource( 1 )]
 margin_top = 8.0
 margin_right = 256.0
 margin_bottom = 40.0
 size_flags_horizontal = 0
 size_flags_vertical = 6
 
-[node name="ManaBar2D" parent="StatusBarContainer/HBox container/VBoxContainer" instance=ExtResource( 2 )]
+[node name="Mana" parent="StatusBarContainer/BottomLeft/StatusBars" instance=ExtResource( 2 )]
 margin_top = 60.0
 margin_right = 256.0
 margin_bottom = 92.0
 size_flags_horizontal = 0
 size_flags_vertical = 6
 
-[node name="Ability1" parent="StatusBarContainer/HBox container" instance=ExtResource( 4 )]
+[node name="Ability1" parent="StatusBarContainer/BottomLeft" instance=ExtResource( 4 )]
 margin_left = 260.0
 margin_right = 360.0
 
-[node name="Ability2" parent="StatusBarContainer/HBox container" instance=ExtResource( 4 )]
+[node name="Ability2" parent="StatusBarContainer/BottomLeft" instance=ExtResource( 4 )]
 margin_left = 364.0
 margin_right = 464.0
 
-[node name="Ability3" parent="StatusBarContainer/HBox container" instance=ExtResource( 4 )]
+[node name="Ability3" parent="StatusBarContainer/BottomLeft" instance=ExtResource( 4 )]
 margin_left = 468.0
 margin_right = 568.0
 
@@ -93,5 +95,11 @@ margin_bottom = 128.0
 grow_horizontal = 0
 grow_vertical = 0
 
-[connection signal="set_health_bar" from="." to="StatusBarContainer/HBox container/VBoxContainer/HealthBar2D" method="_on_StatusBar_set_health_bar"]
-[connection signal="set_mana_bar" from="." to="StatusBarContainer/HBox container/VBoxContainer/ManaBar2D" method="_on_StatusBar_set_mana_bar"]
+[node name="Inventory" parent="." instance=ExtResource( 7 )]
+margin_left = 471.0
+margin_top = 305.0
+margin_right = 1129.0
+margin_bottom = 595.0
+
+[node name="VBox" parent="." instance=ExtResource( 8 )]
+margin_top = 400.0

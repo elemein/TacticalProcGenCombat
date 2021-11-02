@@ -12,6 +12,8 @@ var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/Body
 var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
 
 # Map Objects
+var base_ground = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
+var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
 var base_tempwall = preload("res://Assets/Objects/MapObjects/TempWall.tscn")
 var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
 
@@ -23,12 +25,30 @@ var base_imp = preload("res://Assets/Objects/EnemyObjects/Imp.tscn")
 var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
 var base_minotaur = preload("res://Assets/Objects/EnemyObjects/Minotaur.tscn")
 
+# Actors
+var base_player = preload("res://Assets/Objects/PlayerObjects/Player.tscn")
+var base_pside_player = preload("res://Assets/Objects/PlayerObjects/PSidePlayer.tscn")
+var base_dumb_actor = preload("res://Assets/Objects/PlayerObjects/DumbActor.tscn")
+
+# Graphics
+var plague_doc_graphics = preload("res://Assets/ObjectGraphicScenesForDumbActor/PlagueDocGraphics.tscn")
+var imp_graphics = preload("res://Assets/ObjectGraphicScenesForDumbActor/ImpGraphicsScene.tscn")
+var fox_graphics = preload("res://Assets/ObjectGraphicScenesForDumbActor/FoxGraphicsScene.tscn")
+var minotaur_graphics = preload("res://Assets/ObjectGraphicScenesForDumbActor/MinotaurGraphicsScene.tscn")
+
+# Lantern
+var lantern_light_effect = preload("res://Assets/Objects/Effects/Lantern/LanternLight.tscn")
+
 func create_object(object_scene, map, map_pos, visibility) -> Object:
 	var object = object_scene.instance()
-	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
 	object.visible = visibility
+	
+	# If the map/map_pos = 'Inventory' (i.e. a string), do not designate a map.
+	if typeof(map) == TYPE_STRING: return object
+		
 	object.set_map_pos([map_pos[0], map_pos[1]])
 	object.set_parent_map(map)
+	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
 	map.add_map_object(object)
 	
 	return object
@@ -48,6 +68,31 @@ func spawn_item(item_name, map, map_pos, visibility):
 	item.add_to_group('loot')
 	
 	return item
+
+func spawn_actor(actor_name, map, map_pos, visibility):
+	var actor_scene
+	
+	match actor_name:
+		'PlagueDoc': actor_scene = base_dumb_actor
+		'Fox': actor_scene = base_dumb_actor
+		'Imp': actor_scene = base_dumb_actor
+	
+	var actor = create_object(actor_scene, map, map_pos, visibility)
+	
+	match actor_name:
+		'PlagueDoc':
+			#Replacing the placeholder graphics with intended:
+			actor.set_graphics(plague_doc_graphics.instance())
+			actor.add_child(lantern_light_effect.instance())
+			actor.add_to_group('player')
+		'Fox':
+			actor.set_graphics(fox_graphics.instance())
+			actor.add_to_group('enemies')
+		'Imp':
+			actor.set_graphics(imp_graphics.instance())
+			actor.add_to_group('enemies')
+	
+	return actor
 
 func spawn_enemy(enemy_name, map, map_pos, visibility):
 	var enemy_scene
@@ -76,6 +121,8 @@ func spawn_map_object(object_name, map, map_pos, visibility):
 	match object_name:
 		'TempWall': object_scene = base_tempwall
 		'Stairs': object_scene = base_stairs
+		'BaseGround': object_scene = base_ground
+		'BaseWall': object_scene = base_wall
 			
 	var object = create_object(object_scene, map, map_pos, visibility)
 	

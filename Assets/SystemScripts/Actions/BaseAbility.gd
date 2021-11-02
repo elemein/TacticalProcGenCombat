@@ -40,14 +40,14 @@ func move_check() -> bool:
 	set_target_actor_pos()
 	for target_tile in get_target_tiles():
 		for object in target_tile:
-			if object.object_type in GlobalVars.NON_TRAVERSABLES:
+			if object.get_id()['CategoryType'] in GlobalVars.NON_TRAVERSABLES:
 				return false
 	return true
 			
 func heal_user():
-	parent.set_hp(parent.get_hp() + spell_final_power)
-	parent.display_notif(("+" + str(spell_final_power)), 'heal')
-			
+	Server.update_actor_stat(parent.get_id(), {"Stat": "HP", "Modifier": spell_final_power})
+	Server.actor_notif_event(parent.get_id(), ("+" + str(spell_final_power)), 'heal')
+
 func play_audio():
 	UseSpell = find_node('UseSpell')
 	if UseSpell != null and not UseSpell.is_playing():
@@ -65,7 +65,7 @@ func mana_check() -> bool:
 	if parent.get_mp() and parent.get_mp() < spell_cost:
 		if not out_of_mana.is_playing():
 			out_of_mana.translation = parent.translation
-			out_of_mana.play()
+#			out_of_mana.play()
 		return false
 	return true
 
@@ -201,7 +201,7 @@ func do_damage(amount, variance):
 	for objects_on_tile in get_target_tiles():
 		if typeof(objects_on_tile) != TYPE_STRING:
 			for object in objects_on_tile:
-				if object.get_obj_type() in ['Enemy', 'Player']:
+				if object.get_id()['CategoryType'] in ['Enemy', 'Player']:
 					damaged_objects.append(object)
 
 	for object in damaged_objects:

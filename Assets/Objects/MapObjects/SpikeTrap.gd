@@ -6,12 +6,17 @@ var sprung = false
 
 var minimap_icon = null
 
-func _init().('Spike Trap'): pass
+var identity = {"Category": "MapObject", "CategoryType": "Trap", 
+				"Identifier": "Spike Trap", 'Map ID': null, 
+				'Position': [0,0], 'Instance ID': get_instance_id()}
+
+func _init().(identity): pass
 
 func activate_trap(tile_objects):
 	for object in tile_objects:
-		if object.get_obj_type() == 'Player':
+		if object.get_id()['CategoryType'] == 'Player':
 			if sprung == false: # only spring if not already sprung
+				Server.object_action_event(object_identity, {"Command Type": "Spawn On Map"})
 				sprung = true
 				visible = true
 				object.take_damage(trap_damage, false)
@@ -23,6 +28,4 @@ func activate_trap(tile_objects):
 				$Tween.start()
 
 func _on_tween_complete(_tween_object, _tween_node_path):
-	print('tween completed')
-	parent_map.remove_map_object(self)
-	self.queue_free()
+	Server.object_action_event(object_identity, {"Command Type": "Remove From Map"})

@@ -53,8 +53,6 @@ func perlin_flicker_effect():
 	if (value > MAX_VALUE): value = 0.0
 	var perlin_val = (noise.get_noise_1d(value) + 1)/2
 	
-	print(perlin_val)
-	
 	var energy_variance = max_energy - min_energy
 	
 	light_energy = min_energy + (perlin_val * energy_variance)
@@ -69,8 +67,6 @@ func flicker_effect(): #works like dogshit
 	var flicker_chance = 20
 
 	if (flicker < flicker_chance):
-		print(flicker)
-		print("flicker")
 		omni_range += rng.randi_range(2,5)
 		omni_range = max_range if omni_range > max_range else omni_range
 

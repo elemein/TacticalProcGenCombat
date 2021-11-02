@@ -24,9 +24,6 @@ func _on_Actions_spell_cast_fireball():
 
 func use():
 	map = parent.get_parent_map()
-	
-	# Update mana
-	parent.set_mp(parent.get_mp() - spell_cost)
 
 	play_audio()
 	
@@ -36,10 +33,17 @@ func use():
 	
 	effect_tween.connect("tween_completed", self, "_on_tween_complete")
 	effect_tween.interpolate_property(effect, "translation", effect.translation, target_spell_pos, anim_time, Tween.TRANS_QUAD, Tween.EASE_OUT)
-	effect_tween.start()
 
-	set_power()
-	do_damage(spell_final_power, damage_variance)
+	# Handles Anim
+	parent.play_anim('run')
+	effect_tween.interpolate_callback(parent, anim_time, "play_anim", 'idle')
+
+	effect_tween.start()
+	
+	if GlobalVars.peer_type == 'server':
+		Server.update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})
+		set_power()
+		do_damage(spell_final_power, damage_variance)
 
 func _on_tween_complete(_tween_object, _tween_node_path):
 	effect_tween.disconnect("tween_completed", self, "_on_tween_complete")

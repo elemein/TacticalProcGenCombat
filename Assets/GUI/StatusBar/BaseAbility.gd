@@ -12,7 +12,6 @@ var icon_path_beg = "res://Assets/GUI/StatusBar/"
 var icon_path_end = "_x76.png"
 var icon_path = null
 
-
 var base_spell_cost = 0
 var base_spell_power = 0
 var spell_cost = 0
@@ -21,7 +20,6 @@ var spell_button = ''
 var spell_description = ''
 var uses_any_power = true
 var uses_attack_power = false
-
 
 func _ready():
 	var _result = Signals.connect("player_attack_power_updated", self, "update_attack_power")

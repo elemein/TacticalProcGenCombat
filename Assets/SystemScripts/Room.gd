@@ -38,17 +38,24 @@ func pos_in_room(pos):
 	if (pos_x >= x) and (pos_x <= x + (l-1)):
 		if (pos_z >= z) and (pos_z <= z + (w-1)):
 			print("Player is inside me! I'm %s" % [self])
-			
-			if room_cleared == false:
-				if type in ['Enemy', 'Exit Room']:
-					if exits_blocked == false:
-						count_enemies_in_room()
-						if enemy_count > 0:
-							block_exits()
-			
 			return true
 	#else
 	return false
+
+func check_if_locking(map_player_list):
+	count_enemies_in_room()
+	if room_cleared == true: return
+	if !(type in ['Enemy', 'Exit Room']): return
+	if exits_blocked == true: return
+	if enemy_count <= 0: return
+	if map_player_list.size() == 0: return
+	
+	var all_players_in_room = true
+	for player in map_player_list:
+		if all_players_in_room == true:
+			all_players_in_room = pos_in_room(player.get_id()['Position'])
+	
+	if all_players_in_room: Server.map_object_event(parent_map.get_map_server_id(), {"Scope": "Room", "Room ID": id, "Action": "Block Exits"})
 
 func count_enemies_in_room():
 	var temp_count = 0
@@ -58,11 +65,11 @@ func count_enemies_in_room():
 			var objects_on_tile = parent_map.get_tile_contents(pos_x, pos_z)
 			
 			for obj in objects_on_tile:
-				if obj.get_obj_type() in GlobalVars.ENEMY_TYPES:
+				if obj.get_id()['CategoryType'] == 'Enemy':
 					if obj.get_is_dead() == false:
 						temp_count += 1
 	enemy_count = temp_count
-	print("Enemies detected in room: " + str(enemy_count))
+#	print("Enemies detected in room: " + str(enemy_count))
 
 func block_exits():
 	for exit in exits:
@@ -84,7 +91,7 @@ func unblock_exits():
 		var objects_on_tile = parent_map.get_tile_contents(exit[0], exit[1])
 		
 		for obj in objects_on_tile:
-			if obj.get_obj_type() == 'TempWall':
+			if obj.get_id()['CategoryType'] == 'TempWall':
 				obj.remove_self()
 	
 func log_enemy_death(_dead_enemy):
@@ -92,7 +99,7 @@ func log_enemy_death(_dead_enemy):
 	
 	if enemy_count <= 0: 
 		room_cleared = true
-		unblock_exits()
+		Server.map_object_event(parent_map.get_map_server_id(), {"Scope": "Room", "Room ID": id, "Action": "Unblock Exits"})
 		
 		if type == 'Exit Room':
-			var _result = GlobalVars.get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
+			Server.map_object_event(parent_map.get_map_server_id(), {"Scope": "Map", "Action": "Victory"})

@@ -8,7 +8,7 @@ const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
 var pathfinder = PATHFINDER.new()
 
 const Y_OFFSET = -0.3
-const AVG_NO_OF_ENEMIES_PER_ROOM = 1
+const AVG_NO_OF_ENEMIES_PER_ROOM = 0
 const NUMBER_OF_TRAPS = 5
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
@@ -63,7 +63,7 @@ func get_random_available_tile_in_room(room) -> Array:
 		var all_clear = true
 		
 		for object in total_map[x][z]:
-			if object.get_obj_type() != 'Ground': 
+			if object.get_id()['CategoryType'] != 'Ground': 
 				all_clear = false
 		
 		if all_clear == true: tile_clear = true
@@ -72,7 +72,7 @@ func get_random_available_tile_in_room(room) -> Array:
 	
 func find_smallest_room():
 	var smallest_room
-	var smallest_room_area = 99999
+	var smallest_room_area = INF
 	
 	for room in rooms:
 		if room.area < smallest_room_area: 
@@ -87,13 +87,16 @@ func assign_spawn_room():
 	spawn_room['type'] = 'Player Spawn'
 	map_object.spawn_room = spawn_room
 	
+#	# ENABLE BELOW IF YOU WANT STAIRS IN SPAWN ROOM
 	var x = spawn_room.topleft[0]
 	var z = spawn_room.topleft[1]
-	
+
 	if map_object.map_id < map_object.parent_mapset.floor_count: # if last floor, no stairs
 		var stairs = obj_spawner.spawn_map_object('Stairs', map_object, [x,z], false)
 		stairs.connects_to = map_object.map_id + 1
+	# ------------------------------------------------------------
 	
+	rng.randomize()
 	spawn_treasure_in_room(spawn_room, rng.randi_range(0,1), 
 							rng.randi_range(0,1), rng.randi_range(0,1), 0)
 

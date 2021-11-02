@@ -98,16 +98,20 @@ func sort_actors_by_speed():
 			highest_speed -= 1
 
 func end_turn():
-	gui.clear_action()
 	for actor in actors:
 		actor.end_turn()
+	Server.update_round_for_players_in_map(map)
 	turn_in_process = false
 	turn_counter += 1
 	map.print_map_grid()
 	
-	map.hide_non_visible_from_player()
+	map.check_for_map_events()
 	
-	map.check_what_room_player_is_in()
+	for actor in actors:
+		if actor.get_id()['CategoryType'] == 'Enemy':
+			actor.find_viewfield()
+			
+	Server.resolve_all_viewfields(map)
 
 func _physics_process(_delta):
 	if turn_in_process:
@@ -126,7 +130,7 @@ func check_if_actors_ready() -> bool:
 		if actor.ready_status == false: all_ready = false
 
 	for actor in actors:
-		if actor.object_type == 'Player':
+		if actor.get_id()['CategoryType'] == 'Player':
 			if actor.is_dead == false: players_alive += 1
 	if players_alive == 0:
 		all_ready = false

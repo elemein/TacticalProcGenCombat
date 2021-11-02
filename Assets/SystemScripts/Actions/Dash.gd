@@ -16,9 +16,6 @@ func _on_Actions_spell_cast_dash():
 func use():
 	map = parent.get_parent_map()
 	
-	# Update mana
-	parent.set_mp(parent.get_mp() - spell_cost)
-	
 	if move_check() == false:
 		parent = null
 		return
@@ -26,4 +23,7 @@ func use():
 	play_audio()
 
 	set_target_actor_pos()
-	parent.manual_move_char(2)
+	parent.move_actor_in_facing_dir(2)
+
+	if GlobalVars.peer_type == 'server':
+		Server.update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})

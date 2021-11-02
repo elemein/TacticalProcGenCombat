@@ -5,21 +5,18 @@ extends Node
 # ALL mapgen shit. The map should contain the map; it shouldnt generate itself.
 # Revealing and hiding things from the player.
 
-const Y_OFFSET = -0.3
-
 const TIMER_SCENE = preload("res://Assets/Objects/TurnTimer.tscn")
 var turn_timer = TIMER_SCENE.instance()
 
 var rng = RandomNumberGenerator.new()
 
 var in_view_objects = []
-var objs_visible_to_player_last_turn = []
-var player
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
 var parent_mapset
 var map_name = ''
 var map_id = 1
+var map_server_id 
 var map_grid = []
 var rooms
 
@@ -37,6 +34,7 @@ func _init(name, id, type):
 	map_type = type
 
 func _ready():
+	map_server_id = get_instance_id()
 	rng.randomize()
 	turn_timer.set_map(self)
 	add_child(turn_timer)
@@ -56,18 +54,25 @@ func add_map_objects_to_tree():
 				if object.get_parent() != null:
 					object.get_parent().remove_child(object)
 				add_child(object)
-				if object.get_obj_type() == 'Enemy':
+				if object.get_id()['CategoryType'] == 'Enemy':
 					object.setup_actor()
 					current_number_of_enemies += 1
 
 func place_player_on_map(object):
-	player = object # caches player for future funcs
+	var player = object
 	
 	for room in rooms:
 		if room['type'] == 'Player Spawn':
 			var tile = [room.center[0], room.center[1]]
 			map_grid[tile[0]][tile[1]].append(object)
-			add_child(player)
+			
+			# WORKAROUND
+			var players_node = get_node('Players')
+			if players_node != null:
+				players_node.add_child(player)
+			else:
+				add_child(player)
+				
 			turn_timer.add_to_timer_group(player)
 			return tile
 
@@ -87,21 +92,22 @@ func print_map_grid():
 			var to_append = ''
 			
 			for object in tile:
-				match object.get_obj_type():
-					'Wall':
+				match object.get_id()['Identifier']:
+					'BaseWall':
 						if (to_append in ['X', 'E', 't','c','s', 'm']) == false: 
 							to_append = '.'
-					'Ground':
+					'BaseGround':
 						if (to_append in ['X', 'E', 't','c','s', 'm']) == false: 
 							to_append = '0'
 					'Player': to_append = 'X'
-					'Enemy': to_append = 'E'
+					'Imp': to_append = 'i'
+					'Fox': to_append = 'f'
+					'Minotaur': to_append = 'B'
 					'Spike Trap': to_append = 't'
 					'Coins': to_append = 'c'
-					'Inv Item':
-						match object.get_inv_item_name():
-							'Sword': to_append = 's'
-							'Magic Staff': to_append = 'm'
+
+					'Sword': to_append = 's'
+					'Magic Staff': to_append = 'm'
 			
 			converted_row.append(to_append)
 		print(converted_row)
@@ -126,10 +132,10 @@ func tile_in_bounds(x,z):
 func tile_available(x,z):
 	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
-			if object.get_obj_type() in GlobalVars.NON_TRAVERSABLES: return false
+			if object.get_id()['CategoryType'] in GlobalVars.NON_TRAVERSABLES: return false
 			
-			if (object.get_obj_type() in GlobalVars.ENEMY_TYPES) or \
-				(object.get_obj_type() == 'Player'):
+			if (object.get_id()['CategoryType'] == 'Enemy') or \
+				(object.get_id()['CategoryType'] == 'Player'):
 				if object.get_is_dead() == true: continue
 				else: return false
 		return true
@@ -138,38 +144,11 @@ func tile_available(x,z):
 func is_tile_wall(x,z):
 	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
-			if object.get_obj_type() in ['Wall', 'TempWall']: return true
+			if object.get_id()['CategoryType'] in ['Wall', 'TempWall']: return true
 	return false
 
 func get_map():
 	return map_grid
-
-func hide_non_visible_from_player():
-	var viewfield = player.get_viewfield()
-	var objs_visible_to_player = []
-	
-	# catalog what ought to be in view
-	for tile in viewfield: 
-		var objects_on_tile = get_tile_contents(tile[0], tile[1])
-		
-		for object in objects_on_tile:
-			if object.get_obj_type() != 'Spike Trap': # dont reveal traps
-				objs_visible_to_player.append(object)
-				object.visible = true
-
-	# check what was in vision last turn
-	# if its not in the seen objects, turn off visible
-	for object in objs_visible_to_player_last_turn:
-		if not (object in objs_visible_to_player):
-			object.visible = false
-	
-	# save what was in vision
-	objs_visible_to_player_last_turn = objs_visible_to_player
-
-
-func hide_all():
-	for object in objs_visible_to_player_last_turn:
-		object.visible = false
 
 func add_map_object(object):
 	var tile = object.get_map_pos()
@@ -182,7 +161,7 @@ func remove_map_object(object):
 	var tile = object.get_map_pos()
 	
 	map_grid[tile[0]][tile[1]].erase(object)
-	remove_child(object)
+	object.get_parent().remove_child(object)
 
 func remove_from_map_grid_but_keep_node(object):
 	var tile = object.get_map_pos()
@@ -192,9 +171,16 @@ func remove_from_map_tree(object):
 	remove_child(object)
 # -----------------------------------------
 
-func check_what_room_player_is_in():
+func check_for_map_events():
+	
+	var relevant_player_list = []
+	for player in Server.get_player_list():
+		if player.get_id()['Map ID'] == get_map_server_id():
+			relevant_player_list.append(player)
+	
+	# Check if rooms should lock:
 	for room in rooms:
-		room.pos_in_room(player.get_map_pos())
+		room.check_if_locking(relevant_player_list)
 
 # Getters
 func get_turn_timer() -> Object: return turn_timer
@@ -205,6 +191,8 @@ func get_map_name() -> String: return map_name
 
 func get_map_type() -> String: return map_type
 
+func get_map_server_id(): return map_server_id
+
 # Setters
 func set_parent_mapset(mapset): parent_mapset = mapset
 
@@ -212,6 +200,52 @@ func log_enemy_death(dead_enemy):
 	current_number_of_enemies -= 1
 	
 	for room in rooms:
-		var in_room = room.pos_in_room(player.get_map_pos())
+		var in_room = room.pos_in_room(dead_enemy.get_map_pos())
 		if in_room == true:
 			room.log_enemy_death(dead_enemy)
+
+func return_map_grid_encoded_to_string():
+	var to_return = []
+	
+	for x in range(map_grid.size()):
+		to_return.append([])
+		for z in range(map_grid[0].size()):
+			to_return[x].append([])
+			for obj in range(map_grid[x][z].size()):
+				to_return[x][z].append([])
+				to_return[x][z][obj].append(map_grid[x][z][obj].get_id())
+#				print(map_grid[x][z][obj].get_id()['Identifier'])
+
+	return to_return
+
+func return_rooms_encoded_to_dict():
+	var to_return = []
+	
+	for room in rooms:
+		var dict_to_add = {}
+		
+		dict_to_add['parent_map_id'] = room.parent_map.map_server_id
+		dict_to_add['id'] = room.id
+		dict_to_add['type'] = room.type
+
+		dict_to_add['split'] = room.split
+		dict_to_add['center'] = room.center
+		
+		dict_to_add['x'] = room.x
+		dict_to_add['z'] = room.z
+		dict_to_add['w'] = room.w
+		dict_to_add['l'] = room.l
+		dict_to_add['area'] = room.area
+		
+		dict_to_add['topleft'] = room.topleft
+		dict_to_add['topright'] = room.topright
+		dict_to_add['bottomleft'] = room.bottomleft
+		dict_to_add['bottomright'] = room.bottomright
+		
+		dict_to_add['enemy_count'] = room.enemy_count
+		dict_to_add['exits'] = room.exits
+		dict_to_add['distance_to_spawn'] = room.distance_to_spawn
+		
+		to_return.append(dict_to_add)
+		
+	return to_return

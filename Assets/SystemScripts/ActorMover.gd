@@ -5,11 +5,23 @@ var direction_facing
 var target_pos
 var turn_timer
 
+onready var parent_tween = get_node("../Tween")
+
 # Initiliaztion functions
 func set_actor(setter):
 	actor = setter
 	target_pos = actor.get_translation()
 	turn_timer = actor.get_parent_map().get_turn_timer()
+
+func move_actor_translation():
+	# ANIM TIMER FOR MOVE IS 0.35
+	var walk_time = 0.35
+	parent_tween.interpolate_property(actor, "translation", actor.get_translation(), target_pos, walk_time, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	
+	# handles animation
+	actor.play_anim('run')
+	parent_tween.interpolate_callback(actor, walk_time, "play_anim", 'idle')
+	parent_tween.start()
 
 func set_actor_translation():
 	var interp_mod = actor.get_turn_anim_timer().time_left / actor.get_turn_anim_timer().get_wait_time()
@@ -103,14 +115,19 @@ func move_actor(amount):
 
 	map_pos = actor.parent_map.move_on_map(actor, map_pos, target_tile)
 	actor.set_map_pos(map_pos)
-	check_tile_for_steppable_objects(map_pos[0], map_pos[1])
+	move_actor_translation()
+	
+	if GlobalVars.peer_type == 'server':
+		check_tile_for_steppable_objects(map_pos[0], map_pos[1])
 
 func check_tile_for_steppable_objects(x,z):
 	var tile_objects = actor.parent_map.get_tile_contents(x,z)
 	
 	for object in tile_objects:
-		match object.get_obj_type():
-			'Spike Trap': object.activate_trap(tile_objects)
+		match object.get_id()['CategoryType']:
+			'Trap': object.activate_trap(tile_objects)
 			'Coins': object.collect_item(tile_objects)
-			'Inv Item': object.collect_item(tile_objects)
-			'Stairs': object.take_stairs(tile_objects)
+			'Armour': object.collect_item(tile_objects)
+			'Weapon': object.collect_item(tile_objects)
+			'Accessory': object.collect_item(tile_objects)
+			'Interactable': object.interact_w_object(tile_objects)

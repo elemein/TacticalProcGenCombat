@@ -29,7 +29,7 @@ var map
 
 # owner vars
 var inventory_owner
-var owner_type
+var owner_id
 
 # parallel arrays
 var inventory_objects = []
@@ -51,34 +51,36 @@ func setup_inventory(owner):
 	add_child(object_action_menu)
 	object_action_menu.visible = false
 	inventory_owner = owner
-	owner_type = owner.get_obj_type()
+	owner_id = owner.get_id()
 	inventory_ui.visible = false
 	map = inventory_owner.get_parent_map()
 
 func _physics_process(_delta):
-	if owner_type == 'Player':
+	if owner_id['CategoryType'] == 'Player':
 		var turn_timer = inventory_owner.get_parent_map().get_turn_timer()
 		
 		if turn_timer.get_turn_in_process() == true: return # lock out while in turn
 		
-		if Input.is_action_just_pressed("tab"):
-			if inventory_ui.visible == false: open_inv_ui()
-			else: close_inv_ui()
-		
-		if inventory_ui.visible == true:
-			if inventory_objects.size() > 0:
-				if Input.is_action_just_pressed("w"):
-					if !object_action_menu_open: move_inv_selector(-1)
-					elif object_action_menu_open: move_actmenu_selector(-1)
-				if Input.is_action_just_pressed("s"):
-					if !object_action_menu_open: move_inv_selector(1)
-					elif object_action_menu_open: move_actmenu_selector(1)
-				if Input.is_action_just_pressed("e"):
-					if !object_action_menu_open: open_object_action_menu()
-					elif object_action_menu_open: handle_action_menu()
-				if Input.is_action_just_pressed("q"):
-					if !object_action_menu_open: close_inv_ui()
-					elif object_action_menu_open: close_object_action_menu()
+		if is_players_inventory():
+			if Input.is_action_just_pressed("tab"):
+				Server.request_for_inventory()
+			
+			if inventory_ui.visible == true:
+				if inventory_objects.size() > 0:
+					if Input.is_action_just_pressed("w"):
+						if !object_action_menu_open: move_inv_selector(-1)
+						elif object_action_menu_open: move_actmenu_selector(-1)
+					if Input.is_action_just_pressed("s"):
+						if !object_action_menu_open: move_inv_selector(1)
+						elif object_action_menu_open: move_actmenu_selector(1)
+					if Input.is_action_just_pressed("e"):
+						if !object_action_menu_open: open_object_action_menu()
+						elif object_action_menu_open: handle_action_menu()
+					if Input.is_action_just_pressed("q"):
+						if !object_action_menu_open: close_inv_ui()
+						elif object_action_menu_open: close_object_action_menu()
+
+func is_players_inventory(): return inventory_owner.get_id()['Instance ID'] == GlobalVars.self_instanceID
 
 func handle_action_menu():
 	match object_action_menu.get_node("MenuHolder").get_children()[actmenu_selector_index].text:
@@ -207,18 +209,33 @@ func make_action_option_list() -> Array:
 	
 	return optionlist
 
+func build_inv_from_list(inv_list):
+	for item in inv_list:
+		if GlobalVars.peer_type == 'client':
+			var new_item = GlobalVars.obj_spawner.\
+			spawn_item(item['Identifier'], 'Inventory', 'Inventory', false)
+			new_item.set_id(item)
+			inventory_objects.append(new_item)
+		
+		var new_object = INVENTORY_OBJECT.instance()
+		inventory_ui_slots.add_child(new_object)
+		ui_objects.append(new_object)
+		new_object.set_object_text(item['Identifier'])
+		new_object.set_object_type(item['CategoryType'])
+#		new_object.set_equipped(false)
+
+func reset_inv_ui():
+	for item in inventory_ui_slots.get_children():
+		inventory_ui_slots.remove_child(item)
+		item.queue_free()
+
+	inventory_objects = []
+	ui_objects = []
+
 func add_to_inventory(object):
 	inventory_objects.append(object)
-	
-	var new_object = INVENTORY_OBJECT.instance()
-	inventory_ui_slots.add_child(new_object)
-	ui_objects.append(new_object)
-	new_object.set_object_text(object.get_inv_item_name())
-	new_object.set_object_type(object.get_inv_item_type())
-	new_object.set_equipped(false)
 
 func remove_from_inventory(object):
-	
 	var idx = -1
 	
 	for item in inventory_objects:
@@ -309,10 +326,10 @@ func set_unequip_item_action():
 	inventory_owner.set_action("unequip item")
 
 func drop_item():
-	if item_to_act_on in [equipped_weapon, equipped_armour, equipped_accessory]:
-		unequip_item(item_to_act_on.get_inv_item_type())
+#	if item_to_act_on in [equipped_weapon, equipped_armour, equipped_accessory]:
+#		unequip_item(item_to_act_on.get_inv_item_type())
 	
-	item_to_act_on.set_map_pos_and_translation(inventory_owner.get_map_pos())
+#	item_to_act_on.set_map_pos_and_translation(inventory_owner.get_map_pos())
 	map.add_map_object(item_to_act_on)
 
 	remove_from_inventory(item_to_act_on)
@@ -327,3 +344,9 @@ func get_inventory_objects() -> Array:
 
 func get_item_to_act_on() -> Object:
 	return item_to_act_on
+
+func return_inventory_as_list():
+	var to_return = []
+	for item in inventory_objects:
+		to_return.append(item.get_id())
+	return to_return

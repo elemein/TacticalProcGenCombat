@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Assets/GUI/StatusBar/StatusBar.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Assets/GUI/Arrow.png" type="Texture" id=3]
+[ext_resource path="res://Assets/GUI/ActionIcon/Arrow.png" type="Texture" id=3]
 [ext_resource path="res://Assets/GUI/GUI.gd" type="Script" id=4]
 [ext_resource path="res://World.gd" type="Script" id=6]
 [ext_resource path="res://GUI.gd" type="Script" id=7]

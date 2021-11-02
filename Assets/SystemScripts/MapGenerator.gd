@@ -30,11 +30,13 @@ var tree = {}
 var leaves = []
 var leaf_id = 0
 var rooms = []
+var map_id
 
 var total_map = []
 
 func generate(parent_mapset, name, id, type):
 	reset_map_gen_vars()
+	map_id = id
 	var map_to_return = MAP_CLASS.new(name, id, type)
 	
 	map_to_return.set_parent_mapset(parent_mapset)
@@ -84,7 +86,7 @@ func test_if_map_valid():
 		z -= 1
 		
 		while (x <= room.topleft[0]):
-			if total_map[x][z][0].get_obj_type() == 'Ground':
+			if total_map[x][z][0].get_id()['CategoryType'] == 'Ground':
 				if last_was_ground: return false
 				else: 
 					last_was_ground = true
@@ -100,7 +102,7 @@ func test_if_map_valid():
 		x += 1
 		
 		while (z <= room.topright[1]):
-			if total_map[x][z][0].get_obj_type() == 'Ground':
+			if total_map[x][z][0].get_id()['CategoryType'] == 'Ground':
 				if last_was_ground: return false
 				else: 
 					last_was_ground = true
@@ -116,7 +118,7 @@ func test_if_map_valid():
 		z += 1
 		
 		while (x >= room.bottomright[0]):
-			if total_map[x][z][0].get_obj_type() == 'Ground':
+			if total_map[x][z][0].get_id()['CategoryType'] == 'Ground':
 				if last_was_ground: return false
 				else: 
 					last_was_ground = true
@@ -132,7 +134,7 @@ func test_if_map_valid():
 		x -= 1
 		
 		while (z >= room.bottomleft[1]):
-			if total_map[x][z][0].get_obj_type() == 'Ground':
+			if total_map[x][z][0].get_id()['CategoryType'] == 'Ground':
 				if last_was_ground: return false
 				else: 
 					last_was_ground = true
@@ -160,6 +162,7 @@ func create_floor():
 			var wall = base_wall.instance()
 			wall.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, z * GlobalVars.TILE_OFFSET)
 			wall.visible = false
+			wall.set_map_pos([x,z])
 			
 			total_map[x].append([wall])
 
@@ -265,7 +268,8 @@ func create_rooms():
 				var ground = base_block.instance()
 				ground.translation = Vector3((x) * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, (z) * GlobalVars.TILE_OFFSET)
 				ground.visible = false
-				
+				ground.set_map_pos([x,z])
+
 				total_map[x][z][0] = ground
 			
 func join_rooms():
@@ -298,19 +302,20 @@ func connect_leaves(leaf1, leaf2):
 			
 	for i in range(x, x+l):
 		for j in range(z, z+w):
-			if (total_map[i][j][0].get_obj_type() == 'Wall'):
+			if (total_map[i][j][0].get_id()['CategoryType'] == 'Wall'):
 				var ground = base_block.instance()
 				ground.translation = Vector3((i) * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, (j) * GlobalVars.TILE_OFFSET)
 				ground.visible = false
+				ground.set_map_pos([x,z])
 				total_map[i][j][0] = ground 
 
 func check_if_path_may_need_extension(x, z, split_type):
 	if split_type == 'h':
-		if total_map[x+1][z+1][0].get_obj_type() == 'Ground': return true
-		if total_map[x+1][z-1][0].get_obj_type() == 'Ground': return true
+		if total_map[x+1][z+1][0].get_id()['CategoryType'] == 'Ground': return true
+		if total_map[x+1][z-1][0].get_id()['CategoryType'] == 'Ground': return true
 	elif split_type == 'v':
-		if total_map[x+1][z+1][0].get_obj_type() == 'Ground': return true
-		if total_map[x-1][z+1][0].get_obj_type() == 'Ground': return true
+		if total_map[x+1][z+1][0].get_id()['CategoryType'] == 'Ground': return true
+		if total_map[x-1][z+1][0].get_id()['CategoryType'] == 'Ground': return true
 	
 	return false
 
@@ -323,13 +328,14 @@ func clear_deadends():
 		for x in range(0, total_map.size()-1):
 			for z in range(0, total_map[0].size()-1): 
 				# using 0th entry v here, is okay at this stage.
-				if total_map[x][z][0].get_obj_type() != 'Ground' : continue
+				if total_map[x][z][0].get_id()['CategoryType'] != 'Ground' : continue
 				
 				var roof_count = check_cardinal_dirs_for_walls(x,z)
 				if roof_count == 3:
 					var wall = base_wall.instance()
 					wall.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, z * GlobalVars.TILE_OFFSET)
 					wall.visible = false
+					wall.set_map_pos([x,z])
 					
 					total_map[x][z][0] = wall
 
@@ -337,10 +343,10 @@ func clear_deadends():
 
 func check_cardinal_dirs_for_walls(x,z):
 	var count = 0
-	if total_map[x][z-1][0].get_obj_type() == 'Wall' : count += 1
-	if total_map[x][z+1][0].get_obj_type() == 'Wall' : count += 1
-	if total_map[x-1][z][0].get_obj_type() == 'Wall' : count += 1
-	if total_map[x+1][z][0].get_obj_type() == 'Wall' : count += 1
+	if total_map[x][z-1][0].get_id()['CategoryType'] == 'Wall' : count += 1
+	if total_map[x][z+1][0].get_id()['CategoryType'] == 'Wall' : count += 1
+	if total_map[x-1][z][0].get_id()['CategoryType'] == 'Wall' : count += 1
+	if total_map[x+1][z][0].get_id()['CategoryType'] == 'Wall' : count += 1
 			
 	return count
 
