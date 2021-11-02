@@ -29,7 +29,7 @@ var enemy_count = 0
 var room_cleared = false
 var exits_blocked = false
 
-var obj_spawner = GlobalVars.plyr_obj_spawner
+var obj_spawner = GlobalVars.obj_spawner
 
 func pos_in_room(pos):
 	var pos_x = pos[0]

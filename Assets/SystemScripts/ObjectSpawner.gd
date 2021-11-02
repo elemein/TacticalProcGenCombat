@@ -73,9 +73,11 @@ func spawn_actor(actor_name, map, map_pos, visibility):
 	var actor_scene
 	
 	match actor_name:
+		'PSidePlayer': actor_scene = base_pside_player
 		'PlagueDoc': actor_scene = base_dumb_actor
 		'Fox': actor_scene = base_dumb_actor
 		'Imp': actor_scene = base_dumb_actor
+		'Minotaur': actor_scene = base_dumb_actor
 	
 	var actor = create_object(actor_scene, map, map_pos, visibility)
 	
@@ -90,6 +92,9 @@ func spawn_actor(actor_name, map, map_pos, visibility):
 			actor.add_to_group('enemies')
 		'Imp':
 			actor.set_graphics(imp_graphics.instance())
+			actor.add_to_group('enemies')
+		'Minotaur':
+			actor.set_graphics(minotaur_graphics.instance())
 			actor.add_to_group('enemies')
 	
 	return actor
@@ -120,9 +125,10 @@ func spawn_map_object(object_name, map, map_pos, visibility):
 	
 	match object_name:
 		'TempWall': object_scene = base_tempwall
-		'Stairs': object_scene = base_stairs
+		'BaseStairs': object_scene = base_stairs
 		'BaseGround': object_scene = base_ground
 		'BaseWall': object_scene = base_wall
+		'Spike Trap': object_scene = base_spiketrap
 			
 	var object = create_object(object_scene, map, map_pos, visibility)
 	

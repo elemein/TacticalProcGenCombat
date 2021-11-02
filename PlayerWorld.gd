@@ -63,13 +63,13 @@ func unpack_map(map_data):
 						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
 						new_object.translation.y = 0 # on server, these are spawned at 0
 					'BaseWall': 
-						new_object = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
+						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
 						new_object.translation.y = 0 # on server, these are spawned at 0
 					'BaseStairs':
-						new_object = GlobalVars.plyr_obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
+						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
 					'PlagueDoc': 
 						if object['NetID'] == GlobalVars.self_netID:
-							new_object = GlobalVars.plyr_obj_spawner.spawn_actor('PSidePlayer', plyr_play_map, [x,z], false)
+							new_object = GlobalVars.obj_spawner.spawn_actor('PSidePlayer', plyr_play_map, [x,z], false)
 							Server.add_player_to_local_player_list(new_object)
 							new_object.update_id('NetID', GlobalVars.self_netID)
 							new_object.update_id('Instance ID', object['Instance ID'])
@@ -78,7 +78,7 @@ func unpack_map(map_data):
 							GlobalVars.self_instanceObj = new_object
 							GlobalVars.self_instanceObj.connect_to_status_bars()
 						else:
-							new_object = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
+							new_object = GlobalVars.obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
 							Server.add_player_to_local_player_list(new_object)
 							new_object.update_id('NetID', object['NetID'])
 							new_object.update_id('Instance ID', object['Instance ID'])
@@ -89,11 +89,11 @@ func unpack_map(map_data):
 					_:
 						match object['CategoryType']:
 							'Enemy':
-								new_object = GlobalVars.plyr_obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
+								new_object = GlobalVars.obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
 							'Weapon', 'Accessory', 'Armour':
-								new_object = GlobalVars.plyr_obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
+								new_object = GlobalVars.obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
 							'Coins':
-								new_object = GlobalVars.plyr_obj_spawner.spawn_gold(object['Gold Value'], plyr_play_map, [x,z], false)
+								new_object = GlobalVars.obj_spawner.spawn_gold(object['Gold Value'], plyr_play_map, [x,z], false)
 							'Trap':
 								pass
 							_:

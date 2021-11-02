@@ -92,7 +92,7 @@ func assign_spawn_room():
 #	var z = spawn_room.topleft[1]
 #
 #	if map_object.map_id < map_object.parent_mapset.floor_count: # if last floor, no stairs
-#		var stairs = obj_spawner.spawn_map_object('Stairs', map_object, [x,z], false)
+#		var stairs = obj_spawner.spawn_map_object('BaseStairs', map_object, [x,z], false)
 #		stairs.connects_to = map_object.map_id + 1
 	# ------------------------------------------------------------
 	
@@ -108,7 +108,7 @@ func assign_exit_room():
 	if map_object.get_map_type() == 'Normal Floor':
 		var x = exit_room.center[0]
 		var z = exit_room.center[1]
-		var stairs = obj_spawner.spawn_map_object('Stairs', map_object, [x,z], false)
+		var stairs = obj_spawner.spawn_map_object('BaseStairs', map_object, [x,z], false)
 		stairs.connects_to = map_object.map_id + 1
 
 	elif map_object.get_map_type() == 'End Floor':

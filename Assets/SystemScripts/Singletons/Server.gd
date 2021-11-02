@@ -448,22 +448,22 @@ remote func spawn_object_in_map(object_id):
 	
 	match object_id['Identifier']:
 		'PlagueDoc': 
-			var other_player = GlobalVars.plyr_obj_spawner.spawn_actor(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
+			var other_player = GlobalVars.obj_spawner.spawn_actor(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
 			other_player.set_id(object_id)
 			other_player.play_anim('idle')
 			self.player_list.append(other_player)
 
 		'Spike Trap':
-			var trap = GlobalVars.plyr_obj_spawner.spawn_map_object(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
+			var trap = GlobalVars.obj_spawner.spawn_map_object(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
 			trap.set_id(object_id)
 		
 		'Coins':
-			var obj = GlobalVars.plyr_obj_spawner.spawn_gold(object_id['Gold Value'], get_map_from_map_id(object_id['Map ID']), object_id['Position'], true)
+			var obj = GlobalVars.obj_spawner.spawn_gold(object_id['Gold Value'], get_map_from_map_id(object_id['Map ID']), object_id['Position'], true)
 			obj.set_id(object_id)
 	
 	match object_id['Category']:
 		'Inv Item':
-			var obj = GlobalVars.plyr_obj_spawner.spawn_item(object_id['Identifier'], get_map_from_map_id(object_id['Map ID']), object_id['Position'], true)
+			var obj = GlobalVars.obj_spawner.spawn_item(object_id['Identifier'], get_map_from_map_id(object_id['Map ID']), object_id['Position'], true)
 			obj.set_id(object_id)
 			
 	resolve_viewfield()
