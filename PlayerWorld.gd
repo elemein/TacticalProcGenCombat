@@ -150,6 +150,7 @@ func unpack_map(map_data):
 			GlobalVars.server_player = player
 	GlobalVars.client_state = 'ingame'
 	Server.notify_server_map_loaded(plyr_play_map.get_map_server_id())
+	GlobalVars.client_state = 'ingame'
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):
 	var targ_mapset
