@@ -183,6 +183,9 @@ remote func receive_object_action_event(object_id, action):
 		return
 	
 	var object = get_object_from_identity(object_id)
+	
+	if object == null: return
+	
 	print("%s(%s) does: %s" % [object_id['Identifier'], object_id['Instance ID'], action])
 	
 	# determine action
@@ -213,6 +216,9 @@ remote func receive_object_action_event(object_id, action):
 		'Remove From Map':
 			var map = get_map_from_map_id(object.get_id()['Map ID'])
 			map.remove_map_object(object)
+			if GlobalVars.self_netID != 1:
+				if object.get_id()['Identifier'] == 'PlagueDoc':
+					self.player_list.erase(object)
 		'Spawn On Map': # Only for client. Server must spawn objects directly.
 			if GlobalVars.peer_type == 'client':
 				if object_id['Instance ID'] != GlobalVars.self_instanceID:
@@ -444,7 +450,6 @@ remote func spawn_object_in_map(object_id):
 			var other_player = GlobalVars.plyr_obj_spawner.spawn_actor(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
 			other_player.set_id(object_id)
 			other_player.play_anim('idle')
-			GlobalVars.self_instanceObj.get_parent_map().map_grid[x][z].append(other_player)
 			self.player_list.append(other_player)
 
 		'Spike Trap':
@@ -476,11 +481,10 @@ func _player_connected(id):
 	GlobalVars.server_player.get_parent().add_child(new_player)
 	new_player.update_id('NetID', id)
 	player_list.append(new_player)
-	var instance_id = new_player.get_id()['Instance ID']
-	new_player.name = 'Player%d' % instance_id
+	new_player.name = 'Player%d' % new_player.get_id()['NetID']
 	new_player.play_anim('idle')
 	
-	rpc_id(id, "receive_id_from_server", id, instance_id)
+	rpc_id(id, "receive_id_from_server", id, new_player.get_id()['Instance ID'])
 
 func _player_disconnected(id):
 	print('Goodbye player ' + str(id) + '.')
@@ -518,6 +522,7 @@ func get_object_from_identity(object_id):
 	var map
 	for child_map in GlobalVars.total_mapsets:
 		if child_map.get_map_server_id() == object_id['Map ID']: map = child_map
+		
 	# determine object
 	var object
 	var x = object_id['Position'][0]
