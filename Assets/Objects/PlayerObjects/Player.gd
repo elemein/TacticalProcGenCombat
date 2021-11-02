@@ -1,9 +1,5 @@
 extends ActorObj
 
-const DIRECTION_SELECT_TIME = 0.27
-const DIAGONAL_INPUT_SMOOTHING_TIME = 0.1
-const INPUT_CONFIRMATION_SMOOTHING_TIME = 0.1
-
 signal prepare_gui(stats)
 
 var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
@@ -13,7 +9,6 @@ var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 
 # movement and positioning related vars
 var directional_timer = Timer.new()
-var input_smoothing_timer = Timer.new()
 
 var minimap_icon = "Player"
 
@@ -27,14 +22,6 @@ func _init().(identity, start_stats):
 	pass
 
 func _ready():
-	directional_timer.set_one_shot(true)
-	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
-	add_child(directional_timer)
-
-	input_smoothing_timer.set_one_shot(true)
-	input_smoothing_timer.set_wait_time(DIAGONAL_INPUT_SMOOTHING_TIME)
-	add_child(input_smoothing_timer)
-
 	var _result = self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
 	_result = self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
 	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
@@ -51,139 +38,5 @@ func add_sub_nodes_as_children():
 	add_child(mover)
 	mover.set_actor(self)
 
-func _physics_process(_delta):
-	if is_dead == false:
-		get_input()
-
-func smooth_diagonal_input():
-	match direction_facing:
-		'upleft':
-			if (Input.is_action_just_released('w') or Input.is_action_just_released('a')):
-				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
-		'upright':
-			if (Input.is_action_just_released('w') or Input.is_action_just_released('d')):
-				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
-		'downleft':
-			if (Input.is_action_just_released('s') or Input.is_action_just_released('a')):
-				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
-		'downright':
-			if (Input.is_action_just_released('s') or Input.is_action_just_released('d')):
-				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
-
-func smooth_move_confirm_input():
-	var dir_char = ''
-
-	match direction_facing:
-		'up': dir_char = 'w'
-		'down': dir_char = 's'
-		'left': dir_char = 'a'
-		'right': dir_char = 'd'
-	
-	if dir_char != '':
-		if(Input.is_action_just_pressed(dir_char)):
-			directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
-
-func get_input():
-	smooth_diagonal_input()
-	smooth_move_confirm_input()
-	
-	var no_of_inputs = 0
-	
-	for input in [Input.is_action_pressed("w"), 
-				Input.is_action_pressed("a"),
-				Input.is_action_pressed("s"), 
-				Input.is_action_pressed("d")]:
-					
-		if input == true: no_of_inputs += 1
-	
-	# Below sets direction. It checks for the directional key being used, AND
-	# if the char is not already facing that direction, and then starts the 
-	# timer to decide direction so that it doesnt just auto-move.
-	
-	if no_of_inputs > 1:
-		
-		if (Input.is_action_pressed("w") && Input.is_action_pressed("a") 
-			&& direction_facing != 'upleft'):
-			Server.request_for_player_action({"Command Type": "Look", "Value": "upleft"})
-			directional_timer.start(DIRECTION_SELECT_TIME)
-		if (Input.is_action_pressed("w") && Input.is_action_pressed("d") 
-			&& direction_facing != 'upright'): 
-			Server.request_for_player_action({"Command Type": "Look", "Value": "upright"})
-			directional_timer.start(DIRECTION_SELECT_TIME)
-		if (Input.is_action_pressed("s") && Input.is_action_pressed("a") 
-			&& direction_facing != 'downleft'): 
-			Server.request_for_player_action({"Command Type": "Look", "Value": "downleft"})
-			directional_timer.start(DIRECTION_SELECT_TIME)
-		if (Input.is_action_pressed("s") && Input.is_action_pressed("d") 
-			&& direction_facing != 'downright'): 
-			Server.request_for_player_action({"Command Type": "Look", "Value": "downright"})
-			directional_timer.start(DIRECTION_SELECT_TIME)
-	
-	if no_of_inputs == 1:
-		if Input.is_action_pressed("w") && direction_facing != 'up': 
-			Server.request_for_player_action({"Command Type": "Look", "Value": "up"})
-			directional_timer.start(DIRECTION_SELECT_TIME)
-		if Input.is_action_pressed("s") && direction_facing != 'down': 
-			Server.request_for_player_action({"Command Type": "Look", "Value": "down"})
-			directional_timer.start(DIRECTION_SELECT_TIME)
-		if Input.is_action_pressed("a") && direction_facing != 'left': 
-			Server.request_for_player_action({"Command Type": "Look", "Value": "left"})
-			directional_timer.start(DIRECTION_SELECT_TIME)
-		if Input.is_action_pressed("d") && direction_facing != 'right': 
-			Server.request_for_player_action({"Command Type": "Look", "Value": "right"})
-			directional_timer.start(DIRECTION_SELECT_TIME)
-
-	# As the move buttons are used to change direction, these need to abide
-	# to the directional timer.
-	if directional_timer.time_left == 0:
-		if no_of_inputs > 1:
-			if Input.is_action_pressed("w") && Input.is_action_pressed("a"): 
-				if check_move_action('move upleft'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "upleft"})
-			if Input.is_action_pressed("w") && Input.is_action_pressed("d"): 
-				if check_move_action('move upright'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "upright"})
-			if Input.is_action_pressed("s") && Input.is_action_pressed("a"): 
-				if check_move_action('move downleft'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "downleft"})
-			if Input.is_action_pressed("s") && Input.is_action_pressed("d"): 
-				if check_move_action('move downright'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "downright"})
-		
-		if no_of_inputs == 1:
-			if Input.is_action_pressed("w"): 
-				if check_move_action('move up'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "up"})
-			if Input.is_action_pressed("s"): 
-				if check_move_action('move down'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "down"})
-			if Input.is_action_pressed("a"):
-				if check_move_action('move left'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "left"})
-			if Input.is_action_pressed("d"): 
-				if check_move_action('move right'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "right"})
-	
-	# X to skip your turn.
-	if Input.is_action_pressed("x"): 
-		Server.request_for_player_action({"Command Type": "Idle"})
-	
-	# Basic attacks only need one press.
-	if 'BasicAttackAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("space"): 
-			Server.request_for_player_action({"Command Type": "Basic Attack", "Value": get_direction_facing()})
-	
-	# Skills will need two presses to confirm.
-	if 'FireballAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("e"): 
-			Server.request_for_player_action({"Command Type": "Fireball"})
-	if 'DashAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("r"): 
-			Server.request_for_player_action({"Command Type": "Dash"})
-	if 'SelfHealAbility' in PlayerInfo.abilities:
-		if Input.is_action_pressed("t"): 
-			Server.request_for_player_action({"Command Type": "Self Heal"})
-
 func set_direction(direction):
 	set_actor_dir(direction)
-	directional_timer.start(DIRECTION_SELECT_TIME)

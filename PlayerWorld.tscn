@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://PlayerWorld.gd" type="Script" id=1]
 [ext_resource path="res://Assets/GUI/StatusBar/StatusBar.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/SystemScripts/KeyboardInput.gd" type="Script" id=3]
 [ext_resource path="res://Assets/GUI/GUI.gd" type="Script" id=4]
 [ext_resource path="res://GUI.gd" type="Script" id=7]
 
@@ -35,6 +36,9 @@ scale = Vector2( 0.5, 0.5 )
 texture = SubResource( 1 )
 
 [node name="StatusBar" parent="GUI" instance=ExtResource( 2 )]
+
+[node name="KeyboardInput" type="Node" parent="."]
+script = ExtResource( 3 )
 
 [connection signal="set_status_bars" from="GUI" to="GUI/StatusBar" method="_on_GUI_set_status_bars"]
 [connection signal="update_health_bar" from="GUI" to="GUI/StatusBar" method="_on_GUI_update_health_bar"]
