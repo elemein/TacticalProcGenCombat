@@ -76,6 +76,9 @@ func _process(_delta):
 								or thing.visible:
 							match thing.get_id()['Identifier']:
 								"BaseGround":
-									minimap_icon = tile_icon
+									if thing.visible:
+										minimap_icon = tile_icon
+									else:
+										minimap_icon = seen_icon
 			tile.texture = minimap_icon
 
