@@ -73,6 +73,7 @@ func spawn_actor(actor_name, map, map_pos, visibility):
 	var actor_scene
 	
 	match actor_name:
+		'Player': actor_scene = base_player
 		'PSidePlayer': actor_scene = base_pside_player
 		'PlagueDoc': actor_scene = base_dumb_actor
 		'Fox': actor_scene = base_dumb_actor

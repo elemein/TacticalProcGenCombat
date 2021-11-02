@@ -76,6 +76,11 @@ func place_player_on_map(object):
 			turn_timer.add_to_timer_group(player)
 			return tile
 
+func get_map_start_tile():
+	for room in rooms:
+		if room['type'] == 'Player Spawn':
+			return [room.center[0], room.center[1]]
+
 func move_on_map(object, old_pos, new_pos):
 	map_grid[new_pos[0]][new_pos[1]].append(object)
 	map_grid[old_pos[0]][old_pos[1]].erase(object)

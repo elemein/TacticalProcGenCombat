@@ -14,14 +14,17 @@ var mapsets = []
 var floor_num = 0
 
 func _ready():
-	plyr_play_map.name = GlobalVars.server_map_name
-	add_child(plyr_play_map)
-	mapsets = [plyr_play_map]
-	GlobalVars.total_maps.append(plyr_play_map)
+	catalog_dungeon_to_server()
 	unpack_map(GlobalVars.server_map_data)
 	
 	GlobalVars.self_instanceObj.find_and_render_viewfield()
 	Signals.emit_signal("world_loaded")
+
+func catalog_dungeon_to_server():
+	plyr_play_map.name = GlobalVars.server_map_name
+	add_child(plyr_play_map)
+	mapsets = [plyr_play_map]
+	GlobalVars.total_maps.append(plyr_play_map)
 
 func clear_play_map():
 	for child in plyr_play_map.get_children():

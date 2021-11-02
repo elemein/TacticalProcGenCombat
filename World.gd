@@ -6,39 +6,19 @@ extends Node
 
 var map_name = 'The Cave'
 
-const BASE_PLAYER = preload("res://Assets/Objects/PlayerObjects/Player.tscn")
-var player = BASE_PLAYER.instance()
-
 const MAPSET_CLASS = preload("res://Assets/SystemScripts/Mapset.gd")
 var dungeon = MAPSET_CLASS.new(map_name, 3)
 
 var mapsets = []
 
-func _ready():
-	GlobalVars.self_instanceID = player.get_id()['Instance ID']
-	GlobalVars.self_instanceObj = player
-	
-	add_child(dungeon)
-	mapsets = [dungeon]
-	
-	for mapset in mapsets:
-		GlobalVars.total_mapsets.append(mapset)
-		for level in mapset.floors:
-			GlobalVars.total_maps.append(mapset.floors[level])
-	
-	move_to_map(player, map_name, 1)
-	
-	GlobalVars.self_instanceObj.find_and_render_viewfield()
-	
-	# Put the player on the first floor and clean up the garbage
-	var player_child = dungeon.get_node('Floor1/Players/Player')
-	player_child.get_parent().remove_child(player_child)
-	dungeon.get_node('Floor1/Players').add_child(player_child)
-	
+func _ready():	
+	catalog_dungeon_to_server()
+	create_server_player_and_spawn_to_map()
+
 	### NETWORK
 	if GlobalVars.peer_type == 'server' and GlobalVars.self_netID != 1: 
 		GlobalVars.server_map_name = map_name
-		player_child.name = 'Player1'
+		GlobalVars.self_instanceObj.name = 'Player1'
 		Server.create_server()
 
 	elif GlobalVars.peer_type == 'client': 
@@ -46,7 +26,34 @@ func _ready():
 		
 	else:
 		Server.player_list.append(GlobalVars.server_player)
+	
 	Signals.emit_signal("world_loaded")
+
+func create_server_player_and_spawn_to_map():
+	var first_floor
+	for mapset in GlobalVars.total_mapsets:
+		if mapset.dungeon_name == 'The Cave':
+			first_floor = mapset.floors['Dungeon Floor 1']
+	
+	var first_floor_start_tile = first_floor.get_map_start_tile()
+	var server_player = GlobalVars.obj_spawner.spawn_actor('Player', \
+						first_floor, first_floor_start_tile, true)
+						
+	server_player.get_parent_map().get_turn_timer().add_to_timer_group(server_player)
+	
+	GlobalVars.self_instanceID = server_player.get_id()['Instance ID']
+	GlobalVars.self_instanceObj = server_player
+	
+	GlobalVars.self_instanceObj.find_and_render_viewfield()
+
+func catalog_dungeon_to_server():
+	add_child(dungeon)
+	mapsets = [dungeon]
+	
+	for mapset in mapsets:
+		GlobalVars.total_mapsets.append(mapset)
+		for level in mapset.floors:
+			GlobalVars.total_maps.append(mapset.floors[level])
 
 func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):
 	var targ_mapset
