@@ -2,6 +2,8 @@ extends Node
 
 var loading_screen = preload('res://Assets/GUI/LoadingScreen/LoadingScreen.tscn')
 
+var rng = RandomNumberGenerator.new()
+
 var camera = null
 var peer_type = null
 
@@ -31,6 +33,9 @@ var obj_spawner = OBJ_SPAWNER.new()
 var default_settings = {
 	'Server IP': ''
 }
+
+func _ready():
+	rng.randomize()
 
 func set_loading(state): 
 	in_loading = state
