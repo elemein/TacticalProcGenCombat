@@ -91,7 +91,7 @@ func _input(event):
 					visible = not visible
 					option_menu.visible = false
 				_:
-					GlobalVars.self_instanceObj
+					GlobalVars.self_obj
 			yield(get_tree(), "idle_frame")
 			rect_position = window_offset
 			
@@ -103,18 +103,18 @@ func _input(event):
 				option_menu.visible = false
 			
 func _process(_delta):
-	if not GlobalVars.get_client_state() == 'loading' and GlobalVars.self_instanceObj != null:
+	if not GlobalVars.get_client_state() == 'loading' and GlobalVars.self_obj != null:
 		# Set the items for the current inventory tab
 		for item_index in 8:
 			var item_node = item_tab_dict[active_inventory_tab][item_index]
 			
-			if GlobalVars.self_instanceObj.inventory.keys().size() > item_index:
-				var player_item = GlobalVars.self_instanceObj.inventory.keys()[item_index]
+			if GlobalVars.self_obj.inventory.keys().size() > item_index:
+				var player_item = GlobalVars.self_obj.inventory.keys()[item_index]
 				
 				if active_inventory_tab.name in ['All', player_item.get_id()['CategoryType']]:
 					item_node['Label'].text = player_item.get_id()['Identifier'].replace(' ', '\n')
 					item_node['Icon'].texture = player_item.inventory_icon
-					if GlobalVars.self_instanceObj.inventory[player_item]['equipped']:
+					if GlobalVars.self_obj.inventory[player_item]['equipped']:
 						item_node['Equipped'].visible = true
 					else:
 						item_node['Equipped'].visible = false
@@ -136,8 +136,8 @@ func _process(_delta):
 		# Set the equipped items icon for whatever was last selected
 		var empty_categories = item_categories.duplicate()
 		for category in item_categories:
-			for item in GlobalVars.self_instanceObj.inventory:
-				if item.get_id()['CategoryType'] == category and GlobalVars.self_instanceObj.inventory[item]['equipped']:
+			for item in GlobalVars.self_obj.inventory:
+				if item.get_id()['CategoryType'] == category and GlobalVars.self_obj.inventory[item]['equipped']:
 					icon_types[category].texture = item.inventory_icon
 					empty_categories.erase(category)
 					
@@ -149,11 +149,11 @@ func _process(_delta):
 func item_selected(num):
 	var player_item
 	var index = -1
-	for item in GlobalVars.self_instanceObj.inventory:
+	for item in GlobalVars.self_obj.inventory:
 		index += 1
 		if index == num:
 			local_item = item
-			player_item = GlobalVars.self_instanceObj.inventory[local_item]
+			player_item = GlobalVars.self_obj.inventory[local_item]
 		
 	set_option_menu(player_item['equipped'])
 	option_menu.rect_position = get_viewport().get_mouse_position() - window_offset
@@ -167,8 +167,8 @@ func update_item_stats(num):
 		'defense_bonus': 'Defense',
 	}
 	
-	if GlobalVars.self_instanceObj.inventory.keys().size() > num:
-		var hovered_item = GlobalVars.self_instanceObj.inventory.keys()[num]
+	if GlobalVars.self_obj.inventory.keys().size() > num:
+		var hovered_item = GlobalVars.self_obj.inventory.keys()[num]
 		for stat in item_stats:
 			if not hovered_item.get(stat) == null:
 				item_stats_label.text += item_stats[stat] + ' +' + str(hovered_item.get(stat)) + '\n'
@@ -176,18 +176,18 @@ func update_item_stats(num):
 	
 func update_player_stats():
 	player_stats_label.text = ''
-	for stat in GlobalVars.self_instanceObj.stat_dict:
-		player_stats_label.text += stat + ' ' + str(GlobalVars.self_instanceObj.stat_dict[stat]) + '\n'
+	for stat in GlobalVars.self_obj.stat_dict:
+		player_stats_label.text += stat + ' ' + str(GlobalVars.self_obj.stat_dict[stat]) + '\n'
 	player_stats_label.text = player_stats_label.text.strip_edges()
 	
 func option_action(index):
-	var server_item_id = GlobalVars.self_instanceObj.inventory[local_item].get('server_id')
+	var server_item_id = GlobalVars.self_obj.inventory[local_item].get('server_id')
 	if not server_item_id:
 		server_item_id = local_item.get_id()['Instance ID']
-	if not GlobalVars.self_instanceObj.in_turn:
+	if not GlobalVars.self_obj.in_turn:
 		match index:
 			0:  # equip item
-				var player_inventory = GlobalVars.self_instanceObj.inventory
+				var player_inventory = GlobalVars.self_obj.inventory
 				if not player_inventory[local_item]['equipped']:
 					set_option_menu(true)
 					Server.request_for_player_action({"Command Type": "Equip Item", "Value": server_item_id})

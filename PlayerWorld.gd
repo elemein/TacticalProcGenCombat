@@ -17,7 +17,7 @@ func _ready():
 	catalog_dungeon_to_server()
 	unpack_map(GlobalVars.server_map_data)
 	
-	GlobalVars.self_instanceObj.find_and_render_viewfield()
+	GlobalVars.self_obj.find_and_render_viewfield()
 	Signals.emit_signal("world_loaded")
 
 func catalog_dungeon_to_server():
@@ -82,8 +82,8 @@ func unpack_map(map_data):
 							Server.player_list.append(new_object)
 						
 						if object['NetID'] == GlobalVars.self_netID:
-							GlobalVars.self_instanceObj = new_object
-							GlobalVars.self_instanceObj.connect_to_status_bars()
+							GlobalVars.self_obj = new_object
+							GlobalVars.self_obj.connect_to_status_bars()
 							
 					_:
 						match object['CategoryType']:
@@ -146,6 +146,6 @@ func unpack_map(map_data):
 	print('Map unpacked.')
 	for player in Server.player_list:
 		if player.object_identity['NetID'] == GlobalVars.self_netID:
-			GlobalVars.self_instanceObj = player
+			GlobalVars.self_obj = player
 	
 	Server.notify_server_map_loaded(plyr_play_map.get_map_server_id())

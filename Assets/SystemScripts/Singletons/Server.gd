@@ -15,7 +15,7 @@ func create_server():
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	print("Server opened successfully on port " + str(port))
-	player_list.append(GlobalVars.self_instanceObj)
+	player_list.append(GlobalVars.self_obj)
 	GlobalVars.self_netID = 1
 
 # How turns work, from input:
@@ -242,9 +242,9 @@ remote func receive_round_update():
 
 func request_for_inventory():
 	if GlobalVars.self_netID == 1:
-		send_inventory_to_requester(GlobalVars.self_instanceObj.get_id())
+		send_inventory_to_requester(GlobalVars.self_obj.get_id())
 	else:	
-		rpc_id(1, "send_inventory_to_requester", GlobalVars.self_instanceObj.get_id())
+		rpc_id(1, "send_inventory_to_requester", GlobalVars.self_obj.get_id())
 
 remote func send_inventory_to_requester(requester_id):
 	var inventory_owner = instance_from_id(requester_id['Instance ID'])
@@ -257,7 +257,7 @@ remote func send_inventory_to_requester(requester_id):
 
 remote func receive_inventory_from_server(inventory):
 	if not GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
-		GlobalVars.self_instanceObj.build_inv_from_server(inventory)
+		GlobalVars.self_obj.build_inv_from_server(inventory)
 	
 # CHANGING STAT COMMANDS -------------------------------
 # This is a duplicate from below. More bandwidth but easier to maintain
@@ -332,8 +332,8 @@ func resolve_all_viewfields(map):
 # Resolve your viewfield and render it to screen.
 remote func resolve_viewfield():
 	if GlobalVars.get_client_state() == 'ingame':
-		GlobalVars.self_instanceObj.find_viewfield()
-		GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
+		GlobalVars.self_obj.find_viewfield()
+		GlobalVars.self_obj.resolve_viewfield_to_screen()
 # ------------------------------------------------------
 
 # MAP ACTION COMMANDS ---------------------------------
@@ -383,7 +383,7 @@ remote func prepare_for_map_change(map_id):
 	var world = get_node("/root/World")
 	world.clear_play_map()
 	
-	rpc_id(1, "send_requested_map_to_requester", GlobalVars.self_instanceObj.get_id()['NetID'], map_id)
+	rpc_id(1, "send_requested_map_to_requester", GlobalVars.self_obj.get_id()['NetID'], map_id)
 #
 remote func send_requested_map_to_requester(requester_id, requested_map_id):
 	var map
@@ -428,7 +428,7 @@ func unpack_new_map():
 	get_node('/root/World').unpack_map(GlobalVars.server_map_data)
 
 func notify_server_map_loaded(map_id):
-	rpc_id(1, 'receive_client_has_loaded', GlobalVars.self_instanceObj.get_id()['NetID'], map_id)
+	rpc_id(1, 'receive_client_has_loaded', GlobalVars.self_obj.get_id()['NetID'], map_id)
 	sync_from_sync_queue()
 	
 remote func receive_client_has_loaded(client_id, map_id):
@@ -444,13 +444,13 @@ remote func spawn_object_in_map(object_id):
 	
 	match object_id['Identifier']:
 		'PlagueDoc': 
-			var other_player = GlobalVars.obj_spawner.spawn_actor(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
+			var other_player = GlobalVars.obj_spawner.spawn_actor(object_id['Identifier'], GlobalVars.self_obj.get_parent_map(), [x,z], false)
 			other_player.set_id(object_id)
 			other_player.play_anim('idle')
 			self.player_list.append(other_player)
 
 		'Spike Trap':
-			var trap = GlobalVars.obj_spawner.spawn_map_object(object_id['Identifier'], GlobalVars.self_instanceObj.get_parent_map(), [x,z], false)
+			var trap = GlobalVars.obj_spawner.spawn_map_object(object_id['Identifier'], GlobalVars.self_obj.get_parent_map(), [x,z], false)
 			trap.set_id(object_id)
 		
 		'Coins':
@@ -469,13 +469,13 @@ remote func spawn_object_in_map(object_id):
 func _player_connected(id):
 	print('Player ' + str(id) + ' has connected!')
 	
-	var spawn_to_map = GlobalVars.self_instanceObj.get_parent_map()
-	var spawn_to_pos = GlobalVars.self_instanceObj.get_map_pos().duplicate()
+	var spawn_to_map = GlobalVars.self_obj.get_parent_map()
+	var spawn_to_pos = GlobalVars.self_obj.get_map_pos().duplicate()
 	spawn_to_pos[1] += 1
 	
 	var new_player = GlobalVars.obj_spawner.spawn_actor('PlagueDoc', spawn_to_map, spawn_to_pos, true)
 	new_player.get_parent().remove_child(new_player)
-	GlobalVars.self_instanceObj.get_parent().add_child(new_player)
+	GlobalVars.self_obj.get_parent().add_child(new_player)
 	new_player.update_id('NetID', id)
 	player_list.append(new_player)
 	new_player.name = 'Player%d' % new_player.get_id()['NetID']

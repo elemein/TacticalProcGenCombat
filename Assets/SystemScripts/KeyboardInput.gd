@@ -18,12 +18,12 @@ func _ready():
 	add_child(input_smoothing_timer)
 
 func _physics_process(_delta):
-	if GlobalVars.self_instanceObj.get_is_dead() == false and \
+	if GlobalVars.self_obj.get_is_dead() == false and \
 		GlobalVars.get_client_state() == 'ingame': 
 		get_input()
 
 func smooth_input():
-	var direction_facing = GlobalVars.self_instanceObj.get_direction_facing()
+	var direction_facing = GlobalVars.self_obj.get_direction_facing()
 	
 	var dir_char = ''
 	match direction_facing:
@@ -49,7 +49,7 @@ func count_inputs():
 	return no_of_inputs
 
 func get_possible_direction(no_of_inputs):
-	var character = GlobalVars.self_instanceObj
+	var character = GlobalVars.self_obj
 	var direction_facing = character.get_direction_facing()
 	
 	if input_smoothing_timer.time_left == 0:
@@ -90,7 +90,7 @@ func get_possible_direction(no_of_inputs):
 				directional_timer.start(DIRECTION_SELECT_TIME)
 
 func confirm_direction(no_of_inputs):
-	var character = GlobalVars.self_instanceObj
+	var character = GlobalVars.self_obj
 	var direction_facing = character.get_direction_facing()
 	
 	if directional_timer.time_left == 0 and input_smoothing_timer.time_left == 0:
@@ -123,7 +123,7 @@ func confirm_direction(no_of_inputs):
 					Server.request_for_player_action({"Command Type": "Move", "Value": "right"})
 
 func check_for_action():
-	var character = GlobalVars.self_instanceObj
+	var character = GlobalVars.self_obj
 	
 	# X to skip your turn.
 	if Input.is_action_pressed("x"): 

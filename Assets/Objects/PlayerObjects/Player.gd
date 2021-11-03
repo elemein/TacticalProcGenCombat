@@ -32,7 +32,7 @@ func _ready():
 
 	add_sub_nodes_as_children()
 	
-	GlobalVars.self_instanceObj = self
+	GlobalVars.self_obj = self
 
 func add_sub_nodes_as_children():
 	add_child(mover)

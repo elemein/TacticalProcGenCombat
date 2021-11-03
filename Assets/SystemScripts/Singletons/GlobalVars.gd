@@ -19,7 +19,7 @@ var total_maps = []
 
 var self_netID : int
 var self_instanceID
-var self_instanceObj : ActorObj
+var self_obj : ActorObj
 
 const TILE_OFFSET = 2.0
 

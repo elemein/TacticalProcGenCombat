@@ -14,7 +14,7 @@ func _ready():
 	### NETWORK
 	if GlobalVars.peer_type == 'server' and GlobalVars.self_netID != 1: 
 		GlobalVars.server_map_name = map_name
-		GlobalVars.self_instanceObj.name = 'Player1'
+		GlobalVars.self_obj.name = 'Player1'
 		Server.create_server()
 
 	elif GlobalVars.peer_type == 'client': 
@@ -35,9 +35,9 @@ func create_server_player_and_spawn_to_map():
 						
 	
 	GlobalVars.self_instanceID = server_player.get_id()['Instance ID']
-	GlobalVars.self_instanceObj = server_player
+	GlobalVars.self_obj = server_player
 	
-	GlobalVars.self_instanceObj.find_and_render_viewfield()
+	GlobalVars.self_obj.find_and_render_viewfield()
 
 func catalog_dungeon_to_server():
 	add_child(dungeon)

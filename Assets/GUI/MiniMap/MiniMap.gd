@@ -28,7 +28,7 @@ func _ready():
 		self.queue_free()
 	else:
 		yield(Signals, "world_loaded")
-		player = GlobalVars.self_instanceObj
+		player = GlobalVars.self_obj
 
 		var map_grid = player.get_parent_map().map_grid
 		for row_cnt in range(map_grid.size()):
@@ -42,11 +42,11 @@ func _ready():
 			
 func _process(_delta):
 	if GlobalVars.get_client_state() == 'loading' \
-			or GlobalVars.self_instanceObj == null \
-			or GlobalVars.self_instanceObj.get_parent() == null:
+			or GlobalVars.self_obj == null \
+			or GlobalVars.self_obj.get_parent() == null:
 		return
 
-	var map_grid = GlobalVars.self_instanceObj.get_parent_map().map_grid
+	var map_grid = GlobalVars.self_obj.get_parent_map().map_grid
 	for row_cnt in range(map_grid.size()):
 		for tile_cnt in range(map_grid[row_cnt].size()):
 			var minimap_icon = blank_icon
