@@ -100,7 +100,6 @@ func unpack_map(map_data):
 								pass
 				if new_object != null:
 					new_object.set_id(object)
-					new_object.set_parent_map(plyr_play_map)
 	
 	plyr_play_map.set_map_grid(map_grid)
 	

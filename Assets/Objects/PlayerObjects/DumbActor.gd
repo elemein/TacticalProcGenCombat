@@ -19,10 +19,7 @@ var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
 func _init().(identity, relation_rules, start_stats):
 	pass
 
-func _ready():
-	if GlobalVars.peer_type == 'client': set_parent_map(GlobalVars.server_mapset)
-	elif GlobalVars.peer_type == 'server': set_parent_map(get_parent())
-	
+func _ready():	
 	add_sub_nodes_as_children()
 
 func add_sub_nodes_as_children():

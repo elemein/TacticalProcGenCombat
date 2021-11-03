@@ -46,10 +46,8 @@ func create_object(object_scene, map, map_pos, visibility) -> Object:
 	# If the map/map_pos = 'Inventory' (i.e. a string), do not designate a map.
 	if typeof(map) == TYPE_STRING: return object
 		
-	object.set_map_pos([map_pos[0], map_pos[1]])
-	object.set_parent_map(map)
-	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
-	
+	object.set_map_pos_and_translation([map_pos[0], map_pos[1]])
+
 	apply_item_specific_modifications(object)
 	
 	map.add_map_object(object)

@@ -138,9 +138,11 @@ func get_map():
 	return map_grid
 
 func add_map_object(object):
-	var tile = object.get_map_pos()
+	object.set_parent_map(self)
 	
+	var tile = object.get_map_pos()
 	map_grid[tile[0]][tile[1]].append(object)
+	
 	add_child(object)
 	
 	if object.get_id()['Category'] == 'Actor':
