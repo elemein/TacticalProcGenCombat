@@ -16,14 +16,22 @@ func _on_Actions_spell_cast_dash():
 func use():
 	map = parent.get_parent_map()
 	
-	if move_check() == false:
-		parent = null
-		return
+	match move_check():
+		2:
+			play_audio()
 
-	play_audio()
+			set_target_actor_pos()
+			parent.move_actor_in_facing_dir(2)
+			
+		1:
+			play_audio()
 
-	set_target_actor_pos()
-	parent.move_actor_in_facing_dir(2)
+			set_target_actor_pos()
+			parent.move_actor_in_facing_dir(1)
+			Server.actor_notif_event(parent.get_id(), '!', 'interrupt')
+			
+		0:
+			return
 
 	if GlobalVars.peer_type == 'server':
 		Server.update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})

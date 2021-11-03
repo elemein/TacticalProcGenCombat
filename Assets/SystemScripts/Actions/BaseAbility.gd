@@ -36,13 +36,22 @@ var effect_end_height = 0
 func _ready():
 	parent = find_parent("Actions").get_parent()
 
-func move_check() -> bool:
+func move_check():
+	var dash_length = 0
+	
 	set_target_actor_pos()
-	for target_tile in get_target_tiles():
+	var target_tiles = get_target_tiles()
+	for target_tile in target_tiles:
+		
+		var tile_clear = true
+		
 		for object in target_tile:
 			if object.get_id()['CategoryType'] in GlobalVars.NON_TRAVERSABLES:
-				return false
-	return true
+				tile_clear = false
+		
+		if tile_clear == true: dash_length += 1
+		
+	return dash_length
 			
 func heal_user():
 	Server.update_actor_stat(parent.get_id(), {"Stat": "HP", "Modifier": spell_final_power})
