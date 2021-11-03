@@ -19,6 +19,8 @@ func run_engine():
 				if player_is_in_fireball_range(players_in_focus[0].get_map_pos()):
 					fireball_player()
 				else: move_toward_player()
+			elif dist_from_player > 2: move_toward_player()
+			else: idle()
 		
 		else:
 			if dist_from_player == 1: basic_attack_player()
@@ -47,22 +49,32 @@ func player_is_in_fireball_range(target_pos) -> bool:
 	var self_pos = actor.get_map_pos()
 	
 	if target_pos[0] == self_pos[0]: return true
-	if target_pos[1] == self_pos[1]: return true
+	elif target_pos[1] == self_pos[1]: return true
+	
+	# have to do janky shit below because apparently comparing arrays doesnt work..?
 	
 	# downleft
-	if target_pos == [self_pos[0]-1 , self_pos[1]-1]: return true
-	if target_pos == [self_pos[0]-2 , self_pos[1]-2]: return true
+	elif (target_pos[0] == self_pos[0]-1) and (target_pos[1] == self_pos[1]-1): 
+		return true
+	elif (target_pos[0] == self_pos[0]-2) and (target_pos[1] == self_pos[1]-2): 
+		return true
 	
 	#downright
-	if target_pos == [self_pos[0]-1 , self_pos[1]+1]: return true
-	if target_pos == [self_pos[0]-2 , self_pos[1]+2]: return true
+	elif (target_pos[0] == self_pos[0]-1) and (target_pos[1] == self_pos[1]+1): 
+		return true
+	elif (target_pos[0] == self_pos[0]-2) and (target_pos[1] == self_pos[1]+2): 
+		return true
 	
 	#upleft
-	if target_pos == [self_pos[0]+1 , self_pos[1]-1]: return true
-	if target_pos == [self_pos[0]+2 , self_pos[1]-2]: return true
+	elif (target_pos[0] == self_pos[0]+1) and (target_pos[1] == self_pos[1]-1): 
+		return true
+	elif (target_pos[0] == self_pos[0]+2) and (target_pos[1] == self_pos[1]-2): 
+		return true
 
 	#upright
-	if target_pos == [self_pos[0]+1 , self_pos[1]+1]: return true
-	if target_pos == [self_pos[0]+2 , self_pos[1]+2]: return true
+	elif (target_pos[0] == self_pos[0]+1) and (target_pos[1] == self_pos[1]+1): 
+		return true
+	elif (target_pos[0] == self_pos[0]+2) and (target_pos[1] == self_pos[1]+2): 
+		return true
 	
-	return false
+	else: return false
