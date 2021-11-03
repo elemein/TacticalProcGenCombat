@@ -27,7 +27,6 @@ var base_minotaur = preload("res://Assets/Objects/EnemyObjects/Minotaur.tscn")
 
 # Actors
 var base_player = preload("res://Assets/Objects/PlayerObjects/Player.tscn")
-var base_pside_player = preload("res://Assets/Objects/PlayerObjects/PSidePlayer.tscn")
 var base_dumb_actor = preload("res://Assets/Objects/PlayerObjects/DumbActor.tscn")
 
 # Graphics
@@ -73,7 +72,6 @@ func spawn_actor(actor_name, map, map_pos, visibility):
 	
 	match actor_name:
 		'Player': actor_scene = base_player
-		'PSidePlayer': actor_scene = base_pside_player
 		'PlagueDoc': actor_scene = base_dumb_actor
 		'Fox': actor_scene = base_dumb_actor
 		'Imp': actor_scene = base_dumb_actor

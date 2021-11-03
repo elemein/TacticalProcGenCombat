@@ -10,8 +10,8 @@ var minimap_icon = "Player"
 var identity = {'Category': 'Actor', 'CategoryType': 'Player', 
 				'Identifier': 'PlagueDoc', "Max HP": start_stats['Max HP'],
 				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
-				'MP': start_stats['MP'], 'Facing': null, 'NetID': null, 
-				'Map ID': null, 'Position': [0,0], 'Instance ID': get_instance_id()}
+				'MP': start_stats['MP'], 'Facing': null, 'Map ID': null, 
+				'Position': [0,0], 'NetID': null, 'Instance ID': get_instance_id()}
 
 var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
 						"Monopolizes Space": false}
@@ -19,7 +19,7 @@ var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
 func _init().(identity, relation_rules, start_stats):
 	pass
 
-func _ready():	
+func _ready():
 	add_sub_nodes_as_children()
 
 func add_sub_nodes_as_children():

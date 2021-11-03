@@ -7,9 +7,6 @@ var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 				"Crit Chance": 5, "Spell Power" : 20, "Defense" : 0, \
 				"Speed": 13, "View Range" : 4}
 
-# movement and positioning related vars
-var directional_timer = Timer.new()
-
 var minimap_icon = "Player"
 
 var identity = {'Category': 'Actor', 'CategoryType': 'Player', 

@@ -141,9 +141,7 @@ func add_map_object(object, tile):
 	object.set_parent_map(self)
 
 	object.set_map_pos_and_translation(tile)
-	
 	map_grid[tile[0]][tile[1]].append(object)
-	
 	add_child(object)
 	
 	if object.get_id()['Category'] == 'Actor':

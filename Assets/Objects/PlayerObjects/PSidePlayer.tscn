@@ -5,9 +5,41 @@
 [ext_resource path="res://Assets/Audio/PlayerAudio/hit_basic_attack_player_1.wav" type="AudioStream" id=3]
 [ext_resource path="res://Assets/Audio/PlayerAudio/hit_basic_attack_player_2.wav" type="AudioStream" id=4]
 [ext_resource path="res://Assets/Objects/PlayerObjects/Lantern.gd" type="Script" id=5]
-[ext_resource path="res://Assets/Objects/PlayerObjects/PSidePlayer.gd" type="Script" id=6]
 [ext_resource path="res://Assets/Objects/PlayerObjects/Camera.gd" type="Script" id=7]
 [ext_resource path="res://Assets/NewArt/Gull.tscn" type="PackedScene" id=8]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends ActorObj
+
+var start_stats = {\"Max HP\" : 100, \"HP\" : 100, \"Max MP\": 100, \"MP\": 100, \\
+				\"HP Regen\" : 1, \"MP Regen\": 6, \"Attack Power\" : 10, \\
+				\"Crit Chance\": 5, \"Spell Power\" : 20, \"Defense\" : 0, \\
+				\"Speed\": 13, \"View Range\" : 4}
+
+var minimap_icon = \"Player\"
+
+var identity = {'Category': 'Actor', 'CategoryType': 'Player', 
+				'Identifier': 'PlagueDoc', \"Max HP\": start_stats['Max HP'],
+				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
+				'MP': start_stats['MP'], 'Facing': null, 'Map ID': null, 
+				'Position': [0,0], 'NetID': null, 'Instance ID': get_instance_id()}
+
+var relation_rules = {\"Blocks Vision\": false, \"Non-Traversable\": false, \\
+						\"Monopolizes Space\": false}
+
+func _init().(identity, relation_rules, start_stats):
+	pass
+
+func _ready():
+	add_sub_nodes_as_children()
+
+func add_sub_nodes_as_children():
+	add_child(mover)
+	mover.set_actor(self)
+
+func set_direction(direction):
+	set_actor_dir(direction)
+"
 
 [sub_resource type="Environment" id=1]
 ambient_light_color = Color( 1, 1, 1, 1 )
@@ -17,7 +49,7 @@ ambient_light_sky_contribution = 0.0
 [node name="Player" type="MeshInstance" groups=[
 "player",
 ]]
-script = ExtResource( 6 )
+script = SubResource( 2 )
 
 [node name="Graphics" parent="." instance=ExtResource( 8 )]
 transform = Transform( -5.70222e-08, 0, -0.35, 0, 0.35, 0, 0.35, 0, -5.70222e-08, 0, 0, 0 )
@@ -66,6 +98,7 @@ omni_attenuation = 0.999999
 script = ExtResource( 5 )
 
 [node name="Tween" type="Tween" parent="."]
+
 [connection signal="action_drop_item" from="." to="Actions" method="_on_action_drop_item"]
 [connection signal="action_equip_item" from="." to="Actions" method="_on_action_equip_item"]
 [connection signal="action_unequip_item" from="." to="Actions" method="_on_action_unequip_item"]
@@ -78,5 +111,4 @@ script = ExtResource( 5 )
 [connection signal="timeout" from="CamBase/Camera/Timer" to="CamBase/Camera" method="_on_Timer_timeout"]
 
 [editable path="Graphics"]
-
 [editable path="Actions"]

@@ -69,23 +69,22 @@ func unpack_map(map_data):
 						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
 					'PlagueDoc': 
 						if object['NetID'] == GlobalVars.self_netID:
-							new_object = GlobalVars.obj_spawner.spawn_actor('PSidePlayer', plyr_play_map, [x,z], false)
-							Server.add_player_to_local_player_list(new_object)
-							new_object.update_id('NetID', GlobalVars.self_netID)
-							new_object.update_id('Instance ID', object['Instance ID'])
-							new_object.set_map_pos(new_object.get_id()['Position'])
-							
-							GlobalVars.self_instanceObj = new_object
-							GlobalVars.self_instanceObj.connect_to_status_bars()
+							new_object = GlobalVars.obj_spawner.spawn_actor('Player', plyr_play_map, [x,z], false)
 						else:
 							new_object = GlobalVars.obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
-							Server.add_player_to_local_player_list(new_object)
-							new_object.update_id('NetID', object['NetID'])
-							new_object.update_id('Instance ID', object['Instance ID'])
-							new_object.play_anim('idle')
+						
+						Server.add_player_to_local_player_list(new_object)
+						new_object.update_id('NetID', object['NetID'])
+						new_object.update_id('Instance ID', object['Instance ID'])
+						new_object.play_anim('idle')
+						
+						if not new_object in Server.player_list:
+							Server.player_list.append(new_object)
+						
+						if object['NetID'] == GlobalVars.self_netID:
+							GlobalVars.self_instanceObj = new_object
+							GlobalVars.self_instanceObj.connect_to_status_bars()
 							
-							if not new_object in Server.player_list:
-								Server.player_list.append(new_object)
 					_:
 						match object['CategoryType']:
 							'Enemy':

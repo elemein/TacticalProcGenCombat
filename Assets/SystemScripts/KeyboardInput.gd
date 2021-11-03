@@ -18,7 +18,8 @@ func _ready():
 	add_child(input_smoothing_timer)
 
 func _physics_process(_delta):
-	if GlobalVars.self_instanceObj.get_is_dead() == false: 
+	if GlobalVars.self_instanceObj.get_is_dead() == false and \
+		GlobalVars.client_state == 'ingame': 
 		get_input()
 
 func smooth_input():

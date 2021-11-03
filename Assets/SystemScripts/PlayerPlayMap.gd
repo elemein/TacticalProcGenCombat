@@ -59,11 +59,10 @@ func remove_map_object(object):
 	map_grid[tile[0]][tile[1]].erase(object)
 	object.get_parent().remove_child(object)
 
-func add_map_object(object):
+func add_map_object(object, tile):
 	object.set_parent_map(self)
-	
-	var tile = object.get_map_pos()
-	
+
+	object.set_map_pos_and_translation(tile)
 	map_grid[tile[0]][tile[1]].append(object)
 	add_child(object)
 
