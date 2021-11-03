@@ -61,7 +61,6 @@ func unequip_item():
 	
 func drop_item():
 	unequip_item()
-	set_map_pos_and_translation(item_owner.get_map_pos())
-	item_owner.get_parent_map().add_map_object(self)
+	item_owner.get_parent_map().add_map_object(self, item_owner.get_map_pos())
 	item_owner.inventory.erase(self)
 	Server.object_action_event(object_identity, {"Command Type": "Spawn On Map"})

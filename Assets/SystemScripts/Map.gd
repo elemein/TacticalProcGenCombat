@@ -137,10 +137,11 @@ func tile_blocks_vision(x,z):
 func get_map():
 	return map_grid
 
-func add_map_object(object):
+func add_map_object(object, tile):
 	object.set_parent_map(self)
+
+	object.set_map_pos_and_translation(tile)
 	
-	var tile = object.get_map_pos()
 	map_grid[tile[0]][tile[1]].append(object)
 	
 	add_child(object)

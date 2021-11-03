@@ -55,9 +55,7 @@ func remove_obj_from_old_map(object):
 func move_to_map(object, map):
 	remove_obj_from_old_map(object)
 	
-	object.set_map_pos_and_translation(map.get_map_start_tile())
-	
-	map.add_map_object(object)
+	map.add_map_object(object, map.get_map_start_tile())
 	
 	map.print_map_grid()
 	
