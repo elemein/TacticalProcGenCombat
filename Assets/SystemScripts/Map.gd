@@ -142,6 +142,9 @@ func add_map_object(object):
 	
 	map_grid[tile[0]][tile[1]].append(object)
 	add_child(object)
+	
+	if object.get_id()['Category'] == 'Actor':
+		turn_timer.add_to_timer_group(object)
 
 # REMOVE FROM MAP FUNCS --------------------
 func remove_map_object(object):
@@ -149,6 +152,9 @@ func remove_map_object(object):
 	
 	map_grid[tile[0]][tile[1]].erase(object)
 	object.get_parent().remove_child(object)
+
+	if object.get_id()['Category'] == 'Actor':
+		turn_timer.remove_from_timer_group(object)
 
 func remove_from_map_grid_but_keep_node(object):
 	var tile = object.get_map_pos()

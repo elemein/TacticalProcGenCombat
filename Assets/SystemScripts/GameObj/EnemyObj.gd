@@ -27,7 +27,6 @@ func _physics_process(_delta):
 
 func setup_actor():
 	object_identity['Map ID'] = get_parent_map().get_map_server_id()
-	turn_timer.add_to_timer_group(self)
 	translation.x = map_pos[0] * GlobalVars.TILE_OFFSET
 	translation.z = map_pos[1] * GlobalVars.TILE_OFFSET
 	

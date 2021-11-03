@@ -33,7 +33,6 @@ func create_server_player_and_spawn_to_map():
 	var server_player = GlobalVars.obj_spawner.spawn_actor('Player', \
 						first_floor, first_floor_start_tile, true)
 						
-	server_player.get_parent_map().get_turn_timer().add_to_timer_group(server_player)
 	
 	GlobalVars.self_instanceID = server_player.get_id()['Instance ID']
 	GlobalVars.self_instanceObj = server_player
@@ -57,7 +56,7 @@ func get_mapset_from_name(mapset_name):
 func remove_obj_from_old_map(object):
 	var curr_map = object.get_parent_map()
 	if typeof(curr_map) != TYPE_STRING:
-		curr_map.get_turn_timer().remove_from_timer_group(object)
+		curr_map.remove_map_object(object)
 		
 		Server.object_action_event(object.get_id(), {"Command Type": "Remove From Map"})
 		
@@ -68,14 +67,12 @@ func move_to_map(object, map):
 	
 	object.set_parent_map(map)
 	
-	var desired_tile = map.get_map_start_tile()
-	object.set_map_pos_and_translation(desired_tile)
+	object.set_map_pos_and_translation(map.get_map_start_tile())
 	map.add_map_object(object)
-	map.get_turn_timer().add_to_timer_group(object)
 	
 	map.print_map_grid()
 	
-	object.find_and_render_viewfield()
+	Server.resolve_all_viewfields(map)
 	
 	if object.get_id()['NetID'] != 1:
 		Server.move_client_to_map(object, map)

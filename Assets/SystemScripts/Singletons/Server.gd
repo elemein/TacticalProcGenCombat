@@ -376,9 +376,8 @@ remote func receive_map_object_event(map_id, map_action):
 					var _result = GlobalVars.get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
 #
 func move_client_to_map(client_obj, map):
-	get_map_from_map_id(client_obj.get_id()['Map ID']).get_turn_timer().remove_from_timer_group(client_obj)
 	rpc_id(client_obj.get_id()['NetID'], 'prepare_for_map_change', map.get_map_server_id())
-#
+
 remote func prepare_for_map_change(map_id):
 	GlobalVars.client_state = 'loading'
 	
@@ -437,8 +436,6 @@ remote func receive_client_has_loaded(client_id, map_id):
 	var client_obj = get_player_obj_from_netid(client_id)
 	client_obj.update_id('Map ID', map_id)
 	client_obj.play_anim('idle')
-	var map = get_map_from_map_id(map_id)
-	map.get_turn_timer().add_to_timer_group(client_obj)
 	
 	rpc_id(client_id, 'resolve_viewfield')
 
@@ -493,9 +490,8 @@ func _player_disconnected(id):
 		if player.get_id()['NetID'] == id:
 			Server.object_action_event(player.get_id(), {"Command Type": "Remove From Map"})
 
-#			player.get_parent_map().remove_map_object(player)
+			player.get_parent_map().remove_map_object(player)
 			player_list.erase(player)
-			player.get_parent_map().get_turn_timer().remove_from_timer_group(player)
 			player.queue_free()
 
 # CLIENT SIDE FUNCS ------------------------------
