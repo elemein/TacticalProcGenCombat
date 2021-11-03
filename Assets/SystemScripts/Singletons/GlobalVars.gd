@@ -24,8 +24,6 @@ var self_instanceObj : ActorObj
 
 const TILE_OFFSET = 2.0
 
-const BLOCKS_VISION = ['Wall', 'TempWall']
-
 const OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner.gd")
 var obj_spawner = OBJ_SPAWNER.new()
 
