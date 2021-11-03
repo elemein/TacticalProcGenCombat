@@ -331,7 +331,7 @@ func resolve_all_viewfields(map):
 	resolve_viewfield()
 # Resolve your viewfield and render it to screen.
 remote func resolve_viewfield():
-	if GlobalVars.client_state == 'ingame':
+	if GlobalVars.get_client_state() == 'ingame':
 		GlobalVars.self_instanceObj.find_viewfield()
 		GlobalVars.self_instanceObj.resolve_viewfield_to_screen()
 # ------------------------------------------------------
@@ -378,7 +378,7 @@ func move_client_to_map(client_obj, map):
 	rpc_id(client_obj.get_id()['NetID'], 'prepare_for_map_change', map.get_map_server_id())
 
 remote func prepare_for_map_change(map_id):
-	GlobalVars.client_state = 'loading'
+	GlobalVars.set_client_state('loading')
 	
 	var world = get_node("/root/World")
 	world.clear_play_map()
@@ -534,7 +534,7 @@ func get_object_from_identity(object_id):
 func get_player_list() -> Array: return player_list
 
 func sync_from_sync_queue():
-	GlobalVars.client_state = 'ingame'
+	GlobalVars.set_client_state('ingame') 
 	while sync_queue.size() > 0:
 		var event = sync_queue.pop_front()
 		

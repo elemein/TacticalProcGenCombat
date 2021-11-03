@@ -33,3 +33,16 @@ var default_settings = {
 
 func _ready():
 	rng.randomize()
+
+# Getters
+func get_client_state(): return client_state
+
+# Setters
+func set_client_state(state): 
+	client_state = state
+	
+	if state == 'loading':
+		add_child(loading_screen.instance())
+	else:
+		var to_remove = get_node('/root/GlobalVars/LoadingScreen')
+		remove_child(to_remove)

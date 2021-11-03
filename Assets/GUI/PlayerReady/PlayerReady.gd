@@ -12,7 +12,7 @@ func _ready():
 	setup_player_status_list()
 	
 func _process(_delta):
-	if GlobalVars.client_state == 'ingame':
+	if GlobalVars.get_client_state() == 'ingame':
 		remove_old_players()
 		setup_player_status_list()
 	

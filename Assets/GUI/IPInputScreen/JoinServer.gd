@@ -32,7 +32,7 @@ func _on_button_pressed():
 	
 func on_successful_connect():
 	loading_icon.visible = false
-	GlobalVars.client_state = 'character select'
+	GlobalVars.set_client_state('character select')
 	reference_path = 'res://Assets/GUI/CharacterSelect/CharacterSelect.tscn'
 	var _result = get_tree().change_scene(reference_path)
 

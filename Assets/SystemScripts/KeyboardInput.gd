@@ -19,7 +19,7 @@ func _ready():
 
 func _physics_process(_delta):
 	if GlobalVars.self_instanceObj.get_is_dead() == false and \
-		GlobalVars.client_state == 'ingame': 
+		GlobalVars.get_client_state() == 'ingame': 
 		get_input()
 
 func smooth_input():

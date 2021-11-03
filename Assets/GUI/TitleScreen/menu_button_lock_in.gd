@@ -21,4 +21,4 @@ func _on_button_pressed():
 	
 	var _result = get_tree().change_scene(reference_path)
 	
-	GlobalVars.client_state = 'ingame'
+	GlobalVars.set_client_state('ingame')
