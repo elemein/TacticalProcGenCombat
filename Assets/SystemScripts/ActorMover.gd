@@ -23,10 +23,6 @@ func move_actor_translation():
 	parent_tween.interpolate_callback(actor, walk_time, "play_anim", 'idle')
 	parent_tween.start()
 
-func set_actor_translation():
-	var interp_mod = actor.get_turn_anim_timer().time_left / actor.get_turn_anim_timer().get_wait_time()
-	actor.set_translation(actor.get_translation().linear_interpolate(target_pos, 1-interp_mod))
-
 func check_cornering(direction):
 	var map_pos = actor.get_map_pos()
 	

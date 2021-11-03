@@ -18,6 +18,8 @@ var player_pos = []
 var dist_from_player = 0
 var path = []
 var viewfield = []
+var players_in_viewfield = {}
+var players_in_focus = []
 
 var pathfinder = PATHFINDER.new()
 var pathfinder_direction
@@ -33,21 +35,29 @@ func set_actor(setter):
 	
 func reset_vars():
 	player_pos = []
+	players_in_viewfield = {}
+	players_in_focus = []
 	dist_from_player = 0
 	ai_state = 'idle'
 
 func pathfind(): # ENEMIES WILL PATHFIND TO PLAYER WITH LOWEST DISTANCE.
-	var possible_paths = []
-	for x in range(player_pos.size()):
-		possible_paths.append(pathfinder.solve(actor, actor.get_parent_map(), actor.get_map_pos(), player_pos[x]))
+	var possible_paths = {}
+	
+	for key in players_in_viewfield.keys():
+		possible_paths[key] = pathfinder.solve(actor, actor.get_parent_map(), \
+												actor.get_map_pos(), \
+												players_in_viewfield[key])
 	
 	var lowest_path_cost = INF
 	var lowest_path
-	for path in possible_paths:
-		if path[0] < lowest_path_cost:
-			lowest_path_cost = path[0]
-			lowest_path = path[1]
+	var player_in_focus
+	for key in possible_paths.keys():
+		if possible_paths[key][0] < lowest_path_cost:
+			lowest_path_cost = possible_paths[key][0]
+			lowest_path = possible_paths[key][1]
+			player_in_focus = key
 	
+	players_in_focus.append(player_in_focus)
 	dist_from_player = lowest_path_cost
 	path = lowest_path
 
@@ -74,4 +84,6 @@ func find_players_in_viewfield():
 	for tile in viewfield:
 		var tile_objects = map.get_tile_contents(tile[0], tile[1])
 		for object in tile_objects:
-			if object.get_id()['CategoryType'] == 'Player': player_pos.append(tile)
+			if object.get_id()['CategoryType'] == 'Player': 
+				players_in_viewfield[object] = tile
+				player_pos.append(tile)

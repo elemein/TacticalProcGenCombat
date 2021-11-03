@@ -14,20 +14,55 @@ func run_engine():
 		pathfind()
 		pathfinder_direction = determine_direction_of_path()
 		
-		if (dist_from_player in [1,2]) && actor.get_mp() >= 25:
-			actor.set_actor_dir(pathfinder_direction)
-			actor.set_action('fireball')
+		if actor.get_mp() >= 25:
+			if (dist_from_player in [1,2]):
+				if player_is_in_fireball_range(players_in_focus[0].get_map_pos()):
+					fireball_player()
+				else: move_toward_player()
 		
-		elif dist_from_player == 1: 
-			actor.set_actor_dir(pathfinder_direction)
-			actor.set_action('basic attack')
-		
-		elif dist_from_player > 2:
-			var move_command = 'move %s' % [pathfinder_direction]
-			
-			if actor.check_move_action(move_command):
-				actor.set_action(move_command)
-			else: actor.set_action('idle')
-			
 		else:
-			actor.set_action('idle')
+			if dist_from_player == 1: basic_attack_player()
+			elif dist_from_player > 2: move_toward_player()
+			else: idle()
+
+func fireball_player():
+	actor.set_actor_dir(pathfinder_direction)
+	actor.set_action('fireball')
+
+func move_toward_player():
+	var move_command = 'move %s' % [pathfinder_direction]
+	
+	if actor.check_move_action(move_command):
+		actor.set_action(move_command)
+	else: actor.set_action('idle')
+
+func basic_attack_player():
+	actor.set_actor_dir(pathfinder_direction)
+	actor.set_action('basic attack')
+
+func idle():
+	actor.set_action('idle')
+
+func player_is_in_fireball_range(target_pos) -> bool:
+	var self_pos = actor.get_map_pos()
+	
+	if target_pos[0] == self_pos[0]: return true
+	if target_pos[1] == self_pos[1]: return true
+	
+	# downleft
+	if target_pos == [self_pos[0]-1 , self_pos[1]-1]: return true
+	if target_pos == [self_pos[0]-2 , self_pos[1]-2]: return true
+	
+	#downright
+	if target_pos == [self_pos[0]-1 , self_pos[1]+1]: return true
+	if target_pos == [self_pos[0]-2 , self_pos[1]+2]: return true
+	
+	#upleft
+	if target_pos == [self_pos[0]+1 , self_pos[1]-1]: return true
+	if target_pos == [self_pos[0]+2 , self_pos[1]-2]: return true
+
+	#upright
+	if target_pos == [self_pos[0]+1 , self_pos[1]+1]: return true
+	if target_pos == [self_pos[0]+2 , self_pos[1]+2]: return true
+	
+	return false

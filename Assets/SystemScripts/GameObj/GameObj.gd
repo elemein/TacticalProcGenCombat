@@ -41,11 +41,9 @@ func set_map_pos(new_pos):
 	object_identity['Position'] = new_pos
 	map_pos = new_pos
 
-func set_translation(new_translation): translation = new_translation 
+func set_translation_w_map_pos(new_pos):
+	translation = Vector3(new_pos[0] * GlobalVars.TILE_OFFSET, 0.3, new_pos[1] * GlobalVars.TILE_OFFSET)
 
 func set_map_pos_and_translation(new_pos):	
 	set_map_pos(new_pos)
 	set_translation_w_map_pos(new_pos)
-
-func set_translation_w_map_pos(new_pos):
-	translation = Vector3(new_pos[0] * GlobalVars.TILE_OFFSET, 0.3, new_pos[1] * GlobalVars.TILE_OFFSET)
