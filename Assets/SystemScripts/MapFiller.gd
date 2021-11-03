@@ -88,12 +88,12 @@ func assign_spawn_room():
 	map_object.spawn_room = spawn_room
 	
 #	# ENABLE BELOW IF YOU WANT STAIRS IN SPAWN ROOM
-#	var x = spawn_room.topleft[0]
-#	var z = spawn_room.topleft[1]
-#
-#	if map_object.map_id < map_object.parent_mapset.floor_count: # if last floor, no stairs
-#		var stairs = obj_spawner.spawn_map_object('BaseStairs', map_object, [x,z], false)
-#		stairs.connects_to = map_object.map_id + 1
+	var x = spawn_room.topleft[0]
+	var z = spawn_room.topleft[1]
+
+	if map_object.map_id < map_object.parent_mapset.floor_count: # if last floor, no stairs
+		var stairs = obj_spawner.spawn_map_object('BaseStairs', map_object, [x,z], false)
+		stairs.connects_to = map_object.map_id + 1
 	# ------------------------------------------------------------
 	
 	rng.randomize()

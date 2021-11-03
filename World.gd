@@ -49,19 +49,6 @@ func catalog_dungeon_to_server():
 		for level in mapset.floors:
 			GlobalVars.total_maps.append(mapset.floors[level])
 
-func return_map_w_mapset_and_id(targ_mapset_name, target_map_id):
-	var targ_mapset
-	for map in mapsets:
-		if map.get_mapset_name() == targ_mapset_name:
-			targ_mapset = map
-	
-	var floor_dict = targ_mapset.get_floors()
-	for flr in floor_dict.values():
-		if flr.map_id == target_map_id:
-			return flr
-	
-	return 'Map ID not found in mapset.'
-
 func get_mapset_from_name(mapset_name):
 	for mapset in mapsets:
 		if mapset.get_mapset_name() == mapset_name:
@@ -76,19 +63,21 @@ func remove_obj_from_old_map(object):
 		
 		object.set_action('idle') # prevents using the last map's move action on the next map
 
-func move_to_map(object, mapset_name, target_map_id):
+func move_to_map(object, map):
 	remove_obj_from_old_map(object)
 	
-	var targ_map = return_map_w_mapset_and_id(mapset_name, target_map_id)
-	object.set_parent_map(targ_map)
-	var player_pos = targ_map.place_player_on_map(object)
-	object.set_map_pos_and_translation(player_pos)
+	object.set_parent_map(map)
 	
-	targ_map.print_map_grid()
+	var desired_tile = map.get_map_start_tile()
+	object.set_map_pos_and_translation(desired_tile)
+	map.add_map_object(object)
+	map.get_turn_timer().add_to_timer_group(object)
+	
+	map.print_map_grid()
 	
 	object.find_and_render_viewfield()
 	
 	if object.get_id()['NetID'] != 1:
-		Server.move_client_to_map(object, targ_map)
+		Server.move_client_to_map(object, map)
 	
 	Server.object_action_event(object.get_id(), {"Command Type": "Spawn On Map"})

@@ -21,4 +21,8 @@ func _process(_delta):
 func interact_w_object(tile_objects):
 	for object in tile_objects:
 		if object.get_id()['CategoryType'] == 'Player':
-			world.move_to_map(object, parent_mapset.get_mapset_name(), connects_to)
+			
+			var self_map_id = parent_map.get_mapset_map_id()
+			for key in parent_mapset.floors.keys():
+				if parent_mapset.floors[key].get_mapset_map_id() == (self_map_id + 1):
+					world.move_to_map(object, parent_mapset.floors[key])

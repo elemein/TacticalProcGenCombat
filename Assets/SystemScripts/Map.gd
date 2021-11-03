@@ -15,7 +15,7 @@ var in_view_objects = []
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
 var parent_mapset
 var map_name = ''
-var map_id = 1
+var map_id
 var map_server_id 
 var map_grid = []
 var rooms
@@ -57,24 +57,6 @@ func add_map_objects_to_tree():
 				if object.get_id()['CategoryType'] == 'Enemy':
 					object.setup_actor()
 					current_number_of_enemies += 1
-
-func place_player_on_map(object):
-	var player = object
-	
-	for room in rooms:
-		if room['type'] == 'Player Spawn':
-			var tile = [room.center[0], room.center[1]]
-			map_grid[tile[0]][tile[1]].append(object)
-			
-			# WORKAROUND
-			var players_node = get_node('Players')
-			if players_node != null:
-				players_node.add_child(player)
-			else:
-				add_child(player)
-				
-			turn_timer.add_to_timer_group(player)
-			return tile
 
 func get_map_start_tile():
 	for room in rooms:
@@ -195,6 +177,8 @@ func get_parent_mapset() -> Object: return parent_mapset
 func get_map_name() -> String: return map_name
 
 func get_map_type() -> String: return map_type
+
+func get_mapset_map_id() -> int: return map_id
 
 func get_map_server_id(): return map_server_id
 
