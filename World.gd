@@ -48,29 +48,22 @@ func catalog_dungeon_to_server():
 		for level in mapset.floors:
 			GlobalVars.total_maps.append(mapset.floors[level])
 
-func get_mapset_from_name(mapset_name):
-	for mapset in mapsets:
-		if mapset.get_mapset_name() == mapset_name:
-			return mapset
-
 func remove_obj_from_old_map(object):
-	var curr_map = object.get_parent_map()
-	if typeof(curr_map) != TYPE_STRING:
-		curr_map.remove_map_object(object)
-		
-		Server.object_action_event(object.get_id(), {"Command Type": "Remove From Map"})
-		
-		object.set_action('idle') # prevents using the last map's move action on the next map
+	Server.object_action_event(object.get_id(), {"Command Type": "Remove From Map"})
+	object.set_action('idle') # prevents using the last map's move action on the next map
 
 func move_to_map(object, map):
 	remove_obj_from_old_map(object)
 	
 	object.set_parent_map(map)
-	
 	object.set_map_pos_and_translation(map.get_map_start_tile())
+	
 	map.add_map_object(object)
 	
 	map.print_map_grid()
+	
+	# de-render everything from old map.
+	for obj in object.view_finder.objs_visible_to_player_last_turn: obj.visible = false
 	
 	Server.resolve_all_viewfields(map)
 	

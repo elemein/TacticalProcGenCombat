@@ -149,11 +149,5 @@ func unpack_map(map_data):
 	for player in Server.player_list:
 		if player.object_identity['NetID'] == GlobalVars.self_netID:
 			GlobalVars.server_player = player
-	GlobalVars.client_state = 'ingame'
+	
 	Server.notify_server_map_loaded(plyr_play_map.get_map_server_id())
-	GlobalVars.client_state = 'ingame'
-
-func get_mapset_from_name(mapset_name):
-	for mapset in mapsets:
-		if mapset.get_mapset_name() == mapset_name:
-			return mapset

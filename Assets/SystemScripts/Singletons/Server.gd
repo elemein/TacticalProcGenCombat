@@ -490,7 +490,6 @@ func _player_disconnected(id):
 		if player.get_id()['NetID'] == id:
 			Server.object_action_event(player.get_id(), {"Command Type": "Remove From Map"})
 
-			player.get_parent_map().remove_map_object(player)
 			player_list.erase(player)
 			player.queue_free()
 
@@ -536,6 +535,7 @@ func get_object_from_identity(object_id):
 func get_player_list() -> Array: return player_list
 
 func sync_from_sync_queue():
+	GlobalVars.client_state = 'ingame'
 	while sync_queue.size() > 0:
 		var event = sync_queue.pop_front()
 		
@@ -550,5 +550,3 @@ func sync_from_sync_queue():
 				receive_map_object_event(event['MapID'], event['Map Action'])
 			'Action Confirm':
 				receive_action_request_confirm(event['Actor Id'], event['Response'])
-	
-	GlobalVars.client_state = 'ingame'
