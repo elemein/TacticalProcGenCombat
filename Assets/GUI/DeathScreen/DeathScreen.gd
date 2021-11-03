@@ -11,7 +11,7 @@ func _ready():
 	Server.player_list = []
 	GlobalVars.server_mapset = null
 	GlobalVars.server_map_data = null
-	GlobalVars.server_player = null
+	GlobalVars.self_instanceObj = null
 	GlobalVars.total_mapsets = []
 	GlobalVars.total_maps = []
 	GlobalVars.self_instanceID = null

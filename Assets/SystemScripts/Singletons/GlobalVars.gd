@@ -10,7 +10,6 @@ var peer_type = null
 var server_mapset
 var server_map_data
 var server_map_name
-var server_player : ActorObj
 
 # Possible states: ['ingame', 'loading', 'character select']
 var client_state

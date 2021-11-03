@@ -42,11 +42,11 @@ func _ready():
 			
 func _process(_delta):
 	if GlobalVars.get_client_state() == 'loading' \
-			or GlobalVars.server_player == null \
-			or GlobalVars.server_player.get_parent() == null:
+			or GlobalVars.self_instanceObj == null \
+			or GlobalVars.self_instanceObj.get_parent() == null:
 		return
 
-	var map_grid = GlobalVars.server_player.get_parent_map().map_grid
+	var map_grid = GlobalVars.self_instanceObj.get_parent_map().map_grid
 	for row_cnt in range(map_grid.size()):
 		for tile_cnt in range(map_grid[row_cnt].size()):
 			var minimap_icon = blank_icon

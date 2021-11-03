@@ -387,19 +387,19 @@ func build_inv_from_server(inventory):
 				__server_inventory[item.object_id] = new_item
 				
 				# Add to the player's inventory
-				GlobalVars.server_player.inventory[new_item] = {'equipped': inventory[item]['equipped'], 'description': new_item['identity']['Identifier'], 'server_id': item.object_id, 'item': new_item}
-				new_item.item_owner = GlobalVars.server_player
+				GlobalVars.self_instanceObj.inventory[new_item] = {'equipped': inventory[item]['equipped'], 'description': new_item['identity']['Identifier'], 'server_id': item.object_id, 'item': new_item}
+				new_item.item_owner = GlobalVars.self_instanceObj
 		else:
-			GlobalVars.server_player.inventory[__server_inventory[item.object_id]]['equipped'] = inventory[item]['equipped']
+			GlobalVars.self_instanceObj.inventory[__server_inventory[item.object_id]]['equipped'] = inventory[item]['equipped']
 			
 	# Remove items no longer in inventory
 	var server_item_ids = []
 	for server_item_id in inventory:
 		server_item_ids.append(server_item_id.object_id)
-	for item in GlobalVars.server_player.inventory:
-		var server_id = GlobalVars.server_player.inventory[item]['server_id']
+	for item in GlobalVars.self_instanceObj.inventory:
+		var server_id = GlobalVars.self_instanceObj.inventory[item]['server_id']
 		if not server_id in server_item_ids:
-			GlobalVars.server_player.inventory.erase(item)
+			GlobalVars.self_instanceObj.inventory.erase(item)
 			__server_inventory.erase(server_id)
 
 func connect_to_status_bars():

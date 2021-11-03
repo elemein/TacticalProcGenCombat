@@ -146,6 +146,6 @@ func unpack_map(map_data):
 	print('Map unpacked.')
 	for player in Server.player_list:
 		if player.object_identity['NetID'] == GlobalVars.self_netID:
-			GlobalVars.server_player = player
+			GlobalVars.self_instanceObj = player
 	
 	Server.notify_server_map_loaded(plyr_play_map.get_map_server_id())

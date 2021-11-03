@@ -15,7 +15,7 @@ func create_server():
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	print("Server opened successfully on port " + str(port))
-	player_list.append(GlobalVars.server_player)
+	player_list.append(GlobalVars.self_instanceObj)
 	GlobalVars.self_netID = 1
 
 # How turns work, from input:
@@ -469,13 +469,13 @@ remote func spawn_object_in_map(object_id):
 func _player_connected(id):
 	print('Player ' + str(id) + ' has connected!')
 	
-	var spawn_to_map = GlobalVars.server_player.get_parent_map()
-	var spawn_to_pos = GlobalVars.server_player.get_map_pos().duplicate()
+	var spawn_to_map = GlobalVars.self_instanceObj.get_parent_map()
+	var spawn_to_pos = GlobalVars.self_instanceObj.get_map_pos().duplicate()
 	spawn_to_pos[1] += 1
 	
 	var new_player = GlobalVars.obj_spawner.spawn_actor('PlagueDoc', spawn_to_map, spawn_to_pos, true)
 	new_player.get_parent().remove_child(new_player)
-	GlobalVars.server_player.get_parent().add_child(new_player)
+	GlobalVars.self_instanceObj.get_parent().add_child(new_player)
 	new_player.update_id('NetID', id)
 	player_list.append(new_player)
 	new_player.name = 'Player%d' % new_player.get_id()['NetID']

@@ -32,7 +32,7 @@ func _ready():
 
 	add_sub_nodes_as_children()
 	
-	GlobalVars.server_player = self
+	GlobalVars.self_instanceObj = self
 
 func add_sub_nodes_as_children():
 	add_child(mover)
