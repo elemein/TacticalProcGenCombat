@@ -12,6 +12,9 @@ var identity = {"Category": "MapObject", "CategoryType": "Trap",
 
 func _init().(identity): pass
 
+func _ready():
+	bury_self()
+
 func activate_trap(tile_objects):
 	for object in tile_objects:
 		if object.get_id()['CategoryType'] == 'Player':
@@ -27,9 +30,12 @@ func activate_trap(tile_objects):
 				
 				var _result = $Tween.connect("tween_completed", self, "_on_tween_complete")
 				$Tween.interpolate_property(self, "translation", translation, 
-					translation + Vector3(0,1,0), 1, 
+					translation + Vector3(0,2,0), 1, 
 					Tween.TRANS_ELASTIC, Tween.EASE_OUT)
 				$Tween.start()
+
+func bury_self():
+	translation.y -= 1
 
 func _on_tween_complete(_tween_object, _tween_node_path):
 	Server.object_action_event(object_identity, {"Command Type": "Remove From Map"})

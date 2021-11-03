@@ -7,15 +7,8 @@ onready var world = get_node('/.')
 const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
 var pathfinder = PATHFINDER.new()
 
-const Y_OFFSET = -0.3
-const AVG_NO_OF_ENEMIES_PER_ROOM = 0
+const AVG_NO_OF_ENEMIES_PER_ROOM = 1
 const NUMBER_OF_TRAPS = 5
-
-var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
-var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
-var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
-
-var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
 
 var obj_spawner = GlobalVars.obj_spawner
 
@@ -92,8 +85,7 @@ func assign_spawn_room():
 	var z = spawn_room.topleft[1]
 
 	if map_object.map_id < map_object.parent_mapset.floor_count: # if last floor, no stairs
-		var stairs = obj_spawner.spawn_map_object('BaseStairs', map_object, [x,z], false)
-		stairs.connects_to = map_object.map_id + 1
+		obj_spawner.spawn_map_object('BaseStairs', map_object, [x,z], false)
 	# ------------------------------------------------------------
 	
 	rng.randomize()
@@ -108,8 +100,7 @@ func assign_exit_room():
 	if map_object.get_map_type() == 'Normal Floor':
 		var x = exit_room.center[0]
 		var z = exit_room.center[1]
-		var stairs = obj_spawner.spawn_map_object('BaseStairs', map_object, [x,z], false)
-		stairs.connects_to = map_object.map_id + 1
+		obj_spawner.spawn_map_object('BaseStairs', map_object, [x,z], false)
 
 	elif map_object.get_map_type() == 'End Floor':
 		spawn_specific_enemy_in_room(exit_room, 1, 'Minotaur')
@@ -129,9 +120,9 @@ func assign_room_types():
 func fill_rooms():
 	for room in rooms:
 		if room.type == 'Enemy':
-			var rng_mod = rng.randi_range(-1,2)
+			var rng_mod = rng.randi_range(-1,1)
 			var no_of_enemy_in_room = rng_mod + AVG_NO_OF_ENEMIES_PER_ROOM
-			spawn_enemies_in_room(room, no_of_enemy_in_room)		
+			spawn_enemies_in_room(room, no_of_enemy_in_room)
 
 		elif room.type == 'Treasure':
 			var wep_cnt = rng.randi_range(0,1)
@@ -217,12 +208,5 @@ func spawn_traps():
 		var rand_tile = get_random_available_tile_in_room(room)
 		var x = rand_tile[0]
 		var z = rand_tile[1]
-				
-		var trap = base_spiketrap.instance()
-		trap.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3-1, z * GlobalVars.TILE_OFFSET)
-		trap.visible = false
-		trap.set_map_pos([x,z])
-		trap.set_parent_map(map_object)
-		trap.add_to_group('traps')
-
-		total_map[x][z].append(trap)
+		
+		obj_spawner.spawn_map_object('Spike Trap', map_object, [x,z], false)

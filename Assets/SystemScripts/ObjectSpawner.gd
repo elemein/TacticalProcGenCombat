@@ -49,6 +49,9 @@ func create_object(object_scene, map, map_pos, visibility) -> Object:
 	object.set_map_pos([map_pos[0], map_pos[1]])
 	object.set_parent_map(map)
 	object.translation = Vector3(map_pos[0] * GlobalVars.TILE_OFFSET, 0.3, map_pos[1] * GlobalVars.TILE_OFFSET)
+	
+	apply_item_specific_modifications(object)
+	
 	map.add_map_object(object)
 	
 	return object
@@ -134,3 +137,7 @@ func spawn_map_object(object_name, map, map_pos, visibility):
 	var object = create_object(object_scene, map, map_pos, visibility)
 	
 	return object
+	
+	
+func apply_item_specific_modifications(object):
+	pass

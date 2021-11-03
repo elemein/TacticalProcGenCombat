@@ -2,8 +2,6 @@ extends GameObj
 
 onready var world = get_node('/root/World')
 
-var connects_to
-
 # vars for minimap
 var was_visible = false
 var minimap_icon = "Stairs"
