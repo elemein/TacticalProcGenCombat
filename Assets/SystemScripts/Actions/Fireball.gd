@@ -43,7 +43,7 @@ func use():
 	if GlobalVars.peer_type == 'server':
 		Server.update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})
 		set_power()
-		do_damage(spell_final_power, damage_variance)
+		do_damage(spell_final_power, damage_variance, parent)
 
 func _on_tween_complete(_tween_object, _tween_node_path):
 	effect_tween.disconnect("tween_completed", self, "_on_tween_complete")

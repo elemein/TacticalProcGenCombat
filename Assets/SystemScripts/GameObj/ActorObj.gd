@@ -218,7 +218,11 @@ func display_notif(notif_text, notif_type):
 	add_child(new_notif)
 	new_notif.create_notif(notif_text, notif_type)
 
-func take_damage(damage, is_crit):
+func take_damage(damage_instance):
+	var damage = damage_instance['Amount']
+	var is_crit = damage_instance['Crit']
+	var attacker = damage_instance['Attacker']
+	
 	if not is_dead:
 		var damage_multiplier = 100 / (100+float(stat_dict['Defense']))
 		damage = floor(damage * damage_multiplier)

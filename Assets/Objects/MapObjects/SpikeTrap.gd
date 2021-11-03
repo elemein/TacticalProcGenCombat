@@ -19,7 +19,11 @@ func activate_trap(tile_objects):
 				Server.object_action_event(object_identity, {"Command Type": "Spawn On Map"})
 				sprung = true
 				visible = true
-				object.take_damage(trap_damage, false)
+				
+				var damage_instance = {"Amount": trap_damage, "Crit": false, \
+										"Attacker": self}
+				
+				object.take_damage(damage_instance)
 				
 				var _result = $Tween.connect("tween_completed", self, "_on_tween_complete")
 				$Tween.interpolate_property(self, "translation", translation, 

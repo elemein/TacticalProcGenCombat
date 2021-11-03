@@ -38,7 +38,7 @@ func use():
 	if GlobalVars.peer_type == 'server':
 		parent.set_mp(parent.get_mp() - spell_cost)
 		set_attack_power()
-		do_damage(spell_final_attack_power, damage_variance)
+		do_damage(spell_final_attack_power, damage_variance, parent)
 
 # Move back
 func _on_tween_complete(_tween_object, _tween_node_path):

@@ -188,7 +188,7 @@ func get_target_tiles() -> Array:
 	return target_tile_contents
 
 # Actually inflict damage on the target tiles
-func do_damage(amount, variance):
+func do_damage(amount, variance, attacker):
 	var is_crit = rng.randi_range(0,100) < parent.get_crit_chance()
 	
 	var damage_percentage = (100 - rng.randf_range(0, variance)) / 100
@@ -204,5 +204,8 @@ func do_damage(amount, variance):
 				if object.get_id()['CategoryType'] in ['Enemy', 'Player']:
 					damaged_objects.append(object)
 
+	var damage_instance = {"Amount": damage_amount, "Crit": is_crit, \
+						"Attacker": attacker}
+
 	for object in damaged_objects:
-		object.take_damage(damage_amount, is_crit)
+		object.take_damage(damage_instance)

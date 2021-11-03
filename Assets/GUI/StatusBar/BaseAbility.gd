@@ -77,7 +77,3 @@ func update_spell_power(val):
 	if not uses_attack_power:
 		spell_power = val
 		power.text = str(base_spell_power + spell_power)
-	
-#func update_spell_cost(val):
-#	spell_cost = val
-#	cost.text = str(base_spell_cost + spell_cost)
