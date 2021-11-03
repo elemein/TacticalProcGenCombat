@@ -28,17 +28,17 @@ func check_cornering(direction):
 	
 	match direction:
 		'upleft':
-			if actor.parent_map.is_tile_wall(map_pos[0]+1,map_pos[1]): return false
-			if actor.parent_map.is_tile_wall(map_pos[0],map_pos[1]-1): return false
+			if actor.parent_map.tile_blocks_vision(map_pos[0]+1,map_pos[1]): return false
+			if actor.parent_map.tile_blocks_vision(map_pos[0],map_pos[1]-1): return false
 		'upright': 
-			if actor.parent_map.is_tile_wall(map_pos[0]+1,map_pos[1]): return false
-			if actor.parent_map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
+			if actor.parent_map.tile_blocks_vision(map_pos[0]+1,map_pos[1]): return false
+			if actor.parent_map.tile_blocks_vision(map_pos[0],map_pos[1]+1): return false
 		'downleft': 
-			if actor.parent_map.is_tile_wall(map_pos[0]-1,map_pos[1]): return false
-			if actor.parent_map.is_tile_wall(map_pos[0],map_pos[1]-1): return false	
+			if actor.parent_map.tile_blocks_vision(map_pos[0]-1,map_pos[1]): return false
+			if actor.parent_map.tile_blocks_vision(map_pos[0],map_pos[1]-1): return false	
 		'downright': 
-			if actor.parent_map.is_tile_wall(map_pos[0]-1,map_pos[1]): return false
-			if actor.parent_map.is_tile_wall(map_pos[0],map_pos[1]+1): return false
+			if actor.parent_map.tile_blocks_vision(map_pos[0]-1,map_pos[1]): return false
+			if actor.parent_map.tile_blocks_vision(map_pos[0],map_pos[1]+1): return false
 	return true
 
 func check_move_action(move):

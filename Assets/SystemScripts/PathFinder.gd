@@ -105,17 +105,17 @@ func check_valid_cornering(pos, direction):
 	
 	match direction: # checking cornering
 		'upleft':
-			if map.is_tile_wall(pos[0] + 1, pos[1]): valid_cornering = false
-			if map.is_tile_wall(pos[0], pos[1] - 1): valid_cornering = false
+			if map.tile_blocks_vision(pos[0] + 1, pos[1]): valid_cornering = false
+			if map.tile_blocks_vision(pos[0], pos[1] - 1): valid_cornering = false
 		'upright': 
-			if map.is_tile_wall(pos[0] + 1, pos[1]): valid_cornering = false
-			if map.is_tile_wall(pos[0], pos[1] + 1): valid_cornering = false
+			if map.tile_blocks_vision(pos[0] + 1, pos[1]): valid_cornering = false
+			if map.tile_blocks_vision(pos[0], pos[1] + 1): valid_cornering = false
 		'downleft': 
-			if map.is_tile_wall(pos[0] - 1, pos[1]): valid_cornering = false
-			if map.is_tile_wall(pos[0], pos[1] - 1): valid_cornering = false
+			if map.tile_blocks_vision(pos[0] - 1, pos[1]): valid_cornering = false
+			if map.tile_blocks_vision(pos[0], pos[1] - 1): valid_cornering = false
 		'downright':
-			if map.is_tile_wall(pos[0] - 1, pos[1]): valid_cornering = false
-			if map.is_tile_wall(pos[0], pos[1]+1): valid_cornering = false
+			if map.tile_blocks_vision(pos[0] - 1, pos[1]): valid_cornering = false
+			if map.tile_blocks_vision(pos[0], pos[1]+1): valid_cornering = false
 			
 	return valid_cornering
 
@@ -150,7 +150,7 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 	
 		var skip_tile = false
 		for object in tile_contents:
-			if object.get_id()['CategoryType'] in GlobalVars.NON_TRAVERSABLES: skip_tile = true
+			if object.get_relation_rules()['Non-Traversable'] == true: skip_tile = true
 			if object.get_id()['CategoryType'] == 'Enemy':
 				if object.get_is_dead() == false:
 					if ignore_enemies == false: skip_tile = true

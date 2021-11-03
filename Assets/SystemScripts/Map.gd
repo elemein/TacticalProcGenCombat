@@ -119,7 +119,7 @@ func tile_in_bounds(x,z):
 func tile_available(x,z):
 	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
-			if object.get_id()['CategoryType'] in GlobalVars.NON_TRAVERSABLES: return false
+			if object.get_relation_rules()['Non-Traversable'] == true: return false
 			
 			if (object.get_id()['CategoryType'] == 'Enemy') or \
 				(object.get_id()['CategoryType'] == 'Player'):
@@ -128,7 +128,7 @@ func tile_available(x,z):
 		return true
 	return false
 
-func is_tile_wall(x,z):
+func tile_blocks_vision(x,z):
 	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
 			if object.get_id()['CategoryType'] in ['Wall', 'TempWall']: return true

@@ -7,11 +7,17 @@ var parent_map = 'None'
 var turn_timer
 var map_pos = []
 
-func _init(obj_id):
+var obj_relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
+						"Monopolizes Space": false}
+
+func _init(obj_id, obj_relate_rules):
 	object_identity = obj_id
+	obj_relation_rules = obj_relate_rules
 
 # Getters
 func get_id(): return object_identity
+
+func get_relation_rules(): return obj_relation_rules
 
 func get_parent_mapset(): return parent_mapset
 

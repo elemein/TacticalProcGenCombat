@@ -46,7 +46,7 @@ func move_check():
 		var tile_clear = true
 		
 		for object in target_tile:
-			if object.get_id()['CategoryType'] in GlobalVars.NON_TRAVERSABLES:
+			if object.get_relation_rules()['Non-Traversable'] == true:
 				tile_clear = false
 		
 		if tile_clear == true: dash_length += 1

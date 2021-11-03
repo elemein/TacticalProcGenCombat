@@ -9,7 +9,10 @@ var identity = {"Category": "MapObject", "CategoryType": "Coins",
 				'Position': [0,0], 'Instance ID': get_instance_id(),
 				'Gold Value': value}
 
-func _init().(identity): pass
+var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
+						"Monopolizes Space": false}
+
+func _init().(identity, relation_rules): pass
 
 func set_gold_value(new_value):
 	identity['Gold Value'] = new_value

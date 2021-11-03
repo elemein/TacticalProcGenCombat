@@ -55,12 +55,12 @@ func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - S
 	while true:
 		points.append([p0[0], p0[1]]) # Adds tile to line.
 		
-		if actor.parent_map.is_tile_wall(p0[0], p0[1]) == true: break
+		if actor.parent_map.tile_blocks_vision(p0[0], p0[1]) == true: break
 		if p0[0] == p1[0] and p0[1] == p1[1]: break
 		
 		# Seeing through corner wall fix
-		if actor.parent_map.is_tile_wall(p0[0] + next_x, p0[1]) and actor.parent_map.is_tile_wall(p0[0], p0[1] + next_y): 
-			if !(actor.parent_map.is_tile_wall(p0[0] + next_x, p0[1] + next_y)): 
+		if actor.parent_map.tile_blocks_vision(p0[0] + next_x, p0[1]) and actor.parent_map.tile_blocks_vision(p0[0], p0[1] + next_y): 
+			if !(actor.parent_map.tile_blocks_vision(p0[0] + next_x, p0[1] + next_y)): 
 				points.append([p0[0] + next_x, p0[1]]) # Without manually adding
 				points.append([p0[0], p0[1] + next_y]) # they sometimes dont show
 				break 

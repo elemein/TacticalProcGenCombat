@@ -11,8 +11,10 @@ var usable
 var minimap_icon = null
 var inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/placeholder_x76.png")
 
-func _init(identity).(identity):
-	pass
+var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
+						"Monopolizes Space": false}
+
+func _init(identity).(identity, relation_rules): pass
 
 func get_gold_value():
 	return value

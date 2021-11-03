@@ -11,7 +11,7 @@ var loot_dropped = false
 
 var obj_spawner = GlobalVars.obj_spawner
 
-func _init(ai_eng_const, start_drop_table, obj_id, actor_stats).(obj_id, actor_stats):
+func _init(ai_eng_const, start_drop_table, obj_id, relation_rules, actor_stats).(obj_id, relation_rules, actor_stats):
 	ai_engine = ai_eng_const.new()
 	drop_table = start_drop_table
 	rng.randomize()

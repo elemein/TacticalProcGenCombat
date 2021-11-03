@@ -14,7 +14,10 @@ var identity = {"Category": "MapObject", "CategoryType": "TempWall",
 				"Identifier": "TempWall", 'Map ID': null, 
 				'Position': [0,0], 'Instance ID': get_instance_id()}
 
-func _init().(identity): pass
+var relation_rules = {"Blocks Vision": true, "Non-Traversable": true, \
+						"Monopolizes Space": true}
+
+func _init().(identity, relation_rules): pass
 
 func _ready():
 	TweenNode.connect("tween_completed", self, "_on_wall_slam_down_complete")

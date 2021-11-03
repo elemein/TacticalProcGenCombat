@@ -67,7 +67,7 @@ var gold : int = 0
 func _ready():
 	play_anim('idle', true)
 
-func _init(obj_id, actor_stats).(obj_id):
+func _init(obj_id, relation_rules, actor_stats).(obj_id, relation_rules):
 	stat_dict = actor_stats
 
 	turn_anim_timer.set_one_shot(true)

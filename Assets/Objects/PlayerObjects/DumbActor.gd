@@ -13,7 +13,10 @@ var identity = {'Category': 'Actor', 'CategoryType': 'Player',
 				'MP': start_stats['MP'], 'Facing': null, 'NetID': null, 
 				'Map ID': null, 'Position': [0,0], 'Instance ID': get_instance_id()}
 
-func _init().(identity, start_stats):
+var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
+						"Monopolizes Space": false}
+
+func _init().(identity, relation_rules, start_stats):
 	pass
 
 func _ready():

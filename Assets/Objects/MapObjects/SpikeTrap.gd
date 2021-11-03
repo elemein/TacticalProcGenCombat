@@ -10,7 +10,10 @@ var identity = {"Category": "MapObject", "CategoryType": "Trap",
 				"Identifier": "Spike Trap", 'Map ID': null, 
 				'Position': [0,0], 'Instance ID': get_instance_id()}
 
-func _init().(identity): pass
+var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
+						"Monopolizes Space": false}
+
+func _init().(identity, relation_rules): pass
 
 func _ready():
 	bury_self()

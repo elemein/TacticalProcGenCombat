@@ -69,8 +69,8 @@ func block_exits():
 		var tempwall = obj_spawner.spawn_map_object('TempWall', parent_map, [exit[0], exit[1]], true)
 		
 		# below rotates the wall 90 degrees if it runs horizontally
-		if parent_map.is_tile_wall(exit[0], exit[1]-1) and \
-			parent_map.is_tile_wall(exit[0], exit[1]+1):
+		if parent_map.tile_blocks_vision(exit[0], exit[1]-1) and \
+			parent_map.tile_blocks_vision(exit[0], exit[1]+1):
 			tempwall.rotation_degrees.y = 90
 	
 	exits_blocked = true

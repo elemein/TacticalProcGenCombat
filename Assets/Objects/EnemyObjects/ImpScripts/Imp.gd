@@ -15,11 +15,14 @@ var identity = {"Category": "Actor", "CategoryType": "Enemy",
 				'MP': start_stats['MP'], 'Map ID': null, 'Position': [0,0] , 
 				'Facing': 'right', 'Instance ID': get_instance_id()}
 
+var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
+						"Monopolizes Space": false}
+
 var start_drop_table = {'50': 'Gold', '59': "Sword", '69': 'Magic Staff', '79': \
 					'Arcane Necklace', '89': 'Scabbard and Dagger', '94': \
 					'Body Armour', '100': 'Leather Cuirass'}
 
-func _init().(IMP_AI, start_drop_table, identity, start_stats):
+func _init().(IMP_AI, start_drop_table, identity, relation_rules, start_stats):
 	pass
 
 func _ready():
