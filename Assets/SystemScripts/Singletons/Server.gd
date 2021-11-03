@@ -52,7 +52,6 @@ remote func query_for_action(requester, request):
 		if player.get_id()['NetID'] == player_id:
 			player_obj = player
 			player_identity = player.get_id()
-#			player_map = player.get_parent_map()
 			player_turn_timer = player.get_parent_map().get_turn_timer()
 	
 	match request['Command Type']:
