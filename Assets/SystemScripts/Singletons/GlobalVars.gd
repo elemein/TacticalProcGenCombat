@@ -2,6 +2,10 @@ extends Node
 
 var loading_screen = preload('res://Assets/GUI/LoadingScreen/LoadingScreen.tscn')
 
+# for self_obj
+var player_cam = preload('res://Assets/Objects/PlayerObjects/PlayerCam.tscn')
+var player_light = preload('res://Assets/Objects/PlayerObjects/PlayerOmniLight.tscn')
+
 var rng = RandomNumberGenerator.new()
 
 var camera = null
@@ -40,7 +44,12 @@ func get_self_netid(): return self_netID
 func get_client_state(): return client_state
 
 # Setters
-func set_self_obj(obj): self_obj = obj
+func set_self_obj(obj): 
+	self_obj = obj
+	self_obj.connect_to_status_bars()
+	self_obj.add_child(player_light.instance())
+	self_obj.add_child(player_cam.instance())
+
 func set_self_netID(netid): self_netID = netid
 
 func set_client_state(state): 

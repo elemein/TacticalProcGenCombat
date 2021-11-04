@@ -83,7 +83,6 @@ func unpack_map(map_data):
 						
 						if object['NetID'] == GlobalVars.get_self_netid():
 							GlobalVars.set_self_obj(new_object)
-							GlobalVars.get_self_obj().connect_to_status_bars()
 							
 					_:
 						match object['CategoryType']:

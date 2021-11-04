@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Assets/Objects/PlayerObjects/Camera.gd" type="Script" id=1]
+
+[sub_resource type="Environment" id=1]
+ambient_light_color = Color( 1, 1, 1, 1 )
+ambient_light_energy = 0.0
+ambient_light_sky_contribution = 0.0
+
+[node name="CamBase" type="Spatial"]
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( -1.62921e-07, 0.984808, -0.173648, 0, 0.173648, 0.984808, 1, 1.60446e-07, -2.82909e-08, -2.5, 15, 0 )
+environment = SubResource( 1 )
+current = true
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="Timer" type="Timer" parent="Camera"]
+
+[node name="Tween" type="Tween" parent="Camera"]
+
+[connection signal="timeout" from="Camera/Timer" to="Camera" method="_on_Timer_timeout"]

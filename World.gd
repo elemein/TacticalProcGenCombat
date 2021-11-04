@@ -31,7 +31,7 @@ func create_server_player_and_spawn_to_map():
 						first_floor, first_floor_start_tile, true)
 	
 	GlobalVars.set_self_obj(server_player)
-	GlobalVars.get_self_obj().connect_to_status_bars()
+	GlobalVars.get_self_obj().update_id('NetID', 1)
 	
 	Server.player_list.append(GlobalVars.get_self_obj())
 	
