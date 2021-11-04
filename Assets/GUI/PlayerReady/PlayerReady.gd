@@ -19,7 +19,7 @@ func _process(_delta):
 func setup_player_status_list():
 	for player in Server.player_list:
 
-		if GlobalVars.self_obj.get_parent_map() == player.get_parent_map():
+		if GlobalVars.get_self_obj().get_parent_map() == player.get_parent_map():
 
 			player = player as ActorObj
 
@@ -48,7 +48,7 @@ func setup_player_status_list():
 func remove_old_players():
 	for player in player_slots:
 		if not player in Server.player_list or \
-				not GlobalVars.self_obj.get_parent_map() == player.get_parent_map():
+				not GlobalVars.get_self_obj().get_parent_map() == player.get_parent_map():
 			remove_child(player_slots[player]['node'])
 			player_slots[player]['node'].queue_free()
 			player_slots.erase(player)

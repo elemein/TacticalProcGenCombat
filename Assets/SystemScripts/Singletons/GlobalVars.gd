@@ -17,9 +17,8 @@ var client_state
 var total_mapsets = []
 var total_maps = []
 
-var self_netID : int
-var self_instanceID
 var self_obj : ActorObj
+var self_netID : int
 
 const TILE_OFFSET = 2.0
 
@@ -34,9 +33,16 @@ func _ready():
 	rng.randomize()
 
 # Getters
+func get_self_obj(): return self_obj
+func get_self_instance_id(): return self_obj.get_id()['Instance ID']
+func get_self_netid(): return self_netID
+
 func get_client_state(): return client_state
 
 # Setters
+func set_self_obj(obj): self_obj = obj
+func set_self_netID(netid): self_netID = netid
+
 func set_client_state(state): 
 	client_state = state
 	

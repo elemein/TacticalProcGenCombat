@@ -55,7 +55,5 @@ func remove_buttons():
 	Server.player_list = []
 	GlobalVars.server_mapset = null
 	GlobalVars.server_map_data = null
-	GlobalVars.self_obj = null
+	GlobalVars.set_self_obj(null)
 	GlobalVars.total_mapsets = []
-	GlobalVars.self_instanceID = null
-	GlobalVars.self_obj = null

@@ -262,13 +262,13 @@ func die():
 
 	play_death_anim()
 	
-	if object_identity['Instance ID'] == GlobalVars.self_instanceID:
+	if object_identity['Instance ID'] == GlobalVars.get_self_instance_id():
 		tween.interpolate_callback(self, 2, 'move_to_death_screen')
 	else:
 		if GlobalVars.peer_type == 'server': parent_map.log_enemy_death(self)
 
 func move_to_death_screen():
-	if GlobalVars.self_netID != 1:
+	if GlobalVars.get_self_netid() != 1:
 		Server.peer.disconnect_peer(1, true)
 	get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
 
@@ -387,19 +387,19 @@ func build_inv_from_server(inventory):
 				__server_inventory[item.object_id] = new_item
 				
 				# Add to the player's inventory
-				GlobalVars.self_obj.inventory[new_item] = {'equipped': inventory[item]['equipped'], 'description': new_item['identity']['Identifier'], 'server_id': item.object_id, 'item': new_item}
-				new_item.item_owner = GlobalVars.self_obj
+				GlobalVars.get_self_obj().inventory[new_item] = {'equipped': inventory[item]['equipped'], 'description': new_item['identity']['Identifier'], 'server_id': item.object_id, 'item': new_item}
+				new_item.item_owner = GlobalVars.get_self_obj()
 		else:
-			GlobalVars.self_obj.inventory[__server_inventory[item.object_id]]['equipped'] = inventory[item]['equipped']
+			GlobalVars.get_self_obj().inventory[__server_inventory[item.object_id]]['equipped'] = inventory[item]['equipped']
 			
 	# Remove items no longer in inventory
 	var server_item_ids = []
 	for server_item_id in inventory:
 		server_item_ids.append(server_item_id.object_id)
-	for item in GlobalVars.self_obj.inventory:
-		var server_id = GlobalVars.self_obj.inventory[item]['server_id']
+	for item in GlobalVars.get_self_obj().inventory:
+		var server_id = GlobalVars.get_self_obj().inventory[item]['server_id']
 		if not server_id in server_item_ids:
-			GlobalVars.self_obj.inventory.erase(item)
+			GlobalVars.get_self_obj().inventory.erase(item)
 			__server_inventory.erase(server_id)
 
 func connect_to_status_bars():

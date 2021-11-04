@@ -20,5 +20,3 @@ func _on_button_pressed():
 		reference_path = 'res://PlayerWorld.tscn'
 	
 	var _result = get_tree().change_scene(reference_path)
-	
-	GlobalVars.set_client_state('ingame')

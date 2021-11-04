@@ -17,7 +17,7 @@ func _ready():
 	catalog_dungeon_to_server()
 	unpack_map(GlobalVars.server_map_data)
 	
-	GlobalVars.self_obj.find_and_render_viewfield()
+	GlobalVars.get_self_obj().find_and_render_viewfield()
 	Signals.emit_signal("world_loaded")
 
 func catalog_dungeon_to_server():
@@ -68,7 +68,7 @@ func unpack_map(map_data):
 					'BaseStairs':
 						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
 					'PlagueDoc': 
-						if object['NetID'] == GlobalVars.self_netID:
+						if object['NetID'] == GlobalVars.get_self_netid():
 							new_object = GlobalVars.obj_spawner.spawn_actor('Player', plyr_play_map, [x,z], false)
 						else:
 							new_object = GlobalVars.obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
@@ -81,9 +81,9 @@ func unpack_map(map_data):
 						if not new_object in Server.player_list:
 							Server.player_list.append(new_object)
 						
-						if object['NetID'] == GlobalVars.self_netID:
-							GlobalVars.self_obj = new_object
-							GlobalVars.self_obj.connect_to_status_bars()
+						if object['NetID'] == GlobalVars.get_self_netid():
+							GlobalVars.set_self_obj(new_object)
+							GlobalVars.get_self_obj().connect_to_status_bars()
 							
 					_:
 						match object['CategoryType']:
@@ -145,7 +145,7 @@ func unpack_map(map_data):
 	
 	print('Map unpacked.')
 	for player in Server.player_list:
-		if player.object_identity['NetID'] == GlobalVars.self_netID:
-			GlobalVars.self_obj = player
+		if player.object_identity['NetID'] == GlobalVars.get_self_netid():
+			GlobalVars.set_self_obj(player)
 	
 	Server.notify_server_map_loaded(plyr_play_map.get_map_server_id())

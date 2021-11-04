@@ -11,16 +11,13 @@ func _ready():
 	catalog_dungeon_to_server()
 	create_server_player_and_spawn_to_map()
 
-	### NETWORK
-	if GlobalVars.peer_type == 'server' and GlobalVars.self_netID != 1: 
-		GlobalVars.server_map_name = map_name
-		GlobalVars.self_obj.name = 'Player1'
-		Server.create_server()
+	GlobalVars.server_map_name = map_name
+	GlobalVars.get_self_obj().name = 'Player1'
 
-	elif GlobalVars.peer_type == 'client': 
-		Server.request_map_from_server()
-	
+	Server.create_server()
+
 	Signals.emit_signal("world_loaded")
+	GlobalVars.set_client_state('ingame')
 
 func create_server_player_and_spawn_to_map():
 	var first_floor
@@ -32,12 +29,13 @@ func create_server_player_and_spawn_to_map():
 	
 	var server_player = GlobalVars.obj_spawner.spawn_actor('Player', \
 						first_floor, first_floor_start_tile, true)
-						
 	
-	GlobalVars.self_instanceID = server_player.get_id()['Instance ID']
-	GlobalVars.self_obj = server_player
+	GlobalVars.set_self_obj(server_player)
+	GlobalVars.get_self_obj().connect_to_status_bars()
 	
-	GlobalVars.self_obj.find_and_render_viewfield()
+	Server.player_list.append(GlobalVars.get_self_obj())
+	
+	GlobalVars.get_self_obj().find_and_render_viewfield()
 
 func catalog_dungeon_to_server():
 	add_child(dungeon)

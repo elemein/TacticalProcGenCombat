@@ -31,7 +31,7 @@ func _ready():
 	ability_info_size = ability_info.get_size()
 	
 	yield(get_tree(), "idle_frame")
-	_on_GUI_set_status_bars(GlobalVars.self_obj.start_stats)
+	_on_GUI_set_status_bars(GlobalVars.get_self_obj().start_stats)
 
 
 func _on_GUI_set_status_bars(stats):
