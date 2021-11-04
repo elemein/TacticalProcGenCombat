@@ -33,8 +33,8 @@ func setup_actor():
 	ai_engine.set_actor(self)
 	add_child(ai_engine)
 	
-	add_child(mover)
-	mover.set_actor(self)
+#	add_child(mover)
+#	mover.set_actor(self)
 	
 	add_loot_to_inventory()
 
@@ -66,6 +66,3 @@ func drop_loot():
 
 	# drop items
 	loot_dropped = true
-
-func set_direction(direction):
-	set_actor_dir(direction)

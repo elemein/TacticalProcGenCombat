@@ -24,6 +24,3 @@ var start_drop_table = {'50': 'Gold', '59': "Sword", '69': 'Magic Staff', '79': 
 
 func _init().(IMP_AI, start_drop_table, identity, relation_rules, start_stats):
 	pass
-
-func _ready():
-	stat_dict['Speed'] = rng.randi_range(5,15)

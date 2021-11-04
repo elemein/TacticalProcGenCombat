@@ -19,12 +19,9 @@ var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
 func _init().(identity, relation_rules, start_stats):
 	pass
 
-func _ready():
-	add_sub_nodes_as_children()
-
-func add_sub_nodes_as_children():
-	add_child(mover)
-	mover.set_actor(self)
-
-func set_direction(direction):
-	set_actor_dir(direction)
+#func _ready():
+#	add_sub_nodes_as_children()
+#
+#func add_sub_nodes_as_children():
+#	add_child(mover)
+#	mover.set_actor(self)

@@ -66,6 +66,9 @@ var gold : int = 0
 
 func _ready():
 	play_anim('idle', true)
+	
+	add_child(mover)
+	mover.set_actor(self)
 
 func _init(obj_id, relation_rules, actor_stats).(obj_id, relation_rules):
 	stat_dict = actor_stats
@@ -122,7 +125,6 @@ func process_turn():
 	if proposed_action.split(" ")[0] == 'move':
 #		set_actor_dir(proposed_action.split(" ")[1])
 		if check_move_action(proposed_action) == true:
-#			mover.move_actor(1)
 			print([object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]}])
 			Server.object_action_event(object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]})
 	
@@ -166,9 +168,6 @@ func turn_regen():
 		if object_identity['MP'] > object_identity['Max MP']:
 			var difference = object_identity['MP'] - object_identity['Max MP']
 			Server.update_actor_stat(object_identity, {"Stat": "MP", "Modifier": -difference})
-	
-#	set_hp(stat_dict['HP'] + stat_dict['HP Regen'])
-#	set_mp(stat_dict['MP'] + stat_dict['MP Regen'])
 
 func perform_action(action):
 	match action['Command Type']:
@@ -320,6 +319,9 @@ func set_stat_dict(changed_dict): stat_dict = changed_dict
 
 func set_actor_dir(dir_facing):
 	direction_facing = dir_facing
+
+func set_direction(direction):
+	set_actor_dir(direction)
 
 	match direction_facing:
 		'upleft': model.rotation_degrees.y = 135
