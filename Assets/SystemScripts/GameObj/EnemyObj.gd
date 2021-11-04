@@ -33,9 +33,6 @@ func setup_actor():
 	ai_engine.set_actor(self)
 	add_child(ai_engine)
 	
-#	add_child(mover)
-#	mover.set_actor(self)
-	
 	add_loot_to_inventory()
 
 func decide_next_action():
