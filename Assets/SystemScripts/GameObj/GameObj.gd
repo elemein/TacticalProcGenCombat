@@ -40,6 +40,7 @@ func set_parent_map(map):
 	object_identity['Map ID'] = map.get_map_server_id()
 	
 	parent_map = map
+	parent_mapset = map.get_parent_mapset()
 	turn_timer = map.get_turn_timer()
 	if GlobalVars.peer_type == 'server': parent_mapset = map.get_parent_mapset()
 

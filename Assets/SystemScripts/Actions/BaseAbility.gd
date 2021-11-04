@@ -72,9 +72,6 @@ func set_attack_power():
 # Check if out of mana
 func mana_check() -> bool:
 	if parent.get_mp() and parent.get_mp() < spell_cost:
-		if not out_of_mana.is_playing():
-			out_of_mana.translation = parent.translation
-#			out_of_mana.play()
 		return false
 	return true
 

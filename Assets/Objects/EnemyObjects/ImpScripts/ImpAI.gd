@@ -53,7 +53,7 @@ func player_is_in_fireball_range(target_pos) -> bool:
 	
 	# have to do janky shit below because apparently comparing arrays doesnt work..?
 	
-	# downleft
+	#downleft
 	elif (target_pos[0] == self_pos[0]-1) and (target_pos[1] == self_pos[1]-1): 
 		return true
 	elif (target_pos[0] == self_pos[0]-2) and (target_pos[1] == self_pos[1]-2): 

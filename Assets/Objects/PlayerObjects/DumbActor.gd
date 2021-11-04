@@ -14,7 +14,7 @@ var identity = {'Category': 'Actor', 'CategoryType': 'Player',
 				'Position': [0,0], 'NetID': null, 'Instance ID': get_instance_id()}
 
 var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
-						"Monopolizes Space": false}
+						"Monopolizes Space": true}
 
 func _init().(identity, relation_rules, start_stats):
 	pass

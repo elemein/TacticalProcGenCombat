@@ -41,8 +41,6 @@ var anim_timer_waittime = 1
 
 # movement and positioning related vars
 var direction_facing = "down"
-var target_pos = Vector3()
-var saved_pos = Vector3()
 
 # turn_state vars
 var ready_status = false
@@ -180,8 +178,6 @@ func perform_action(action):
 		'Self Heal': emit_signal("spell_cast_self_heal")
 
 func end_turn():
-	target_pos = translation
-	saved_pos = translation
 	proposed_action = ''
 	in_turn = false
 	ready_status = false
@@ -228,8 +224,6 @@ func take_damage(damage_instance):
 		damage = floor(damage)
 		
 		Server.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": -damage})
-		
-#		stat_dict['HP'] -= damage
 		
 		if is_crit: 
 			Server.actor_notif_event(object_identity, ("-" + str(damage)) + "!", 'crit damage')

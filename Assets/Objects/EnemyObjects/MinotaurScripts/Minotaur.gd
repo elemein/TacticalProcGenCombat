@@ -16,7 +16,7 @@ var identity = {"Category": "Actor", "CategoryType": "Enemy",
 				'Facing': 'right', 'Instance ID': get_instance_id()}
 
 var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
-						"Monopolizes Space": false}
+						"Monopolizes Space": true}
 
 var start_drop_table = {'50': 'Gold', '59': "Sword", '69': 'Magic Staff', '79': \
 					'Arcane Necklace', '89': 'Scabbard and Dagger', '94': \
