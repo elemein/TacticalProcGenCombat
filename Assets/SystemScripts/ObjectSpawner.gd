@@ -45,8 +45,6 @@ func create_object(object_scene, map, map_pos, visibility) -> Object:
 	# If the map/map_pos = 'Inventory' (i.e. a string), do not designate a map.
 	if typeof(map) == TYPE_STRING: return object
 	
-	apply_item_specific_modifications(object)
-	
 	map.add_map_object(object, map_pos)
 	
 	return object
@@ -68,22 +66,12 @@ func spawn_item(item_name, map, map_pos, visibility):
 	return item
 
 func spawn_actor(actor_name, map, map_pos, visibility):
-	var actor_scene
+	var actor = create_object(base_dumb_actor, map, map_pos, visibility)
 	
-	match actor_name:
-		'Player': actor_scene = base_dumb_actor
-		'PlagueDoc': actor_scene = base_dumb_actor
-		'Fox': actor_scene = base_dumb_actor
-		'Imp': actor_scene = base_dumb_actor
-		'Minotaur': actor_scene = base_dumb_actor
-	
-	var actor = create_object(actor_scene, map, map_pos, visibility)
-	
+	#Replacing the placeholder graphics with intended:
 	match actor_name:
 		'PlagueDoc':
-			#Replacing the placeholder graphics with intended:
 			actor.set_graphics(plague_doc_graphics.instance())
-			actor.add_child(lantern_light_effect.instance())
 			actor.add_to_group('player')
 		'Fox':
 			actor.set_graphics(fox_graphics.instance())
@@ -131,7 +119,3 @@ func spawn_map_object(object_name, map, map_pos, visibility):
 	var object = create_object(object_scene, map, map_pos, visibility)
 	
 	return object
-	
-	
-func apply_item_specific_modifications(object):
-	pass

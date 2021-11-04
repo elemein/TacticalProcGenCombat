@@ -405,10 +405,8 @@ func build_inv_from_server(inventory):
 			__server_inventory.erase(server_id)
 
 func connect_to_status_bars():
-	var _result = self.connect("prepare_gui", get_node("/root/World/GUI"),"_on_Player_prepare_gui")
-	_result = self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
-	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")	
+	var _result = self.connect("status_bar_hp", get_node("/root/World/GUI"), "_on_Player_status_bar_hp")
+	_result = self.connect("status_bar_mp", get_node("/root/World/GUI"), "_on_Player_status_bar_mp")
 
-	emit_signal("prepare_gui", stat_dict)
 	Signals.emit_signal("player_attack_power_updated", stat_dict['Attack Power'])
 	Signals.emit_signal("player_spell_power_updated", stat_dict['Spell Power'])
