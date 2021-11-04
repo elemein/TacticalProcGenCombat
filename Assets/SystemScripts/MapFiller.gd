@@ -75,17 +75,14 @@ func find_smallest_room():
 	return smallest_room
 
 func assign_spawn_room():
-	var smallest_room = find_smallest_room()
-	spawn_room = smallest_room
+	spawn_room = find_smallest_room()
 	spawn_room['type'] = 'Player Spawn'
 	map_object.spawn_room = spawn_room
 	
 #	# ENABLE BELOW IF YOU WANT STAIRS IN SPAWN ROOM
-	var x = spawn_room.topleft[0]
-	var z = spawn_room.topleft[1]
-
 	if map_object.map_id < map_object.parent_mapset.floor_count: # if last floor, no stairs
-		obj_spawner.spawn_map_object('BaseStairs', map_object, [x,z], false)
+		obj_spawner.spawn_map_object('BaseStairs', map_object, \
+										spawn_room.topleft, false)
 	# ------------------------------------------------------------
 	
 	rng.randomize()
@@ -98,9 +95,8 @@ func assign_exit_room():
 	map_object.exit_room = exit_room
 	
 	if map_object.get_map_type() == 'Normal Floor':
-		var x = exit_room.center[0]
-		var z = exit_room.center[1]
-		obj_spawner.spawn_map_object('BaseStairs', map_object, [x,z], false)
+		obj_spawner.spawn_map_object('BaseStairs', map_object, \
+										exit_room.center, false)
 
 	elif map_object.get_map_type() == 'End Floor':
 		spawn_specific_enemy_in_room(exit_room, 1, 'Minotaur')
@@ -138,7 +134,7 @@ func fill_rooms():
 			spawn_enemies_in_room(room, enemy_cnt)
 
 func find_room_dists_to_spawn():
-	var furthest_dist = -99
+	var furthest_dist = -INF
 	var furthest_room
 	
 	for room in rooms:
@@ -155,8 +151,6 @@ func find_room_dists_to_spawn():
 			
 	exit_room = furthest_room
 
-
-				
 func spawn_treasure_in_room(room, wep_cnt, armr_cnt, acc_cnt, gold_cnt):
 	var pos_weps = ['Sword', 'Magic Staff']
 	for _wep in range(0, wep_cnt):
@@ -181,32 +175,24 @@ func spawn_treasure_in_room(room, wep_cnt, armr_cnt, acc_cnt, gold_cnt):
 		obj_spawner.spawn_gold(rng.randi_range(10,30), map_object, rand_tile, false)
 
 func spawn_enemies_in_room(room, enemy_cnt):
+	var enemy_list = ['Imp', 'Fox']
+	
 	if enemy_cnt > 0:
 		for _cnt in range(enemy_cnt):
-			var rand_tile = get_random_available_tile_in_room(room)
-			var x = rand_tile[0]
-			var z = rand_tile[1]
+			var chosen_enemy = enemy_list[rng.randi_range(0, enemy_list.size()-1)]
 			
-			var enemy_list = ['Imp', 'Fox']
-			var chosen_enemy = enemy_list[rng.randi_range(0,1)]
-			
-			obj_spawner.spawn_enemy(chosen_enemy, map_object, [x, z], false)
+			obj_spawner.spawn_enemy(chosen_enemy, map_object, \
+								get_random_available_tile_in_room(room), false)
 
 func spawn_specific_enemy_in_room(room, enemy_cnt, enemy_type):
 	if enemy_cnt > 0:
-			for _cnt in range(enemy_cnt):
-				var rand_tile = get_random_available_tile_in_room(room)
-				var x = rand_tile[0]
-				var z = rand_tile[1]
-				
-				obj_spawner.spawn_enemy(enemy_type, map_object, [x, z], false)
+		for _cnt in range(enemy_cnt):
+			obj_spawner.spawn_enemy(enemy_type, map_object, \
+							get_random_available_tile_in_room(room), false)
 
 func spawn_traps():
 	for _trap_cnt in range(NUMBER_OF_TRAPS):
 		var room = rooms[rng.randi_range(0, rooms.size()-1)]
 
-		var rand_tile = get_random_available_tile_in_room(room)
-		var x = rand_tile[0]
-		var z = rand_tile[1]
-		
-		obj_spawner.spawn_map_object('Spike Trap', map_object, [x,z], false)
+		obj_spawner.spawn_map_object('Spike Trap', map_object, \
+								get_random_available_tile_in_room(room), false)

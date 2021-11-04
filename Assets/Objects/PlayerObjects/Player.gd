@@ -1,7 +1,5 @@
 extends ActorObj
 
-signal prepare_gui(stats)
-
 var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 				"HP Regen" : 1, "MP Regen": 6, "Attack Power" : 10, \
 				"Crit Chance": 5, "Spell Power" : 20, "Defense" : 0, \
