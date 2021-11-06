@@ -1,6 +1,5 @@
 extends Node
 
-var blank_node = preload("res://Assets/SystemScripts/blank_node.tscn")
 const TIMER_SCENE = preload("res://Assets/Objects/TurnTimer.tscn")
 var turn_timer = TIMER_SCENE.instance()
 
@@ -261,7 +260,7 @@ func organize_map_floor():
 	# Generate Organization Nodes
 	var organize_types = ['Terrain', 'Objects', 'Enemies', 'Players', 'Logic']
 	for type in organize_types:
-		var new_node = blank_node.instance()
+		var new_node = Node.new()
 		new_node.name = type
 		organization_nodes[type] = new_node
 		organization_nodes['All'].append(new_node)

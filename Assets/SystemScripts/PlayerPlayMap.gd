@@ -5,8 +5,6 @@ extends Node
 var map_name = ''
 var parent_mapset 
 
-var blank_node = preload("res://Assets/SystemScripts/blank_node.tscn")
-
 var PSIDE_TURN_TIMER = preload("res://Assets/SystemScripts/PSideTurnTimer.gd")
 var turn_timer = PSIDE_TURN_TIMER.new()
 var map_grid
@@ -92,7 +90,7 @@ func organize_map_floor():
 	# Generate Organization Nodes
 	var organize_types = ['Terrain', 'Objects', 'Enemies', 'Players', 'Logic']
 	for type in organize_types:
-		var new_node = blank_node.instance()
+		var new_node = Node.new()
 		new_node.name = type
 		organization_nodes[type] = new_node
 		organization_nodes['All'].append(new_node)

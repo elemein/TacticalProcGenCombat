@@ -1,7 +1,5 @@
 extends Node
 
-onready var blank_node = preload("res://Assets/SystemScripts/blank_node.tscn")
-
 const MAPSET = preload("res://Assets/SystemScripts/Mapset.gd")
 var map_set = MAPSET.new(null, null)
 
