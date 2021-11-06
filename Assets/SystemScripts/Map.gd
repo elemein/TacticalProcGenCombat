@@ -145,6 +145,8 @@ func add_map_object(object, tile):
 	map_grid[tile[0]][tile[1]].append(object)
 	add_child(object)
 	
+	organize_object(object)
+	
 	if object.get_id()['Category'] == 'Actor':
 		turn_timer.add_to_timer_group(object)
 
@@ -244,6 +246,14 @@ func return_rooms_encoded_to_dict():
 		to_return.append(dict_to_add)
 		
 	return to_return
+
+func organize_object(obj):
+	match obj.get_id()['Category']:
+		'Actor':
+			match obj.get_id()['CategoryType']:
+				'Player':
+					obj.get_parent().remove_child(obj)
+					get_node("Players").add_child(obj)
 
 func organize_map_floor():
 	var organization_nodes = {'All': []}

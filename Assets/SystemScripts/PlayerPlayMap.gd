@@ -68,6 +68,8 @@ func add_map_object(object, tile):
 	object.set_map_pos_and_translation(tile)
 	map_grid[tile[0]][tile[1]].append(object)
 	add_child(object)
+	
+	organize_object(object)
 
 func remove_from_map_grid_but_keep_node(object):
 	var tile = object.get_map_pos()
@@ -75,6 +77,14 @@ func remove_from_map_grid_but_keep_node(object):
 	
 func remove_from_map_tree(object):
 	remove_child(object)
+
+func organize_object(obj):
+	match obj.get_id()['Category']:
+		'Actor':
+			match obj.get_id()['CategoryType']:
+				'Player':
+					obj.get_parent().remove_child(obj)
+					get_node("Players").add_child(obj)
 
 func organize_map_floor():
 	var organization_nodes = {'All': []}
