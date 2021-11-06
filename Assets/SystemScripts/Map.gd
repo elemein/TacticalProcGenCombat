@@ -170,7 +170,6 @@ func remove_from_map_tree(object):
 # -----------------------------------------
 
 func check_for_map_events():
-	
 	var relevant_player_list = []
 	for player in Server.get_player_list():
 		if player.get_id()['Map ID'] == get_map_server_id():

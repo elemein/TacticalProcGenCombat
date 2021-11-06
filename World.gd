@@ -51,8 +51,6 @@ func remove_obj_from_old_map(object):
 	object.set_action('idle') # prevents using the last map's move action on the next map
 
 func move_to_map(object, map):
-#	remove_obj_from_old_map(object)
-	
 	map.add_map_object(object, map.get_map_start_tile())
 	
 	map.print_map_grid()

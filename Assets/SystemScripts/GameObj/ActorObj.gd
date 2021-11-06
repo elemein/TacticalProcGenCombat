@@ -63,8 +63,6 @@ var __server_inventory : Dictionary = {}
 var gold : int = 0
 
 func _ready():
-	play_anim('idle', true)
-	
 	add_child(mover)
 	mover.set_actor(self)
 

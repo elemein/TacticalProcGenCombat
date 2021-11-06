@@ -26,7 +26,7 @@ var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
 var base_minotaur = preload("res://Assets/Objects/EnemyObjects/Minotaur.tscn")
 
 # Actors
-var base_player = preload("res://Assets/Objects/PlayerObjects/Player.tscn")
+var base_plaguedoc = preload("res://Assets/Objects/PlayerObjects/PlagueDoc.tscn")
 var base_dumb_actor = preload("res://Assets/Objects/PlayerObjects/DumbActor.tscn")
 
 # Graphics
