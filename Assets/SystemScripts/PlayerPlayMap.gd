@@ -2,7 +2,10 @@
 
 extends Node
 
-var dungeon_name = ''
+var map_name = ''
+var parent_mapset 
+
+var blank_node = preload("res://Assets/SystemScripts/blank_node.tscn")
 
 var PSIDE_TURN_TIMER = preload("res://Assets/SystemScripts/PSideTurnTimer.gd")
 var turn_timer = PSIDE_TURN_TIMER.new()
@@ -11,7 +14,7 @@ var map_server_id
 var rooms = []
 
 # Getters
-func get_mapset_name() -> String: return dungeon_name
+func get_map_name() -> String: return map_name
 
 func get_turn_timer(): return turn_timer
 
@@ -72,3 +75,42 @@ func remove_from_map_grid_but_keep_node(object):
 	
 func remove_from_map_tree(object):
 	remove_child(object)
+
+func organize_map_floor():
+	var organization_nodes = {'All': []}
+	
+	# Generate Organization Nodes
+	var organize_types = ['Terrain', 'Objects', 'Enemies', 'Players', 'Logic']
+	for type in organize_types:
+		var new_node = blank_node.instance()
+		new_node.name = type
+		organization_nodes[type] = new_node
+		organization_nodes['All'].append(new_node)
+		self.add_child(new_node)
+	
+	var types = []
+	for asset in self.get_children():
+		if not asset in organization_nodes['All']:
+			asset.get_parent().remove_child(asset)
+			if asset.name == 'TurnTimer':
+				organization_nodes['Logic'].add_child(asset)
+			else:
+				if GlobalVars.peer_type == 'server':
+					asset.update_id('Map ID', self.get_map_server_id())
+				
+				match asset.object_identity['Category']:
+					'Inv Item':
+						organization_nodes['Objects'].add_child(asset)
+						asset.name = '%s%d' % [asset.object_identity['Identifier'], asset.object_identity['Instance ID']]
+					'MapObject':
+						organization_nodes['Terrain'].add_child(asset)
+						asset.name = '%s%d' % [asset.object_identity['Identifier'], asset.object_identity['Instance ID']]
+					'Actor':
+						match asset.object_identity['CategoryType']:
+							'Enemy':
+								organization_nodes['Enemies'].add_child(asset)
+								asset.name = '%s%d' % [asset.object_identity['Identifier'], asset.object_identity['Instance ID']]
+							'Player':
+								organization_nodes['Players'].add_child(asset)
+								asset.name = 'Player%d' % asset.object_identity['NetID']
+	print('Map objects not categorized: ' + str(types))

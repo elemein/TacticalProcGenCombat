@@ -10,7 +10,6 @@ var plyr_play_map = PLYR_PLY_MAP.new()
 
 const PSIDE_ROOM_CLASS = preload("res://Assets/SystemScripts/PSideRoom.gd")
 
-var mapsets = []
 var floor_num = 0
 
 func _ready():
@@ -21,9 +20,12 @@ func _ready():
 	Signals.emit_signal("world_loaded")
 
 func catalog_dungeon_to_server():
-	plyr_play_map.name = GlobalVars.server_map_name
-	add_child(plyr_play_map)
-	mapsets = [plyr_play_map]
+	map_set.name = GlobalVars.server_map_data['Parent Mapset Name']
+	add_child(map_set)
+	
+	plyr_play_map.name = GlobalVars.server_map_data['Map Name']
+	map_set.add_child(plyr_play_map)
+	
 	GlobalVars.total_maps.append(plyr_play_map)
 
 func clear_play_map():
@@ -37,13 +39,13 @@ func clear_play_map():
 
 func unpack_map(map_data):
 	floor_num += 1
-	plyr_play_map.set_map_server_id(map_data[0])
-	map_data = map_data[1]
+	plyr_play_map.set_map_server_id(map_data['Map ID'])
+	plyr_play_map.map_name = map_data['Map Name']
+	map_data = map_data['Grid Data']
 	var map_grid = []
 	
 	Server.player_list = []
-	
-	GlobalVars.server_mapset = plyr_play_map
+
 	print('Unpacking map.')
 	
 	for x in range(map_data.size()):
@@ -59,31 +61,22 @@ func unpack_map(map_data):
 				var new_object = null
 				
 				match object['Identifier']:
-					'BaseGround': 
+					'BaseGround', 'BaseWall', 'BaseStairs': 
 						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
-						new_object.translation.y = 0 # on server, these are spawned at 0
-					'BaseWall': 
-						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
-						new_object.translation.y = 0 # on server, these are spawned at 0
-					'BaseStairs':
-						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
+
 					'PlagueDoc': 
 						if object['NetID'] == GlobalVars.get_self_netid():
-							new_object = GlobalVars.obj_spawner.spawn_dumb_actor('Player', plyr_play_map, [x,z], false)
+							new_object = GlobalVars.obj_spawner.spawn_dumb_actor('PlagueDoc', plyr_play_map, [x,z], false)
+							GlobalVars.set_self_obj(new_object)
 						else:
 							new_object = GlobalVars.obj_spawner.spawn_dumb_actor(object['Identifier'], plyr_play_map, [x,z], false)
 						
-						Server.add_player_to_local_player_list(new_object)
-						new_object.update_id('NetID', object['NetID'])
-						new_object.update_id('Instance ID', object['Instance ID'])
 						new_object.play_anim('idle')
+						Server.add_player_to_local_player_list(new_object)
 						
 						if not new_object in Server.player_list:
 							Server.player_list.append(new_object)
 						
-						if object['NetID'] == GlobalVars.get_self_netid():
-							GlobalVars.set_self_obj(new_object)
-							
 					_:
 						match object['CategoryType']:
 							'Enemy':
@@ -101,19 +94,11 @@ func unpack_map(map_data):
 	
 	plyr_play_map.set_map_grid(map_grid)
 	
-	# Organize Nodes
-	var floor_node = blank_node.instance()
-	plyr_play_map.add_child(floor_node)
-	floor_node.name = 'Floor%d' % [floor_num]
-	for child in plyr_play_map.get_children():
-		if not 'Floor' in child.name:
-			plyr_play_map.remove_child(child)
-			floor_node.add_child(child)
-	var map_dict = {'Dungeon Floor %d' % [floor_num]: floor_node}
-	map_set.organize_map_nodes(map_dict, floor_num)
+	map_set.add_map_to_mapset(plyr_play_map)
+	map_set.organize_child_map_nodes()
 	
 	# Unpack room data.
-	var map_rooms = GlobalVars.server_map_data[2]
+	var map_rooms = GlobalVars.server_map_data["Room Data"]
 	for room in map_rooms:
 		var curr_room = PSIDE_ROOM_CLASS.new()
 		
@@ -143,8 +128,5 @@ func unpack_map(map_data):
 		plyr_play_map.rooms.append(curr_room)
 	
 	print('Map unpacked.')
-	for player in Server.player_list:
-		if player.object_identity['NetID'] == GlobalVars.get_self_netid():
-			GlobalVars.set_self_obj(player)
 	
 	Server.notify_server_map_loaded(plyr_play_map.get_map_server_id())

@@ -62,6 +62,8 @@ func generate(parent_mapset, name, id, type):
 	print('%d maps thrown away' % [maps_thrown_away])
 	# map must be accepted to go further
 	
+	map_to_return.name = name
+	
 	map_to_return.set_map_grid_and_dict(filled_map[0], filled_map[1])
 	
 	return map_to_return

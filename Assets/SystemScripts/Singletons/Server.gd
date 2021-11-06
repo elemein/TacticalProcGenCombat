@@ -404,22 +404,27 @@ func request_map_from_server():
 	rpc_id(1, "send_map_to_requester", get_instance_id())
 # Send map to requester.
 remote func send_map_to_requester(_requester):
+	var map = PlayerInfo.current_map
+	
 	var player_id = get_tree().get_rpc_sender_id()
-	var map_id = PlayerInfo.current_map.get_map_server_id()
-	var map_data = PlayerInfo.current_map.return_map_grid_encoded_to_string()
-	var map_rooms = PlayerInfo.current_map.return_rooms_encoded_to_dict()
-	var map_dict = {"Map ID": map_id, "Grid Data": map_data, "Room Data": map_rooms}
-	var map_name = GlobalVars.server_map_name
+	var map_id = map.get_map_server_id()
+	var map_data = map.return_map_grid_encoded_to_string()
+	var map_rooms = map.return_rooms_encoded_to_dict()
+	var parent_mapset_name = map.get_parent_mapset().get_mapset_name()
+	var map_name = map.get_map_name()
+	var map_dict = {"Parent Mapset Name": parent_mapset_name, \
+					"Map Name": map_name, "Map ID": map_id, \
+					"Grid Data": map_data, "Room Data": map_rooms}
+	
 	print(map_data)
 	print("Sending map data to requester.")
-	rpc_id(player_id, 'receive_map_from_server', map_dict, map_name)
+	rpc_id(player_id, 'receive_map_from_server', map_dict)
 # Receive map from server.
-remote func receive_map_from_server(map_dict, map_name):
-	GlobalVars.server_map_data = [map_dict['Map ID'], map_dict['Grid Data'], map_dict['Room Data']]
-	GlobalVars.server_map_name = map_name
+remote func receive_map_from_server(map_dict):
+	GlobalVars.server_map_data = map_dict
 #
 remote func receive_requested_map_from_server(map_dict):
-	GlobalVars.server_map_data = [map_dict['Map ID'], map_dict['Grid Data'], map_dict['Room Data']]
+	GlobalVars.server_map_data = map_dict
 	unpack_new_map()
 #
 func unpack_new_map():

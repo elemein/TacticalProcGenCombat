@@ -11,9 +11,7 @@ var rng = RandomNumberGenerator.new()
 var camera = null
 var peer_type = null
 
-var server_mapset
 var server_map_data
-var server_map_name
 
 # Possible states: ['ingame', 'loading', 'character select']
 var client_state

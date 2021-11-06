@@ -12,7 +12,6 @@ func _ready():
 	catalog_dungeon_to_server()
 	create_server_player_and_spawn_to_map()
 
-	GlobalVars.server_map_name = map_name
 	GlobalVars.get_self_obj().name = 'Player1'
 
 	Server.create_server()

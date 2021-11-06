@@ -1,10 +1,6 @@
 extends Node
 
-# This script is way overloaded and needs to be refactored.
-# Things to move OUT:
-# ALL mapgen shit. The map should contain the map; it shouldnt generate itself.
-# Revealing and hiding things from the player.
-
+var blank_node = preload("res://Assets/SystemScripts/blank_node.tscn")
 const TIMER_SCENE = preload("res://Assets/Objects/TurnTimer.tscn")
 var turn_timer = TIMER_SCENE.instance()
 
@@ -214,7 +210,6 @@ func return_map_grid_encoded_to_string():
 			for obj in range(map_grid[x][z].size()):
 				to_return[x][z].append([])
 				to_return[x][z][obj].append(map_grid[x][z][obj].get_id())
-#				print(map_grid[x][z][obj].get_id()['Identifier'])
 
 	return to_return
 
@@ -249,3 +244,42 @@ func return_rooms_encoded_to_dict():
 		to_return.append(dict_to_add)
 		
 	return to_return
+
+func organize_map_floor():
+	var organization_nodes = {'All': []}
+	
+	# Generate Organization Nodes
+	var organize_types = ['Terrain', 'Objects', 'Enemies', 'Players', 'Logic']
+	for type in organize_types:
+		var new_node = blank_node.instance()
+		new_node.name = type
+		organization_nodes[type] = new_node
+		organization_nodes['All'].append(new_node)
+		self.add_child(new_node)
+	
+	var types = []
+	for asset in self.get_children():
+		if not asset in organization_nodes['All']:
+			asset.get_parent().remove_child(asset)
+			if asset.name == 'TurnTimer':
+				organization_nodes['Logic'].add_child(asset)
+			else:
+				if GlobalVars.peer_type == 'server':
+					asset.update_id('Map ID', self.get_map_server_id())
+				
+				match asset.object_identity['Category']:
+					'Inv Item':
+						organization_nodes['Objects'].add_child(asset)
+						asset.name = '%s%d' % [asset.object_identity['Identifier'], asset.object_identity['Instance ID']]
+					'MapObject':
+						organization_nodes['Terrain'].add_child(asset)
+						asset.name = '%s%d' % [asset.object_identity['Identifier'], asset.object_identity['Instance ID']]
+					'Actor':
+						match asset.object_identity['CategoryType']:
+							'Enemy':
+								organization_nodes['Enemies'].add_child(asset)
+								asset.name = '%s%d' % [asset.object_identity['Identifier'], asset.object_identity['Instance ID']]
+							'Player':
+								organization_nodes['Players'].add_child(asset)
+								asset.name = 'Player%d' % asset.object_identity['NetID']
+	print('Map objects not categorized: ' + str(types))
