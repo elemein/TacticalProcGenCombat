@@ -6,8 +6,6 @@ extends Node
 # I followed this link: https://abitawake.com/news/articles/procedural-generation-with-godot-create-dungeons-using-a-bsp-tree
 # I had to do some modification to it as the link uses a TileMap, whereas we use a 2D Array. 
 
-const Y_OFFSET = -0.3
-
 const ROOM_CLASS = preload("res://Assets/SystemScripts/Room.gd")
 
 const MAP_CLASS = preload("res://Assets/SystemScripts/Map.gd")
@@ -160,7 +158,7 @@ func create_floor():
 		total_map.append([])
 		for z in range(0, map_w):
 			var wall = base_wall.instance()
-			wall.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, z * GlobalVars.TILE_OFFSET)
+			wall.translation = Vector3(x * GlobalVars.TILE_OFFSET, 0, z * GlobalVars.TILE_OFFSET)
 			wall.visible = false
 			wall.set_map_pos([x,z])
 			
@@ -266,7 +264,7 @@ func create_rooms():
 		for x in range(room.x, (room.x + room.l)):
 			for z in range(room.z, (room.z + room.w)):
 				var ground = base_block.instance()
-				ground.translation = Vector3((x) * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, (z) * GlobalVars.TILE_OFFSET)
+				ground.translation = Vector3((x) * GlobalVars.TILE_OFFSET, 0, (z) * GlobalVars.TILE_OFFSET)
 				ground.visible = false
 				ground.set_map_pos([x,z])
 
@@ -304,7 +302,7 @@ func connect_leaves(leaf1, leaf2):
 		for j in range(z, z+w):
 			if (total_map[i][j][0].get_id()['CategoryType'] == 'Wall'):
 				var ground = base_block.instance()
-				ground.translation = Vector3((i) * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, (j) * GlobalVars.TILE_OFFSET)
+				ground.translation = Vector3((i) * GlobalVars.TILE_OFFSET, 0, (j) * GlobalVars.TILE_OFFSET)
 				ground.visible = false
 				ground.set_map_pos([x,z])
 				total_map[i][j][0] = ground 
@@ -333,7 +331,7 @@ func clear_deadends():
 				var roof_count = check_cardinal_dirs_for_walls(x,z)
 				if roof_count == 3:
 					var wall = base_wall.instance()
-					wall.translation = Vector3(x * GlobalVars.TILE_OFFSET, Y_OFFSET+0.3, z * GlobalVars.TILE_OFFSET)
+					wall.translation = Vector3(x * GlobalVars.TILE_OFFSET, 0, z * GlobalVars.TILE_OFFSET)
 					wall.visible = false
 					wall.set_map_pos([x,z])
 					

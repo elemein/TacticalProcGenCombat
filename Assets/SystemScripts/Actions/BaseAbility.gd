@@ -86,7 +86,7 @@ func create_spell_instance():
 func set_target_spell_pos():
 	direction_facing = parent.direction_facing
 
-	target_spell_pos = Vector3(0, 0.3, 0)
+	target_spell_pos = Vector3(0, 0, 0)
 
 	match direction_facing:
 		'upleft':
