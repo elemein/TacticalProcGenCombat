@@ -138,6 +138,10 @@ func get_map():
 	return map_grid
 
 func add_map_object(object, tile):
+	# First remove from old map.
+	Server.object_action_event(object.get_id(), {"Command Type": "Remove From Map"})
+	if object.get_id()['Category'] == 'Actor': object.set_action('idle') 
+	
 	object.set_parent_map(self)
 
 	object.set_map_pos_and_translation(tile)

@@ -47,6 +47,7 @@ func get_client_state(): return client_state
 func set_self_obj(obj): 
 	if obj != null:
 		self_obj = obj
+		self_obj.update_id('NetID', self_netID)
 		self_obj.connect_to_status_bars()
 		self_obj.add_child(player_light.instance())
 		self_obj.add_child(player_cam.instance())

@@ -65,7 +65,7 @@ func spawn_item(item_name, map, map_pos, visibility):
 	
 	return item
 
-func spawn_actor(actor_name, map, map_pos, visibility):
+func spawn_dumb_actor(actor_name, map, map_pos, visibility):
 	var actor = create_object(base_dumb_actor, map, map_pos, visibility)
 	
 	#Replacing the placeholder graphics with intended:

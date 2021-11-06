@@ -69,9 +69,9 @@ func unpack_map(map_data):
 						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
 					'PlagueDoc': 
 						if object['NetID'] == GlobalVars.get_self_netid():
-							new_object = GlobalVars.obj_spawner.spawn_actor('Player', plyr_play_map, [x,z], false)
+							new_object = GlobalVars.obj_spawner.spawn_dumb_actor('Player', plyr_play_map, [x,z], false)
 						else:
-							new_object = GlobalVars.obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
+							new_object = GlobalVars.obj_spawner.spawn_dumb_actor(object['Identifier'], plyr_play_map, [x,z], false)
 						
 						Server.add_player_to_local_player_list(new_object)
 						new_object.update_id('NetID', object['NetID'])
@@ -87,7 +87,7 @@ func unpack_map(map_data):
 					_:
 						match object['CategoryType']:
 							'Enemy':
-								new_object = GlobalVars.obj_spawner.spawn_actor(object['Identifier'], plyr_play_map, [x,z], false)
+								new_object = GlobalVars.obj_spawner.spawn_dumb_actor(object['Identifier'], plyr_play_map, [x,z], false)
 							'Weapon', 'Accessory', 'Armour':
 								new_object = GlobalVars.obj_spawner.spawn_item(object['Identifier'], plyr_play_map, [x,z], false)
 							'Coins':

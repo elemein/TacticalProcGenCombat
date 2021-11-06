@@ -7,7 +7,8 @@ var dungeon = MAPSET_CLASS.new(map_name, 3)
 
 var mapsets = []
 
-func _ready():	
+func _ready():
+	GlobalVars.set_self_netID(1)
 	catalog_dungeon_to_server()
 	create_server_player_and_spawn_to_map()
 
@@ -27,11 +28,10 @@ func create_server_player_and_spawn_to_map():
 	
 	var first_floor_start_tile = first_floor.get_map_start_tile()
 	
-	var server_player = GlobalVars.obj_spawner.spawn_actor('Player', \
+	var server_player = GlobalVars.obj_spawner.spawn_dumb_actor('PlagueDoc', \
 						first_floor, first_floor_start_tile, true)
 	
 	GlobalVars.set_self_obj(server_player)
-	GlobalVars.get_self_obj().update_id('NetID', 1)
 	
 	Server.player_list.append(GlobalVars.get_self_obj())
 	
@@ -51,7 +51,7 @@ func remove_obj_from_old_map(object):
 	object.set_action('idle') # prevents using the last map's move action on the next map
 
 func move_to_map(object, map):
-	remove_obj_from_old_map(object)
+#	remove_obj_from_old_map(object)
 	
 	map.add_map_object(object, map.get_map_start_tile())
 	
