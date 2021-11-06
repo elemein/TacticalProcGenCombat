@@ -114,3 +114,5 @@ func basic_attack_player():
 func fireball_player():
 	actor.set_actor_dir(pathfinder_direction)
 	actor.set_action('fireball')
+
+func self_heal(): actor.set_action('self heal')

@@ -112,3 +112,6 @@ func resolve_viewfield():
 func hide_all():
 	for object in objs_visible_to_player_last_turn:
 		object.visible = false
+
+func clear_vision():
+	for obj in objs_visible_to_player_last_turn: obj.visible = false

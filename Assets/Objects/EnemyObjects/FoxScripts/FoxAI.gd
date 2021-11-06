@@ -5,8 +5,7 @@ func run_engine():
 	find_players_in_viewfield()
 	determine_ai_state()
 	
-	if ai_state == 'idle':
-		actor.set_action('idle')
+	if ai_state == 'idle': idle()
 	elif ai_state == 'active':
 		get_pathfinder_direction_to_player()
 		

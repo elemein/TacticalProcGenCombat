@@ -56,7 +56,7 @@ func move_to_map(object, map):
 	map.print_map_grid()
 	
 	# de-render everything from old map.
-	for obj in object.view_finder.objs_visible_to_player_last_turn: obj.visible = false
+	object.view_finder.clear_vision()
 	
 	Server.resolve_all_viewfields(map)
 	
