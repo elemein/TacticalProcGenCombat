@@ -46,18 +46,12 @@ func catalog_dungeon_to_server():
 		for level in mapset.floors:
 			GlobalVars.total_maps.append(mapset.floors[level])
 
-func remove_obj_from_old_map(object):
-	Server.object_action_event(object.get_id(), {"Command Type": "Remove From Map"})
-	object.set_action('idle') # prevents using the last map's move action on the next map
-
 func move_to_map(object, map):
 	map.add_map_object(object, map.get_map_start_tile())
 	
 	map.print_map_grid()
 	
-	# de-render everything from old map.
 	object.view_finder.clear_vision()
-	
 	Server.resolve_all_viewfields(map)
 	
 	if object.get_id()['NetID'] != 1:
