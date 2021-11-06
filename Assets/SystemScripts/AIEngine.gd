@@ -87,3 +87,30 @@ func find_players_in_viewfield():
 			if object.get_id()['CategoryType'] == 'Player': 
 				players_in_viewfield[object] = tile
 				player_pos.append(tile)
+
+func get_pathfinder_direction_to_player():
+	pathfinder_direction = 'idle'
+	pathfind()
+	pathfinder_direction = determine_direction_of_path()
+
+func determine_ai_state(): if player_pos.size() > 0: ai_state = 'active'
+# ----------------------------------------------------------------------------
+# ACTIONS
+
+func idle():
+	actor.set_action('idle')
+
+func move_toward_player():
+	var move_command = 'move %s' % [pathfinder_direction]
+	
+	if actor.check_move_action(move_command):
+		actor.set_action(move_command)
+	else: actor.set_action('idle')
+
+func basic_attack_player():
+	actor.set_actor_dir(pathfinder_direction)
+	actor.set_action('basic attack')
+
+func fireball_player():
+	actor.set_actor_dir(pathfinder_direction)
+	actor.set_action('fireball')
