@@ -2,7 +2,6 @@ extends Node
 class_name Mapset
 
 const MAP_GEN = preload("res://Assets/SystemScripts/MapGenerator.gd")
-
 var map_generator = MAP_GEN.new()
 
 var dungeon_name = ''

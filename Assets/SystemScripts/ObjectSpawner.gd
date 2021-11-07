@@ -119,3 +119,9 @@ func spawn_map_object(object_name, map, map_pos, visibility):
 	var object = create_object(object_scene, map, map_pos, visibility)
 	
 	return object
+
+# To be used when spawning something from an existing identity, like when
+# player unpacks a map from server.
+# Not for when spawning a new object that does not exist yet.
+func spawn_obj_with_identity(object_identity):
+	pass
