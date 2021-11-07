@@ -90,16 +90,21 @@ func organize_map_floor():
 	
 	# Generate Organization Nodes
 	var organize_types = ['Terrain', 'Objects', 'Enemies', 'Players', 'Logic']
+	var type_nodes_exist = true
 	for type in organize_types:
-		var new_node = Node.new()
-		new_node.name = type
-		organization_nodes[type] = new_node
-		organization_nodes['All'].append(new_node)
-		self.add_child(new_node)
+		if get_node(type) == null: type_nodes_exist = false
+	
+	if type_nodes_exist == false:
+		for type in organize_types:
+			var new_node = Node.new()
+			new_node.name = type
+			organization_nodes[type] = new_node
+			organization_nodes['All'].append(new_node)
+			self.add_child(new_node)
 	
 	var types = []
 	for asset in self.get_children():
-		if not asset in organization_nodes['All']:
+		if not asset.name in organize_types:
 			asset.get_parent().remove_child(asset)
 			if asset.name == 'TurnTimer':
 				organization_nodes['Logic'].add_child(asset)
@@ -123,3 +128,12 @@ func organize_map_floor():
 								organization_nodes['Players'].add_child(asset)
 								asset.name = 'Player%d' % asset.object_identity['NetID']
 	print('Map objects not categorized: ' + str(types))
+
+func clear_play_map():
+	for child in get_children():
+		remove_child(child)
+		
+		if not child.get('object_identity') == null and child.get_id()['Identifier'] == 'PlagueDoc':
+			Server.player_list.erase(child)
+			
+		child.queue_free()

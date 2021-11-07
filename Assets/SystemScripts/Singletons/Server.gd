@@ -378,8 +378,7 @@ func move_client_to_map(client_obj, map):
 remote func prepare_for_map_change(map_id):
 	GlobalVars.set_client_state('loading')
 	
-	var world = get_node("/root/World")
-	world.clear_play_map()
+	GlobalVars.self_obj.get_parent_map().clear_play_map()
 	
 	rpc_id(1, "send_requested_map_to_requester", GlobalVars.get_self_obj().get_id()['NetID'], map_id)
 #
@@ -389,11 +388,15 @@ remote func send_requested_map_to_requester(requester_id, requested_map_id):
 		for flr in mapset.floors.values():
 			if requested_map_id == flr.get_map_server_id(): map = flr
 	
-	var player_id = requester_id
-	var map_id = requested_map_id
+	var player_id = get_tree().get_rpc_sender_id()
+	var map_id = map.get_map_server_id()
 	var map_data = map.return_map_grid_encoded_to_string()
 	var map_rooms = map.return_rooms_encoded_to_dict()
-	var map_dict = {"Map ID": map_id, "Grid Data": map_data, "Room Data": map_rooms}
+	var parent_mapset_name = map.get_parent_mapset().get_mapset_name()
+	var map_name = map.get_map_name()
+	var map_dict = {"Parent Mapset Name": parent_mapset_name, \
+					"Map Name": map_name, "Map ID": map_id, \
+					"Grid Data": map_data, "Room Data": map_rooms}
 	print(map_data)
 	print("Sending map data to requester.")
 	rpc_id(player_id, 'receive_requested_map_from_server', map_dict)
@@ -425,10 +428,7 @@ remote func receive_map_from_server(map_dict):
 #
 remote func receive_requested_map_from_server(map_dict):
 	GlobalVars.server_map_data = map_dict
-	unpack_new_map()
-#
-func unpack_new_map():
-	get_node('/root/World').unpack_map(GlobalVars.server_map_data)
+	get_node('/root/World').load_new_map()
 
 func notify_server_map_loaded(map_id):
 	rpc_id(1, 'receive_client_has_loaded', GlobalVars.get_self_obj().get_id()['NetID'], map_id)
@@ -505,9 +505,7 @@ func add_player_to_local_player_list(player):
 
 func get_map_from_map_id(mapid):
 	var map
-	for mapset in get_node('/root/World').mapsets:
-		if GlobalVars.peer_type == 'client': return mapset
-		
+	for mapset in GlobalVars.total_mapsets:
 		for flr in mapset.floors.values():
 			if mapid == flr.get_map_server_id(): map = flr
 	return map
