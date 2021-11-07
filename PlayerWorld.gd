@@ -3,7 +3,7 @@ extends Node
 const MAPSET = preload("res://Assets/SystemScripts/Mapset.gd")
 var map_set = MAPSET.new(null, null)
 
-const PLYR_PLY_MAP = preload("res://Assets/SystemScripts/PlayerPlayMap.gd")
+const PLYR_PLY_MAP = preload("res://Assets/SystemScripts/C_Map.gd")
 #var plyr_play_map = PLYR_PLY_MAP.new()
 
 const PSIDE_ROOM_CLASS = preload("res://Assets/SystemScripts/PSideRoom.gd")

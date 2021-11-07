@@ -8,7 +8,7 @@ extends Node
 
 const ROOM_CLASS = preload("res://Assets/SystemScripts/Room.gd")
 
-const MAP_CLASS = preload("res://Assets/SystemScripts/Map.gd")
+const MAP_CLASS = preload("res://Assets/SystemScripts/S_Map.gd")
 const MAP_FILL = preload("res://Assets/SystemScripts/MapFiller.gd")
 
 var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")

@@ -1,4 +1,4 @@
-extends Node
+extends Base_Map
 
 const TIMER_SCENE = preload("res://Assets/Objects/TurnTimer.tscn")
 var turn_timer = TIMER_SCENE.instance()
@@ -9,10 +9,9 @@ var in_view_objects = []
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
 var parent_mapset
-var map_name = ''
+
 var map_id
-var map_server_id 
-var map_grid = []
+
 var rooms
 
 var map_type
@@ -102,15 +101,6 @@ func catalog_ground_tiles():
 func choose_random_ground_tile():
 	return catalog_of_ground_tiles[rng.randi_range(0, catalog_of_ground_tiles.size()-1)]
 
-func get_tile_contents(x,z):
-	if !tile_in_bounds(x,z): 
-		return 'Out of Bounds'
-	
-	return map_grid[x][z]
-
-func tile_in_bounds(x,z):
-	return (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size())
-
 func tile_available(x,z):
 	if tile_in_bounds(x,z): 
 		for object in map_grid[x][z]:
@@ -158,13 +148,6 @@ func remove_map_object(object):
 
 	if object.get_id()['Category'] == 'Actor':
 		turn_timer.remove_from_timer_group(object)
-
-func remove_from_map_grid_but_keep_node(object):
-	var tile = object.get_map_pos()
-	map_grid[tile[0]][tile[1]].erase(object)
-
-func remove_from_map_tree(object):
-	remove_child(object)
 # -----------------------------------------
 
 func check_for_map_events():
@@ -182,13 +165,9 @@ func get_turn_timer() -> Object: return turn_timer
 
 func get_parent_mapset() -> Object: return parent_mapset
 
-func get_map_name() -> String: return map_name
-
 func get_map_type() -> String: return map_type
 
 func get_mapset_map_id() -> int: return map_id
-
-func get_map_server_id(): return map_server_id
 
 # Setters
 func set_parent_mapset(mapset): parent_mapset = mapset
@@ -245,50 +224,3 @@ func return_rooms_encoded_to_dict():
 		to_return.append(dict_to_add)
 		
 	return to_return
-
-func organize_object(obj):
-	match obj.get_id()['Category']:
-		'Actor':
-			match obj.get_id()['CategoryType']:
-				'Player':
-					obj.get_parent().remove_child(obj)
-					get_node("Players").add_child(obj)
-
-func organize_map_floor():
-	var organization_nodes = {'All': []}
-	
-	# Generate Organization Nodes
-	var organize_types = ['Terrain', 'Objects', 'Enemies', 'Players', 'Logic']
-	for type in organize_types:
-		var new_node = Node.new()
-		new_node.name = type
-		organization_nodes[type] = new_node
-		organization_nodes['All'].append(new_node)
-		self.add_child(new_node)
-	
-	var types = []
-	for asset in self.get_children():
-		if not asset in organization_nodes['All']:
-			asset.get_parent().remove_child(asset)
-			if asset.name == 'TurnTimer':
-				organization_nodes['Logic'].add_child(asset)
-			else:
-				if GlobalVars.peer_type == 'server':
-					asset.update_id('Map ID', self.get_map_server_id())
-				
-				match asset.object_identity['Category']:
-					'Inv Item':
-						organization_nodes['Objects'].add_child(asset)
-						asset.name = '%s%d' % [asset.object_identity['Identifier'], asset.object_identity['Instance ID']]
-					'MapObject':
-						organization_nodes['Terrain'].add_child(asset)
-						asset.name = '%s%d' % [asset.object_identity['Identifier'], asset.object_identity['Instance ID']]
-					'Actor':
-						match asset.object_identity['CategoryType']:
-							'Enemy':
-								organization_nodes['Enemies'].add_child(asset)
-								asset.name = '%s%d' % [asset.object_identity['Identifier'], asset.object_identity['Instance ID']]
-							'Player':
-								organization_nodes['Players'].add_child(asset)
-								asset.name = 'Player%d' % asset.object_identity['NetID']
-	print('Map objects not categorized: ' + str(types))

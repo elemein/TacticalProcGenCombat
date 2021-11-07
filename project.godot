@@ -24,6 +24,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Assets/SystemScripts/Actions/BaseAbility.gd"
 }, {
+"base": "Node",
+"class": "Base_Map",
+"language": "GDScript",
+"path": "res://Assets/SystemScripts/Base_Map.gd"
+}, {
 "base": "ActorObj",
 "class": "EnemyObj",
 "language": "GDScript",
@@ -58,6 +63,7 @@ _global_script_class_icons={
 "AI_Engine": "",
 "ActorObj": "",
 "BaseAbility": "",
+"Base_Map": "",
 "EnemyObj": "",
 "GameObj": "",
 "InvObject": "",
