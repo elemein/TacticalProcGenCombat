@@ -41,6 +41,10 @@ func get_self_netid(): return self_netID
 
 func get_client_state(): return client_state
 
+func clear_maps():
+	total_maps = []
+	total_mapsets = []
+
 # Setters
 func set_self_obj(obj): 
 	if obj != null:

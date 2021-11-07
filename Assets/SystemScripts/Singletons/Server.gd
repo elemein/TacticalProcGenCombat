@@ -378,38 +378,23 @@ func move_client_to_map(client_obj, map):
 remote func prepare_for_map_change(map_id):
 	GlobalVars.set_client_state('loading')
 	
-	GlobalVars.self_obj.get_parent_map().clear_play_map()
+	GlobalVars.get_self_obj().get_parent_map().clear_play_map()
 	
-	rpc_id(1, "send_requested_map_to_requester", GlobalVars.get_self_obj().get_id()['NetID'], map_id)
-#
-remote func send_requested_map_to_requester(requester_id, requested_map_id):
-	var map
-	for mapset in get_node('/root/World').mapsets:
-		for flr in mapset.floors.values():
-			if requested_map_id == flr.get_map_server_id(): map = flr
-	
-	var player_id = get_tree().get_rpc_sender_id()
-	var map_id = map.get_map_server_id()
-	var map_data = map.return_map_grid_encoded_to_string()
-	var map_rooms = map.return_rooms_encoded_to_dict()
-	var parent_mapset_name = map.get_parent_mapset().get_mapset_name()
-	var map_name = map.get_map_name()
-	var map_dict = {"Parent Mapset Name": parent_mapset_name, \
-					"Map Name": map_name, "Map ID": map_id, \
-					"Grid Data": map_data, "Room Data": map_rooms}
-	print(map_data)
-	print("Sending map data to requester.")
-	rpc_id(player_id, 'receive_requested_map_from_server', map_dict)
+	rpc_id(1, "send_map_to_requester")
 
 # Request map from server.
 func request_map_from_server():
 	print("Requesting map from server.")
-	rpc_id(1, "send_map_to_requester", get_instance_id())
+	rpc_id(1, "send_map_to_requester")
 # Send map to requester.
-remote func send_map_to_requester(_requester):
-	var map = PlayerInfo.current_map
-	
+remote func send_map_to_requester():
 	var player_id = get_tree().get_rpc_sender_id()
+	
+	var map 
+	for player in Server.player_list:
+		if player.get_id()['NetID'] == player_id:
+			map = player.get_parent_map()
+	
 	var map_id = map.get_map_server_id()
 	var map_data = map.return_map_grid_encoded_to_string()
 	var map_rooms = map.return_rooms_encoded_to_dict()
@@ -425,10 +410,9 @@ remote func send_map_to_requester(_requester):
 # Receive map from server.
 remote func receive_map_from_server(map_dict):
 	GlobalVars.server_map_data = map_dict
-#
-remote func receive_requested_map_from_server(map_dict):
-	GlobalVars.server_map_data = map_dict
-	get_node('/root/World').load_new_map()
+	
+	if GlobalVars.client_state == 'loading':	
+		get_node('/root/World').load_new_map()
 
 func notify_server_map_loaded(map_id):
 	rpc_id(1, 'receive_client_has_loaded', GlobalVars.get_self_obj().get_id()['NetID'], map_id)

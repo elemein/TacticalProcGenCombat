@@ -15,6 +15,7 @@ func _ready():
 	load_new_map()
 
 func load_new_map():
+	GlobalVars.clear_maps()
 	map_set.name = GlobalVars.server_map_data['Parent Mapset Name']
 	var unpacked_map = map_unpacker.unpack_map(GlobalVars.server_map_data)
 
@@ -24,4 +25,6 @@ func load_new_map():
 	map_set.organize_child_map_nodes()
 	
 	GlobalVars.get_self_obj().find_and_render_viewfield()
+	
+	Server.notify_server_map_loaded(unpacked_map.get_map_server_id())
 	Signals.emit_signal("world_loaded")

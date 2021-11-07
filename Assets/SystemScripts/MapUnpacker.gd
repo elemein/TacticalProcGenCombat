@@ -43,7 +43,7 @@ func fill_map():
 				var new_object = null
 				
 				match object['Identifier']:
-					'BaseGround', 'BaseWall', 'BaseStairs': 
+					'BaseGround', 'BaseWall', 'BaseStairs', 'TempWall': 
 						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
 
 					'PlagueDoc': 
@@ -107,7 +107,5 @@ func fill_map():
 		plyr_play_map.rooms.append(curr_room)
 	
 	print('Map unpacked.')
-	
-	Server.notify_server_map_loaded(plyr_play_map.get_map_server_id())
 	
 	return plyr_play_map
