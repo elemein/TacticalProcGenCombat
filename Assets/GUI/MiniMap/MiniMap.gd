@@ -28,7 +28,7 @@ func _ready():
 		self.queue_free()
 	else:
 		yield(Signals, "world_loaded")
-		player = GlobalVars.get_self_obj()
+		player = MultiplayerTestenv.get_client().get_client_obj()
 
 		var map_grid = player.get_parent_map().map_grid
 		for row_cnt in range(map_grid.size()):
@@ -41,12 +41,14 @@ func _ready():
 			markers.append(row)
 			
 func _process(_delta):
-	if GlobalVars.get_client_state() == 'loading' \
-			or GlobalVars.get_self_obj() == null \
-			or GlobalVars.get_self_obj().get_parent() == null:
+	return
+	
+	if MultiplayerTestenv.get_client().get_client_state() == 'loading' \
+			or MultiplayerTestenv.get_client().get_client_obj() == null \
+			or MultiplayerTestenv.get_client().get_client_obj().get_parent() == null:
 		return
 
-	var map_grid = GlobalVars.get_self_obj().get_parent_map().map_grid
+	var map_grid = MultiplayerTestenv.get_client().get_client_obj().get_parent_map().map_grid
 	for row_cnt in range(map_grid.size()):
 		for tile_cnt in range(map_grid[row_cnt].size()):
 			var minimap_icon = blank_icon

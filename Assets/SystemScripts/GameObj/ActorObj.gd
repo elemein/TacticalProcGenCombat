@@ -8,7 +8,6 @@ const ACTOR_NOTIF_LABEL = preload("res://Assets/GUI/ActorNotifLabel/ActorNotifLa
 
 onready var model = $Graphics
 onready var anim : AnimationPlayer = $Graphics/AnimationPlayer
-onready var gui = get_node("/root/World/GUI/Action")
 onready var actions = $Actions
 onready var tween = $Tween
 
@@ -99,9 +98,7 @@ func set_action(action):
 
 	ready_status = true
 	
-	CommBus.update_all_actor_stats(self)
-
-#	if object_identity['CategoryType'] == 'Player': gui.set_action(proposed_action)
+	MultiplayerTestenv.get_server().update_all_actor_stats(self)
 
 func process_turn():
 	if visible:
@@ -149,7 +146,7 @@ func process_turn():
 	for remote_player in CommBus.player_list:
 		if remote_player.get_id()['NetID'] != 1:
 			CommBus.send_inventory_to_requester(remote_player.get_id())
-			CommBus.update_all_actor_stats(remote_player)
+			MultiplayerTestenv.get_server().update_all_actor_stats(self)
 
 func turn_regen():
 	# Apply any regen effects
@@ -182,7 +179,7 @@ func end_turn():
 	
 	# Send the state of the game to the player after round end
 	for remote_player in CommBus.player_list:
-		CommBus.update_all_actor_stats(self)
+		MultiplayerTestenv.get_server().update_all_actor_stats(self)
 
 # View related functions.
 func find_viewfield():
@@ -381,19 +378,19 @@ func build_inv_from_server(inventory):
 				__server_inventory[item.object_id] = new_item
 				
 				# Add to the player's inventory
-				GlobalVars.get_self_obj().inventory[new_item] = {'equipped': inventory[item]['equipped'], 'description': new_item['identity']['Identifier'], 'server_id': item.object_id, 'item': new_item}
-				new_item.item_owner = GlobalVars.get_self_obj()
+				MultiplayerTestenv.get_client().get_client_obj().inventory[new_item] = {'equipped': inventory[item]['equipped'], 'description': new_item['identity']['Identifier'], 'server_id': item.object_id, 'item': new_item}
+				new_item.item_owner = MultiplayerTestenv.get_client().get_client_obj()
 		else:
-			GlobalVars.get_self_obj().inventory[__server_inventory[item.object_id]]['equipped'] = inventory[item]['equipped']
+			MultiplayerTestenv.get_client().get_client_obj().inventory[__server_inventory[item.object_id]]['equipped'] = inventory[item]['equipped']
 			
 	# Remove items no longer in inventory
 	var server_item_ids = []
 	for server_item_id in inventory:
 		server_item_ids.append(server_item_id.object_id)
-	for item in GlobalVars.get_self_obj().inventory:
-		var server_id = GlobalVars.get_self_obj().inventory[item]['server_id']
+	for item in MultiplayerTestenv.get_client().get_client_obj().inventory:
+		var server_id = MultiplayerTestenv.get_client().get_client_obj().inventory[item]['server_id']
 		if not server_id in server_item_ids:
-			GlobalVars.get_self_obj().inventory.erase(item)
+			MultiplayerTestenv.get_client().get_client_obj().inventory.erase(item)
 			__server_inventory.erase(server_id)
 
 func connect_to_status_bars():

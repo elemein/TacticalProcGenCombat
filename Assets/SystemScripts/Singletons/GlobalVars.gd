@@ -35,11 +35,8 @@ func _ready():
 	rng.randomize()
 
 # Getters
-func get_self_obj(): return self_obj
 func get_self_instance_id(): return self_obj.get_id()['Instance ID']
 func get_self_netid(): return self_netID
-
-func get_client_state(): return client_state
 
 func clear_maps():
 	total_maps = []

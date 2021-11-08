@@ -18,7 +18,6 @@ func _on_button_pressed():
 		reference_path = 'res://PlayerWorld.tscn'
 		var _result = get_tree().change_scene(reference_path)
 	elif reference_path == 'res://Assets/GUI/CharacterSelect/CharacterSelect.tscn':
-		GlobalVars.peer_type = 'server'
 		var _result = get_tree().change_scene(reference_path)
 	elif reference_path != "":
 		var _result = get_tree().change_scene(reference_path)

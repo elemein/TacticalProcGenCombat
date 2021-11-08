@@ -14,9 +14,5 @@ func _on_button_mouse_entered():
 	grab_focus()
 	
 func _on_button_pressed():
-	if GlobalVars.peer_type == 'server':
-		reference_path = 'res://World.tscn'
-	elif GlobalVars.peer_type == 'client':
-		reference_path = 'res://PlayerWorld.tscn'
-	
+	reference_path = 'res://PlayerWorld.tscn'
 	var _result = get_tree().change_scene(reference_path)

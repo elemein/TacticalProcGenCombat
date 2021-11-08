@@ -85,7 +85,7 @@ GlobalVars="*res://Assets/SystemScripts/Singletons/GlobalVars.gd"
 PlayerInfo="*res://Assets/SystemScripts/PlayerInfo.gd"
 Client="*res://Assets/SystemScripts/Singletons/Client.gd"
 CommBus="*res://Assets/SystemScripts/Singletons/CommBus.gd"
-MultiplayerTestenv="*res://Assets/SystemScripts/Singletons/MultiplayerTESTENV.gd"
+MultiplayerTestenv="*res://Assets/SystemScripts/TESTING_INFRASTRUCTURE/MultiplayerTESTENV.gd"
 
 [debug]
 

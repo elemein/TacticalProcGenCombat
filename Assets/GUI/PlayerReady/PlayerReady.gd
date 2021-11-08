@@ -12,14 +12,14 @@ func _ready():
 	setup_player_status_list()
 	
 func _process(_delta):
-	if GlobalVars.get_client_state() == 'ingame':
+	if MultiplayerTestenv.get_client().get_client_state() == 'ingame':
 		remove_old_players()
 		setup_player_status_list()
 	
 func setup_player_status_list():
-	for player in CommBus.player_list:
+	for player in MultiplayerTestenv.get_client().players_dict.values():
 
-		if GlobalVars.get_self_obj().get_parent_map() == player.get_parent_map():
+		if MultiplayerTestenv.get_client().get_client_obj().get_parent_map() == player.get_parent_map():
 
 			player = player as ActorObj
 
@@ -47,8 +47,8 @@ func setup_player_status_list():
 			
 func remove_old_players():
 	for player in player_slots:
-		if not player in CommBus.player_list or \
-				not GlobalVars.get_self_obj().get_parent_map() == player.get_parent_map():
+		if not player in MultiplayerTestenv.get_client().players_dict.values() or \
+				not MultiplayerTestenv.get_client().get_client_obj().get_parent_map() == player.get_parent_map():
 			remove_child(player_slots[player]['node'])
 			player_slots[player]['node'].queue_free()
 			player_slots.erase(player)

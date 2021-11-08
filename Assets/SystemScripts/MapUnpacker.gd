@@ -23,23 +23,23 @@ func unpack_map(data):
 func fill_map():
 	plyr_play_map.set_map_server_id(map_data['Map ID'])
 	plyr_play_map.map_name = map_data['Map Name']
-	map_data = map_data['Grid Data']
+	var grid_data = map_data['Grid Data']
 	var map_grid = []
 	
 	CommBus.player_list = []
 
 	print('Unpacking map.')
 	
-	for x in range(map_data.size()):
+	for x in range(grid_data.size()):
 		map_grid.append([])
-		for z in range(map_data[0].size()):
+		for z in range(grid_data[0].size()):
 			map_grid[x].append([])
 	plyr_play_map.set_map_grid(map_grid)
 	
-	for x in range(map_data.size()):
-		for z in range(map_data[0].size()):
-			for obj in range(map_data[x][z].size()):
-				var object = map_data[x][z][obj][0]
+	for x in range(grid_data.size()):
+		for z in range(grid_data[0].size()):
+			for obj in range(grid_data[x][z].size()):
+				var object = grid_data[x][z][obj][0]
 				var new_object = null
 				
 				match object['Identifier']:
@@ -47,11 +47,12 @@ func fill_map():
 						new_object = GlobalVars.obj_spawner.spawn_map_object(object['Identifier'], plyr_play_map, [x,z], false)
 
 					'PlagueDoc': 
-						if object['NetID'] == GlobalVars.get_self_netid():
-							new_object = GlobalVars.obj_spawner.spawn_dumb_actor('PlagueDoc', plyr_play_map, [x,z], false)
-							GlobalVars.set_self_obj(new_object)
-						else:
-							new_object = GlobalVars.obj_spawner.spawn_dumb_actor(object['Identifier'], plyr_play_map, [x,z], false)
+						new_object = GlobalVars.obj_spawner.spawn_dumb_actor('PlagueDoc', plyr_play_map, [x,z], false)
+						
+						if object['NetID'] == MultiplayerTestenv.get_client().get_client_id():
+							MultiplayerTestenv.get_client().set_client_obj(new_object)
+
+						MultiplayerTestenv.get_client().players_dict[object['NetID']] = new_object
 						
 						new_object.play_anim('idle')
 						CommBus.add_player_to_local_player_list(new_object)
@@ -77,7 +78,7 @@ func fill_map():
 	plyr_play_map.set_map_grid(map_grid)
 	
 	# Unpack room data.
-	var map_rooms = GlobalVars.server_map_data["Room Data"]
+	var map_rooms = map_data["Room Data"]
 	for room in map_rooms:
 		var curr_room = PSIDE_ROOM_CLASS.new()
 		

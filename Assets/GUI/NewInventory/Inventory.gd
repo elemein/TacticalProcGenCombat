@@ -102,18 +102,19 @@ func _input(event):
 				option_menu.visible = false
 			
 func _process(_delta):
-	if not GlobalVars.get_client_state() == 'loading' and GlobalVars.get_self_obj() != null:
+	return
+	if not MultiplayerTestenv.get_client().get_client_state() in ['loading', 'character select'] and MultiplayerTestenv.get_client().get_client_obj() != null:
 		# Set the items for the current inventory tab
 		for item_index in 8:
 			var item_node = item_tab_dict[active_inventory_tab][item_index]
 			
-			if GlobalVars.get_self_obj().inventory.keys().size() > item_index:
-				var player_item = GlobalVars.get_self_obj().inventory.keys()[item_index]
+			if MultiplayerTestenv.get_client().get_client_obj().inventory.keys().size() > item_index:
+				var player_item = MultiplayerTestenv.get_client().get_client_obj().inventory.keys()[item_index]
 				
 				if active_inventory_tab.name in ['All', player_item.get_id()['CategoryType']]:
 					item_node['Label'].text = player_item.get_id()['Identifier'].replace(' ', '\n')
 					item_node['Icon'].texture = player_item.inventory_icon
-					if GlobalVars.get_self_obj().inventory[player_item]['equipped']:
+					if MultiplayerTestenv.get_client().get_client_obj().inventory[player_item]['equipped']:
 						item_node['Equipped'].visible = true
 					else:
 						item_node['Equipped'].visible = false
@@ -135,8 +136,8 @@ func _process(_delta):
 		# Set the equipped items icon for whatever was last selected
 		var empty_categories = item_categories.duplicate()
 		for category in item_categories:
-			for item in GlobalVars.get_self_obj().inventory:
-				if item.get_id()['CategoryType'] == category and GlobalVars.get_self_obj().inventory[item]['equipped']:
+			for item in MultiplayerTestenv.get_client().get_client_obj().inventory:
+				if item.get_id()['CategoryType'] == category and MultiplayerTestenv.get_client().get_client_obj().inventory[item]['equipped']:
 					icon_types[category].texture = item.inventory_icon
 					empty_categories.erase(category)
 					
@@ -148,11 +149,11 @@ func _process(_delta):
 func item_selected(num):
 	var player_item
 	var index = -1
-	for item in GlobalVars.get_self_obj().inventory:
+	for item in MultiplayerTestenv.get_client().get_client_obj().inventory:
 		index += 1
 		if index == num:
 			local_item = item
-			player_item = GlobalVars.get_self_obj().inventory[local_item]
+			player_item = MultiplayerTestenv.get_client().get_client_obj().inventory[local_item]
 		
 	set_option_menu(player_item['equipped'])
 	option_menu.rect_position = get_viewport().get_mouse_position() - window_offset
@@ -166,8 +167,8 @@ func update_item_stats(num):
 		'defense_bonus': 'Defense',
 	}
 	
-	if GlobalVars.get_self_obj().inventory.keys().size() > num:
-		var hovered_item = GlobalVars.get_self_obj().inventory.keys()[num]
+	if MultiplayerTestenv.get_client().get_client_obj().inventory.keys().size() > num:
+		var hovered_item = MultiplayerTestenv.get_client().get_client_obj().inventory.keys()[num]
 		for stat in item_stats:
 			if not hovered_item.get(stat) == null:
 				item_stats_label.text += item_stats[stat] + ' +' + str(hovered_item.get(stat)) + '\n'
@@ -175,18 +176,18 @@ func update_item_stats(num):
 	
 func update_player_stats():
 	player_stats_label.text = ''
-	for stat in GlobalVars.get_self_obj().stat_dict:
-		player_stats_label.text += stat + ' ' + str(GlobalVars.get_self_obj().stat_dict[stat]) + '\n'
+	for stat in MultiplayerTestenv.get_client().get_client_obj().stat_dict:
+		player_stats_label.text += stat + ' ' + str(MultiplayerTestenv.get_client().get_client_obj().stat_dict[stat]) + '\n'
 	player_stats_label.text = player_stats_label.text.strip_edges()
 	
 func option_action(index):
-	var server_item_id = GlobalVars.get_self_obj().inventory[local_item].get('server_id')
+	var server_item_id = MultiplayerTestenv.get_client().get_client_obj().inventory[local_item].get('server_id')
 	if not server_item_id:
 		server_item_id = local_item.get_id()['Instance ID']
-	if not GlobalVars.get_self_obj().in_turn:
+	if not MultiplayerTestenv.get_client().get_client_obj().in_turn:
 		match index:
 			0:  # equip item
-				var player_inventory = GlobalVars.get_self_obj().inventory
+				var player_inventory = MultiplayerTestenv.get_client().get_client_obj().inventory
 				if not player_inventory[local_item]['equipped']:
 					set_option_menu(true)
 					CommBus.request_for_player_action({"Command Type": "Equip Item", "Value": server_item_id})
@@ -262,6 +263,7 @@ func _on_TabContainer_gui_input(event):
 
 ### Determine when to show an item as hovered by the coursor ###
 func hovered(num):
+	return
 	# Remove any previous hovers
 	for item_slot in item_tab_dict[active_inventory_tab]:
 		item_tab_dict[active_inventory_tab][item_slot]['Hovered'].visible = false

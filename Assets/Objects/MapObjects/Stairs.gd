@@ -1,7 +1,5 @@
 extends GameObj
 
-onready var world = get_node('/root/World')
-
 # vars for minimap
 var was_visible = false
 var minimap_icon = "Stairs"
@@ -26,4 +24,4 @@ func interact_w_object(tile_objects):
 			var self_map_id = parent_map.get_mapset_map_id()
 			for key in parent_mapset.floors.keys():
 				if parent_mapset.floors[key].get_mapset_map_id() == (self_map_id + 1):
-					world.move_to_map(object, parent_mapset.floors[key])
+					MultiplayerTestenv.get_server().move_to_map(object, parent_mapset.floors[key])

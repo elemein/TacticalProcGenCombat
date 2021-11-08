@@ -18,12 +18,12 @@ func _ready():
 	add_child(input_smoothing_timer)
 
 func _physics_process(_delta):
-	if GlobalVars.get_self_obj().get_is_dead() == false and \
-		GlobalVars.get_client_state() == 'ingame': 
+	if MultiplayerTestenv.get_client().get_client_obj().get_is_dead() == false and \
+		MultiplayerTestenv.get_client().get_client_state() == 'ingame': 
 		get_input()
 
 func smooth_input():
-	var direction_facing = GlobalVars.get_self_obj().get_direction_facing()
+	var direction_facing = MultiplayerTestenv.get_client().get_client_obj().get_direction_facing()
 	
 	var dir_char = ''
 	match direction_facing:
@@ -49,101 +49,101 @@ func count_inputs():
 	return no_of_inputs
 
 func get_possible_direction(no_of_inputs):
-	var character = GlobalVars.get_self_obj()
+	var character = MultiplayerTestenv.get_client().get_client_obj()
 	var direction_facing = character.get_direction_facing()
 	
 	if input_smoothing_timer.time_left == 0:
 		if no_of_inputs > 1:
 			if (Input.is_action_pressed("w") && Input.is_action_pressed("a") 
 				&& direction_facing != 'upleft'):
-				CommBus.request_for_player_action({"Command Type": "Look", "Value": "upleft"})
+				MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Look", "Value": "upleft"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 			if (Input.is_action_pressed("w") && Input.is_action_pressed("d") 
 				&& direction_facing != 'upright'): 
-				CommBus.request_for_player_action({"Command Type": "Look", "Value": "upright"})
+				MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Look", "Value": "upright"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 			if (Input.is_action_pressed("s") && Input.is_action_pressed("a") 
 				&& direction_facing != 'downleft'): 
-				CommBus.request_for_player_action({"Command Type": "Look", "Value": "downleft"})
+				MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Look", "Value": "downleft"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 			if (Input.is_action_pressed("s") && Input.is_action_pressed("d") 
 				&& direction_facing != 'downright'): 
-				CommBus.request_for_player_action({"Command Type": "Look", "Value": "downright"})
+				MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Look", "Value": "downright"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 		
 		if no_of_inputs == 1:
 			if Input.is_action_pressed("w") && direction_facing != 'up': 
-				CommBus.request_for_player_action({"Command Type": "Look", "Value": "up"})
+				MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Look", "Value": "up"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 			if Input.is_action_pressed("s") && direction_facing != 'down': 
-				CommBus.request_for_player_action({"Command Type": "Look", "Value": "down"})
+				MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Look", "Value": "down"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 			if Input.is_action_pressed("a") && direction_facing != 'left': 
-				CommBus.request_for_player_action({"Command Type": "Look", "Value": "left"})
+				MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Look", "Value": "left"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 			if Input.is_action_pressed("d") && direction_facing != 'right': 
-				CommBus.request_for_player_action({"Command Type": "Look", "Value": "right"})
+				MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Look", "Value": "right"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 
 func confirm_direction(no_of_inputs):
-	var character = GlobalVars.get_self_obj()
+	var character = MultiplayerTestenv.get_client().get_client_obj()
 	var direction_facing = character.get_direction_facing()
 	
 	if directional_timer.time_left == 0 and input_smoothing_timer.time_left == 0:
 		if no_of_inputs > 1:
 			if Input.is_action_pressed("w") && Input.is_action_pressed("a"): 
 				if character.check_move_action('move upleft'):
-					CommBus.request_for_player_action({"Command Type": "Move", "Value": "upleft"})
+					MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Move", "Value": "upleft"})
 			if Input.is_action_pressed("w") && Input.is_action_pressed("d"): 
 				if character.check_move_action('move upright'):
-					CommBus.request_for_player_action({"Command Type": "Move", "Value": "upright"})
+					MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Move", "Value": "upright"})
 			if Input.is_action_pressed("s") && Input.is_action_pressed("a"): 
 				if character.check_move_action('move downleft'):
-					CommBus.request_for_player_action({"Command Type": "Move", "Value": "downleft"})
+					MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Move", "Value": "downleft"})
 			if Input.is_action_pressed("s") && Input.is_action_pressed("d"): 
 				if character.check_move_action('move downright'):
-					CommBus.request_for_player_action({"Command Type": "Move", "Value": "downright"})
+					MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Move", "Value": "downright"})
 		
 		if no_of_inputs == 1:
 			if Input.is_action_pressed("w"): 
 				if character.check_move_action('move up'):
-					CommBus.request_for_player_action({"Command Type": "Move", "Value": "up"})
+					MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Move", "Value": "up"})
 			if Input.is_action_pressed("s"): 
 				if character.check_move_action('move down'):
-					CommBus.request_for_player_action({"Command Type": "Move", "Value": "down"})
+					MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Move", "Value": "down"})
 			if Input.is_action_pressed("a"):
 				if character.check_move_action('move left'):
-					CommBus.request_for_player_action({"Command Type": "Move", "Value": "left"})
+					MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Move", "Value": "left"})
 			if Input.is_action_pressed("d"): 
 				if character.check_move_action('move right'):
-					CommBus.request_for_player_action({"Command Type": "Move", "Value": "right"})
+					MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Move", "Value": "right"})
 
 func check_for_action():
-	var character = GlobalVars.get_self_obj()
+	var character = MultiplayerTestenv.get_client().get_client_obj()
 	
 	# X to skip your turn.
 	if Input.is_action_pressed("x"): 
-		CommBus.request_for_player_action({"Command Type": "Idle"})
+		MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Idle"})
 	
 	# Basic attacks only need one press.
 	if 'BasicAttackAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("space"): 
-			CommBus.request_for_player_action({"Command Type": "Basic Attack", "Value": character.get_direction_facing()})
+			MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Basic Attack", "Value": character.get_direction_facing()})
 	
 	# Skills will need two presses to confirm.
 	if 'FireballAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("e"): 
-			CommBus.request_for_player_action({"Command Type": "Fireball"})
+			MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Fireball"})
 	if 'DashAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("r"): 
-			CommBus.request_for_player_action({"Command Type": "Dash"})
+			MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Dash"})
 	if 'SelfHealAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("t"): 
-			CommBus.request_for_player_action({"Command Type": "Self Heal"})
+			MultiplayerTestenv.get_client().request_for_player_action({"Command Type": "Self Heal"})
 
 func get_input():
 	smooth_input()

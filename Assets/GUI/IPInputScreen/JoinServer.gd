@@ -19,7 +19,6 @@ func _on_button_mouse_entered():
 	grab_focus()
 	
 func _on_button_pressed():
-	GlobalVars.peer_type = 'client'
 	Client.set_server_ip(input_box.text)
 	Client.connect_to_server()
 	
@@ -32,7 +31,7 @@ func _on_button_pressed():
 	
 func on_successful_connect():
 	loading_icon.visible = false
-	GlobalVars.set_client_state('character select')
+#	MultiplayerTestenv.get_client().set_client_state('character select')
 	reference_path = 'res://Assets/GUI/CharacterSelect/CharacterSelect.tscn'
 	var _result = get_tree().change_scene(reference_path)
 

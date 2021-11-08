@@ -12,12 +12,12 @@ func _ready():
 	catalog_dungeon_to_server()
 	create_server_player_and_spawn_to_map()
 
-	GlobalVars.get_self_obj().name = 'Player1'
+	MultiplayerTestenv.get_client().get_client_obj().name = 'Player1'
 
 	CommBus.create_server()
 
 	Signals.emit_signal("world_loaded")
-	GlobalVars.set_client_state('ingame')
+	MultiplayerTestenv.get_client().set_client_state('ingame')
 
 func create_server_player_and_spawn_to_map():
 	var first_floor
@@ -32,9 +32,9 @@ func create_server_player_and_spawn_to_map():
 	
 	GlobalVars.set_self_obj(server_player)
 	
-	CommBus.player_list.append(GlobalVars.get_self_obj())
+	CommBus.player_list.append(MultiplayerTestenv.get_client().get_client_obj())
 	
-	GlobalVars.get_self_obj().find_and_render_viewfield()
+	MultiplayerTestenv.get_client().get_client_obj().find_and_render_viewfield()
 
 func catalog_dungeon_to_server():
 	add_child(dungeon)

@@ -9,8 +9,6 @@ var player_list = []
 var sync_queue = []
 
 func create_server():	
-	GlobalVars.peer_type = 'server'
-#	peer.create_server(port, max_players)
 	get_tree().network_peer = peer
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
@@ -113,7 +111,7 @@ func send_action_request_confirm(actor_id, response):
 		rpc_id(actor_id['NetID'], "receive_action_request_confirm", actor_id, response)
 
 remote func receive_action_request_confirm(actor_id, response):
-	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
+	if MultiplayerTestenv.get_client().get_client_state() != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		sync_queue.push_back({"Event Type": "Action Confirm", "Actor Id": actor_id, "Response": response})
 		return
 	var gui = get_node("/root/World/GUI/Action")
@@ -159,7 +157,7 @@ func object_action_event(object_id, action):
 	receive_object_action_event(orig_object_id, orig_action)
 # Parse action of object and run required actions to perform action.
 remote func receive_object_action_event(object_id, action):
-	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
+	if MultiplayerTestenv.get_client().get_client_state() != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		sync_queue.push_back({"Event Type": "Action", "ObjectID": object_id, "Action": action})
 		return
 	
@@ -217,16 +215,16 @@ func update_round_for_players_in_map(map):
 				rpc_id(player.get_id()['NetID'], 'receive_round_update')
 
 remote func receive_round_update():
-	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
+	if MultiplayerTestenv.get_client().get_client_obj() != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		return
 	var gui = get_node("/root/World/GUI/Action")
 	gui.clear_action()
 
 func request_for_inventory():
 	if GlobalVars.get_self_netid() == 1:
-		send_inventory_to_requester(GlobalVars.get_self_obj().get_id())
+		send_inventory_to_requester(MultiplayerTestenv.get_client().get_client_obj().get_id())
 	else:	
-		rpc_id(1, "send_inventory_to_requester", GlobalVars.get_self_obj().get_id())
+		rpc_id(1, "send_inventory_to_requester", MultiplayerTestenv.get_client().get_client_obj().get_id())
 
 remote func send_inventory_to_requester(requester_id):
 	var inventory_owner = instance_from_id(requester_id['Instance ID'])
@@ -238,8 +236,8 @@ remote func send_inventory_to_requester(requester_id):
 		rpc_id(requester_id['NetID'], "receive_inventory_from_server", inventory)
 
 remote func receive_inventory_from_server(inventory):
-	if not GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
-		GlobalVars.get_self_obj().build_inv_from_server(inventory)
+	if not MultiplayerTestenv.get_client().get_client_obj() != 'ingame': # If the client is loading, we don't want to change the map being loaded.
+		MultiplayerTestenv.get_client().get_client_obj().build_inv_from_server(inventory)
 	
 # CHANGING STAT COMMANDS -------------------------------
 # This is a duplicate from below. More bandwidth but easier to maintain
@@ -251,7 +249,7 @@ func update_all_actor_stats(object: ActorObj):
 				rpc_id(player.get_id()['NetID'], 'receive_update_all_actor_stats', object_id, object.stat_dict, object.ready_status)
 			
 remote func receive_update_all_actor_stats(object_id, new_stat_dict, ready_status):
-	if not GlobalVars.client_state != 'ingame':
+	if not MultiplayerTestenv.get_client().get_client_obj() != 'ingame':
 		var object = get_object_from_identity(object_id)
 		
 		if object == null: return
@@ -270,7 +268,7 @@ func update_actor_stat(object_id, stat_update):
 	receive_actor_stat_update(object_id, stat_update)
 # Find the stat and adjust it.
 remote func receive_actor_stat_update(object_id, stat_update):
-	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
+	if MultiplayerTestenv.get_client().get_client_obj() != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		sync_queue.push_back({"Event Type": "Stat Update", "ObjectID": object_id, "Update": stat_update})
 		return
 	if object_id['Map ID'] != 0:
@@ -294,7 +292,7 @@ func actor_notif_event(object_id, notif_text, notif_type):
 	receive_actor_notif_event(object_id, notif_text, notif_type)
 # Get the object and display the notif.
 remote func receive_actor_notif_event(object_id, notif_text, notif_type):
-	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
+	if MultiplayerTestenv.get_client().get_client_obj() != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		sync_queue.push_back({"Event Type": "Notification", "ObjectID": object_id, "Notif Text": notif_text, "Notif Type": notif_type})
 		return
 
@@ -313,9 +311,9 @@ func resolve_all_viewfields(map):
 	resolve_viewfield()
 # Resolve your viewfield and render it to screen.
 remote func resolve_viewfield():
-	if GlobalVars.get_client_state() == 'ingame':
-		GlobalVars.get_self_obj().find_viewfield()
-		GlobalVars.get_self_obj().resolve_viewfield_to_screen()
+	if MultiplayerTestenv.get_client().get_client_state() == 'ingame':
+		MultiplayerTestenv.get_client().get_client_obj().find_viewfield()
+		MultiplayerTestenv.get_client().get_client_obj().resolve_viewfield_to_screen()
 # ------------------------------------------------------
 
 # MAP ACTION COMMANDS ---------------------------------
@@ -329,7 +327,7 @@ func map_object_event(map_id, map_action):
 	receive_map_object_event(map_id, map_action)
 #
 remote func receive_map_object_event(map_id, map_action):
-	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
+	if MultiplayerTestenv.get_client().get_client_obj() != 'ingame': # If the client is loading, we don't want to change the map being loaded.
 		sync_queue.push_back({"Event Type": "Map Event", "MapID": map_id, "Map Action": map_action})
 		return
 	
@@ -360,9 +358,9 @@ func move_client_to_map(client_obj, map):
 	rpc_id(client_obj.get_id()['NetID'], 'prepare_for_map_change', map.get_map_server_id())
 
 remote func prepare_for_map_change(map_id):
-	GlobalVars.set_client_state('loading')
+#	MultiplayerTestenv.get_client().set_client_state('loading')
 	
-	GlobalVars.get_self_obj().get_parent_map().clear_play_map()
+	MultiplayerTestenv.get_client().get_client_obj().get_parent_map().clear_play_map()
 	
 	rpc_id(1, "send_map_to_requester")
 
@@ -395,11 +393,11 @@ remote func send_map_to_requester():
 remote func receive_map_from_server(map_dict):
 	GlobalVars.server_map_data = map_dict
 	
-	if GlobalVars.client_state == 'loading':	
+	if MultiplayerTestenv.get_client().get_client_obj() == 'loading':	
 		get_node('/root/World').load_new_map()
 
 func notify_server_map_loaded(map_id):
-	rpc_id(1, 'receive_client_has_loaded', GlobalVars.get_self_obj().get_id()['NetID'], map_id)
+	rpc_id(1, 'receive_client_has_loaded', MultiplayerTestenv.get_client().get_client_obj().get_id()['NetID'], map_id)
 	sync_from_sync_queue()
 	
 remote func receive_client_has_loaded(client_id, map_id):
@@ -415,13 +413,13 @@ remote func spawn_object_in_map(object_id):
 	
 	match object_id['Identifier']:
 		'PlagueDoc': 
-			var other_player = GlobalVars.obj_spawner.spawn_dumb_actor(object_id['Identifier'], GlobalVars.get_self_obj().get_parent_map(), [x,z], false)
+			var other_player = GlobalVars.obj_spawner.spawn_dumb_actor(object_id['Identifier'], MultiplayerTestenv.get_client().get_client_obj().get_parent_map(), [x,z], false)
 			other_player.set_id(object_id)
 			other_player.play_anim('idle')
 			self.player_list.append(other_player)
 
 		'Spike Trap':
-			var trap = GlobalVars.obj_spawner.spawn_map_object(object_id['Identifier'], GlobalVars.get_self_obj().get_parent_map(), [x,z], false)
+			var trap = GlobalVars.obj_spawner.spawn_map_object(object_id['Identifier'], MultiplayerTestenv.get_client().get_client_obj().get_parent_map(), [x,z], false)
 			trap.set_id(object_id)
 		
 		'Coins':
@@ -440,13 +438,13 @@ remote func spawn_object_in_map(object_id):
 func _player_connected(id):
 	print('Player ' + str(id) + ' has connected!')
 	
-	var spawn_to_map = GlobalVars.get_self_obj().get_parent_map()
-	var spawn_to_pos = GlobalVars.get_self_obj().get_map_pos().duplicate()
+	var spawn_to_map = MultiplayerTestenv.get_client().get_client_obj().get_parent_map()
+	var spawn_to_pos = MultiplayerTestenv.get_client().get_client_obj().get_map_pos().duplicate()
 	spawn_to_pos[1] += 1
 	
 	var new_player = GlobalVars.obj_spawner.spawn_dumb_actor('PlagueDoc', spawn_to_map, spawn_to_pos, true)
 	new_player.get_parent().remove_child(new_player)
-	GlobalVars.get_self_obj().get_parent().add_child(new_player)
+	MultiplayerTestenv.get_client().get_client_obj().get_parent().add_child(new_player)
 	new_player.update_id('NetID', id)
 	player_list.append(new_player)
 	new_player.name = 'Player%d' % new_player.get_id()['NetID']
@@ -502,7 +500,7 @@ func get_object_from_identity(object_id):
 func get_player_list() -> Array: return player_list
 
 func sync_from_sync_queue():
-	GlobalVars.set_client_state('ingame') 
+#	MultiplayerTestenv.get_client().set_client_state('ingame') 
 	while sync_queue.size() > 0:
 		var event = sync_queue.pop_front()
 		

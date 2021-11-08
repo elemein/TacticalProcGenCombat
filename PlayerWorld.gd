@@ -11,15 +11,16 @@ func _ready():
 
 func load_new_map():
 	GlobalVars.clear_maps()
-	map_set.name = GlobalVars.server_map_data['Parent Mapset Name']
-	var unpacked_map = map_unpacker.unpack_map(GlobalVars.server_map_data)
+	var map_data = MultiplayerTestenv.get_client().map_data
+	map_set.name = map_data['Parent Mapset Name']
+	var unpacked_map = map_unpacker.unpack_map(map_data)
 
 	add_child(map_set)
 	GlobalVars.total_mapsets.append(map_set)
 	map_set.add_map_to_mapset(unpacked_map)
 	map_set.organize_child_map_nodes()
 	
-	GlobalVars.get_self_obj().find_and_render_viewfield()
+	MultiplayerTestenv.get_client().get_client_obj().find_and_render_viewfield()
+	MultiplayerTestenv.get_client().set_client_state('ingame')
 	
-	CommBus.notify_server_map_loaded(unpacked_map.get_map_server_id())
-	Signals.emit_signal("world_loaded")
+#	CommBus.notify_server_map_loaded(unpacked_map.get_map_server_id())
