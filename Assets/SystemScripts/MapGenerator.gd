@@ -6,7 +6,7 @@ extends Node
 # I followed this link: https://abitawake.com/news/articles/procedural-generation-with-godot-create-dungeons-using-a-bsp-tree
 # I had to do some modification to it as the link uses a TileMap, whereas we use a 2D Array. 
 
-const ROOM_CLASS = preload("res://Assets/SystemScripts/Room.gd")
+const ROOM_CLASS = preload("res://Assets/SystemScripts/DungeonRoom.gd")
 
 const MAP_CLASS = preload("res://Assets/SystemScripts/S_Map.gd")
 const MAP_FILL = preload("res://Assets/SystemScripts/MapFiller.gd")

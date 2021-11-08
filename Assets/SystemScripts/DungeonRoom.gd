@@ -1,5 +1,5 @@
 extends Node
-class_name Room
+class_name DungeonRoom
 
 var parent_map
 
