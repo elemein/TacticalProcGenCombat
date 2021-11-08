@@ -57,6 +57,6 @@ func clear_play_map():
 		remove_child(child)
 		
 		if not child.get('object_identity') == null and child.get_id()['Identifier'] == 'PlagueDoc':
-			Server.player_list.erase(child)
+			CommBus.player_list.erase(child)
 			
 		child.queue_free()

@@ -14,7 +14,7 @@ func _ready():
 
 	GlobalVars.get_self_obj().name = 'Player1'
 
-	Server.create_server()
+	CommBus.create_server()
 
 	Signals.emit_signal("world_loaded")
 	GlobalVars.set_client_state('ingame')
@@ -32,7 +32,7 @@ func create_server_player_and_spawn_to_map():
 	
 	GlobalVars.set_self_obj(server_player)
 	
-	Server.player_list.append(GlobalVars.get_self_obj())
+	CommBus.player_list.append(GlobalVars.get_self_obj())
 	
 	GlobalVars.get_self_obj().find_and_render_viewfield()
 
@@ -51,9 +51,9 @@ func move_to_map(object, map):
 	map.print_map_grid()
 	
 	object.view_finder.clear_vision()
-	Server.resolve_all_viewfields(map)
+	CommBus.resolve_all_viewfields(map)
 	
 	if object.get_id()['NetID'] != 1:
-		Server.move_client_to_map(object, map)
+		CommBus.move_client_to_map(object, map)
 	
-	Server.object_action_event(object.get_id(), {"Command Type": "Spawn On Map"})
+	CommBus.object_action_event(object.get_id(), {"Command Type": "Spawn On Map"})

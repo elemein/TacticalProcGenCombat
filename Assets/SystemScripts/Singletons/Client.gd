@@ -36,7 +36,7 @@ func connect_to_server():
 func _connected_ok():
 	print("Connected to server successfully.")
 	get_node('/root/IPInputScreen/MarginContainer/VBoxContainer/JoinServer').on_successful_connect()
-	Server.request_map_from_server()
+	CommBus.request_map_from_server()
 	GlobalVars.set_client_state('character select')
 
 func _connected_fail():
@@ -52,7 +52,7 @@ func remove_buttons():
 	option_buttons.visible = false
 	
 	# Reset server info
-	Server.player_list = []
+	CommBus.player_list = []
 	GlobalVars.server_map_data = null
 	GlobalVars.set_self_obj(null)
 	GlobalVars.total_mapsets = []

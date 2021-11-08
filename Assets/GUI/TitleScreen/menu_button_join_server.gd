@@ -14,5 +14,6 @@ func _on_button_mouse_entered():
 	grab_focus()
 	
 func _on_button_pressed():
+	MultiplayerTestenv.create_client()
 	reference_path = 'res://Assets/GUI/IPInputScreen/IPInputScreen.tscn'
 	var _result = get_tree().change_scene(reference_path)

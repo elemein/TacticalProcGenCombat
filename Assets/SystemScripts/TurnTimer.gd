@@ -100,7 +100,7 @@ func sort_actors_by_speed():
 func end_turn():
 	for actor in actors:
 		actor.end_turn()
-	Server.update_round_for_players_in_map(map)
+	CommBus.update_round_for_players_in_map(map)
 	turn_in_process = false
 	turn_counter += 1
 	map.print_map_grid()
@@ -111,7 +111,7 @@ func end_turn():
 		if actor.get_id()['CategoryType'] == 'Enemy':
 			actor.find_viewfield()
 			
-	Server.resolve_all_viewfields(map)
+	CommBus.resolve_all_viewfields(map)
 
 func _physics_process(_delta):
 	if turn_in_process:

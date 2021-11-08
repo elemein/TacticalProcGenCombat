@@ -8,29 +8,13 @@ var player_list = []
 
 var sync_queue = []
 
-func create_server():
+func create_server():	
 	GlobalVars.peer_type = 'server'
-	peer.create_server(port, max_players)
+#	peer.create_server(port, max_players)
 	get_tree().network_peer = peer
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	print("Server opened successfully on port " + str(port))
-
-# How turns work, from input:
-# Input (for ex. basic attack)
-# Input > request_for_player_action(request)
-# Request goes to server > query_for_action(requester, request)
-# Server checks if that move is allowed. If so: > requester.set_action(action)
-# THEN
-# TurnTimer goes to > process_turn() when all actors are ready.
-# actor.process_turn() > object_action_event(object_id, action) 
-# object_action_event(object_id, action) > actor.perform_action(action) > 
-# receive_object_action_event(object_id, action)
-# Parse through what the action was and who did it
-# actor.set_direction & object.update_id('Facing', action['Value']), if required
-# object.perform_action(action) > actor.emit_signal(spell_cast_basic_attack)
-# actor's appropriate action then happens, with most code run by server and
-# client, but some is only serverside, such as changing stats and issuing notifs.
 
 # OBJECT ACTION COMMANDS ------------------------------
 # Query server for permission to perform action.
@@ -55,7 +39,7 @@ remote func query_for_action(requester, request):
 	match request['Command Type']:
 		'Look':
 			if player_turn_timer.get_time_left() == 0:
-				Server.object_action_event(player_identity, request)
+				CommBus.object_action_event(player_identity, request)
 			else: print('Discarding illegal look request from ' + str(player_id))
 		
 		'Move':
@@ -391,7 +375,7 @@ remote func send_map_to_requester():
 	var player_id = get_tree().get_rpc_sender_id()
 	
 	var map 
-	for player in Server.player_list:
+	for player in CommBus.player_list:
 		if player.get_id()['NetID'] == player_id:
 			map = player.get_parent_map()
 	
@@ -474,7 +458,7 @@ func _player_disconnected(id):
 	print('Goodbye player ' + str(id) + '.')
 	for player in player_list:
 		if player.get_id()['NetID'] == id:
-			Server.object_action_event(player.get_id(), {"Command Type": "Remove From Map"})
+			CommBus.object_action_event(player.get_id(), {"Command Type": "Remove From Map"})
 
 			player_list.erase(player)
 			player.queue_free()
@@ -533,3 +517,15 @@ func sync_from_sync_queue():
 				receive_map_object_event(event['MapID'], event['Map Action'])
 			'Action Confirm':
 				receive_action_request_confirm(event['Actor Id'], event['Response'])
+
+
+
+# TEMPORARY TEST FUNCTIONS, DO NOT WORRY ABOUT ####################################################
+func send_to_client(client_id, message):
+	if client_id == 1:
+		receive_from_server(message)
+	else:
+		rpc_id(client_id, 'receive receive_from_server', message)
+
+remote func receive_from_server(message):
+	print(message)

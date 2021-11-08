@@ -14,6 +14,9 @@ func _on_button_mouse_entered():
 	grab_focus()
 	
 func _on_button_pressed():
+	MultiplayerTestenv.create_server()
+	MultiplayerTestenv.create_client()
+	
 	GlobalVars.peer_type = 'server'
 	reference_path = 'res://Assets/GUI/CharacterSelect/CharacterSelect.tscn'
 	var _result = get_tree().change_scene(reference_path)

@@ -17,7 +17,7 @@ func _process(_delta):
 		setup_player_status_list()
 	
 func setup_player_status_list():
-	for player in Server.player_list:
+	for player in CommBus.player_list:
 
 		if GlobalVars.get_self_obj().get_parent_map() == player.get_parent_map():
 
@@ -47,7 +47,7 @@ func setup_player_status_list():
 			
 func remove_old_players():
 	for player in player_slots:
-		if not player in Server.player_list or \
+		if not player in CommBus.player_list or \
 				not GlobalVars.get_self_obj().get_parent_map() == player.get_parent_map():
 			remove_child(player_slots[player]['node'])
 			player_slots[player]['node'].queue_free()

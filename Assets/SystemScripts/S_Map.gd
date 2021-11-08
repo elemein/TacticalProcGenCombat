@@ -125,7 +125,7 @@ func get_map():
 func add_map_object(object, tile):
 	if typeof(object.get_parent_map()) != TYPE_STRING: #If it's a string, it has no parent map.
 		# First remove from old map.
-		Server.object_action_event(object.get_id(), {"Command Type": "Remove From Map"})
+		CommBus.object_action_event(object.get_id(), {"Command Type": "Remove From Map"})
 		if object.get_id()['Category'] == 'Actor': object.set_action('idle') 
 	
 	object.set_parent_map(self)
@@ -152,7 +152,7 @@ func remove_map_object(object):
 
 func check_for_map_events():
 	var relevant_player_list = []
-	for player in Server.get_player_list():
+	for player in CommBus.get_player_list():
 		if player.get_id()['Map ID'] == get_map_server_id():
 			relevant_player_list.append(player)
 	

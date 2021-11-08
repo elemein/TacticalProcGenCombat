@@ -28,10 +28,10 @@ func use():
 
 			set_target_actor_pos()
 			parent.move_actor_in_facing_dir(1)
-			Server.actor_notif_event(parent.get_id(), '!', 'interrupt')
+			CommBus.actor_notif_event(parent.get_id(), '!', 'interrupt')
 			
 		0:
 			return
 
 	if GlobalVars.peer_type == 'server':
-		Server.update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})
+		CommBus.update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})

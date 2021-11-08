@@ -33,7 +33,7 @@ func collect_item(tile_objects):
 			if len(object.inventory) < 8:
 				item_owner = object
 				object.inventory[self] = {'equipped': false, 'description': self.get_id()['Identifier']}
-				Server.object_action_event(object_identity, {"Command Type": "Remove From Map"})
+				CommBus.object_action_event(object_identity, {"Command Type": "Remove From Map"})
 			
 func equip_item():
 	for stat_type in ['spell_power_bonus', 'defense_bonus', 'attack_power_bonus']:
@@ -63,4 +63,4 @@ func drop_item():
 	unequip_item()
 	item_owner.get_parent_map().add_map_object(self, item_owner.get_map_pos())
 	item_owner.inventory.erase(self)
-	Server.object_action_event(object_identity, {"Command Type": "Spawn On Map"})
+	CommBus.object_action_event(object_identity, {"Command Type": "Spawn On Map"})

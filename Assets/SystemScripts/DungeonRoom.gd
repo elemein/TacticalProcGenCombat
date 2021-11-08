@@ -55,7 +55,7 @@ func check_if_locking(map_player_list):
 		if all_players_in_room == true:
 			all_players_in_room = pos_in_room(player.get_id()['Position'])
 	
-	if all_players_in_room: Server.map_object_event(parent_map.get_map_server_id(), {"Scope": "Room", "Room ID": id, "Action": "Block Exits"})
+	if all_players_in_room: CommBus.map_object_event(parent_map.get_map_server_id(), {"Scope": "Room", "Room ID": id, "Action": "Block Exits"})
 
 func count_enemies_in_room():
 	var temp_count = 0
@@ -99,7 +99,7 @@ func log_enemy_death(_dead_enemy):
 	
 	if enemy_count <= 0: 
 		room_cleared = true
-		Server.map_object_event(parent_map.get_map_server_id(), {"Scope": "Room", "Room ID": id, "Action": "Unblock Exits"})
+		CommBus.map_object_event(parent_map.get_map_server_id(), {"Scope": "Room", "Room ID": id, "Action": "Unblock Exits"})
 		
 		if type == 'Exit Room':
-			Server.map_object_event(parent_map.get_map_server_id(), {"Scope": "Map", "Action": "Victory"})
+			CommBus.map_object_event(parent_map.get_map_server_id(), {"Scope": "Map", "Action": "Victory"})

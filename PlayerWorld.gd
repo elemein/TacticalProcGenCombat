@@ -21,5 +21,5 @@ func load_new_map():
 	
 	GlobalVars.get_self_obj().find_and_render_viewfield()
 	
-	Server.notify_server_map_loaded(unpacked_map.get_map_server_id())
+	CommBus.notify_server_map_loaded(unpacked_map.get_map_server_id())
 	Signals.emit_signal("world_loaded")

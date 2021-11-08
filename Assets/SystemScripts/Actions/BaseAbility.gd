@@ -54,8 +54,8 @@ func move_check():
 	return dash_length
 			
 func heal_user():
-	Server.update_actor_stat(parent.get_id(), {"Stat": "HP", "Modifier": spell_final_power})
-	Server.actor_notif_event(parent.get_id(), ("+" + str(spell_final_power)), 'heal')
+	CommBus.update_actor_stat(parent.get_id(), {"Stat": "HP", "Modifier": spell_final_power})
+	CommBus.actor_notif_event(parent.get_id(), ("+" + str(spell_final_power)), 'heal')
 
 func play_audio():
 	UseSpell = find_node('UseSpell')

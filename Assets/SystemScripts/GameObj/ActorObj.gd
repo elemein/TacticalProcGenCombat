@@ -99,7 +99,7 @@ func set_action(action):
 
 	ready_status = true
 	
-	Server.update_all_actor_stats(self)
+	CommBus.update_all_actor_stats(self)
 
 #	if object_identity['CategoryType'] == 'Player': gui.set_action(proposed_action)
 
@@ -110,7 +110,7 @@ func process_turn():
 	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
 	elif proposed_action == 'basic attack': 
 		turn_anim_timer.set_wait_time($Actions/Attacks/BasicAttack.anim_time)
-		Server.object_action_event(object_identity, {"Command Type": "Basic Attack", "Value": get_direction_facing()})
+		CommBus.object_action_event(object_identity, {"Command Type": "Basic Attack", "Value": get_direction_facing()})
 	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time($Actions/Attacks/Fireball.anim_time)
 	elif proposed_action == 'self heal': turn_anim_timer.set_wait_time($Actions/SelfHeal.anim_time)
 	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.6)
@@ -122,17 +122,17 @@ func process_turn():
 #		set_actor_dir(proposed_action.split(" ")[1])
 		if check_move_action(proposed_action) == true:
 			print([object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]}])
-			Server.object_action_event(object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]})
+			CommBus.object_action_event(object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]})
 	
 	elif proposed_action == 'idle': 
-		Server.object_action_event(object_identity, {"Command Type": "Idle"})
+		CommBus.object_action_event(object_identity, {"Command Type": "Idle"})
 	
 	elif proposed_action == 'fireball':
-		Server.object_action_event(object_identity, {"Command Type": "Fireball"})
+		CommBus.object_action_event(object_identity, {"Command Type": "Fireball"})
 	elif proposed_action == 'dash':
-		Server.object_action_event(object_identity, {"Command Type": "Dash"})
+		CommBus.object_action_event(object_identity, {"Command Type": "Dash"})
 	elif proposed_action == 'self heal':
-		Server.object_action_event(object_identity, {"Command Type": "Self Heal"})
+		CommBus.object_action_event(object_identity, {"Command Type": "Self Heal"})
 		
 	elif proposed_action == 'drop item':
 		drop_item(selected_item)
@@ -146,24 +146,24 @@ func process_turn():
 	in_turn = true
 	
 	# Send the state of the game to the player after every turn
-	for remote_player in Server.player_list:
+	for remote_player in CommBus.player_list:
 		if remote_player.get_id()['NetID'] != 1:
-			Server.send_inventory_to_requester(remote_player.get_id())
-			Server.update_all_actor_stats(remote_player)
+			CommBus.send_inventory_to_requester(remote_player.get_id())
+			CommBus.update_all_actor_stats(remote_player)
 
 func turn_regen():
 	# Apply any regen effects
 	if object_identity['HP'] < object_identity['Max HP']:
-		Server.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": stat_dict['HP Regen']})
+		CommBus.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": stat_dict['HP Regen']})
 		if object_identity['HP'] > object_identity['Max HP']:
 			var difference = object_identity['HP'] - object_identity['Max HP']
-			Server.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": -difference})
+			CommBus.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": -difference})
 
 	if object_identity['MP'] < object_identity['Max MP']:
-		Server.update_actor_stat(object_identity, {"Stat": "MP", "Modifier": stat_dict['MP Regen']})
+		CommBus.update_actor_stat(object_identity, {"Stat": "MP", "Modifier": stat_dict['MP Regen']})
 		if object_identity['MP'] > object_identity['Max MP']:
 			var difference = object_identity['MP'] - object_identity['Max MP']
-			Server.update_actor_stat(object_identity, {"Stat": "MP", "Modifier": -difference})
+			CommBus.update_actor_stat(object_identity, {"Stat": "MP", "Modifier": -difference})
 
 func perform_action(action):
 	match action['Command Type']:
@@ -181,8 +181,8 @@ func end_turn():
 	ready_status = false
 	
 	# Send the state of the game to the player after round end
-	for remote_player in Server.player_list:
-		Server.update_all_actor_stats(self)
+	for remote_player in CommBus.player_list:
+		CommBus.update_all_actor_stats(self)
 
 # View related functions.
 func find_viewfield():
@@ -221,12 +221,12 @@ func take_damage(damage_instance):
 		damage = floor(damage * damage_multiplier)
 		damage = floor(damage)
 		
-		Server.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": -damage})
+		CommBus.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": -damage})
 		
 		if is_crit: 
-			Server.actor_notif_event(object_identity, ("-" + str(damage)) + "!", 'crit damage')
+			CommBus.actor_notif_event(object_identity, ("-" + str(damage)) + "!", 'crit damage')
 		else: 
-			Server.actor_notif_event(object_identity, ("-" + str(damage)), 'damage')
+			CommBus.actor_notif_event(object_identity, ("-" + str(damage)), 'damage')
 		
 		print("%s has %s HP" % [self.get_id()['Identifier'], stat_dict['HP']])
 		
@@ -240,7 +240,7 @@ func take_damage(damage_instance):
 		emit_signal("status_bar_hp", stat_dict['HP'], stat_dict['Max HP'])
 
 		if stat_dict['HP'] <= 0:
-			Server.object_action_event(object_identity, {"Command Type": "Die"})
+			CommBus.object_action_event(object_identity, {"Command Type": "Die"})
 
 func die():
 	is_dead = true
@@ -260,7 +260,7 @@ func die():
 
 func move_to_death_screen():
 	if GlobalVars.get_self_netid() != 1:
-		Server.peer.disconnect_peer(1, true)
+		CommBus.peer.disconnect_peer(1, true)
 	get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
 
 func play_death_anim():

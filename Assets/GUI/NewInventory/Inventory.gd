@@ -189,17 +189,17 @@ func option_action(index):
 				var player_inventory = GlobalVars.get_self_obj().inventory
 				if not player_inventory[local_item]['equipped']:
 					set_option_menu(true)
-					Server.request_for_player_action({"Command Type": "Equip Item", "Value": server_item_id})
+					CommBus.request_for_player_action({"Command Type": "Equip Item", "Value": server_item_id})
 					visible = false
 
 				# unequip item
 				else:
 					set_option_menu(false)
-					Server.request_for_player_action({"Command Type": "Unequip Item", "Value": server_item_id})
+					CommBus.request_for_player_action({"Command Type": "Unequip Item", "Value": server_item_id})
 					visible = false
 
 			1:  # drop item
-				Server.request_for_player_action({"Command Type": "Drop Item", "Value": server_item_id})
+				CommBus.request_for_player_action({"Command Type": "Drop Item", "Value": server_item_id})
 				option_menu.visible = false
 				
 func set_option_menu(equipped : bool):

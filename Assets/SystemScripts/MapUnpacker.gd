@@ -26,7 +26,7 @@ func fill_map():
 	map_data = map_data['Grid Data']
 	var map_grid = []
 	
-	Server.player_list = []
+	CommBus.player_list = []
 
 	print('Unpacking map.')
 	
@@ -54,10 +54,10 @@ func fill_map():
 							new_object = GlobalVars.obj_spawner.spawn_dumb_actor(object['Identifier'], plyr_play_map, [x,z], false)
 						
 						new_object.play_anim('idle')
-						Server.add_player_to_local_player_list(new_object)
+						CommBus.add_player_to_local_player_list(new_object)
 						
-						if not new_object in Server.player_list:
-							Server.player_list.append(new_object)
+						if not new_object in CommBus.player_list:
+							CommBus.player_list.append(new_object)
 						
 					_:
 						match object['CategoryType']:

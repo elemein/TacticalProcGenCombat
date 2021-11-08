@@ -56,37 +56,37 @@ func get_possible_direction(no_of_inputs):
 		if no_of_inputs > 1:
 			if (Input.is_action_pressed("w") && Input.is_action_pressed("a") 
 				&& direction_facing != 'upleft'):
-				Server.request_for_player_action({"Command Type": "Look", "Value": "upleft"})
+				CommBus.request_for_player_action({"Command Type": "Look", "Value": "upleft"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 			if (Input.is_action_pressed("w") && Input.is_action_pressed("d") 
 				&& direction_facing != 'upright'): 
-				Server.request_for_player_action({"Command Type": "Look", "Value": "upright"})
+				CommBus.request_for_player_action({"Command Type": "Look", "Value": "upright"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 			if (Input.is_action_pressed("s") && Input.is_action_pressed("a") 
 				&& direction_facing != 'downleft'): 
-				Server.request_for_player_action({"Command Type": "Look", "Value": "downleft"})
+				CommBus.request_for_player_action({"Command Type": "Look", "Value": "downleft"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 			if (Input.is_action_pressed("s") && Input.is_action_pressed("d") 
 				&& direction_facing != 'downright'): 
-				Server.request_for_player_action({"Command Type": "Look", "Value": "downright"})
+				CommBus.request_for_player_action({"Command Type": "Look", "Value": "downright"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 		
 		if no_of_inputs == 1:
 			if Input.is_action_pressed("w") && direction_facing != 'up': 
-				Server.request_for_player_action({"Command Type": "Look", "Value": "up"})
+				CommBus.request_for_player_action({"Command Type": "Look", "Value": "up"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 			if Input.is_action_pressed("s") && direction_facing != 'down': 
-				Server.request_for_player_action({"Command Type": "Look", "Value": "down"})
+				CommBus.request_for_player_action({"Command Type": "Look", "Value": "down"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 			if Input.is_action_pressed("a") && direction_facing != 'left': 
-				Server.request_for_player_action({"Command Type": "Look", "Value": "left"})
+				CommBus.request_for_player_action({"Command Type": "Look", "Value": "left"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 			if Input.is_action_pressed("d") && direction_facing != 'right': 
-				Server.request_for_player_action({"Command Type": "Look", "Value": "right"})
+				CommBus.request_for_player_action({"Command Type": "Look", "Value": "right"})
 				directional_timer.start(DIRECTION_SELECT_TIME)
 
 func confirm_direction(no_of_inputs):
@@ -97,53 +97,53 @@ func confirm_direction(no_of_inputs):
 		if no_of_inputs > 1:
 			if Input.is_action_pressed("w") && Input.is_action_pressed("a"): 
 				if character.check_move_action('move upleft'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "upleft"})
+					CommBus.request_for_player_action({"Command Type": "Move", "Value": "upleft"})
 			if Input.is_action_pressed("w") && Input.is_action_pressed("d"): 
 				if character.check_move_action('move upright'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "upright"})
+					CommBus.request_for_player_action({"Command Type": "Move", "Value": "upright"})
 			if Input.is_action_pressed("s") && Input.is_action_pressed("a"): 
 				if character.check_move_action('move downleft'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "downleft"})
+					CommBus.request_for_player_action({"Command Type": "Move", "Value": "downleft"})
 			if Input.is_action_pressed("s") && Input.is_action_pressed("d"): 
 				if character.check_move_action('move downright'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "downright"})
+					CommBus.request_for_player_action({"Command Type": "Move", "Value": "downright"})
 		
 		if no_of_inputs == 1:
 			if Input.is_action_pressed("w"): 
 				if character.check_move_action('move up'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "up"})
+					CommBus.request_for_player_action({"Command Type": "Move", "Value": "up"})
 			if Input.is_action_pressed("s"): 
 				if character.check_move_action('move down'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "down"})
+					CommBus.request_for_player_action({"Command Type": "Move", "Value": "down"})
 			if Input.is_action_pressed("a"):
 				if character.check_move_action('move left'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "left"})
+					CommBus.request_for_player_action({"Command Type": "Move", "Value": "left"})
 			if Input.is_action_pressed("d"): 
 				if character.check_move_action('move right'):
-					Server.request_for_player_action({"Command Type": "Move", "Value": "right"})
+					CommBus.request_for_player_action({"Command Type": "Move", "Value": "right"})
 
 func check_for_action():
 	var character = GlobalVars.get_self_obj()
 	
 	# X to skip your turn.
 	if Input.is_action_pressed("x"): 
-		Server.request_for_player_action({"Command Type": "Idle"})
+		CommBus.request_for_player_action({"Command Type": "Idle"})
 	
 	# Basic attacks only need one press.
 	if 'BasicAttackAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("space"): 
-			Server.request_for_player_action({"Command Type": "Basic Attack", "Value": character.get_direction_facing()})
+			CommBus.request_for_player_action({"Command Type": "Basic Attack", "Value": character.get_direction_facing()})
 	
 	# Skills will need two presses to confirm.
 	if 'FireballAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("e"): 
-			Server.request_for_player_action({"Command Type": "Fireball"})
+			CommBus.request_for_player_action({"Command Type": "Fireball"})
 	if 'DashAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("r"): 
-			Server.request_for_player_action({"Command Type": "Dash"})
+			CommBus.request_for_player_action({"Command Type": "Dash"})
 	if 'SelfHealAbility' in PlayerInfo.abilities:
 		if Input.is_action_pressed("t"): 
-			Server.request_for_player_action({"Command Type": "Self Heal"})
+			CommBus.request_for_player_action({"Command Type": "Self Heal"})
 
 func get_input():
 	smooth_input()
