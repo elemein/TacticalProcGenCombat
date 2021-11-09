@@ -5,19 +5,74 @@ This script will be used to check for various code quality issues throughout the
 import os
 
 
-class Formatter:
+class IssueChecker:
     """
-    Automatically format any issues found to be in the group format for github pipelines
+    Check for any desired code quality issues throughout the project
     """
-    issues = {
-        'setget': [],
-        'using_self': [],
-        'type_hinting': [],
-        'sync_queue': [],
-        'file_types': []
-    }
+    def __init__(self):
+        self.current_file = None
+        self.current_line = None
+        self.issues = {
+            'setget': [],
+            'using_self': [],
+            'type_hinting': [],
+            'sync_queue': [],
+            'file_types': [],
+        }
+
+        self.run_all_checks()
+
+    def run_all_checks(self):
+        """
+        Run all of the checks we want to look for
+        """
+        for path, _, files in os.walk('../../'):
+            for file in files:
+                if file[-3:] == '.gd':
+                    self.current_file = f'{path}/{file}'
+                    with open(self.current_file, 'r') as my_file:
+                        for line in my_file.readlines():
+                            self.current_line = line
+
+                            self.check_setget()
+                            self.check_using_self()
+                            self.check_type_hinting()
+                            self.check_sync_queue()
+                        self.check_file_types()
+        self.print()
+
+    def check_setget(self):
+        """
+        Verify every class variable uses setget methods
+        """
+        if self.current_line[:4] == 'var ':
+            if 'setget' not in self.current_line:
+                self.issues['setget'].append(f'{self.current_file}\t{self.current_line}')
+
+    def check_using_self(self):
+        """
+        Verify that every class variable is referenced by using "self." throughout the script.
+        """
+
+    def check_type_hinting(self):
+        """
+        Verify that every variable definition uses type hinting
+        """
+
+    def check_sync_queue(self):
+        """
+        Verify that every server call uses the sync queue
+        """
+
+    def check_file_types(self):
+        """
+        Verify that the correct file types only exist in the expected directories
+        """
 
     def print(self):
+        """
+        Print the results of the checks
+        """
         issues_present = False
         for issue_type in self.issues:
             print(f'::group::{issue_type}')
@@ -33,48 +88,6 @@ class Formatter:
                             f'type_hinting: {len(self.issues["type_hinting"])}\n'
                             f'sync_queue: {len(self.issues["sync_queue"])}\n'
                             f'file_types: {len(self.issues["file_types"])}\n')
-
-
-class IssueChecker:
-    """
-    Check for any desired code quality issues throughout the project
-    """
-    def __init__(self):
-        self.formatter = Formatter()
-        self.current_file = None
-
-        self.run_all_checks()
-
-    def run_all_checks(self):
-        for path, _, files in os.walk('../../'):
-            for file in files:
-                if file[-3:] == '.gd':
-                    self.current_file = f'{path}/{file}'
-                    with open(self.current_file, 'r') as my_file:
-                        for line in my_file.readlines():
-                            self.check_setget(line)
-                            self.check_using_self(line)
-                            self.check_type_hinting(line)
-                            self.check_sync_queue(line)
-                            self.check_file_types(line)
-        self.formatter.print()
-
-    def check_setget(self, line: str):
-        if line[:4] == 'var ':
-            if 'setget' not in line:
-                self.formatter.issues['setget'].append(f'{self.current_file}\t{line}')
-
-    def check_using_self(self, line: str):
-        pass
-
-    def check_type_hinting(self, line: str):
-        pass
-
-    def check_sync_queue(self, line: str):
-        pass
-
-    def check_file_types(self, line: str):
-        pass
 
 
 if __name__ == '__main__':
