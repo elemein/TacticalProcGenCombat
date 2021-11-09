@@ -18,11 +18,16 @@ class Formatter:
     }
 
     def print(self):
+        issues_present = False
         for issue_type in self.issues:
             print(f'::group::{issue_type}')
             for issue in self.issues[issue_type]:
                 print(issue[6:].strip())
+                issues_present = True
             print('::endgroup::')
+
+        if issues_present:
+            raise Exception('Failed to pass all code quality checks')
 
 
 class IssueChecker:
