@@ -33,5 +33,5 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Code Quality Check
-        run: python code_quality_check.py
+        run: python .github/workflows/code_quality_check.py
         continue-on-error: false
