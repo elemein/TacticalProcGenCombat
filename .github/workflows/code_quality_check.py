@@ -3,6 +3,7 @@ This script will be used to check for various code quality issues throughout the
 """
 
 import os
+import re
 
 
 class IssueChecker:
@@ -11,7 +12,6 @@ class IssueChecker:
     """
     def __init__(self):
         self.current_file = None
-        self.current_line = None
         self.issues = {
             'setget': [],
             'using_self': [],
@@ -30,29 +30,37 @@ class IssueChecker:
             for file in files:
                 if file[-3:] == '.gd':
                     self.current_file = f'{path}/{file}'
-                    with open(self.current_file, 'r') as my_file:
-                        for line in my_file.readlines():
-                            self.current_line = line
 
-                            self.check_setget()
-                            self.check_using_self()
-                            self.check_type_hinting()
-                            self.check_sync_queue()
-                        self.check_file_types()
+                    self.check_setget()
+                    self.check_using_self()
+                    self.check_type_hinting()
+                    self.check_sync_queue()
+                self.check_file_types()
         self.print()
 
     def check_setget(self):
         """
         Verify every class variable uses setget methods
         """
-        if self.current_line[:4] == 'var ':
-            if 'setget' not in self.current_line:
-                self.issues['setget'].append(f'{self.current_file}\t{self.current_line}')
+        with open(self.current_file, 'r') as my_file:
+            for line in my_file.readlines():
+                if line[:4] == 'var ' and 'setget' not in line and '#ignore' not in line:
+                    self.issues['setget'].append(f'{self.current_file}\t{line}')
 
     def check_using_self(self):
         """
         Verify that every class variable is referenced by using "self." throughout the script.
         """
+        with open(self.current_file, 'r') as my_file:
+            file_contents = my_file.readlines()
+        for orig_line in file_contents:
+            if orig_line[:4] == 'var ' and '#ignore' not in orig_line:
+                var_name = orig_line.split()[1]
+
+                for reference_line in file_contents:
+                    if reference_line != orig_line and var_name in reference_line \
+                            and 'self.' != reference_line[:reference_line.find(var_name)][-5:]:
+                        self.issues['using_self'].append(f'{self.current_file}\tvar: {var_name}\t{reference_line}')
 
     def check_type_hinting(self):
         """
