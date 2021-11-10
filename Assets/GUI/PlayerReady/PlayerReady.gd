@@ -1,6 +1,6 @@
 extends VBoxContainer
 
-onready var example_node = find_node('PlayerStatus')
+var example_node = preload("res://Assets/GUI/PlayerReady/PlayerStatus.tscn")
 
 var player_slots = {}
 
@@ -8,7 +8,7 @@ var player_slots = {}
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	yield(Signals, "world_loaded")
-	example_node.visible = false
+#	example_node.visible = false
 	setup_player_status_list()
 	
 func _process(_delta):
@@ -25,7 +25,7 @@ func setup_player_status_list():
 
 			# Add new player to the list
 			if not player in player_slots:
-				var new_player_node = example_node.duplicate()
+				var new_player_node = example_node.instance()
 				self.add_child(new_player_node)
 				player_slots[player] = {
 					'node': new_player_node,

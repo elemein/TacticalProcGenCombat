@@ -54,12 +54,12 @@ func drop_loot():
 		match item:
 			'Gold':
 				var gold_obj = obj_spawner.spawn_gold(gold, parent_map, map_pos, true)
-				CommBus.object_action_event(gold_obj.get_id(), {"Command Type": "Spawn On Map"})
+				MultiplayerTestenv.get_server().object_action_event(gold_obj.get_id(), {"Command Type": "Spawn On Map"})
 				gold = 0
 			
 			_:
 				var loot = obj_spawner.spawn_item(item, parent_map, map_pos, true)
-				CommBus.object_action_event(loot.get_id(), {"Command Type": "Spawn On Map"})
+				MultiplayerTestenv.get_server().object_action_event(loot.get_id(), {"Command Type": "Spawn On Map"})
 
 	# drop items
 	loot_dropped = true

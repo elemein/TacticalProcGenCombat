@@ -28,10 +28,10 @@ func use():
 
 			set_target_actor_pos()
 			parent.move_actor_in_facing_dir(1)
-			CommBus.actor_notif_event(parent.get_id(), '!', 'interrupt')
+			MultiplayerTestenv.get_server().actor_notif_event(parent.get_id(), '!', 'interrupt')
 			
 		0:
 			return
 
 	if GlobalVars.peer_type == 'server':
-		CommBus.update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})
+		MultiplayerTestenv.get_server().update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})

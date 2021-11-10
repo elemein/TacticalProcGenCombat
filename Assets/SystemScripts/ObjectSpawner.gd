@@ -40,7 +40,7 @@ var lantern_light_effect = preload("res://Assets/Objects/Effects/Lantern/Lantern
 
 func create_object(object_scene, map, map_pos, visibility) -> Object:
 	var object = object_scene.instance()
-	object.visible = visibility
+	object.visible = false
 	
 	# If the map/map_pos = 'Inventory' (i.e. a string), do not designate a map.
 	if typeof(map) == TYPE_STRING: return object

@@ -57,6 +57,6 @@ func clear_play_map():
 		remove_child(child)
 		
 		if not child.get('object_identity') == null and child.get_id()['Identifier'] == 'PlagueDoc':
-			CommBus.player_list.erase(child)
+			MultiplayerTestenv.get_server().players_dict.erase(child.get_id()['NetID'])
 			
 		child.queue_free()

@@ -22,7 +22,7 @@ func activate_trap(tile_objects):
 	for object in tile_objects:
 		if object.get_id()['CategoryType'] == 'Player':
 			if sprung == false: # only spring if not already sprung
-				CommBus.object_action_event(object_identity, {"Command Type": "Spawn On Map"})
+				MultiplayerTestenv.get_server().object_action_event(object_identity, {"Command Type": "Spawn On Map"})
 				sprung = true
 				visible = true
 				
@@ -41,4 +41,4 @@ func bury_self():
 	translation.y -= 1
 
 func _on_tween_complete(_tween_object, _tween_node_path):
-	CommBus.object_action_event(object_identity, {"Command Type": "Remove From Map"})
+	MultiplayerTestenv.get_server().object_action_event(object_identity, {"Command Type": "Remove From Map"})

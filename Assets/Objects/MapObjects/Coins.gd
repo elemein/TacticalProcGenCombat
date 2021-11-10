@@ -25,4 +25,4 @@ func collect_item(tile_objects):
 	for object in tile_objects:
 		if object.get_id()['CategoryType'] == 'Player':
 			object.gold += value
-			CommBus.object_action_event(object_identity, {"Command Type": "Remove From Map"})
+			MultiplayerTestenv.get_server().object_action_event(object_identity, {"Command Type": "Remove From Map"})

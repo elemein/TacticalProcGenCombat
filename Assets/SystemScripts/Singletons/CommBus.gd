@@ -37,7 +37,7 @@ remote func query_for_action(requester, request):
 	match request['Command Type']:
 		'Look':
 			if player_turn_timer.get_time_left() == 0:
-				CommBus.object_action_event(player_identity, request)
+				MultiplayerTestenv.get_server().object_action_event(player_identity, request)
 			else: print('Discarding illegal look request from ' + str(player_id))
 		
 		'Move':
@@ -373,7 +373,7 @@ remote func send_map_to_requester():
 	var player_id = get_tree().get_rpc_sender_id()
 	
 	var map 
-	for player in CommBus.player_list:
+	for player in MultiplayerTestenv.get_server().playesr_dict.values():
 		if player.get_id()['NetID'] == player_id:
 			map = player.get_parent_map()
 	
@@ -456,7 +456,7 @@ func _player_disconnected(id):
 	print('Goodbye player ' + str(id) + '.')
 	for player in player_list:
 		if player.get_id()['NetID'] == id:
-			CommBus.object_action_event(player.get_id(), {"Command Type": "Remove From Map"})
+			MultiplayerTestenv.get_server().object_action_event(player.get_id(), {"Command Type": "Remove From Map"})
 
 			player_list.erase(player)
 			player.queue_free()

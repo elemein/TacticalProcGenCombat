@@ -26,7 +26,7 @@ func fill_map():
 	var grid_data = map_data['Grid Data']
 	var map_grid = []
 	
-	CommBus.player_list = []
+	MultiplayerTestenv.get_server().players_dict = {}
 
 	print('Unpacking map.')
 	
@@ -55,10 +55,9 @@ func fill_map():
 						MultiplayerTestenv.get_client().players_dict[object['NetID']] = new_object
 						
 						new_object.play_anim('idle')
-						CommBus.add_player_to_local_player_list(new_object)
 						
-						if not new_object in CommBus.player_list:
-							CommBus.player_list.append(new_object)
+						if not new_object in MultiplayerTestenv.get_server().players_dict.values():
+							MultiplayerTestenv.get_server().players_dict[new_object.get_id()['NetID']] = new_object
 						
 					_:
 						match object['CategoryType']:

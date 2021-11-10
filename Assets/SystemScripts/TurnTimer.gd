@@ -9,6 +9,8 @@ onready var turn_delay_timer = $TurnDelayTimer
 
 var rng = RandomNumberGenerator.new()
 
+export var type = 'legit timer'
+
 var map
 var turn_in_process = false
 var in_delay = false
@@ -99,7 +101,7 @@ func sort_actors_by_speed():
 func end_turn():
 	for actor in actors:
 		actor.end_turn()
-	CommBus.update_round_for_players_in_map(map)
+	MultiplayerTestenv.get_server().update_round_for_players_in_map(map)
 	turn_in_process = false
 	turn_counter += 1
 	map.print_map_grid()
@@ -110,7 +112,7 @@ func end_turn():
 		if actor.get_id()['CategoryType'] == 'Enemy':
 			actor.find_viewfield()
 			
-	CommBus.resolve_all_viewfields(map)
+	MultiplayerTestenv.get_server().resolve_all_viewfields(map)
 
 func _physics_process(_delta):
 	if turn_in_process:

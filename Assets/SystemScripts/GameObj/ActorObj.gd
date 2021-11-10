@@ -107,7 +107,7 @@ func process_turn():
 	elif proposed_action == 'idle': turn_anim_timer.set_wait_time(0.00001)
 	elif proposed_action == 'basic attack': 
 		turn_anim_timer.set_wait_time($Actions/Attacks/BasicAttack.anim_time)
-		CommBus.object_action_event(object_identity, {"Command Type": "Basic Attack", "Value": get_direction_facing()})
+		MultiplayerTestenv.get_server().object_action_event(object_identity, {"Command Type": "Basic Attack", "Value": get_direction_facing()})
 	elif proposed_action == 'fireball': turn_anim_timer.set_wait_time($Actions/Attacks/Fireball.anim_time)
 	elif proposed_action == 'self heal': turn_anim_timer.set_wait_time($Actions/SelfHeal.anim_time)
 	elif proposed_action == 'dash': turn_anim_timer.set_wait_time(0.6)
@@ -119,17 +119,17 @@ func process_turn():
 #		set_actor_dir(proposed_action.split(" ")[1])
 		if check_move_action(proposed_action) == true:
 			print([object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]}])
-			CommBus.object_action_event(object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]})
+			MultiplayerTestenv.get_server().object_action_event(object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]})
 	
 	elif proposed_action == 'idle': 
-		CommBus.object_action_event(object_identity, {"Command Type": "Idle"})
+		MultiplayerTestenv.get_server().object_action_event(object_identity, {"Command Type": "Idle"})
 	
 	elif proposed_action == 'fireball':
-		CommBus.object_action_event(object_identity, {"Command Type": "Fireball"})
+		MultiplayerTestenv.get_server().object_action_event(object_identity, {"Command Type": "Fireball"})
 	elif proposed_action == 'dash':
-		CommBus.object_action_event(object_identity, {"Command Type": "Dash"})
+		MultiplayerTestenv.get_server().object_action_event(object_identity, {"Command Type": "Dash"})
 	elif proposed_action == 'self heal':
-		CommBus.object_action_event(object_identity, {"Command Type": "Self Heal"})
+		MultiplayerTestenv.get_server().object_action_event(object_identity, {"Command Type": "Self Heal"})
 		
 	elif proposed_action == 'drop item':
 		drop_item(selected_item)
@@ -143,24 +143,24 @@ func process_turn():
 	in_turn = true
 	
 	# Send the state of the game to the player after every turn
-	for remote_player in CommBus.player_list:
+	for remote_player in MultiplayerTestenv.get_server().players_dict.values():
 		if remote_player.get_id()['NetID'] != 1:
-			CommBus.send_inventory_to_requester(remote_player.get_id())
+			MultiplayerTestenv.get_server().send_inventory_to_requester(remote_player.get_id())
 			MultiplayerTestenv.get_server().update_all_actor_stats(self)
 
 func turn_regen():
 	# Apply any regen effects
 	if object_identity['HP'] < object_identity['Max HP']:
-		CommBus.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": stat_dict['HP Regen']})
+		MultiplayerTestenv.get_server().update_actor_stat(object_identity, {"Stat": "HP", "Modifier": stat_dict['HP Regen']})
 		if object_identity['HP'] > object_identity['Max HP']:
 			var difference = object_identity['HP'] - object_identity['Max HP']
-			CommBus.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": -difference})
+			MultiplayerTestenv.get_server().update_actor_stat(object_identity, {"Stat": "HP", "Modifier": -difference})
 
 	if object_identity['MP'] < object_identity['Max MP']:
-		CommBus.update_actor_stat(object_identity, {"Stat": "MP", "Modifier": stat_dict['MP Regen']})
+		MultiplayerTestenv.get_server().update_actor_stat(object_identity, {"Stat": "MP", "Modifier": stat_dict['MP Regen']})
 		if object_identity['MP'] > object_identity['Max MP']:
 			var difference = object_identity['MP'] - object_identity['Max MP']
-			CommBus.update_actor_stat(object_identity, {"Stat": "MP", "Modifier": -difference})
+			MultiplayerTestenv.get_server().update_actor_stat(object_identity, {"Stat": "MP", "Modifier": -difference})
 
 func perform_action(action):
 	match action['Command Type']:
@@ -178,7 +178,7 @@ func end_turn():
 	ready_status = false
 	
 	# Send the state of the game to the player after round end
-	for remote_player in CommBus.player_list:
+	for remote_player in MultiplayerTestenv.get_server().players_dict.values():
 		MultiplayerTestenv.get_server().update_all_actor_stats(self)
 
 # View related functions.
@@ -218,12 +218,12 @@ func take_damage(damage_instance):
 		damage = floor(damage * damage_multiplier)
 		damage = floor(damage)
 		
-		CommBus.update_actor_stat(object_identity, {"Stat": "HP", "Modifier": -damage})
+		MultiplayerTestenv.get_server().update_actor_stat(object_identity, {"Stat": "HP", "Modifier": -damage})
 		
 		if is_crit: 
-			CommBus.actor_notif_event(object_identity, ("-" + str(damage)) + "!", 'crit damage')
+			MultiplayerTestenv.get_server().actor_notif_event(object_identity, ("-" + str(damage)) + "!", 'crit damage')
 		else: 
-			CommBus.actor_notif_event(object_identity, ("-" + str(damage)), 'damage')
+			MultiplayerTestenv.get_server().actor_notif_event(object_identity, ("-" + str(damage)), 'damage')
 		
 		print("%s has %s HP" % [self.get_id()['Identifier'], stat_dict['HP']])
 		
@@ -237,7 +237,7 @@ func take_damage(damage_instance):
 		emit_signal("status_bar_hp", stat_dict['HP'], stat_dict['Max HP'])
 
 		if stat_dict['HP'] <= 0:
-			CommBus.object_action_event(object_identity, {"Command Type": "Die"})
+			MultiplayerTestenv.get_server().object_action_event(object_identity, {"Command Type": "Die"})
 
 func die():
 	is_dead = true
@@ -257,7 +257,7 @@ func die():
 
 func move_to_death_screen():
 	if GlobalVars.get_self_netid() != 1:
-		CommBus.peer.disconnect_peer(1, true)
+		MultiplayerTestenv.get_server().peer.disconnect_peer(1, true)
 	get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
 
 func play_death_anim():

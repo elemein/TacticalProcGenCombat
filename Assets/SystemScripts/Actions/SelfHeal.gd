@@ -40,7 +40,7 @@ func use():
 	set_power()
 
 	if GlobalVars.peer_type == 'server':
-		CommBus.update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})
+		MultiplayerTestenv.get_server().update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})
 		heal_user()
 
 func _on_tween_complete(_tween_object, _tween_node_path):

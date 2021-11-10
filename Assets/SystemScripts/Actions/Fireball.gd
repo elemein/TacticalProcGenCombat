@@ -41,7 +41,7 @@ func use():
 	effect_tween.start()
 	
 	if GlobalVars.peer_type == 'server':
-		CommBus.update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})
+		MultiplayerTestenv.get_server().update_actor_stat(parent.get_id(), {"Stat": "MP", "Modifier": -spell_cost})
 		set_power()
 		do_damage(spell_final_power, damage_variance, parent)
 

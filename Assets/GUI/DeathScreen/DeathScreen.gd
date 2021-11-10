@@ -8,7 +8,6 @@ func _ready():
 	death_sounds.get_children()[randi() % num_audio_effects].play()
 	
 	# Reset server info
-	CommBus.player_list = []
 	GlobalVars.server_map_data = null
 	GlobalVars.set_self_obj(null)
 	GlobalVars.total_mapsets = []

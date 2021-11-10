@@ -14,7 +14,7 @@ func _ready():
 
 	MultiplayerTestenv.get_client().get_client_obj().name = 'Player1'
 
-	CommBus.create_server()
+#	CommBus.create_server()
 
 	Signals.emit_signal("world_loaded")
 	MultiplayerTestenv.get_client().set_client_state('ingame')
@@ -32,7 +32,7 @@ func create_server_player_and_spawn_to_map():
 	
 	GlobalVars.set_self_obj(server_player)
 	
-	CommBus.player_list.append(MultiplayerTestenv.get_client().get_client_obj())
+#	CommBus.player_list.append(MultiplayerTestenv.get_client().get_client_obj())
 	
 	MultiplayerTestenv.get_client().get_client_obj().find_and_render_viewfield()
 
@@ -51,9 +51,9 @@ func move_to_map(object, map):
 	map.print_map_grid()
 	
 	object.view_finder.clear_vision()
-	CommBus.resolve_all_viewfields(map)
+#	CommBus.resolve_all_viewfields(map)
 	
-	if object.get_id()['NetID'] != 1:
-		CommBus.move_client_to_map(object, map)
+	if object.get_id()['NetID'] != 1: pass
+#		CommBus.move_client_to_map(object, map)
 	
-	CommBus.object_action_event(object.get_id(), {"Command Type": "Spawn On Map"})
+#	CommBus.object_action_event(object.get_id(), {"Command Type": "Spawn On Map"})
