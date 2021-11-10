@@ -3,7 +3,6 @@ This script will be used to check for various code quality issues throughout the
 """
 
 import os
-import re
 
 
 class IssueChecker:
@@ -31,8 +30,8 @@ class IssueChecker:
                 if file[-3:] == '.gd':
                     self.current_file = f'{path}/{file}'
 
-                    self.check_setget()
-                    self.check_using_self()
+                    # self.check_setget()
+                    # self.check_using_self()
                     self.check_type_hinting()
                     self.check_sync_queue()
                 self.check_file_types()
@@ -66,6 +65,10 @@ class IssueChecker:
         """
         Verify that every variable definition uses type hinting
         """
+        with open(self.current_file, 'r') as my_file:
+            for line in my_file.readlines():
+                if line.strip()[:4] == 'var ' and ' :' not in line and '#ignore' not in line:
+                    self.issues['type_hinting'].append(f'{self.current_file}\t{line}')
 
     def check_sync_queue(self):
         """
