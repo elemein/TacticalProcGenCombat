@@ -30,8 +30,8 @@ class IssueChecker:
                 if file[-3:] == '.gd':
                     self.current_file = f'{path}/{file}'
 
-                    # self.check_setget()
-                    # self.check_using_self()
+                    self.check_setget()
+                    self.check_using_self()
                     self.check_type_hinting()
                     self.check_sync_queue()
                 self.check_file_types()
