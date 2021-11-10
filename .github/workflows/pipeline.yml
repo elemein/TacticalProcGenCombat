@@ -5,12 +5,12 @@ name: Code_Quality_Check
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-#  push:
-#    branches: [ '**' ]
-#    paths: [ '**.gd', '**.yml' ]
+  push:
+    branches: [ '**' ]
+    paths: [ '**.gd', '**.yml', '**.py' ]
   pull_request:
-    branches: [ main ]
-    paths: [ '**.gd', '**.yml' ]
+    branches: [ '**' ]
+    paths: [ '**.gd', '**.yml', '**.py' ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -26,26 +26,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      #       # Runs a single command using the runners shell
-#       - name: Run a one-line script
-#         run: echo 'Working directory pwd'
+      - uses: actions/setup-python@v2
+        with:
+            python-version: '3.10'
+            architecture: 'x64'
 
       # Runs a set of commands using the runners shell
-      - name: Check for Ignored Warnings
-        run: |
-          if [ -z "$(find . -name "*.gd" -exec grep -H "warning-ignore" {} \;)" ]; then
-            echo "No warnings ignored"
-          else
-            echo "::group::Warnings Found"
-            for line in $(find . -name "*.gd" -exec grep -nH "warning-ignore" {} \;); do
-              if [ $(cut -c 1 <<< "$line") = "." ]; then
-                printf "$line"
-              else
-                echo " " $line
-              fi
-            done
-            echo "::endgroup::"
-            exit 1
-          fi
+      - name: Code Quality Check
+        run: python .github/workflows/code_quality_check.py
         continue-on-error: false
