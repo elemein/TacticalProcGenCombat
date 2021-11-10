@@ -93,12 +93,13 @@ class IssueChecker:
             print('::endgroup::')
 
         if issues_present:
-            raise Exception(f'Failed to pass all code quality checks.\n'
-                            f'setget: {len(self.issues["setget"])}\n'
-                            f'using_self: {len(self.issues["using_self"])}\n'
-                            f'type_hinting: {len(self.issues["type_hinting"])}\n'
-                            f'sync_queue: {len(self.issues["sync_queue"])}\n'
-                            f'file_types: {len(self.issues["file_types"])}\n')
+            print(f'Failed to pass all code quality checks.\n'
+                  f'setget: {len(self.issues["setget"])}\n'
+                  f'using_self: {len(self.issues["using_self"])}\n'
+                  f'type_hinting: {len(self.issues["type_hinting"])}\n'
+                  f'sync_queue: {len(self.issues["sync_queue"])}\n'
+                  f'file_types: {len(self.issues["file_types"])}\n')
+            raise Exception
 
 
 if __name__ == '__main__':
