@@ -29,51 +29,51 @@ func set_info(ability_name):
 	name = ability_name
 	match name:
 		'BasicAttackAbility':
-			icon_path = icon_path_beg + 'Basic_Attack' + icon_path_end
-			base_spell_cost = actions.find_node('BasicAttack').spell_cost
-			base_spell_power = actions.find_node('BasicAttack').attack_power
-			spell_description = actions.find_node('BasicAttack').spell_description
-			spell_button = 'Space'
-			uses_attack_power = true
+			self.icon_path = self.icon_path_beg + 'Basic_Attack' + self.icon_path_end
+			self.base_spell_cost = self.actions.find_node('BasicAttack').spell_cost
+			self.base_spell_power = self.actions.find_node('BasicAttack').attack_power
+			self.spell_description = self.actions.find_node('BasicAttack').spell_description
+			self.spell_button = 'Space'
+			self.uses_attack_power = true
 		'FireballAbility':
-			icon_path = icon_path_beg + 'Fireball' + icon_path_end
-			base_spell_cost = actions.find_node('Fireball').spell_cost
-			base_spell_power = actions.find_node('Fireball').spell_power
-			spell_description = actions.find_node('Fireball').spell_description
-			spell_button = 'E'
+			self.icon_path = self.icon_path_beg + 'Fireball' + self.icon_path_end
+			self.base_spell_cost = self.actions.find_node('Fireball').spell_cost
+			self.base_spell_power = self.actions.find_node('Fireball').spell_power
+			self.spell_description = self.actions.find_node('Fireball').spell_description
+			self.spell_button = 'E'
 		'DashAbility':
-			icon_path = icon_path_beg + 'Dash' + icon_path_end
-			base_spell_cost = actions.find_node('Dash').spell_cost
-			base_spell_power = actions.find_node('Dash').spell_power
-			spell_description = actions.find_node('Dash').spell_description
-			spell_button = 'R'
-			uses_any_power = false
+			self.icon_path = self.icon_path_beg + 'Dash' + self.icon_path_end
+			self.base_spell_cost = self.actions.find_node('Dash').spell_cost
+			self.base_spell_power = self.actions.find_node('Dash').spell_power
+			self.spell_description = self.actions.find_node('Dash').spell_description
+			self.spell_button = 'R'
+			self.uses_any_power = false
 		'SelfHealAbility':
-			icon_path = icon_path_beg + 'Self_Heal' + icon_path_end
-			base_spell_cost = actions.find_node('SelfHeal').spell_cost
-			base_spell_power = actions.find_node('SelfHeal').spell_power
-			spell_description = actions.find_node('SelfHeal').spell_description
-			spell_button = 'T'
+			self.icon_path = self.icon_path_beg + 'Self_Heal' + self.icon_path_end
+			self.base_spell_cost = self.actions.find_node('SelfHeal').spell_cost
+			self.base_spell_power = self.actions.find_node('SelfHeal').spell_power
+			self.spell_description = self.actions.find_node('SelfHeal').spell_description
+			self.spell_button = 'T'
 			
-	if icon_path != null:
-		icon.texture = load(icon_path)
+	if self.icon_path != null:
+		self.icon.texture = load(self.icon_path)
 		
-	button.text = spell_button
-	cost.text = str(base_spell_cost + spell_cost)
-	power.text = str(base_spell_power + spell_power)
+	self.button.text = self.spell_button
+	self.cost.text = str(self.base_spell_cost + self.spell_cost)
+	self.power.text = str(self.base_spell_power + self.spell_power)
 	
 func update_attack_power(val):
-	if not uses_any_power:
-		power.text = '-'
+	if not self.uses_any_power:
+		self.cost.text = '-'
 		return
-	if uses_attack_power:
-		spell_power = val
-		power.text = str(base_spell_power + spell_power)
+	if self.uses_attack_power:
+		self.spell_power = val
+		self.cost.text = str(self.base_spell_power + self.spell_power)
 
 func update_spell_power(val):
-	if not uses_any_power:
-		power.text = '-'
+	if not self.uses_any_power:
+		self.cost.text = '-'
 		return
-	if not uses_attack_power:
-		spell_power = val
-		power.text = str(base_spell_power + spell_power)
+	if not self.uses_attack_power:
+		self.spell_power = val
+		self.cost.text = str(self.base_spell_power + self.spell_power)

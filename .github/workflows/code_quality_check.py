@@ -65,28 +65,32 @@ class IssueChecker:
         with open(self.current_file, 'r') as my_file:
             file_contents = my_file.readlines()
         for orig_line in file_contents:
-            if orig_line[:4] == 'var ' and '#ignore' not in orig_line \
-                    or orig_line[:12] == 'onready var ' and '#ignore' not in orig_line:
-                if orig_line[:3] == 'var':
-                    var_name = orig_line.split()[1]
-                else:
-                    var_name = orig_line.split()[2]
-                # if var_name != 'icon_path':
-                #     continue
+            if '#ignore' not in orig_line:
+                if orig_line[:4] == 'var ' or orig_line[:12] == 'onready var ' or orig_line[:11] == 'export var ' \
+                        or orig_line[:8] == 'export (' or orig_line[:7] == 'export(':
+                    if orig_line[:3] == 'var':
+                        var_name = orig_line.split()[1]
+                    elif orig_line[:8] == 'export (':
+                        var_name = orig_line.split()[3]
+                    else:
+                        var_name = orig_line.split()[2]
+                    # if var_name != 'icon_path':
+                    #     continue
 
-                # Check if the variable was using without referencing it with self.
-                for reference_line in file_contents:
-                    if reference_line != orig_line and var_name in reference_line \
-                            and 'self.' != reference_line[:reference_line.find(var_name)][-5:] \
-                            and reference_line[:reference_line.find(var_name)][-1:] not in string.ascii_letters \
-                            and reference_line[:reference_line.find(var_name)][-1:] not in ['_', '.', "'"] \
-                            and reference_line[reference_line.find(var_name) + len(var_name):][0] not in string.ascii_letters \
-                            and reference_line[reference_line.find(var_name) + len(var_name):][0] not in ['_', "'"]:
-                        self.issues['using_self'].append(f'{self.current_file}\t'
-                                                         f'var: {Colour.red}{var_name}{Colour.reset}\t'
-                                                         f'{reference_line[:reference_line.find(var_name)]}'
-                                                         f'{Colour.red}{var_name}{Colour.reset}'
-                                                         f'{reference_line[reference_line.find(var_name) + len(var_name):]}')
+                    # Check if the variable was using without referencing it with self.
+                    for reference_line in file_contents:
+                        if reference_line != orig_line and var_name in reference_line \
+                                and 'self.' != reference_line[:reference_line.find(var_name)][-5:] \
+                                and reference_line[:reference_line.find(var_name)][-1:] not in string.ascii_letters \
+                                and reference_line[:reference_line.find(var_name)][-1:] not in ['_', '.', "'"] \
+                                and reference_line[reference_line.find(var_name) + len(var_name):][0] not in string.ascii_letters \
+                                and reference_line[reference_line.find(var_name) + len(var_name):][0] not in ['_', "'"] \
+                                and reference_line.strip()[0] != '#':
+                            self.issues['using_self'].append(f'{self.current_file}\t'
+                                                             f'var: {Colour.red}{var_name}{Colour.reset}\t'
+                                                             f'{reference_line[:reference_line.find(var_name)]}'
+                                                             f'{Colour.red}{var_name}{Colour.reset}'
+                                                             f'{reference_line[reference_line.find(var_name) + len(var_name):]}')
 
     def check_type_hinting(self):
         """

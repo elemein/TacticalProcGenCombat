@@ -28,14 +28,14 @@ func _ready():
 		self.queue_free()
 	else:
 		yield(Signals, "world_loaded")
-		player = GlobalVars.get_self_obj()
+		self.player = GlobalVars.get_self_obj()
 
-		var map_grid = player.get_parent_map().map_grid
+		var map_grid = self.player.get_parent_map().map_grid
 		for row_cnt in range(map_grid.size()):
 			var row = []
 			for _tile_cnt in range(map_grid[row_cnt].size()):
-				var new_tile = base_tile.duplicate()
-				grid.add_child(new_tile)
+				var new_tile = self.base_tile.duplicate()
+				self.grid.add_child(new_tile)
 				new_tile.show()
 				row.append(new_tile)
 			self.markers.append(row)
@@ -49,33 +49,33 @@ func _process(_delta):
 	var map_grid = GlobalVars.get_self_obj().get_parent_map().map_grid
 	for row_cnt in range(map_grid.size()):
 		for tile_cnt in range(map_grid[row_cnt].size()):
-			var minimap_icon = blank_icon
+			var minimap_icon = self.blank_icon
 			var tile = self.markers[abs(map_grid.size() - row_cnt) - 1][tile_cnt]
 			for thing in map_grid[row_cnt][tile_cnt]:
 				match thing.get_id()['CategoryType']:
 					"Player":
 						if thing.get_id()['NetID'] == GlobalVars.get_self_netid():
-							minimap_icon = player_icon
+							minimap_icon = self.player_icon
 						else:
-							minimap_icon = co_op_player
+							minimap_icon = self.co_op_player
 						break
 					"Enemy":
 						if thing.visible:
 							match thing.get_id()['Identifier']:
 								"Imp":
-									minimap_icon = imp_icon
+									minimap_icon = self.imp_icon
 								"Fox":
-									minimap_icon = fox_icon
+									minimap_icon = self.fox_icon
 								"Minotaur":
-									minimap_icon = minotaur_icon
+									minimap_icon = self.minotaur_icon
 						elif thing.was_visible and not thing.is_dead:
-							minimap_icon = seen_icon
+							minimap_icon = self.seen_icon
 					"Ground":
-						if minimap_icon == blank_icon \
+						if minimap_icon == self.blank_icon \
 								and thing.was_visible \
 								or thing.visible:
 							match thing.get_id()['Identifier']:
 								"BaseGround":
-									minimap_icon = tile_icon
+									minimap_icon = self.tile_icon
 			tile.texture = minimap_icon
 

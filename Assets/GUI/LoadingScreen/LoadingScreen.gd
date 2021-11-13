@@ -6,7 +6,7 @@ onready var tween = get_node("Tween")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	tween.interpolate_property(background, "modulate", 
+	self.tween.interpolate_property(self.background, "modulate", 
 	  Color(1, 1, 1, 0), Color(1, 1, 1, 1), 1.0, 
 	  Tween.TRANS_LINEAR, Tween.EASE_IN)
-	tween.start()
+	self.tween.start()

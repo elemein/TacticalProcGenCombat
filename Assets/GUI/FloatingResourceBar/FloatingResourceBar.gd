@@ -9,10 +9,10 @@ func _ready():
 	texture = $Viewport.get_texture()
 
 func _on_status_bar_hp(hp, max_hp):
-	health_bar.value = hp
-	health_bar.max_value = max_hp
+	self.health_bar.value = hp
+	self.health_bar.max_value = max_hp
 
 
 func _on_status_bar_mp(mp, max_mp):
-	mana_bar.value = mp
-	mana_bar.max_value = max_mp
+	self.mana_bar.value = mp
+	self.mana_bar.max_value = max_mp
