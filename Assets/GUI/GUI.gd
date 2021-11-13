@@ -21,30 +21,30 @@ func set_action(proposed_action):
 	
 	match proposed_action:
 		'move':
-			action_holder.set_texture(movement_arrow)
+			self.action_holder.set_texture(self.movement_arrow)
 			match direction:
-				'upleft': action_holder.rotation_degrees = 180 + 45
-				'upright': action_holder.rotation_degrees = 180 + 90 + 45
-				'downleft': action_holder.rotation_degrees = 90 + 45
-				'downright': action_holder.rotation_degrees = 45	
+				'upleft': self.action_holder.rotation_degrees = 180 + 45
+				'upright': self.action_holder.rotation_degrees = 180 + 90 + 45
+				'downleft': self.action_holder.rotation_degrees = 90 + 45
+				'downright': self.action_holder.rotation_degrees = 45	
 				
-				'up': action_holder.rotation_degrees = -90
-				'down': action_holder.rotation_degrees = 90
-				'left': action_holder.rotation_degrees = 180
-				'right': action_holder.rotation_degrees = 0
+				'up': self.action_holder.rotation_degrees = -90
+				'down': self.action_holder.rotation_degrees = 90
+				'left': self.action_holder.rotation_degrees = 180
+				'right': self.action_holder.rotation_degrees = 0
 	
-		'basic attack': set_texture_unrotated(basic_attack)
-		'fireball': set_texture_unrotated(fireball)
-		'dash': set_texture_unrotated(dash)
-		'self heal': set_texture_unrotated(self_heal)
-		'drop item': set_texture_unrotated(drop_item)
-		'equip item': set_texture_unrotated(equip_item)
-		'unequip item': set_texture_unrotated(unequip_item)
+		'basic attack': set_texture_unrotated(self.basic_attack)
+		'fireball': set_texture_unrotated(self.fireball)
+		'dash': set_texture_unrotated(self.dash)
+		'self heal': set_texture_unrotated(self.self_heal)
+		'drop item': set_texture_unrotated(self.drop_item)
+		'equip item': set_texture_unrotated(self.equip_item)
+		'unequip item': set_texture_unrotated(self.unequip_item)
 
 func set_texture_unrotated(action):
-	action_holder.rotation_degrees = 0
-	action_holder.set_texture(action)
+	self.action_holder.rotation_degrees = 0
+	self.action_holder.set_texture(action)
 
 func clear_action():
-	action_holder.rotation_degrees = 0
-	action_holder.set_texture(blank_action)
+	self.action_holder.rotation_degrees = 0
+	self.action_holder.set_texture(self.blank_action)

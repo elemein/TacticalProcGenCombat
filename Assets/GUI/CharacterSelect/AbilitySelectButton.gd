@@ -20,35 +20,35 @@ var ability_names = {'BasicAttackAbility': 'BasicAttack',
 
 
 func _ready():
-	ability_description = ability_description.find_node('AbilityDescription')
+	self.ability_description = self.ability_description.find_node('AbilityDescription')
 	match name:
 		'BasicAttackAbility':
-			icon_path = icon_path_beg + 'Basic_Attack' + icon_path_end
+			self.icon_path = self.icon_path_beg + 'Basic_Attack' + self.icon_path_end
 		'FireballAbility':
-			icon_path = icon_path_beg + 'Fireball' + icon_path_end
+			self.icon_path = self.icon_path_beg + 'Fireball' + self.icon_path_end
 		'DashAbility':
-			icon_path = icon_path_beg + 'Dash' + icon_path_end
+			self.icon_path = self.icon_path_beg + 'Dash' + self.icon_path_end
 		'SelfHealAbility':
-			icon_path = icon_path_beg + 'Self_Heal' + icon_path_end
+			self.icon_path = self.icon_path_beg + 'Self_Heal' + self.icon_path_end
 			
-	if icon_path != null:
-		texture_normal = load(icon_path)
+	if self.icon_path != null:
+		texture_normal = load(self.icon_path)
 
 func set_disabled(disabled_status):
 	if not disabled_status:
 		disabled = false
-		disabled_border.visible = false
+		self.disabled_border.visible = false
 	else:
 		disabled = true
-		disabled_border.visible = true
+		self.disabled_border.visible = true
 
 func _on_TextureButton_mouse_entered():
 	if not is_pressed() and not disabled:
-		hovered_border.visible = true
-	ability_description.text = actions.find_node(ability_names[name]).spell_description
+		self.hovered_border.visible = true
+	self.ability_description.text = self.actions.find_node(self.ability_names[name]).spell_description
 
 func _on_TextureButton_mouse_exited():
-	hovered_border.visible = false
+	self.hovered_border.visible = false
 
 func _on_TextureButton_pressed():
-	locked_in_border.visible = not locked_in_border.visible
+	self.locked_in_border.visible = not self.locked_in_border.visible

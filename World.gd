@@ -3,7 +3,7 @@ extends Node
 var map_name = 'The Cave'
 
 const MAPSET_CLASS = preload("res://Assets/SystemScripts/Mapset.gd")
-var dungeon = MAPSET_CLASS.new(map_name, 3)
+var dungeon = MAPSET_CLASS.new(self.map_name, 3)
 
 var mapsets = []
 
@@ -37,10 +37,10 @@ func create_server_player_and_spawn_to_map():
 	GlobalVars.get_self_obj().find_and_render_viewfield()
 
 func catalog_dungeon_to_server():
-	add_child(dungeon)
-	mapsets = [dungeon]
+	add_child(self.dungeon)
+	self.mapsets = [self.dungeon]
 	
-	for mapset in mapsets:
+	for mapset in self.mapsets:
 		GlobalVars.total_mapsets.append(mapset)
 		for level in mapset.floors:
 			GlobalVars.total_maps.append(mapset.floors[level])

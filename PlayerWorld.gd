@@ -11,13 +11,13 @@ func _ready():
 
 func load_new_map():
 	GlobalVars.clear_maps()
-	map_set.name = GlobalVars.server_map_data['Parent Mapset Name']
-	var unpacked_map = map_unpacker.unpack_map(GlobalVars.server_map_data)
+	self.map_set.name = GlobalVars.server_map_data['Parent Mapset Name']
+	var unpacked_map = self.map_unpacker.unpack_map(GlobalVars.server_map_data)
 
-	add_child(map_set)
-	GlobalVars.total_mapsets.append(map_set)
-	map_set.add_map_to_mapset(unpacked_map)
-	map_set.organize_child_map_nodes()
+	add_child(self.map_set)
+	GlobalVars.total_mapsets.append(self.map_set)
+	self.map_set.add_map_to_mapset(unpacked_map)
+	self.map_set.organize_child_map_nodes()
 	
 	GlobalVars.get_self_obj().find_and_render_viewfield()
 	

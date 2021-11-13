@@ -38,7 +38,7 @@ func _ready():
 				grid.add_child(new_tile)
 				new_tile.show()
 				row.append(new_tile)
-			markers.append(row)
+			self.markers.append(row)
 			
 func _process(_delta):
 	if GlobalVars.get_client_state() == 'loading' \
@@ -50,7 +50,7 @@ func _process(_delta):
 	for row_cnt in range(map_grid.size()):
 		for tile_cnt in range(map_grid[row_cnt].size()):
 			var minimap_icon = blank_icon
-			var tile = markers[abs(map_grid.size() - row_cnt) - 1][tile_cnt]
+			var tile = self.markers[abs(map_grid.size() - row_cnt) - 1][tile_cnt]
 			for thing in map_grid[row_cnt][tile_cnt]:
 				match thing.get_id()['CategoryType']:
 					"Player":
