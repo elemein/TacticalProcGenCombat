@@ -40,11 +40,11 @@ class IssueChecker:
                 if file[-3:] == '.gd':
                     self.current_file = f'{path}/{file}'
 
-                    # self.check_setget()
+                    self.check_setget()
                     self.check_using_self()
-                    # self.check_type_hinting()
-                    # self.check_sync_queue()
-                # self.check_file_types()
+                    self.check_type_hinting()
+                    self.check_sync_queue()
+                self.check_file_types()
         self.print()
 
     def check_setget(self):
@@ -119,14 +119,14 @@ class IssueChecker:
                 issues_present = True
             print('::endgroup::')
 
-        # if issues_present:
-        #     print(f'Failed to pass all code quality checks.\n'
-        #           f'setget: {len(self.issues["setget"])}\n'
-        #           f'using_self: {len(self.issues["using_self"])}\n'
-        #           f'type_hinting: {len(self.issues["type_hinting"])}\n'
-        #           f'sync_queue: {len(self.issues["sync_queue"])}\n'
-        #           f'file_types: {len(self.issues["file_types"])}\n')
-        #     raise Exception
+        if issues_present:
+            print(f'Failed to pass all code quality checks.\n'
+                  f'setget: {len(self.issues["setget"])}\n'
+                  f'using_self: {len(self.issues["using_self"])}\n'
+                  f'type_hinting: {len(self.issues["type_hinting"])}\n'
+                  f'sync_queue: {len(self.issues["sync_queue"])}\n'
+                  f'file_types: {len(self.issues["file_types"])}\n')
+            raise Exception
 
 
 if __name__ == '__main__':
