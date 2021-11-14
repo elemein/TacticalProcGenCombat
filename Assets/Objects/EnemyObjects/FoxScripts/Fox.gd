@@ -10,9 +10,9 @@ var start_stats = {"Max HP" : 130, "HP" : 130, "Max MP": 0, "MP": 0, \
 var minimap_icon = 'Fox'
 
 var identity = {"Category": "Actor", "CategoryType": "Enemy", 
-				"Identifier": "Fox", "Max HP": start_stats['Max HP'],
-				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
-				'MP': start_stats['MP'], 'Map ID': null, 'Position': [0,0] ,
+				"Identifier": "Fox", "Max HP": self.start_stats['Max HP'],
+				'HP': self.start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
+				'MP': self.start_stats['MP'], 'Map ID': null, 'Position': [0,0] ,
 				'Facing': 'right', 'Instance ID': get_instance_id()}
 
 var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \

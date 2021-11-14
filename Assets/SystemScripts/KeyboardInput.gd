@@ -9,13 +9,13 @@ var directional_timer = Timer.new()
 var input_smoothing_timer = Timer.new()
 
 func _ready():
-	directional_timer.set_one_shot(true)
-	directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
-	add_child(directional_timer)
+	self.directional_timer.set_one_shot(true)
+	self.directional_timer.set_wait_time(DIRECTION_SELECT_TIME)
+	add_child(self.directional_timer)
 
-	input_smoothing_timer.set_one_shot(true)
-	input_smoothing_timer.set_wait_time(DIAGONAL_INPUT_SMOOTHING_TIME)
-	add_child(input_smoothing_timer)
+	self.input_smoothing_timer.set_one_shot(true)
+	self.input_smoothing_timer.set_wait_time(DIAGONAL_INPUT_SMOOTHING_TIME)
+	add_child(self.input_smoothing_timer)
 
 func _physics_process(_delta):
 	if GlobalVars.get_self_obj().get_is_dead() == false and \
@@ -34,7 +34,7 @@ func smooth_input():
 	
 	if dir_char != '':
 		if(Input.is_action_just_pressed(dir_char)):
-			directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
+			self.directional_timer.start(INPUT_CONFIRMATION_SMOOTHING_TIME)
 
 func count_inputs():
 	var no_of_inputs = 0
@@ -52,48 +52,48 @@ func get_possible_direction(no_of_inputs):
 	var character = GlobalVars.get_self_obj()
 	var direction_facing = character.get_direction_facing()
 	
-	if input_smoothing_timer.time_left == 0:
+	if self.input_smoothing_timer.time_left == 0:
 		if no_of_inputs > 1:
 			if (Input.is_action_pressed("w") && Input.is_action_pressed("a") 
 				&& direction_facing != 'upleft'):
 				Server.request_for_player_action({"Command Type": "Look", "Value": "upleft"})
-				directional_timer.start(DIRECTION_SELECT_TIME)
-				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
+				self.directional_timer.start(DIRECTION_SELECT_TIME)
+				self.input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 			if (Input.is_action_pressed("w") && Input.is_action_pressed("d") 
 				&& direction_facing != 'upright'): 
 				Server.request_for_player_action({"Command Type": "Look", "Value": "upright"})
-				directional_timer.start(DIRECTION_SELECT_TIME)
-				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
+				self.directional_timer.start(DIRECTION_SELECT_TIME)
+				self.input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 			if (Input.is_action_pressed("s") && Input.is_action_pressed("a") 
 				&& direction_facing != 'downleft'): 
 				Server.request_for_player_action({"Command Type": "Look", "Value": "downleft"})
-				directional_timer.start(DIRECTION_SELECT_TIME)
-				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
+				self.directional_timer.start(DIRECTION_SELECT_TIME)
+				self.input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 			if (Input.is_action_pressed("s") && Input.is_action_pressed("d") 
 				&& direction_facing != 'downright'): 
 				Server.request_for_player_action({"Command Type": "Look", "Value": "downright"})
-				directional_timer.start(DIRECTION_SELECT_TIME)
-				input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
+				self.directional_timer.start(DIRECTION_SELECT_TIME)
+				self.input_smoothing_timer.start(DIAGONAL_INPUT_SMOOTHING_TIME)
 		
 		if no_of_inputs == 1:
 			if Input.is_action_pressed("w") && direction_facing != 'up': 
 				Server.request_for_player_action({"Command Type": "Look", "Value": "up"})
-				directional_timer.start(DIRECTION_SELECT_TIME)
+				self.directional_timer.start(DIRECTION_SELECT_TIME)
 			if Input.is_action_pressed("s") && direction_facing != 'down': 
 				Server.request_for_player_action({"Command Type": "Look", "Value": "down"})
-				directional_timer.start(DIRECTION_SELECT_TIME)
+				self.directional_timer.start(DIRECTION_SELECT_TIME)
 			if Input.is_action_pressed("a") && direction_facing != 'left': 
 				Server.request_for_player_action({"Command Type": "Look", "Value": "left"})
-				directional_timer.start(DIRECTION_SELECT_TIME)
+				self.directional_timer.start(DIRECTION_SELECT_TIME)
 			if Input.is_action_pressed("d") && direction_facing != 'right': 
 				Server.request_for_player_action({"Command Type": "Look", "Value": "right"})
-				directional_timer.start(DIRECTION_SELECT_TIME)
+				self.directional_timer.start(DIRECTION_SELECT_TIME)
 
 func confirm_direction(no_of_inputs):
 	var character = GlobalVars.get_self_obj()
 	var direction_facing = character.get_direction_facing()
 	
-	if directional_timer.time_left == 0 and input_smoothing_timer.time_left == 0:
+	if self.directional_timer.time_left == 0 and self.input_smoothing_timer.time_left == 0:
 		if no_of_inputs > 1:
 			if Input.is_action_pressed("w") && Input.is_action_pressed("a"): 
 				if character.check_move_action('move upleft'):

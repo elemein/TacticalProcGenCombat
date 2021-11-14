@@ -14,4 +14,4 @@ func _init().(identity, relation_rules): pass
 
 func _process(_delta):
 	if visible:
-		was_visible = true
+		self.was_visible = true

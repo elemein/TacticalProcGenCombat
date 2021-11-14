@@ -17,7 +17,7 @@ var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
 func _init(identity).(identity, relation_rules): pass
 
 func get_gold_value():
-	return value
+	return self.value
 
 func get_usable(): return object_identity['Usable']
 
@@ -31,7 +31,7 @@ func collect_item(tile_objects):
 	for object in tile_objects:
 		if object.get_id()['CategoryType'] == 'Player':
 			if len(object.inventory) < 8:
-				item_owner = object
+				self.item_owner = object
 				object.inventory[self] = {'equipped': false, 'description': self.get_id()['Identifier']}
 				Server.object_action_event(object_identity, {"Command Type": "Remove From Map"})
 			
@@ -40,27 +40,27 @@ func equip_item():
 		if self.get(stat_type):
 			match stat_type:
 				'spell_power_bonus':
-					item_owner.set_spell_power(item_owner.get_spell_power() + self.get(stat_type))
+					self.item_owner.set_spell_power(item_owner.get_spell_power() + self.get(stat_type))
 				'defense_bonus':
-					item_owner.set_defense(item_owner.get_defense() + self.get(stat_type))
+					self.item_owner.set_defense(item_owner.get_defense() + self.get(stat_type))
 				'attack_power_bonus':
-					item_owner.set_attack_power(item_owner.get_attack_power() + self.get(stat_type))
-	item_owner.inventory[self]['equipped'] = true
+					self.item_owner.set_attack_power(item_owner.get_attack_power() + self.get(stat_type))
+	self.item_owner.inventory[self]['equipped'] = true
 	
 func unequip_item():
 	for stat_type in ['spell_power_bonus', 'defense_bonus', 'attack_power_bonus']:
 		if self.get(stat_type):
 			match stat_type:
 				'spell_power_bonus':
-					item_owner.set_spell_power(item_owner.get_spell_power() - self.get(stat_type))
+					self.item_owner.set_spell_power(item_owner.get_spell_power() - self.get(stat_type))
 				'defense_bonus':
-					item_owner.set_defense(item_owner.get_defense() - self.get(stat_type))
+					self.item_owner.set_defense(item_owner.get_defense() - self.get(stat_type))
 				'attack_power_bonus':
-					item_owner.set_attack_power(item_owner.get_attack_power() - self.get(stat_type))
-	item_owner.inventory[self]['equipped'] = false
+					self.item_owner.set_attack_power(item_owner.get_attack_power() - self.get(stat_type))
+	self.item_owner.inventory[self]['equipped'] = false
 	
 func drop_item():
 	unequip_item()
-	item_owner.get_parent_map().add_map_object(self, item_owner.get_map_pos())
-	item_owner.inventory.erase(self)
+	self.item_owner.get_parent_map().add_map_object(self, item_owner.get_map_pos())
+	self.item_owner.inventory.erase(self)
 	Server.object_action_event(object_identity, {"Command Type": "Spawn On Map"})

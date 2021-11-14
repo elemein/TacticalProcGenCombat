@@ -8,9 +8,9 @@ var start_stats = {"Max HP" : 100, "HP" : 100, "Max MP": 100, "MP": 100, \
 var minimap_icon = "Player"
 
 var identity = {'Category': 'Actor', 'CategoryType': 'Player', 
-				'Identifier': 'PlagueDoc', "Max HP": start_stats['Max HP'],
-				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
-				'MP': start_stats['MP'], 'Facing': null, 'Map ID': null, 
+				'Identifier': 'PlagueDoc', "Max HP": self.start_stats['Max HP'],
+				'HP': self.start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
+				'MP': self.start_stats['MP'], 'Facing': null, 'Map ID': null, 
 				'Position': [0,0], 'NetID': null, 'Instance ID': get_instance_id()}
 
 var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \

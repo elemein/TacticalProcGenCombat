@@ -15,18 +15,18 @@ var server_port = 7369
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	option_buttons = quit_buttons.instance()
-	for button in option_buttons.get_children():
+	self.option_buttons = self.quit_buttons.instance()
+	for button in self.option_buttons.get_children():
 		button = button as Button
 		button.connect("pressed", self, 'remove_buttons')
-	self.add_child(option_buttons)
-	option_buttons.visible = false
+	self.add_child(self.option_buttons)
+	self.option_buttons.visible = false
 
 func connect_to_server():
 	GlobalVars.set_client_state('loading')
 	GlobalVars.peer_type = 'client'
 	var peer = NetworkedMultiplayerENet.new()
-	peer.create_client(server_ip, server_port)
+	peer.create_client(self.server_ip, self.server_port)
 	get_tree().network_peer = peer
 	get_tree().connect("connected_to_server", self, "_connected_ok")
 	get_tree().connect("connection_failed", self, "_connected_fail")
@@ -46,10 +46,10 @@ func _connected_fail():
 func set_server_ip(target_ip): server_ip = target_ip
 
 func _disconnected():
-	option_buttons.visible = true
+	self.option_buttons.visible = true
 	
 func remove_buttons():
-	option_buttons.visible = false
+	self.option_buttons.visible = false
 	
 	# Reset server info
 	Server.player_list = []

@@ -24,14 +24,14 @@ var current_number_of_enemies = 0
 
 func _init(name, id, type):
 	map_name = name
-	map_id = id
-	map_type = type
+	self.map_id = id
+	self.map_type = type
 
 func _ready():
 	map_server_id = get_instance_id()
-	rng.randomize()
-	turn_timer.set_map(self)
-	add_child(turn_timer)
+	self.rng.randomize()
+	self.turn_timer.set_map(self)
+	add_child(self.turn_timer)
 	
 	add_map_objects_to_tree()
 	
@@ -39,7 +39,7 @@ func _ready():
 
 func set_map_grid_and_dict(grid, dict):
 	map_grid = grid
-	rooms = dict
+	self.rooms = dict
 	
 func add_map_objects_to_tree():
 	for line in map_grid.size():
@@ -50,10 +50,10 @@ func add_map_objects_to_tree():
 				add_child(object)
 				if object.get_id()['CategoryType'] == 'Enemy':
 					object.setup_actor()
-					current_number_of_enemies += 1
+					self.current_number_of_enemies += 1
 
 func get_map_start_tile():
-	for room in rooms:
+	for room in self.rooms:
 		if room['type'] == 'Player Spawn':
 			return [room.center[0], room.center[1]]
 
@@ -96,10 +96,10 @@ func print_map_grid():
 func catalog_ground_tiles():
 	for x in range(0, map_grid.size()-1):
 		for z in range(0, map_grid[0].size()-1):
-			if tile_available(x,z): catalog_of_ground_tiles.append([x,z])
+			if tile_available(x,z): self.catalog_of_ground_tiles.append([x,z])
 
 func choose_random_ground_tile():
-	return catalog_of_ground_tiles[rng.randi_range(0, catalog_of_ground_tiles.size()-1)]
+	return self.catalog_of_ground_tiles[self.rng.randi_range(0, catalog_of_ground_tiles.size()-1)]
 
 func tile_available(x,z):
 	if tile_in_bounds(x,z): 
@@ -137,7 +137,7 @@ func add_map_object(object, tile):
 	organize_object(object)
 	
 	if object.get_id()['Category'] == 'Actor':
-		turn_timer.add_to_timer_group(object)
+		self.turn_timer.add_to_timer_group(object)
 
 # REMOVE FROM MAP FUNCS --------------------
 func remove_map_object(object):
@@ -147,7 +147,7 @@ func remove_map_object(object):
 	object.get_parent().remove_child(object)
 
 	if object.get_id()['Category'] == 'Actor':
-		turn_timer.remove_from_timer_group(object)
+		self.turn_timer.remove_from_timer_group(object)
 # -----------------------------------------
 
 func check_for_map_events():
@@ -157,7 +157,7 @@ func check_for_map_events():
 			relevant_player_list.append(player)
 	
 	# Check if rooms should lock:
-	for room in rooms:
+	for room in self.rooms:
 		room.check_if_locking(relevant_player_list)
 
 # Getters
@@ -173,9 +173,9 @@ func get_mapset_map_id() -> int: return map_id
 func set_parent_mapset(mapset): parent_mapset = mapset
 
 func log_enemy_death(dead_enemy): 
-	current_number_of_enemies -= 1
+	self.current_number_of_enemies -= 1
 	
-	for room in rooms:
+	for room in self.rooms:
 		var in_room = room.pos_in_room(dead_enemy.get_map_pos())
 		if in_room == true:
 			room.log_enemy_death(dead_enemy)
@@ -196,7 +196,7 @@ func return_map_grid_encoded_to_string():
 func return_rooms_encoded_to_dict():
 	var to_return = []
 	
-	for room in rooms:
+	for room in self.rooms:
 		var dict_to_add = {}
 		
 		dict_to_add['parent_map_id'] = room.parent_map.map_server_id

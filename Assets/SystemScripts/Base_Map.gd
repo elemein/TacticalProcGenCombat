@@ -7,7 +7,7 @@ var map_grid = []
 
 func remove_from_map_grid_but_keep_node(object):
 	var tile = object.get_map_pos()
-	map_grid[tile[0]][tile[1]].erase(object)
+	self.map_grid[tile[0]][tile[1]].erase(object)
 
 func remove_from_map_tree(object):
 	remove_child(object)
@@ -66,12 +66,12 @@ func organize_map_floor():
 	print('Map objects not categorized: ' + str(types))
 
 func tile_in_bounds(x,z):
-	return (x >= 0 && z >= 0 && x < map_grid.size() && z < map_grid[x].size())
+	return (x >= 0 && z >= 0 && x < self.map_grid.size() && z < map_grid[x].size())
 
 func get_tile_contents(x,z):
 	if !tile_in_bounds(x,z): return 'Out of Bounds'
 	
-	return map_grid[x][z]
+	return self.map_grid[x][z]
 
 func get_map_name() -> String: return map_name
 

@@ -26,22 +26,22 @@ func use():
 	set_target_actor_pos()
 	
 	# Move towards
-	effect_tween.connect("tween_completed", self, "_on_tween_complete")
-	effect_tween.interpolate_property(parent, "translation", saved_actor_pos, target_actor_pos, anim_time/2, Tween.TRANS_SINE, Tween.EASE_OUT)
+	self.effect_tween.connect("tween_completed", self, "_on_tween_complete")
+	self.effect_tween.interpolate_property(parent, "translation", saved_actor_pos, target_actor_pos, anim_time/2, Tween.TRANS_SINE, Tween.EASE_OUT)
 	
 	# Handles Anim
 	parent.play_anim('run')
-	effect_tween.interpolate_callback(parent, anim_time, "play_anim", 'idle')
+	self.effect_tween.interpolate_callback(parent, anim_time, "play_anim", 'idle')
 
-	effect_tween.start()
+	self.effect_tween.start()
 
 	if GlobalVars.peer_type == 'server':
 		parent.set_mp(parent.get_mp() - spell_cost)
 		set_attack_power()
-		do_damage(spell_final_attack_power, damage_variance, parent)
+		do_damage(spell_final_attack_power, self.damage_variance, parent)
 
 # Move back
 func _on_tween_complete(_tween_object, _tween_node_path):
-	effect_tween.disconnect("tween_completed", self, "_on_tween_complete")
-	effect_tween.interpolate_property(parent, "translation", target_actor_pos, saved_actor_pos, anim_time/2, Tween.TRANS_SINE, Tween.EASE_OUT)
-	effect_tween.start()
+	self.effect_tween.disconnect("tween_completed", self, "_on_tween_complete")
+	self.effect_tween.interpolate_property(parent, "translation", target_actor_pos, saved_actor_pos, anim_time/2, Tween.TRANS_SINE, Tween.EASE_OUT)
+	self.effect_tween.start()

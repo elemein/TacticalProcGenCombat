@@ -17,7 +17,7 @@ func _init().(identity, relation_rules): pass
 
 func _process(_delta):
 	if visible:
-		was_visible = true
+		self.was_visible = true
 
 func interact_w_object(tile_objects):
 	for object in tile_objects:
@@ -26,4 +26,4 @@ func interact_w_object(tile_objects):
 			var self_map_id = parent_map.get_mapset_map_id()
 			for key in parent_mapset.floors.keys():
 				if parent_mapset.floors[key].get_mapset_map_id() == (self_map_id + 1):
-					world.move_to_map(object, parent_mapset.floors[key])
+					self.world.move_to_map(object, parent_mapset.floors[key])

@@ -28,14 +28,14 @@ func use():
 	
 	set_target_spell_pos()
 	
-	effect_tween.connect("tween_completed", self, "_on_tween_complete")
-	effect_tween.interpolate_property(effect, "translation", effect.translation, target_spell_pos, anim_time, Tween.TRANS_SINE, Tween.EASE_OUT)
+	self.effect_tween.connect("tween_completed", self, "_on_tween_complete")
+	self.effect_tween.interpolate_property(effect, "translation", effect.translation, target_spell_pos, anim_time, Tween.TRANS_SINE, Tween.EASE_OUT)
 
 	# Handles Anim
 	parent.play_anim('run')
-	effect_tween.interpolate_callback(parent, anim_time, "play_anim", 'idle')
+	self.effect_tween.interpolate_callback(parent, anim_time, "play_anim", 'idle')
 
-	effect_tween.start()
+	self.effect_tween.start()
 	
 	set_power()
 
@@ -44,7 +44,7 @@ func use():
 		heal_user()
 
 func _on_tween_complete(_tween_object, _tween_node_path):
-	effect_tween.disconnect("tween_completed", self, "_on_tween_complete")
+	self.effect_tween.disconnect("tween_completed", self, "_on_tween_complete")
 	get_node(spell_name).queue_free()
 	remove_child(get_node(spell_name))
 	effect = null

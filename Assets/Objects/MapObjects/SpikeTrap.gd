@@ -21,12 +21,12 @@ func _ready():
 func activate_trap(tile_objects):
 	for object in tile_objects:
 		if object.get_id()['CategoryType'] == 'Player':
-			if sprung == false: # only spring if not already sprung
+			if self.sprung == false: # only spring if not already sprung
 				Server.object_action_event(object_identity, {"Command Type": "Spawn On Map"})
-				sprung = true
+				self.sprung = true
 				visible = true
 				
-				var damage_instance = {"Amount": trap_damage, "Crit": false, \
+				var damage_instance = {"Amount": self.trap_damage, "Crit": false, \
 										"Attacker": self}
 				
 				object.take_damage(damage_instance)

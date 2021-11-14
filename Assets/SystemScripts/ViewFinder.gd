@@ -18,30 +18,30 @@ var visible_tiles = []
 var objs_visible_to_player_last_turn = []
 
 func set_actor(setter):
-	actor = setter
+	self.actor = setter
 
 func reset_vars():
-	vision_boundaries = []
-	visible_tiles = []
-	view_range = actor.get_viewrange()
+	self.vision_boundaries = []
+	self.visible_tiles = []
+	self.view_range = self.actor.get_viewrange()
 
 func find_view_field(x, z):
 	reset_vars()
 	
-	pos_x = x
-	pos_z = z
-	pos = [x, z]
+	self.pos_x = x
+	self.pos_z = z
+	self.pos = [x, z]
 	
 	form_vision_boundaries()
 
-	for endpoint in vision_boundaries:
-		var tiles_to_add = draw_line([pos_x, pos_z], endpoint)
+	for endpoint in self.vision_boundaries:
+		var tiles_to_add = draw_line([self.pos_x, self.pos_z], endpoint)
 		
 		for tile in tiles_to_add:
-			if (tile in visible_tiles) == false:
-				visible_tiles.append(tile)
+			if (tile in self.visible_tiles) == false:
+				self.visible_tiles.append(tile)
 
-	return visible_tiles
+	return self.visible_tiles
 
 func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - SS
 	# delta = change of
@@ -55,12 +55,12 @@ func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - S
 	while true:
 		points.append([p0[0], p0[1]]) # Adds tile to line.
 		
-		if actor.parent_map.tile_blocks_vision(p0[0], p0[1]) == true: break
+		if self.actor.parent_map.tile_blocks_vision(p0[0], p0[1]) == true: break
 		if p0[0] == p1[0] and p0[1] == p1[1]: break
 		
 		# Seeing through corner wall fix
-		if actor.parent_map.tile_blocks_vision(p0[0] + next_x, p0[1]) and actor.parent_map.tile_blocks_vision(p0[0], p0[1] + next_y): 
-			if !(actor.parent_map.tile_blocks_vision(p0[0] + next_x, p0[1] + next_y)): 
+		if self.actor.parent_map.tile_blocks_vision(p0[0] + next_x, p0[1]) and actor.parent_map.tile_blocks_vision(p0[0], p0[1] + next_y): 
+			if !(self.actor.parent_map.tile_blocks_vision(p0[0] + next_x, p0[1] + next_y)): 
 				points.append([p0[0] + next_x, p0[1]]) # Without manually adding
 				points.append([p0[0], p0[1] + next_y]) # they sometimes dont show
 				break 
@@ -76,23 +76,23 @@ func draw_line(p0, p1): # I don't fully understand this. I hope to learn it. - S
 
 func form_vision_boundaries():
 	# top and bottom
-	for x in [-view_range, view_range]:
-		for z in range(-view_range, view_range +1):
-			vision_boundaries.append([pos_x + x, pos_z + z])
+	for x in [-self.view_range, view_range]:
+		for z in range(-self.view_range, view_range +1):
+			self.vision_boundaries.append([self.pos_x + x, self.pos_z + z])
 	
 	# left and right
-	for z in [-view_range, view_range]:
-		for x in range(-view_range, view_range +1):
-			if ([pos_x + x, pos_z + z] in vision_boundaries) == false :
-				vision_boundaries.append([pos_x + x, pos_z + z])
+	for z in [-self.view_range, view_range]:
+		for x in range(-self.view_range, view_range +1):
+			if ([self.pos_x + x, self.pos_z + z] in self.vision_boundaries) == false :
+				self.vision_boundaries.append([self.pos_x + x, self.pos_z + z])
 
 func resolve_viewfield():
-	var viewfield = actor.get_viewfield()
+	var viewfield = self.actor.get_viewfield()
 	var objs_visible_to_player = []
 	
 	# catalog what ought to be in view
 	for tile in viewfield: 
-		var objects_on_tile = actor.get_parent_map().get_tile_contents(tile[0], tile[1])
+		var objects_on_tile = self.actor.get_parent_map().get_tile_contents(tile[0], tile[1])
 		
 		for object in objects_on_tile:
 			if object.get_id()['CategoryType'] != 'Trap': # dont reveal traps
@@ -101,17 +101,17 @@ func resolve_viewfield():
 
 	# check what was in vision last turn
 	# if its not in the seen objects, turn off visible
-	for object in objs_visible_to_player_last_turn:
+	for object in self.objs_visible_to_player_last_turn:
 		if not (object in objs_visible_to_player):
 			if is_instance_valid(object):
 				object.visible = false
 	
 	# save what was in vision
-	objs_visible_to_player_last_turn = objs_visible_to_player
+	self.objs_visible_to_player_last_turn = objs_visible_to_player
 	
 func hide_all():
-	for object in objs_visible_to_player_last_turn:
+	for object in self.objs_visible_to_player_last_turn:
 		object.visible = false
 
 func clear_vision():
-	for obj in objs_visible_to_player_last_turn: obj.visible = false
+	for obj in self.objs_visible_to_player_last_turn: obj.visible = false

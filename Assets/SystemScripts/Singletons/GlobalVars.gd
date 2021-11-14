@@ -32,7 +32,7 @@ var default_settings = {
 }
 
 func _ready():
-	rng.randomize()
+	self.rng.randomize()
 
 # Getters
 func get_self_obj(): return self_obj
@@ -42,25 +42,25 @@ func get_self_netid(): return self_netID
 func get_client_state(): return client_state
 
 func clear_maps():
-	total_maps = []
-	total_mapsets = []
+	self.total_maps = []
+	self.total_mapsets = []
 
 # Setters
 func set_self_obj(obj): 
 	if obj != null:
-		self_obj = obj
-		self_obj.update_id('NetID', self_netID)
-		self_obj.connect_to_status_bars()
-		self_obj.add_child(player_light.instance())
-		self_obj.add_child(player_cam.instance())
+		self.self_obj = obj
+		self.self_obj.update_id('NetID', self.self_netID)
+		self.self_obj.connect_to_status_bars()
+		self.self_obj.add_child(self.player_light.instance())
+		self.self_obj.add_child(self.player_cam.instance())
 
 func set_self_netID(netid): self_netID = netid
 
 func set_client_state(state): 
-	client_state = state
+	self.client_state = state
 	
 	if state == 'loading':
-		add_child(loading_screen.instance())
+		add_child(self.loading_screen.instance())
 	else:
 		var to_remove = get_node('/root/GlobalVars/LoadingScreen')
 		remove_child(to_remove)

@@ -37,7 +37,7 @@ var nodes_in_next_layer = 0
 var ignore_enemies
 
 func solve(_searcher, search_map, start, end):
-	ignore_enemies = true
+	self.ignore_enemies = true
 	var path = pathfind(_searcher, search_map, start, end)
 	
 	var first_tile_in_path_x = path[1][0][0]
@@ -47,56 +47,56 @@ func solve(_searcher, search_map, start, end):
 	# untraversable. this if makes it so if the next move suggested is illegal,
 	# it reruns it taking enemies into consideration
 	if search_map.tile_available(first_tile_in_path_x, first_tile_in_path_z) == false:
-		ignore_enemies = false
+		self.ignore_enemies = false
 		path = pathfind(_searcher, search_map, start, end)
 	
 	return [path[0], path[1]]
 
 func reset_vars():
-	pos_queue = []
+	self.pos_queue = []
 
-	move_count = 0
-	nodes_left_in_layer = 1
-	nodes_in_next_layer = 0
+	self.move_count = 0
+	self.nodes_left_in_layer = 1
+	self.nodes_in_next_layer = 0
 
-	reached_end = false
+	self.reached_end = false
 
-	path_holder = {}
+	self.path_holder = {}
 
-	visited = []
+	self.visited = []
 	
-	start_pos = []
-	curr_pos = []
-	end_pos = []
+	self.start_pos = []
+	self.curr_pos = []
+	self.end_pos = []
 
 func pathfind(_searcher, search_map, start, end):
 	reset_vars()
-	map = search_map
-	start_pos = start
-	end_pos = end
+	self.map = search_map
+	self.start_pos = start
+	self.end_pos = end
 	
-	pos_queue.push_front(start_pos)
-	visited.append(start_pos)
+	self.pos_queue.push_front(self.start_pos)
+	self.visited.append(self.start_pos)
 	
 	# Solving ------------------------------------
-	while pos_queue.size() > 0:
-		curr_pos = pos_queue.pop_back()
+	while self.pos_queue.size() > 0:
+		self.curr_pos = self.pos_queue.pop_back()
 		
-		if curr_pos == end_pos:
-			reached_end = true
+		if self.curr_pos == self.end_pos:
+			self.reached_end = true
 			break
 		
-		explore_neighbors(curr_pos)
+		explore_neighbors(self.curr_pos)
 		
-		nodes_left_in_layer -= 1
+		self.nodes_left_in_layer -= 1
 		
-		if nodes_left_in_layer == 0:
-			nodes_left_in_layer = nodes_in_next_layer
-			nodes_in_next_layer = 0
-			move_count += 1
+		if self.nodes_left_in_layer == 0:
+			self.nodes_left_in_layer = self.nodes_in_next_layer
+			self.nodes_in_next_layer = 0
+			self.move_count += 1
 	
-	if reached_end:
-		return [move_count, retrace_path()]
+	if self.reached_end:
+		return [self.move_count, retrace_path()]
 		
 	return [-1,[[-1, -1]]]
 
@@ -105,17 +105,17 @@ func check_valid_cornering(pos, direction):
 	
 	match direction: # checking cornering
 		'upleft':
-			if map.tile_blocks_vision(pos[0] + 1, pos[1]): valid_cornering = false
-			if map.tile_blocks_vision(pos[0], pos[1] - 1): valid_cornering = false
+			if self.map.tile_blocks_vision(pos[0] + 1, pos[1]): valid_cornering = false
+			if self.map.tile_blocks_vision(pos[0], pos[1] - 1): valid_cornering = false
 		'upright': 
-			if map.tile_blocks_vision(pos[0] + 1, pos[1]): valid_cornering = false
-			if map.tile_blocks_vision(pos[0], pos[1] + 1): valid_cornering = false
+			if self.map.tile_blocks_vision(pos[0] + 1, pos[1]): valid_cornering = false
+			if self.map.tile_blocks_vision(pos[0], pos[1] + 1): valid_cornering = false
 		'downleft': 
-			if map.tile_blocks_vision(pos[0] - 1, pos[1]): valid_cornering = false
-			if map.tile_blocks_vision(pos[0], pos[1] - 1): valid_cornering = false
+			if self.map.tile_blocks_vision(pos[0] - 1, pos[1]): valid_cornering = false
+			if self.map.tile_blocks_vision(pos[0], pos[1] - 1): valid_cornering = false
 		'downright':
-			if map.tile_blocks_vision(pos[0] - 1, pos[1]): valid_cornering = false
-			if map.tile_blocks_vision(pos[0], pos[1]+1): valid_cornering = false
+			if self.map.tile_blocks_vision(pos[0] - 1, pos[1]): valid_cornering = false
+			if self.map.tile_blocks_vision(pos[0], pos[1]+1): valid_cornering = false
 			
 	return valid_cornering
 
@@ -136,14 +136,14 @@ func get_target_adjacent_pos(pos, direction):
 	return adj_pos
 
 func explore_neighbors(pos): # this function basically just adds adjacent tiles to queue if its valid
-	path_holder[pos] = []
-	for direction in direction_list: 
+	self.path_holder[pos] = []
+	for direction in self.direction_list: 
 		if check_valid_cornering(pos, direction) == false: continue
 		
 		var search_pos = get_target_adjacent_pos(pos, direction)
-		if search_pos in visited: continue
+		if search_pos in self.visited: continue
 		
-		var tile_contents = map.get_tile_contents(search_pos[0], search_pos[1])
+		var tile_contents = self.map.get_tile_contents(search_pos[0], search_pos[1])
 		
 		if typeof(tile_contents) == TYPE_STRING:
 			if tile_contents == 'Out of Bounds': continue
@@ -153,30 +153,30 @@ func explore_neighbors(pos): # this function basically just adds adjacent tiles 
 			if object.get_relation_rules()['Non-Traversable'] == true: skip_tile = true
 			if object.get_id()['CategoryType'] == 'Enemy':
 				if object.get_is_dead() == false:
-					if ignore_enemies == false: skip_tile = true
+					if self.ignore_enemies == false: skip_tile = true
 		if skip_tile: continue
 			
-		pos_queue.push_front(search_pos)
+		self.pos_queue.push_front(search_pos)
 		
-		visited.append(search_pos)
+		self.visited.append(search_pos)
 		
-		nodes_in_next_layer += 1
+		self.nodes_in_next_layer += 1
 		
-		path_holder[pos].append(search_pos)
+		self.path_holder[pos].append(search_pos)
 
 func retrace_path():
-	curr_pos = end_pos
+	self.curr_pos = self.end_pos
 	
 	var taken_path = []
 	
-	while curr_pos != start_pos:
-		for key in path_holder.keys():
-			if curr_pos in path_holder[key]:
+	while self.curr_pos != self.start_pos:
+		for key in self.path_holder.keys():
+			if self.curr_pos in self.path_holder[key]:
 				taken_path.append(key)
-				curr_pos = key
+				self.curr_pos = key
 
 	taken_path.invert()
 	taken_path.pop_front()
-	taken_path.append(end_pos)
+	taken_path.append(self.end_pos)
 
 	return taken_path

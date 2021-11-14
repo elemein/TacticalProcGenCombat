@@ -11,4 +11,4 @@ func _init().(identity):
 var attack_power_bonus = 20
 	
 func get_stats():
-	return [[attack_power_bonus, "atk pwr"]]
+	return [[self.attack_power_bonus, "atk pwr"]]

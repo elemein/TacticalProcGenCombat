@@ -19,14 +19,22 @@ class IssueChecker:
     """
     Check for any desired code quality issues throughout the project
     """
-    def __init__(self):
+    def __init__(self, fix_issues: bool = False):
         self.current_file = None
+        self.fix_issues = fix_issues
         self.issues = {
             'setget': [],
             'using_self': [],
             'type_hinting': [],
             'sync_queue': [],
             'file_types': [],
+        }
+        self.fixes = {
+            'setget': 0,
+            'using_self': 0,
+            'type_hinting': 0,
+            'sync_queue': 0,
+            'file_types': 0,
         }
 
         self.run_all_checks()
@@ -64,6 +72,8 @@ class IssueChecker:
         #     return
         with open(self.current_file, 'r') as my_file:
             file_contents = my_file.readlines()
+
+        file_modified = False
         for orig_line in file_contents:
             if '#ignore' not in orig_line:
                 if orig_line[:4] == 'var ' or orig_line[:12] == 'onready var ' or orig_line[:11] == 'export var ' \
@@ -78,19 +88,32 @@ class IssueChecker:
                     #     continue
 
                     # Check if the variable was using without referencing it with self.
-                    for reference_line in file_contents:
+                    for cnt, reference_line in enumerate(file_contents):
                         if reference_line != orig_line and var_name in reference_line \
                                 and 'self.' != reference_line[:reference_line.find(var_name)][-5:] \
                                 and reference_line[:reference_line.find(var_name)][-1:] not in string.ascii_letters \
                                 and reference_line[:reference_line.find(var_name)][-1:] not in ['_', '.', "'"] \
                                 and reference_line[reference_line.find(var_name) + len(var_name):][0] not in string.ascii_letters \
                                 and reference_line[reference_line.find(var_name) + len(var_name):][0] not in ['_', "'"] \
-                                and reference_line.strip()[0] != '#':
-                            self.issues['using_self'].append(f'{self.current_file}\t'
-                                                             f'var: {Colour.red}{var_name}{Colour.reset}\t'
-                                                             f'{reference_line[:reference_line.find(var_name)]}'
-                                                             f'{Colour.red}{var_name}{Colour.reset}'
-                                                             f'{reference_line[reference_line.find(var_name) + len(var_name):]}')
+                                and reference_line.strip()[0] != '#' and reference_line[:4] != 'func':
+
+                            if self.fix_issues:
+                                file_contents[cnt] = f'{reference_line[:reference_line.find(var_name)]}self.{var_name}' \
+                                                     f'{reference_line[reference_line.find(var_name) + len(var_name):]}'
+                                file_modified = True
+                                self.fixes['using_self'] += 1
+                            else:
+                                self.issues['using_self'].append(f'{self.current_file}\t'
+                                                                 f'var: {Colour.red}{var_name}{Colour.reset}\t'
+                                                                 f'{reference_line[:reference_line.find(var_name)]}'
+                                                                 f'{Colour.red}{var_name}{Colour.reset}'
+                                                                 f'{reference_line[reference_line.find(var_name) + len(var_name):]}')
+
+        # Overwrite the original file if it was modified
+        if file_modified:
+            with open(self.current_file, 'w') as modified_file:
+                for new_line in file_contents:
+                    modified_file.write(new_line)
 
     def check_type_hinting(self):
         """
@@ -132,6 +155,14 @@ class IssueChecker:
                   f'file_types: {len(self.issues["file_types"])}\n')
             raise Exception
 
+        if any([True for check in self.fixes if self.fixes[check] > 0]):
+            print(f'The following number of issues were fixed automatically.\n'
+                  f'setget: {self.fixes["setget"]}\n'
+                  f'using_self: {self.fixes["using_self"]}\n'
+                  f'type_hinting: {self.fixes["type_hinting"]}\n'
+                  f'sync_queue: {self.fixes["sync_queue"]}\n'
+                  f'file_types: {self.fixes["file_types"]}\n')
+
 
 if __name__ == '__main__':
-    IssueChecker()
+    IssueChecker(fix_issues=False)

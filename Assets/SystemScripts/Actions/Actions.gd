@@ -15,32 +15,32 @@ onready var unequip_item = find_node('UnequipItem')
 
 # Attacks
 func _on_spell_cast_basic_attack():
-	basic_attack.use()
+	self.basic_attack.use()
 
 	
 func _on_spell_cast_fireball():
-	fireball.use()
+	self.fireball.use()
 
 
 # Inventory Actions
 func _on_action_drop_item():
-	drop_item.use()
+	self.drop_item.use()
 
 
 func _on_action_equip_item():
-	equip_item.use()
+	self.equip_item.use()
 
 	
 func _on_action_unequip_item():
-	unequip_item.use()
+	self.unequip_item.use()
 
 
 # Movement
 func _on_spell_cast_dash():
-	dash.use()
+	self.dash.use()
 
 
 # Buffs
 func _on_spell_cast_self_heal():
-	self_heal.use()
+	self.self_heal.use()
 

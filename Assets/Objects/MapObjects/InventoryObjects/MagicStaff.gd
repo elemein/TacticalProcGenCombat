@@ -11,4 +11,4 @@ func _init().(identity):
 var spell_power_bonus = 10
 	
 func get_stats():
-	return [[spell_power_bonus, "spl pwr"]]
+	return [[self.spell_power_bonus, "spl pwr"]]

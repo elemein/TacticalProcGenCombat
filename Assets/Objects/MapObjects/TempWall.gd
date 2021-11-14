@@ -20,27 +20,27 @@ var relation_rules = {"Blocks Vision": true, "Non-Traversable": true, \
 func _init().(identity, relation_rules): pass
 
 func _ready():
-	TweenNode.connect("tween_completed", self, "_on_wall_slam_down_complete")
-	TweenNode.interpolate_property(self, "translation", 
-	rest_pos + Vector3(0, 10, 0), rest_pos, 0.5, 
+	self.TweenNode.connect("tween_completed", self, "_on_wall_slam_down_complete")
+	self.TweenNode.interpolate_property(self, "translation", 
+	self.rest_pos + Vector3(0, 10, 0), rest_pos, 0.5, 
 	Tween.TRANS_QUINT, Tween.EASE_IN)
-	TweenNode.start()
-	anim_playing = true
+	self.TweenNode.start()
+	self.anim_playing = true
 
 func _on_wall_slam_down_complete(_tween_object, _tween_node_path):
 	GlobalVars.camera.shake(50)
-	anim_playing = false
-	anim_played = true
-	TweenNode.disconnect("tween_completed", self, "_on_wall_slam_down_complete")
+	self.anim_playing = false
+	self.anim_played = true
+	self.TweenNode.disconnect("tween_completed", self, "_on_wall_slam_down_complete")
 
 func remove_self():
-	TweenNode.connect("tween_completed", self, "_on_wall_raise_up_complete")
-	TweenNode.interpolate_property(self, "translation", rest_pos, 
-		rest_pos + Vector3(0, 5, 0), 0.5, 
+	self.TweenNode.connect("tween_completed", self, "_on_wall_raise_up_complete")
+	self.TweenNode.interpolate_property(self, "translation", self.rest_pos, 
+		self.rest_pos + Vector3(0, 5, 0), 0.5, 
 		Tween.TRANS_BACK, Tween.EASE_IN)
 	
-	to_remove = true
-	TweenNode.start()
+	self.to_remove = true
+	self.TweenNode.start()
 	parent_map.remove_from_map_grid_but_keep_node(self)
 	
 func _on_wall_raise_up_complete(_tween_object, _tween_node_path):

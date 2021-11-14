@@ -10,11 +10,11 @@ var sync_queue = []
 
 func create_server():
 	GlobalVars.peer_type = 'server'
-	peer.create_server(port, max_players)
+	self.peer.create_server(self.port, self.max_players)
 	get_tree().network_peer = peer
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
-	print("Server opened successfully on port " + str(port))
+	print("Server opened successfully on self.port " + str(port))
 
 # How turns work, from input:
 # Input (for ex. basic attack)
@@ -46,7 +46,7 @@ remote func query_for_action(requester, request):
 	var player_identity
 	var player_turn_timer
 	
-	for player in player_list:
+	for player in self.player_list:
 		if player.get_id()['NetID'] == player_id:
 			player_obj = player
 			player_identity = player.get_id()
@@ -130,7 +130,7 @@ func send_action_request_confirm(actor_id, response):
 
 remote func receive_action_request_confirm(actor_id, response):
 	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
-		sync_queue.push_back({"Event Type": "Action Confirm", "Actor Id": actor_id, "Response": response})
+		self.sync_queue.push_back({"Event Type": "Action Confirm", "Actor Id": actor_id, "Response": response})
 		return
 	var gui = get_node("/root/World/GUI/Action")
 	var player_obj = get_player_obj_from_netid(actor_id['NetID'])
@@ -167,7 +167,7 @@ func object_action_event(object_id, action):
 	var orig_object_id = object_id.duplicate(true)
 	var orig_action = action.duplicate(true)
 	
-	for player in player_list:
+	for player in self.player_list:
 		if object_id['Map ID'] == player.get_id()['Map ID']:
 			if player.get_id()['NetID'] != 1:
 				rpc_id(player.get_id()['NetID'], 'receive_object_action_event', orig_object_id, orig_action)
@@ -176,7 +176,7 @@ func object_action_event(object_id, action):
 # Parse action of object and run required actions to perform action.
 remote func receive_object_action_event(object_id, action):
 	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
-		sync_queue.push_back({"Event Type": "Action", "ObjectID": object_id, "Action": action})
+		self.sync_queue.push_back({"Event Type": "Action", "ObjectID": object_id, "Action": action})
 		return
 	
 	var object = get_object_from_identity(object_id)
@@ -225,7 +225,7 @@ remote func receive_object_action_event(object_id, action):
 
 func update_round_for_players_in_map(map):
 	var map_id = map.get_map_server_id()
-	for player in player_list:
+	for player in self.player_list:
 		if player.get_id()['Map ID'] == map_id:
 			if player.get_id()['NetID'] == 1:
 				receive_round_update()
@@ -261,7 +261,7 @@ remote func receive_inventory_from_server(inventory):
 # This is a duplicate from below. More bandwidth but easier to maintain
 func update_all_actor_stats(object: ActorObj):
 	var object_id = object.get_id()
-	for player in player_list:
+	for player in self.player_list:
 		if object_id['Map ID'] == player.get_id()['Map ID']:
 			if player.get_id()['NetID'] != 1:
 				rpc_id(player.get_id()['NetID'], 'receive_update_all_actor_stats', object_id, object.stat_dict, object.ready_status)
@@ -278,7 +278,7 @@ remote func receive_update_all_actor_stats(object_id, new_stat_dict, ready_statu
 # CHANGING STAT COMMANDS -------------------------------
 # Prompt to all clients to change a given actor's stat.
 func update_actor_stat(object_id, stat_update):
-	for player in player_list:
+	for player in self.player_list:
 		if object_id['Map ID'] == player.get_id()['Map ID']:
 			if player.get_id()['NetID'] != 1:
 				rpc_id(player.get_id()['NetID'], 'receive_actor_stat_update', object_id, stat_update)
@@ -287,7 +287,7 @@ func update_actor_stat(object_id, stat_update):
 # Find the stat and adjust it.
 remote func receive_actor_stat_update(object_id, stat_update):
 	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
-		sync_queue.push_back({"Event Type": "Stat Update", "ObjectID": object_id, "Update": stat_update})
+		self.sync_queue.push_back({"Event Type": "Stat Update", "ObjectID": object_id, "Update": stat_update})
 		return
 	if object_id['Map ID'] != 0:
 		var object = get_object_from_identity(object_id)
@@ -302,7 +302,7 @@ remote func receive_actor_stat_update(object_id, stat_update):
 # NOTIF COMMANDS ---------------------------------------
 # Prompt to all clients to display a notif.
 func actor_notif_event(object_id, notif_text, notif_type):
-	for player in player_list:
+	for player in self.player_list:
 		if object_id['Map ID'] == player.get_id()['Map ID']:
 			if player.get_id()['NetID'] != 1:
 				rpc_id(player.get_id()['NetID'], 'receive_actor_notif_event', object_id, notif_text, notif_type)	
@@ -311,7 +311,7 @@ func actor_notif_event(object_id, notif_text, notif_type):
 # Get the object and display the notif.
 remote func receive_actor_notif_event(object_id, notif_text, notif_type):
 	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
-		sync_queue.push_back({"Event Type": "Notification", "ObjectID": object_id, "Notif Text": notif_text, "Notif Type": notif_type})
+		self.sync_queue.push_back({"Event Type": "Notification", "ObjectID": object_id, "Notif Text": notif_text, "Notif Type": notif_type})
 		return
 
 	var object = get_object_from_identity(object_id)
@@ -321,7 +321,7 @@ remote func receive_actor_notif_event(object_id, notif_text, notif_type):
 # VISION RELATED COMMANDS ------------------------------
 # Prompt to get everyone to review their vision.
 func resolve_all_viewfields(map):
-	for player in player_list:
+	for player in self.player_list:
 		if map.get_map_server_id() == player.get_id()['Map ID']:
 			if player.get_id()['NetID'] != 1:
 				rpc_id(player.get_id()['NetID'], 'resolve_viewfield')
@@ -337,7 +337,7 @@ remote func resolve_viewfield():
 # MAP ACTION COMMANDS ---------------------------------
 #
 func map_object_event(map_id, map_action):
-	for player in player_list:
+	for player in self.player_list:
 		if map_id == player.get_id()['Map ID']:
 			if player.get_id()['NetID'] != 1:
 				rpc_id(player.get_id()['NetID'], 'receive_map_object_event', map_id, map_action)
@@ -346,7 +346,7 @@ func map_object_event(map_id, map_action):
 #
 remote func receive_map_object_event(map_id, map_action):
 	if GlobalVars.client_state != 'ingame': # If the client is loading, we don't want to change the map being loaded.
-		sync_queue.push_back({"Event Type": "Map Event", "MapID": map_id, "Map Action": map_action})
+		self.sync_queue.push_back({"Event Type": "Map Event", "MapID": map_id, "Map Action": map_action})
 		return
 	
 	print([map_id, map_action])
@@ -369,7 +369,7 @@ remote func receive_map_object_event(map_id, map_action):
 			match map_action['Action']:
 				'Victory':
 					if GlobalVars.get_self_netid() != 1:
-						peer.disconnect_peer(1, true)
+						self.peer.disconnect_peer(1, true)
 					var _result = GlobalVars.get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
 #
 func move_client_to_map(client_obj, map):
@@ -464,7 +464,7 @@ func _player_connected(id):
 	new_player.get_parent().remove_child(new_player)
 	GlobalVars.get_self_obj().get_parent().add_child(new_player)
 	new_player.update_id('NetID', id)
-	player_list.append(new_player)
+	self.player_list.append(new_player)
 	new_player.name = 'Player%d' % new_player.get_id()['NetID']
 	new_player.play_anim('idle')
 	
@@ -472,11 +472,11 @@ func _player_connected(id):
 
 func _player_disconnected(id):
 	print('Goodbye player ' + str(id) + '.')
-	for player in player_list:
+	for player in self.player_list:
 		if player.get_id()['NetID'] == id:
 			Server.object_action_event(player.get_id(), {"Command Type": "Remove From Map"})
 
-			player_list.erase(player)
+			self.player_list.erase(player)
 			player.queue_free()
 
 # CLIENT SIDE FUNCS ------------------------------
@@ -485,7 +485,7 @@ remote func receive_id_from_server(net_id):
 
 # SERVER UTILITY FUNCTIONS ---
 func add_player_to_local_player_list(player):
-	player_list.append(player)
+	self.player_list.append(player)
 
 func get_map_from_map_id(mapid):
 	var map
@@ -495,7 +495,7 @@ func get_map_from_map_id(mapid):
 	return map
 
 func get_player_obj_from_netid(netid):
-	for player in player_list:
+	for player in self.player_list:
 		if player.get_id()['NetID'] == netid:
 			return player
 
@@ -519,8 +519,8 @@ func get_player_list() -> Array: return player_list
 
 func sync_from_sync_queue():
 	GlobalVars.set_client_state('ingame') 
-	while sync_queue.size() > 0:
-		var event = sync_queue.pop_front()
+	while self.sync_queue.size() > 0:
+		var event = self.sync_queue.pop_front()
 		
 		match event['Event Type']:
 			'Action':

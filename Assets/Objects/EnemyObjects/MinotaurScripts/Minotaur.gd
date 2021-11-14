@@ -10,9 +10,9 @@ var start_stats = {"Max HP" : 500, "HP" : 500, "Max MP": 40, "MP": 40, \
 var minimap_icon = 'Minotaur'
 
 var identity = {"Category": "Actor", "CategoryType": "Enemy", 
-				"Identifier": "Minotaur", "Max HP": start_stats['Max HP'],
-				'HP': start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
-				'MP': start_stats['MP'], 'Map ID': null, 'Position': [0,0], 
+				"Identifier": "Minotaur", "Max HP": self.start_stats['Max HP'],
+				'HP': self.start_stats['Max HP'], 'Max MP': start_stats['Max MP'],
+				'MP': self.start_stats['MP'], 'Map ID': null, 'Position': [0,0], 
 				'Facing': 'right', 'Instance ID': get_instance_id()}
 
 var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \

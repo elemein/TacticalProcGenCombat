@@ -12,13 +12,13 @@ var loot_dropped = false
 var obj_spawner = GlobalVars.obj_spawner
 
 func _init(ai_eng_const, start_drop_table, obj_id, relation_rules, actor_stats).(obj_id, relation_rules, actor_stats):
-	ai_engine = ai_eng_const.new()
-	drop_table = start_drop_table
-	rng.randomize()
+	self.ai_engine = ai_eng_const.new()
+	self.drop_table = start_drop_table
+	self.rng.randomize()
 
 func _physics_process(_delta):
 	if is_dead:
-		if loot_dropped == false: drop_loot()
+		if self.loot_dropped == false: drop_loot()
 
 	else:
 		if turn_timer.get_turn_in_process() == false: # We don't wanna decide a turn if timer isn't 0.
@@ -30,36 +30,36 @@ func setup_actor():
 	translation.x = map_pos[0] * GlobalVars.TILE_OFFSET
 	translation.z = map_pos[1] * GlobalVars.TILE_OFFSET
 	
-	ai_engine.set_actor(self)
-	add_child(ai_engine)
+	self.ai_engine.set_actor(self)
+	add_child(self.ai_engine)
 	
 	add_loot_to_inventory()
 
 func decide_next_action():
-	ai_engine.run_engine()
+	self.ai_engine.run_engine()
 
 func add_loot_to_inventory():
-	var loot_seed = rng.randi_range(1, 100)
+	var loot_seed = self.rng.randi_range(1, 100)
 	
-	for drop_chance in drop_table.keys():
+	for drop_chance in self.drop_table.keys():
 		if loot_seed <= int(drop_chance):
-			loot_to_drop.append(drop_table[drop_chance])
+			self.loot_to_drop.append(self.drop_table[drop_chance])
 			
-			if drop_table[drop_chance] == 'Gold': gold += rng.randi_range(1,50)
+			if self.drop_table[drop_chance] == 'Gold': gold += self.rng.randi_range(1,50)
 			
 			break
 
 func drop_loot():
-	for item in loot_to_drop:
+	for item in self.loot_to_drop:
 		match item:
 			'Gold':
-				var gold_obj = obj_spawner.spawn_gold(gold, parent_map, map_pos, true)
+				var gold_obj = self.obj_spawner.spawn_gold(gold, parent_map, map_pos, true)
 				Server.object_action_event(gold_obj.get_id(), {"Command Type": "Spawn On Map"})
 				gold = 0
 			
 			_:
-				var loot = obj_spawner.spawn_item(item, parent_map, map_pos, true)
+				var loot = self.obj_spawner.spawn_item(item, parent_map, map_pos, true)
 				Server.object_action_event(loot.get_id(), {"Command Type": "Spawn On Map"})
 
 	# drop items
-	loot_dropped = true
+	self.loot_dropped = true
