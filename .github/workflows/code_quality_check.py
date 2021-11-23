@@ -4,6 +4,7 @@ This script will be used to check for various code quality issues throughout the
 
 import os
 import string
+import sys
 
 
 class Colour:
@@ -20,16 +21,16 @@ class IssueChecker:
     Check for any desired code quality issues throughout the project
     """
     def __init__(self, fix_issues: bool = False):
-        self.current_file = None
-        self.fix_issues = fix_issues
-        self.issues = {
+        self.current_file_path: str = ''
+        self.fix_issues: bool = fix_issues
+        self.issues: dict = {
             'setget': [],
             'using_self': [],
             'type_hinting': [],
             'sync_queue': [],
             'file_types': [],
         }
-        self.fixes = {
+        self.fixes: dict = {
             'setget': 0,
             'using_self': 0,
             'type_hinting': 0,
@@ -45,13 +46,14 @@ class IssueChecker:
         """
         for path, _, files in os.walk('../../'):
             for file in files:
-                if file[-3:] == '.gd':
-                    self.current_file = f'{path}/{file}'
+                self.current_file_path = f'{path.replace(os.getcwd(), "")}/{file}'
 
+                if file[-3:] == '.gd':
                     self.check_setget()
                     self.check_using_self()
                     self.check_type_hinting()
                     self.check_sync_queue()
+
                 self.check_file_types()
         self.print()
 
@@ -59,10 +61,10 @@ class IssueChecker:
         """
         Verify every class variable uses setget methods
         """
-        with open(self.current_file, 'r') as my_file:
+        with open(self.current_file_path, 'r') as my_file:
             for line in my_file.readlines():
                 if line[:4] == 'var ' and 'setget' not in line and '#ignore' not in line:
-                    self.issues['setget'].append(f'{self.current_file}\t{line}')
+                    self.issues['setget'].append(f'{self.current_file_path[6:]}\t{line}')
 
     def check_using_self(self):
         """
@@ -70,7 +72,7 @@ class IssueChecker:
         """
         # if 'Assets\GUI\CharacterSelect/AbilitySelectButton.gd' not in self.current_file:
         #     return
-        with open(self.current_file, 'r') as my_file:
+        with open(self.current_file_path, 'r') as my_file:
             file_contents = my_file.readlines()
 
         file_modified = False
@@ -103,7 +105,7 @@ class IssueChecker:
                                 file_modified = True
                                 self.fixes['using_self'] += 1
                             else:
-                                self.issues['using_self'].append(f'{self.current_file}\t'
+                                self.issues['using_self'].append(f'{self.current_file_path[6:]}\t'
                                                                  f'var: {Colour.red}{var_name}{Colour.reset}\t'
                                                                  f'{reference_line[:reference_line.find(var_name)]}'
                                                                  f'{Colour.red}{var_name}{Colour.reset}'
@@ -111,7 +113,7 @@ class IssueChecker:
 
         # Overwrite the original file if it was modified
         if file_modified:
-            with open(self.current_file, 'w') as modified_file:
+            with open(self.current_file_path, 'w') as modified_file:
                 for new_line in file_contents:
                     modified_file.write(new_line)
 
@@ -119,10 +121,10 @@ class IssueChecker:
         """
         Verify that every variable definition uses type hinting
         """
-        with open(self.current_file, 'r') as my_file:
+        with open(self.current_file_path, 'r') as my_file:
             for line in my_file.readlines():
                 if line.strip()[:4] == 'var ' and ' :' not in line and '#ignore' not in line:
-                    self.issues['type_hinting'].append(f'{self.current_file}\t{line}')
+                    self.issues['type_hinting'].append(f'{self.current_file_path[6:]}\t{line}')
 
     def check_sync_queue(self):
         """
@@ -133,6 +135,16 @@ class IssueChecker:
         """
         Verify that the correct file types only exist in the expected directories
         """
+        missed_message = f'Missing file type: {self.current_file_path.split(".")[-1]}'
+        match self.current_file_path.split('.')[-1]:
+            # case "wav":
+            #     if not self.current_file_path.startswith('Audio'):
+            #         self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
+            case 'g' | 'git':
+                pass
+            case _:
+                if missed_message not in self.issues['file_types']:
+                    self.issues['file_types'].append(missed_message)
 
     def print(self):
         """
@@ -142,7 +154,7 @@ class IssueChecker:
         for issue_type in self.issues:
             print(f'::group::{issue_type}')
             for issue in self.issues[issue_type]:
-                print(issue[6:].strip())
+                print(issue.strip())
                 issues_present = True
             print('::endgroup::')
 
@@ -153,7 +165,7 @@ class IssueChecker:
                   f'type_hinting: {len(self.issues["type_hinting"])}\n'
                   f'sync_queue: {len(self.issues["sync_queue"])}\n'
                   f'file_types: {len(self.issues["file_types"])}\n')
-            raise Exception
+            sys.exit(1)
 
         if any([True for check in self.fixes if self.fixes[check] > 0]):
             print(f'The following number of issues were fixed automatically.\n'
