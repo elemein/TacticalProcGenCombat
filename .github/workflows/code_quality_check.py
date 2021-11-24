@@ -47,7 +47,7 @@ class IssueChecker:
         os.chdir('../../')
         for path, _, files in os.walk(os.getcwd()):
             path = path.replace(f'{os.getcwd()}', '')
-            path = path[1:] if path.startswith('\\') else path
+            path = path[1:] if path.startswith('\\') or path.startswith('/') else path
 
             # Ignored folders for the checks
             if any([True for bad_path in [".github", '.git', 'venv'] if path.startswith(bad_path)]):
