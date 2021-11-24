@@ -44,11 +44,25 @@ class IssueChecker:
         """
         Run all of the checks we want to look for
         """
-        for path, _, files in os.walk('../../'):
-            for file in files:
-                self.current_file_path = f'{path.replace(os.getcwd(), "")}/{file}'
+        os.chdir('../../')
+        for path, _, files in os.walk(os.getcwd()):
+            path = path.replace(f'{os.getcwd()}', '')
+            path = path[1:] if path.startswith('\\') else path
 
-                if file[-3:] == '.gd':
+            # Ignored folders for the checks
+            if any([True for bad_path in [".github", '.git', 'venv'] if path.startswith(bad_path)]):
+                continue
+
+            for file in files:
+
+                # Ignored files for the checks
+                if any([True for bad_extension in [".gitattributes", '.gitignore', 'LICENSE'] if
+                        file.endswith(bad_extension)]):
+                    continue
+
+                self.current_file_path = f'{path}/{file}' if path != '' else file
+
+                if file.endswith('.gd'):
                     self.check_setget()
                     self.check_using_self()
                     self.check_type_hinting()
@@ -64,7 +78,7 @@ class IssueChecker:
         with open(self.current_file_path, 'r') as my_file:
             for line in my_file.readlines():
                 if line[:4] == 'var ' and 'setget' not in line and '#ignore' not in line:
-                    self.issues['setget'].append(f'{self.current_file_path[6:]}\t{line}')
+                    self.issues['setget'].append(f'{self.current_file_path}\t{line}')
 
     def check_using_self(self):
         """
@@ -105,7 +119,7 @@ class IssueChecker:
                                 file_modified = True
                                 self.fixes['using_self'] += 1
                             else:
-                                self.issues['using_self'].append(f'{self.current_file_path[6:]}\t'
+                                self.issues['using_self'].append(f'{self.current_file_path}\t'
                                                                  f'var: {Colour.red}{var_name}{Colour.reset}\t'
                                                                  f'{reference_line[:reference_line.find(var_name)]}'
                                                                  f'{Colour.red}{var_name}{Colour.reset}'
@@ -124,7 +138,7 @@ class IssueChecker:
         with open(self.current_file_path, 'r') as my_file:
             for line in my_file.readlines():
                 if line.strip()[:4] == 'var ' and ' :' not in line and '#ignore' not in line:
-                    self.issues['type_hinting'].append(f'{self.current_file_path[6:]}\t{line}')
+                    self.issues['type_hinting'].append(f'{self.current_file_path}\t{line}')
 
     def check_sync_queue(self):
         """
@@ -135,13 +149,13 @@ class IssueChecker:
         """
         Verify that the correct file types only exist in the expected directories
         """
-        missed_message = f'Missing file type: {self.current_file_path.split(".")[-1]}'
-        match self.current_file_path.split('.')[-1]:
-            # case "wav":
-            #     if not self.current_file_path.startswith('Audio'):
-            #         self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
-            case 'g' | 'git':
-                pass
+        file_extension = self.current_file_path.split(".")[-1]
+        missed_message = f'{Colour.red}Missing file type: {file_extension}{Colour.reset}'
+
+        match file_extension:
+            case 'wav':
+                if not self.current_file_path.startswith('Audio'):
+                    self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
             case _:
                 if missed_message not in self.issues['file_types']:
                     self.issues['file_types'].append(missed_message)
