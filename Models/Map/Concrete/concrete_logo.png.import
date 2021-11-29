@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/concrete_logo.png-691d235e1822391b7578cd84c70d7732.stex"
+path="res://.import/concrete_logo.png-43b53cfa82be5687643e52875a3359ff.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://concrete_logo.png"
-dest_files=[ "res://.import/concrete_logo.png-691d235e1822391b7578cd84c70d7732.stex" ]
+source_file="res://Models/Map/Concrete/concrete_logo.png"
+dest_files=[ "res://.import/concrete_logo.png-43b53cfa82be5687643e52875a3359ff.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

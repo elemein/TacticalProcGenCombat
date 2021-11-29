@@ -156,6 +156,15 @@ class IssueChecker:
             case 'wav':
                 if not self.current_file_path.startswith('Audio'):
                     self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
+            # case 'wav':
+            #     if not self.current_file_path.startswith('Audio'):
+            #         self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
+            # case 'wav':
+            #     if not self.current_file_path.startswith('Audio'):
+            #         self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
+            # case 'wav':
+            #     if not self.current_file_path.startswith('Audio'):
+            #         self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
             case _:
                 if missed_message not in self.issues['file_types']:
                     self.issues['file_types'].append(missed_message)

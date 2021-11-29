@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/concrete.png-3327bed23e228e4e8c21dc2ce53ed2b9.s3tc.stex"
-path.etc2="res://.import/concrete.png-3327bed23e228e4e8c21dc2ce53ed2b9.etc2.stex"
+path.s3tc="res://.import/concrete_spec.png-81e4a72c4a56c60368135c0ec8d4e1bb.s3tc.stex"
+path.etc2="res://.import/concrete_spec.png-81e4a72c4a56c60368135c0ec8d4e1bb.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://concrete.png"
-dest_files=[ "res://.import/concrete.png-3327bed23e228e4e8c21dc2ce53ed2b9.s3tc.stex", "res://.import/concrete.png-3327bed23e228e4e8c21dc2ce53ed2b9.etc2.stex" ]
+source_file="res://Models/Map/Concrete/concrete_spec.png"
+dest_files=[ "res://.import/concrete_spec.png-81e4a72c4a56c60368135c0ec8d4e1bb.s3tc.stex", "res://.import/concrete_spec.png-81e4a72c4a56c60368135c0ec8d4e1bb.etc2.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/mode=2
 compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/bptc_ldr=0
-compress/normal_map=1
+compress/normal_map=0
 flags/repeat=true
 flags/filter=true
 flags/mipmaps=true
@@ -30,6 +30,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=false

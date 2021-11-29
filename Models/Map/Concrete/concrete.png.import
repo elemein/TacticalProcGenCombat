@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/concrete_height.png-4ac22428dfea08beafbc999af5cab13e.s3tc.stex"
-path.etc2="res://.import/concrete_height.png-4ac22428dfea08beafbc999af5cab13e.etc2.stex"
+path.s3tc="res://.import/concrete.png-20f922c9cad2497d904aa2dd734f5478.s3tc.stex"
+path.etc2="res://.import/concrete.png-20f922c9cad2497d904aa2dd734f5478.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://concrete_height.png"
-dest_files=[ "res://.import/concrete_height.png-4ac22428dfea08beafbc999af5cab13e.s3tc.stex", "res://.import/concrete_height.png-4ac22428dfea08beafbc999af5cab13e.etc2.stex" ]
+source_file="res://Models/Map/Concrete/concrete.png"
+dest_files=[ "res://.import/concrete.png-20f922c9cad2497d904aa2dd734f5478.s3tc.stex", "res://.import/concrete.png-20f922c9cad2497d904aa2dd734f5478.etc2.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/mode=2
 compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/bptc_ldr=0
-compress/normal_map=0
+compress/normal_map=1
 flags/repeat=true
 flags/filter=true
 flags/mipmaps=true
@@ -30,6 +30,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=false
