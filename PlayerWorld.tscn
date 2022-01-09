@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://PlayerWorld.gd" type="Script" id=1]
-[ext_resource path="res://Assets/GUI/StatusBar/StatusBar.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Gui/InGame/Hud/Hud.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Assets/SystemScripts/KeyboardInput.gd" type="Script" id=3]
-[ext_resource path="res://Assets/GUI/GUI.gd" type="Script" id=4]
+[ext_resource path="res://Gui/InGame/Hud/SelectedAction.gd" type="Script" id=4]
 [ext_resource path="res://GUI.gd" type="Script" id=7]
 
 [sub_resource type="StreamTexture" id=1]

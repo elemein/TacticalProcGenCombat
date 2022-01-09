@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Audio/InGame/Enemy/hit_basic_attack_1.wav" type="AudioStream" id=1]
 [ext_resource path="res://Audio/InGame/Enemy/hit_basic_attack_2.wav" type="AudioStream" id=2]
-[ext_resource path="res://Assets/GUI/FloatingResourceBar/FloatingResourceBar.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Gui/Objects/FloatingResourceBar/FloatingResourceBar.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/NewArt/Fox/Fox.glb" type="PackedScene" id=4]
 [ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/Objects/EnemyObjects/FoxScripts/Fox.gd" type="Script" id=6]

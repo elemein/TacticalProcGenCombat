@@ -53,6 +53,8 @@ class IssueChecker:
             if any([True for bad_path in [".github", '.git', 'venv'] if path.startswith(bad_path)]):
                 continue
 
+            # todo add check for SnakeCase on folder names
+
             for file in files:
 
                 # Ignored files for the checks
@@ -158,7 +160,7 @@ class IssueChecker:
                     self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
             # case 'wav':
             #     if not self.current_file_path.startswith('Audio'):
-            #         self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
+            #         self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')4
             # case 'wav':
             #     if not self.current_file_path.startswith('Audio'):
             #         self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')

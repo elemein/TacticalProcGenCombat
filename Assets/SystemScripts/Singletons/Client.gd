@@ -1,6 +1,6 @@
 extends Node
 
-onready var quit_buttons := preload("res://Assets/GUI/MenuButtons/MenuButtons.tscn")
+onready var quit_buttons := preload("res://Gui/Menu/PostGame/MenuButtons.tscn")
 var option_buttons : VBoxContainer = null
 
 # Spare signal connections.

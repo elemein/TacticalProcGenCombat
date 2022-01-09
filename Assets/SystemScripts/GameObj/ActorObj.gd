@@ -4,7 +4,7 @@ class_name ActorObj
 const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
 const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
 
-const ACTOR_NOTIF_LABEL = preload("res://Assets/GUI/ActorNotifLabel/ActorNotifLabel.tscn")
+const ACTOR_NOTIF_LABEL = preload("res://Gui/InGame/Hud/SelectedAction.gd")
 
 onready var model = $Graphics
 onready var anim : AnimationPlayer = $Graphics/AnimationPlayer

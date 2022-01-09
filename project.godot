@@ -75,7 +75,7 @@ _global_script_class_icons={
 [application]
 
 config/name="RyanSebProj"
-run/main_scene="res://Assets/GUI/TitleScreen/MainTitleScreen.tscn"
+run/main_scene="res://Gui/Menu/Main/MainTitleScreen.tscn"
 config/icon="res://icon.png"
 
 [autoload]

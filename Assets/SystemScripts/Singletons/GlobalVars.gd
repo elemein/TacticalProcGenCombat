@@ -1,6 +1,6 @@
 extends Node
 
-var loading_screen = preload('res://Assets/GUI/LoadingScreen/LoadingScreen.tscn')
+var loading_screen = preload("res://Gui/LoadingScreen/LoadingScreen.tscn")
 
 # for self_obj
 var player_cam = preload('res://Assets/Objects/PlayerObjects/PlayerCam.tscn')

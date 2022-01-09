@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Gui/InGame/DamageIndicator/DamageIndicator.gd" type="Script" id=1]
+
+[sub_resource type="DynamicFontData" id=1]
+font_path = "res://Assets/Fonts/Roboto-Regular.ttf"
+
+[sub_resource type="DynamicFont" id=2]
+font_data = SubResource( 1 )
+
+[sub_resource type="ViewportTexture" id=3]
+viewport_path = NodePath("Viewport")
+
+[node name="ActorNotifLabel" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.924, 0 )
+script = ExtResource( 1 )
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 200, 25 )
+transparent_bg = true
+
+[node name="Label" type="Label" parent="Viewport"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_colors/font_color = Color( 0.854902, 0.745098, 0, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "asdfad"
+align = 1
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform( -4.48032e-07, 0, -2.75, 0, 2.75, 0, 2.75, 0, -4.48032e-07, 0, 0, 0 )
+flip_v = true
+billboard = 1
+texture = SubResource( 3 )
+
+[node name="Tween" type="Tween" parent="."]
