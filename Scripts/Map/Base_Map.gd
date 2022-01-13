@@ -25,7 +25,7 @@ func organize_map_floor():
 	var organization_nodes = {'All': []}
 	
 	# Generate Organization Nodes
-	var organize_types = ['Terrain', 'Objects', 'Enemies', 'Players', 'Logic']
+	var organize_types = ['Terrain', 'Objects', 'Characters', 'Players', 'Logic']
 	var type_nodes_exist = true
 	for type in organize_types:
 		if get_node(type) == null: type_nodes_exist = false
@@ -58,7 +58,7 @@ func organize_map_floor():
 					'Actor':
 						match asset.object_identity['CategoryType']:
 							'Enemy':
-								organization_nodes['Enemies'].add_child(asset)
+								organization_nodes['Characters'].add_child(asset)
 								asset.name = '%s%d' % [asset.object_identity['Identifier'], asset.object_identity['Instance ID']]
 							'Player':
 								organization_nodes['Players'].add_child(asset)

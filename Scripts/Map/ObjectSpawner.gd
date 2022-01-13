@@ -20,7 +20,7 @@ var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
 # Traps
 var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
 
-# Enemies
+# Characters
 var base_imp = preload("res://Assets/Objects/EnemyObjects/Imp.tscn")
 var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
 var base_minotaur = preload("res://Assets/Objects/EnemyObjects/Minotaur.tscn")
@@ -36,7 +36,7 @@ var fox_graphics = preload("res://Assets/ObjectGraphicScenesForDumbActor/FoxGrap
 var minotaur_graphics = preload("res://Assets/ObjectGraphicScenesForDumbActor/MinotaurGraphicsScene.tscn")
 
 # Lantern
-var lantern_light_effect = preload("res://Assets/Objects/Effects/Lantern/LanternLight.tscn")
+var lantern_light_effect = preload("res://Assets/Objects/3dEffects/Lantern/LanternLight.tscn")
 
 func create_object(object_scene, map, map_pos, visibility) -> Object:
 	var object = object_scene.instance()

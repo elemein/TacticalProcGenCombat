@@ -1,5 +1,5 @@
 extends Node
-class_name PSideRoom
+class_name DungeonRoom
 
 var parent_map
 
@@ -38,17 +38,24 @@ func pos_in_room(pos):
 	if (pos_x >= x) and (pos_x <= x + (self.l-1)):
 		if (pos_z >= z) and (pos_z <= z + (self.w-1)):
 			print("Player is inside me! I'm %s" % [self])
-			
-			if self.room_cleared == false:
-				if self.type in ['Enemy', 'Exit Room']:
-					if self.exits_blocked == false:
-						count_enemies_in_room()
-						if self.enemy_count > 0:
-							block_exits()
-			
 			return true
 	#else
 	return false
+
+func check_if_locking(map_player_list):
+	count_enemies_in_room()
+	if self.room_cleared == true: return
+	if !(self.type in ['Enemy', 'Exit Room']): return
+	if self.exits_blocked == true: return
+	if self.enemy_count <= 0: return
+	if map_player_list.size() == 0: return
+	
+	var all_players_in_room = true
+	for player in map_player_list:
+		if all_players_in_room == true:
+			all_players_in_room = pos_in_room(player.get_id()['Position'])
+	
+	if all_players_in_room: Server.map_object_event(self.parent_map.get_map_server_id(), {"Scope": "Room", "Room ID": id, "Action": "Block Exits"})
 
 func count_enemies_in_room():
 	var temp_count = 0
@@ -62,7 +69,7 @@ func count_enemies_in_room():
 					if obj.get_is_dead() == false:
 						temp_count += 1
 	self.enemy_count = temp_count
-	print("Enemies detected in room: " + str(self.enemy_count))
+#	print("Characters detected in room: " + str(enemy_count))
 
 func block_exits():
 	for exit in self.exits:
@@ -92,3 +99,7 @@ func log_enemy_death(_dead_enemy):
 	
 	if self.enemy_count <= 0: 
 		self.room_cleared = true
+		Server.map_object_event(self.parent_map.get_map_server_id(), {"Scope": "Room", "Room ID": id, "Action": "Unblock Exits"})
+		
+		if self.type == 'Exit Room':
+			Server.map_object_event(self.parent_map.get_map_server_id(), {"Scope": "Map", "Action": "Victory"})

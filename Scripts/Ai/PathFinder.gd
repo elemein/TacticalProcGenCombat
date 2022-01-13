@@ -3,7 +3,7 @@
 # with some modifications to suit our usecase.
 
 #Current Bugs:
-#	- Enemies do not make room for eachother around a player. e.g.:
+#	- Characters do not make room for eachother around a player. e.g.:
 #		E-0-0-0-.
 #		0-E-E-E-.
 #		0-E-P-0-.
