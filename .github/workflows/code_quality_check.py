@@ -50,7 +50,7 @@ class IssueChecker:
             path = path[1:] if path.startswith('\\') or path.startswith('/') else path
 
             # Ignored folders for the checks
-            if any([True for bad_path in [".github", '.git', 'venv'] if path.startswith(bad_path)]):
+            if any([True for bad_path in [".github", '.git', 'venv'] if f'{os.sep}{bad_path}{os.sep}' in path]):
                 continue
 
             # todo add check for SnakeCase on folder names

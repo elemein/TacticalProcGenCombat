@@ -8,7 +8,7 @@ onready var button = find_node('Button')
 onready var cost = find_node('Cost')
 onready var power = find_node('Power')
 
-var icon_path_beg = "res://Assets/GUI/StatusBar/"
+var icon_path_beg = "res://Gui/Objects/Icons/Abilities/"
 var icon_path_end = "_x76.png"
 var icon_path = null
 

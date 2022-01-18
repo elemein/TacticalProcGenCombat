@@ -41,17 +41,17 @@ var lantern_light_effect = preload("res://Assets/Objects/3dEffects/Lantern/Lante
 func create_object(object_scene, map, map_pos, visibility) -> Object:
 	var object = object_scene.instance()
 	object.visible = visibility
-	
+
 	# If the map/map_pos = 'Inventory' (i.e. a string), do not designate a map.
 	if typeof(map) == TYPE_STRING: return object
-	
+
 	map.add_map_object(object, map_pos)
-	
+
 	return object
 
 func spawn_item(item_name, map, map_pos, visibility):
 	var item_scene
-	
+
 	match item_name:
 		'Sword': item_scene = self.base_sword
 		'Magic Staff': item_scene = self.base_staff
@@ -59,15 +59,15 @@ func spawn_item(item_name, map, map_pos, visibility):
 		'Scabbard and Dagger': item_scene = self.base_dagger
 		'Body Armour': item_scene = self.base_armour
 		'Leather Cuirass': item_scene = self.base_cuirass
-			
+
 	var item = create_object(item_scene, map, map_pos, visibility)
 	item.add_to_group('loot')
-	
+
 	return item
 
 func spawn_dumb_actor(actor_name, map, map_pos, visibility):
 	var actor = create_object(self.base_dumb_actor, map, map_pos, visibility)
-	
+
 	#Replacing the placeholder graphics with intended:
 	match actor_name:
 		'PlagueDoc':
@@ -82,20 +82,20 @@ func spawn_dumb_actor(actor_name, map, map_pos, visibility):
 		'Minotaur':
 			actor.set_graphics(self.minotaur_graphics.instance())
 			actor.add_to_group('enemies')
-	
+
 	return actor
 
 func spawn_enemy(enemy_name, map, map_pos, visibility):
 	var enemy_scene
-	
+
 	match enemy_name:
 		'Fox': enemy_scene = self.base_fox
 		'Imp': enemy_scene = self.base_imp
 		'Minotaur': enemy_scene = self.base_minotaur
-	
+
 	var enemy = create_object(enemy_scene, map, map_pos, visibility)
 	enemy.add_to_group('enemies')
-	
+
 	return enemy
 
 func spawn_gold(value, map, map_pos, visibility):
@@ -103,21 +103,21 @@ func spawn_gold(value, map, map_pos, visibility):
 
 	coins.add_to_group('loot')
 	coins.set_gold_value(value)
-	
+
 	return coins
 
 func spawn_map_object(object_name, map, map_pos, visibility):
 	var object_scene
-	
+
 	match object_name:
 		'TempWall': object_scene = self.base_tempwall
 		'BaseStairs': object_scene = self.base_stairs
 		'BaseGround': object_scene = self.base_ground
 		'BaseWall': object_scene = self.base_wall
 		'Spike Trap': object_scene = self.base_spiketrap
-			
+
 	var object = create_object(object_scene, map, map_pos, visibility)
-	
+
 	return object
 
 # To be used when spawning something from an existing identity, like when

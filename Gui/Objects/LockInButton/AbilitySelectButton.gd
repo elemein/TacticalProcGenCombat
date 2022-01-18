@@ -8,7 +8,7 @@ onready var hovered_border = find_node('Hovered')
 onready var locked_in_border = find_node('LockedIn')
 onready var disabled_border = find_node('Disabled')
 
-var icon_path_beg = "res://Assets/GUI/StatusBar/"
+var icon_path_beg = "res://Gui/Objects/Icons/Abilities/"
 var icon_path_end = "_x76.png"
 var icon_path = null
 
