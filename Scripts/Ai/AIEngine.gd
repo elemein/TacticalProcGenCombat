@@ -3,7 +3,7 @@ class_name AI_Engine
 
 const VISION_RANGE = 15
 
-const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
+const PATHFINDER = preload("res://Scripts/Ai/PathFinder.gd")
 
 var rng = RandomNumberGenerator.new()
 

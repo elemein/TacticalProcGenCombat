@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://Assets/Objects/MapObjects/Stairs.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/Map/Objects/Stairs.gd" type="Script" id=1]
 
 [sub_resource type="CubeMesh" id=1]
 size = Vector3( 1.5, 1, 0.4 )

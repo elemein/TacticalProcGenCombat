@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/smoke_04.png-2b6df79d4b7a5518a345fa67bc4eda30.s3tc.stex"
-path.etc2="res://.import/smoke_04.png-2b6df79d4b7a5518a345fa67bc4eda30.etc2.stex"
+path.s3tc="res://.import/smoke_04.png-4e3f2fd72391b648f1b418250ca9100c.s3tc.stex"
+path.etc2="res://.import/smoke_04.png-4e3f2fd72391b648f1b418250ca9100c.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Assets/Objects/Effects/Fire/smoke_04.png"
-dest_files=[ "res://.import/smoke_04.png-2b6df79d4b7a5518a345fa67bc4eda30.s3tc.stex", "res://.import/smoke_04.png-2b6df79d4b7a5518a345fa67bc4eda30.etc2.stex" ]
+source_file="res://Resources/3dEffects/Fire/smoke_04.png"
+dest_files=[ "res://.import/smoke_04.png-4e3f2fd72391b648f1b418250ca9100c.s3tc.stex", "res://.import/smoke_04.png-4e3f2fd72391b648f1b418250ca9100c.etc2.stex" ]
 
 [params]
 
@@ -30,6 +30,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=false

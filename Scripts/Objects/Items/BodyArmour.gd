@@ -6,7 +6,7 @@ var identity = {"Category": "Inv Item", "CategoryType": 'Armour' ,
 				'Map ID': null, 'Position': [0,0], 'Instance ID': get_instance_id()}
 
 func _init().(identity):
-	inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour_x76.png")
+	inventory_icon = preload("res://Resources/Objects/Items/BodyArmour_x76.png")
 
 var defense_bonus = 30
 	

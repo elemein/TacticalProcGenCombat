@@ -28,7 +28,7 @@ func organize_map_floor():
 	var organize_types = ['Terrain', 'Objects', 'Characters', 'Players', 'Logic']
 	var type_nodes_exist = true
 	for type in organize_types:
-		if get_node(type) == null: type_nodes_exist = false
+		if get_node_or_null(type) == null: type_nodes_exist = false
 	
 	if type_nodes_exist == false:
 		for type in organize_types:

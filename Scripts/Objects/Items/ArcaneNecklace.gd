@@ -6,7 +6,7 @@ var identity = {"Category": "Inv Item", "CategoryType": 'Accessory' ,
 				'Map ID': null, 'Position': [0,0], 'Instance ID': get_instance_id()}
 
 func _init().(identity):
-	inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/ArcaneNecklace_x76.png")
+	inventory_icon = preload("res://Resources/Objects/Items/ArcaneNecklace_x76.png")
 
 var spell_power_bonus = 5
 	

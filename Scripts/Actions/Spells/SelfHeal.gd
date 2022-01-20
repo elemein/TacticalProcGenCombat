@@ -14,7 +14,7 @@ func _ready():
 	""").format({'cost': spell_cost, 'power': spell_power})
 	effect_start_height = 13
 	effect_end_height = 0
-	visual_effect = preload("res://Assets/Objects/3dEffects/Heal/Heal.tscn")
+	visual_effect = preload("res://Resources/3dEffects/Heal/Heal.tscn")
 
 func _on_Actions_spell_cast_self_heal():
 	use()

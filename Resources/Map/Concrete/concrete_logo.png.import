@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/concrete_logo.png-526bda0ee2d2f9163505ce16ef7dc902.stex"
+path="res://.import/concrete_logo.png-e92470d18fa35e0b876b6d420ff4f53b.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Materials/Concrete/concrete_logo.png"
-dest_files=[ "res://.import/concrete_logo.png-526bda0ee2d2f9163505ce16ef7dc902.stex" ]
+source_file="res://Resources/Map/Concrete/concrete_logo.png"
+dest_files=[ "res://.import/concrete_logo.png-e92470d18fa35e0b876b6d420ff4f53b.stex" ]
 
 [params]
 

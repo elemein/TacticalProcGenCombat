@@ -3,7 +3,7 @@
 [ext_resource path="res://Gui/Objects/ResourceBar/health_over.png" type="Texture" id=1]
 [ext_resource path="res://Gui/Objects/ResourceBar/health_progress.png" type="Texture" id=2]
 [ext_resource path="res://Gui/Objects/ResourceBar/health_under.png" type="Texture" id=3]
-[ext_resource path="res://Assets/Themes/GUI/default_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Resources/Themes/default_theme.tres" type="Theme" id=4]
 
 [node name="ProgressBarContainer" type="MarginContainer"]
 __meta__ = {

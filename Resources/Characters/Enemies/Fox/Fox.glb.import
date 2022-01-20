@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/Fox.glb-d780f4b9c914bd8364de0625a8a51577.scn"
+path="res://.import/Fox.glb-657f30caeaf9401cd94426075f8ddebb.scn"
 
 [deps]
 
-source_file="res://Assets/NewArt/Fox/Fox.glb"
-dest_files=[ "res://.import/Fox.glb-d780f4b9c914bd8364de0625a8a51577.scn" ]
+source_file="res://Resources/Characters/Enemies/Fox/Fox.glb"
+dest_files=[ "res://.import/Fox.glb-657f30caeaf9401cd94426075f8ddebb.scn" ]
 
 [params]
 

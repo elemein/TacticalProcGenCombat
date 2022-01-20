@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/MagicStaff_x76.png-8757e6f0c3ad8fbc45c1c848d1d8d085.stex"
+path="res://.import/MagicStaff_x76.png-704b9dfb7110163e00fa72852a5803f7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Objects/MapObjects/InventoryObjects/MagicStaff_x76.png"
-dest_files=[ "res://.import/MagicStaff_x76.png-8757e6f0c3ad8fbc45c1c848d1d8d085.stex" ]
+source_file="res://Resources/Objects/Items/MagicStaff_x76.png"
+dest_files=[ "res://.import/MagicStaff_x76.png-704b9dfb7110163e00fa72852a5803f7.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

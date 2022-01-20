@@ -6,13 +6,13 @@ extends Node
 # I followed this link: https://abitawake.com/news/articles/procedural-generation-with-godot-create-dungeons-using-a-bsp-tree
 # I had to do some modification to it as the link uses a TileMap, whereas we use a 2D Array. 
 
-const ROOM_CLASS = preload("res://Assets/SystemScripts/DungeonRoom.gd")
+const ROOM_CLASS = preload("res://Scripts/Map/DungeonRoom.gd")
 
-const MAP_CLASS = preload("res://Assets/SystemScripts/S_Map.gd")
-const MAP_FILL = preload("res://Assets/SystemScripts/MapFiller.gd")
+const MAP_CLASS = preload("res://Scripts/Map/S_Map.gd")
+const MAP_FILL = preload("res://Scripts/Map/Generation/MapFiller.gd")
 
-var base_block = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
-var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
+var base_block = preload("res://Objects/Map/BaseBlock.tscn")
+var base_wall = preload("res://Objects/Map/Wall.tscn")
 
 var map_l = 20 # MIN: 12, how many rows
 var map_w = 20 # MIN: 12, how long are those rows

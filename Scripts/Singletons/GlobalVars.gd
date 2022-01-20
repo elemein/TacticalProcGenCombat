@@ -3,8 +3,8 @@ extends Node
 var loading_screen = preload("res://Gui/LoadingScreen/LoadingScreen.tscn")
 
 # for self_obj
-var player_cam = preload('res://Assets/Objects/PlayerObjects/PlayerCam.tscn')
-var player_light = preload('res://Assets/Objects/PlayerObjects/PlayerOmniLight.tscn')
+var player_cam = preload('res://Objects/Characters/Players/PlayerCam.tscn')
+var player_light = preload('res://Objects/Characters/Players/PlayerOmniLight.tscn')
 
 var rng = RandomNumberGenerator.new()
 
@@ -24,7 +24,7 @@ var self_netID : int
 
 const TILE_OFFSET = 2.0
 
-const OBJ_SPAWNER = preload("res://Assets/SystemScripts/ObjectSpawner.gd")
+const OBJ_SPAWNER = preload("res://Scripts/Map/ObjectSpawner.gd")
 var obj_spawner = OBJ_SPAWNER.new()
 
 var default_settings = {

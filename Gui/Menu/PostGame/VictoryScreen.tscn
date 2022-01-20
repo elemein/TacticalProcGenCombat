@@ -54,7 +54,7 @@ focus_previous = NodePath("../menuExit")
 size_flags_horizontal = 4
 size_flags_vertical = 6
 text = "Main Menu"
-reference_path = "res://Assets/GUI/TitleScreen/MainTitleScreen.tscn"
+reference_path = "res://Gui/Menu/Main/MainTitleScreen.tscn"
 start_focused = true
 
 [node name="menuExit" parent="VBoxContainer" instance=ExtResource( 1 )]

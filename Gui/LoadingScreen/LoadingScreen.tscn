@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Assets/Themes/GUI/ARIAL.TTF" type="DynamicFontData" id=1]
+[ext_resource path="res://Resources/Fonts/ARIAL.TTF" type="DynamicFontData" id=1]
 [ext_resource path="res://Gui/LoadingScreen/moon_multi_exposure_unsplash_license.jpg" type="Texture" id=2]
 [ext_resource path="res://Gui/LoadingScreen/LoadingScreen.gd" type="Script" id=3]
 

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/cracked_mud_logo.png-df41ae937bf67309fc79bf27849cf9d8.stex"
+path="res://.import/cracked_mud_logo.png-5198b3475c2f1a115811d6e27d101f14.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://materials/mudCracked/cracked_mud_logo.png"
-dest_files=[ "res://.import/cracked_mud_logo.png-df41ae937bf67309fc79bf27849cf9d8.stex" ]
+source_file="res://Resources/Map/CrackedMud/cracked_mud_logo.png"
+dest_files=[ "res://.import/cracked_mud_logo.png-5198b3475c2f1a115811d6e27d101f14.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

@@ -4,7 +4,7 @@ var rng = RandomNumberGenerator.new()
 
 onready var world = get_node('/.')
 
-const PATHFINDER = preload("res://Assets/SystemScripts/PathFinder.gd")
+const PATHFINDER = preload("res://Scripts/Ai/PathFinder.gd")
 var pathfinder = PATHFINDER.new()
 
 const AVG_NO_OF_ENEMIES_PER_ROOM = 1

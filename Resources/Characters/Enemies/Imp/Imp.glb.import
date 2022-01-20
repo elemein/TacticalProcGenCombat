@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/Imp.glb-117513085ae5facdde8aa554d897eadd.scn"
+path="res://.import/Imp.glb-f08ef909f5e719e8411b587aace18f8b.scn"
 
 [deps]
 
-source_file="res://Assets/NewArt/Imp/Imp.glb"
-dest_files=[ "res://.import/Imp.glb-117513085ae5facdde8aa554d897eadd.scn" ]
+source_file="res://Resources/Characters/Enemies/Imp/Imp.glb"
+dest_files=[ "res://.import/Imp.glb-f08ef909f5e719e8411b587aace18f8b.scn" ]
 
 [params]
 

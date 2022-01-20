@@ -9,7 +9,7 @@ var equippable
 var usable
 
 var minimap_icon = null
-var inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/placeholder_x76.png")
+var inventory_icon = preload("res://Resources/Objects/Items/placeholder_x76.png")
 
 var relation_rules = {"Blocks Vision": false, "Non-Traversable": false, \
 						"Monopolizes Space": false}

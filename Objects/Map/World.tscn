@@ -1,11 +1,12 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://Assets/SystemScripts/KeyboardInput.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/Objects/Characters/Player/KeyboardInput.gd" type="Script" id=1]
 [ext_resource path="res://Gui/InGame/Hud/Hud.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Gui/Objects/Icons/Abilities/Arrow_x200.png" type="Texture" id=3]
 [ext_resource path="res://Gui/InGame/Hud/SelectedAction.gd" type="Script" id=4]
-[ext_resource path="res://World.gd" type="Script" id=6]
-[ext_resource path="res://GUI.gd" type="Script" id=7]
+[ext_resource path="res://Scripts/Map/InGame/World.gd" type="Script" id=6]
+[ext_resource path="res://Scripts/Map/InGame/Gui.gd" type="Script" id=7]
+
 
 [node name="World" type="Node"]
 script = ExtResource( 6 )

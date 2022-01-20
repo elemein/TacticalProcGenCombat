@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://Assets/Textures/Wood.tres" type="Material" id=1]
-[ext_resource path="res://Assets/Textures/Steell.tres" type="Material" id=2]
-[ext_resource path="res://Assets/Textures/Gold.tres" type="Material" id=3]
-[ext_resource path="res://Assets/Objects/MapObjects/Chest.gd" type="Script" id=4]
+[ext_resource path="res://Resources/Textures/Wood.tres" type="Material" id=1]
+[ext_resource path="res://Resources/Textures/Steell.tres" type="Material" id=2]
+[ext_resource path="res://Resources/Textures/Gold.tres" type="Material" id=3]
+[ext_resource path="res://Scripts/Map/Objects/Chest.gd" type="Script" id=4]
 
 [sub_resource type="CylinderMesh" id=1]
 

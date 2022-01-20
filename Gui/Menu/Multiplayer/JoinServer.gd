@@ -3,7 +3,7 @@ extends Button
 onready var loading_icon : TextureRect = get_parent().find_node('Loading')
 onready var input_box : LineEdit = get_parent().find_node('ServerIPInput')
 
-export var reference_path = 'res://Assets/GUI/CharacterSelect/CharacterSelect.tscn'
+export var reference_path = 'res://Gui/Menu/CharacterSelect/CharacterSelect.tscn'
 export(bool) var start_focused = false
 
 func _ready():
@@ -33,7 +33,7 @@ func _on_button_pressed():
 func on_successful_connect():
 	self.loading_icon.visible = false
 	GlobalVars.set_client_state('character select')
-	self.reference_path = 'res://Assets/GUI/CharacterSelect/CharacterSelect.tscn'
+	self.reference_path = 'res://Gui/Menu/CharacterSelect/CharacterSelect.tscn'
 	var _result = get_tree().change_scene(self.reference_path)
 
 func on_unsuccessful_connect():

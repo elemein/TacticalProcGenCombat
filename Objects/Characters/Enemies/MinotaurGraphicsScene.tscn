@@ -1,12 +1,12 @@
 [gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://Assets/NewArt/Minotaur/LoinCloth.material" type="Material" id=1]
-[ext_resource path="res://Assets/NewArt/Minotaur/Hoof.material" type="Material" id=2]
-[ext_resource path="res://Assets/NewArt/Minotaur/Dark Fur.material" type="Material" id=3]
-[ext_resource path="res://Assets/NewArt/Minotaur/Red Eyes.material" type="Material" id=4]
-[ext_resource path="res://Assets/NewArt/Minotaur/Light Fur.material" type="Material" id=5]
-[ext_resource path="res://Assets/NewArt/Minotaur/Dark Eye Slots.material" type="Material" id=6]
-[ext_resource path="res://Assets/NewArt/Minotaur/Horns.material" type="Material" id=7]
+[ext_resource path="res://Resources/Characters/Enemies/Minotaur/LoinCloth.material" type="Material" id=1]
+[ext_resource path="res://Resources/Characters/Enemies/Minotaur/Hoof.material" type="Material" id=2]
+[ext_resource path="res://Resources/Characters/Enemies/Minotaur/Dark Fur.material" type="Material" id=3]
+[ext_resource path="res://Resources/Characters/Enemies/Minotaur/Red Eyes.material" type="Material" id=4]
+[ext_resource path="res://Resources/Characters/Enemies/Minotaur/Light Fur.material" type="Material" id=5]
+[ext_resource path="res://Resources/Characters/Enemies/Minotaur/Dark Eye Slots.material" type="Material" id=6]
+[ext_resource path="res://Resources/Characters/Enemies/Minotaur/Horns.material" type="Material" id=7]
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "LoinCloth"

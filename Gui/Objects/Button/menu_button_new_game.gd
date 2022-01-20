@@ -15,5 +15,5 @@ func _on_button_mouse_entered():
 	
 func _on_button_pressed():
 	GlobalVars.peer_type = 'server'
-	self.reference_path = 'res://Assets/GUI/CharacterSelect/CharacterSelect.tscn'
+	self.reference_path = 'res://Gui/Menu/CharacterSelect/CharacterSelect.tscn'
 	var _result = get_tree().change_scene(self.reference_path)

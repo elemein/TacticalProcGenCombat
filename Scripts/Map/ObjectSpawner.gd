@@ -1,42 +1,42 @@
 extends Node
 
 # Gold
-var base_coins = preload("res://Assets/Objects/MapObjects/Coins.tscn")
+var base_coins = preload("res://Objects/Map/Coins.tscn")
 
 # Inv Objects
-var base_sword = preload("res://Assets/Objects/MapObjects/InventoryObjects/Sword.tscn")
-var base_staff = preload("res://Assets/Objects/MapObjects/InventoryObjects/MagicStaff.tscn")
-var base_necklace = preload("res://Assets/Objects/MapObjects/InventoryObjects/ArcaneNecklace.tscn")
-var base_dagger = preload("res://Assets/Objects/MapObjects/InventoryObjects/ScabbardAndDagger.tscn")
-var base_armour = preload("res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour.tscn")
-var base_cuirass = preload("res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.tscn")
+var base_sword = preload("res://Objects/Items/Weapon/Sword.tscn")
+var base_staff = preload("res://Objects/Items/Weapon/MagicStaff.tscn")
+var base_necklace = preload("res://Objects/Items/Accessory/ArcaneNecklace.tscn")
+var base_dagger = preload("res://Objects/Items/Accessory/ScabbardAndDagger.tscn")
+var base_armour = preload("res://Objects/Items/Armour/BodyArmour.tscn")
+var base_cuirass = preload("res://Objects/Items/Armour/LeatherCuirass.tscn")
 
 # Map Objects
-var base_ground = preload("res://Assets/Objects/MapObjects/BaseBlock.tscn")
-var base_wall = preload("res://Assets/Objects/MapObjects/Wall.tscn")
-var base_tempwall = preload("res://Assets/Objects/MapObjects/TempWall.tscn")
-var base_stairs = preload("res://Assets/Objects/MapObjects/Stairs.tscn")
+var base_ground = preload("res://Objects/Map/BaseBlock.tscn")
+var base_wall = preload("res://Objects/Map/Wall.tscn")
+var base_tempwall = preload("res://Objects/Map/TempWall.tscn")
+var base_stairs = preload("res://Objects/Map/Stairs.tscn")
 
 # Traps
-var base_spiketrap = preload("res://Assets/Objects/MapObjects/SpikeTrap.tscn")
+var base_spiketrap = preload("res://Objects/Map/SpikeTrap.tscn")
 
 # Characters
-var base_imp = preload("res://Assets/Objects/EnemyObjects/Imp.tscn")
-var base_fox = preload("res://Assets/Objects/EnemyObjects/Fox.tscn")
-var base_minotaur = preload("res://Assets/Objects/EnemyObjects/Minotaur.tscn")
+var base_imp = preload("res://Objects/Characters/Enemies/Imp.tscn")
+var base_fox = preload("res://Objects/Characters/Enemies/Fox.tscn")
+var base_minotaur = preload("res://Objects/Characters/Enemies/Minotaur.tscn")
 
 # Actors
-var base_plaguedoc = preload("res://Assets/Objects/PlayerObjects/PlagueDoc.tscn")
-var base_dumb_actor = preload("res://Assets/Objects/PlayerObjects/DumbActor.tscn")
+var base_plaguedoc = preload("res://Objects/Characters/Players/PlagueDoc.tscn")
+var base_dumb_actor = preload("res://Objects/Characters/DumbActor.tscn")
 
 # Graphics
-var plague_doc_graphics = preload("res://Assets/ObjectGraphicScenesForDumbActor/PlagueDocGraphics.tscn")
-var imp_graphics = preload("res://Assets/ObjectGraphicScenesForDumbActor/ImpGraphicsScene.tscn")
-var fox_graphics = preload("res://Assets/ObjectGraphicScenesForDumbActor/FoxGraphicsScene.tscn")
-var minotaur_graphics = preload("res://Assets/ObjectGraphicScenesForDumbActor/MinotaurGraphicsScene.tscn")
+var plague_doc_graphics = preload("res://Objects/Characters/Players/PlagueDocGraphics.tscn")
+var imp_graphics = preload("res://Objects/Characters/Enemies/ImpGraphicsScene.tscn")
+var fox_graphics = preload("res://Objects/Characters/Enemies/FoxGraphicsScene.tscn")
+var minotaur_graphics = preload("res://Objects/Characters/Enemies/MinotaurGraphicsScene.tscn")
 
 # Lantern
-var lantern_light_effect = preload("res://Assets/Objects/3dEffects/Lantern/LanternLight.tscn")
+var lantern_light_effect = preload("res://Resources/3dEffects/Lantern/LanternLight.tscn")
 
 func create_object(object_scene, map, map_pos, visibility) -> Object:
 	var object = object_scene.instance()

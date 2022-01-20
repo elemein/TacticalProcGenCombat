@@ -2,7 +2,7 @@ extends Node
 
 var map_name = 'The Cave'
 
-const MAPSET_CLASS = preload("res://Assets/SystemScripts/Mapset.gd")
+const MAPSET_CLASS = preload("res://Scripts/Map/Generation/Mapset.gd")
 var dungeon = MAPSET_CLASS.new(self.map_name, 3)
 
 var mapsets = []

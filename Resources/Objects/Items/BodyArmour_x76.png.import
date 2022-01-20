@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/BodyArmour_x76.png-03d51672fb2bf2c3766b91fd5aad8a07.stex"
+path="res://.import/BodyArmour_x76.png-65ec1ebd143d997842ec8809467c0cdd.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Objects/MapObjects/InventoryObjects/BodyArmour_x76.png"
-dest_files=[ "res://.import/BodyArmour_x76.png-03d51672fb2bf2c3766b91fd5aad8a07.stex" ]
+source_file="res://Resources/Objects/Items/BodyArmour_x76.png"
+dest_files=[ "res://.import/BodyArmour_x76.png-65ec1ebd143d997842ec8809467c0cdd.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

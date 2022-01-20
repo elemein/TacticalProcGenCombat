@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/polycat.dae-9d5064c0251d4a33b5717b6ed8b81b9f.scn"
+path="res://.import/polycat.dae-8474aff63ae3ac2e3cc3c5db996fa636.scn"
 
 [deps]
 
-source_file="res://Assets/Objects/EnemyObjects/polycat.dae"
-dest_files=[ "res://.import/polycat.dae-9d5064c0251d4a33b5717b6ed8b81b9f.scn" ]
+source_file="res://Objects/Characters/polycat.dae"
+dest_files=[ "res://.import/polycat.dae-8474aff63ae3ac2e3cc3c5db996fa636.scn" ]
 
 [params]
 
@@ -16,9 +16,11 @@ nodes/root_name="Scene Root"
 nodes/root_scale=1.0
 nodes/custom_script=""
 nodes/storage=0
+nodes/use_legacy_names=true
 materials/location=1
 materials/storage=1
 materials/keep_on_reimport=true
+meshes/octahedral_compression=true
 meshes/compress=true
 meshes/ensure_tangents=true
 meshes/storage=0

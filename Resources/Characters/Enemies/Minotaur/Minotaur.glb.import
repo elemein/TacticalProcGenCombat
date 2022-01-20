@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/Minotaur.glb-f49f90b42e6ef9b6005e3005edaecf68.scn"
+path="res://.import/Minotaur.glb-274bcd4cdd3a9ba4327ce1b57ac8766e.scn"
 
 [deps]
 
-source_file="res://Assets/NewArt/Minotaur/Minotaur.glb"
-dest_files=[ "res://.import/Minotaur.glb-f49f90b42e6ef9b6005e3005edaecf68.scn" ]
+source_file="res://Resources/Characters/Enemies/Minotaur/Minotaur.glb"
+dest_files=[ "res://.import/Minotaur.glb-274bcd4cdd3a9ba4327ce1b57ac8766e.scn" ]
 
 [params]
 

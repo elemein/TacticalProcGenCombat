@@ -7,15 +7,15 @@ export var zoom = 1.5
 onready var grid = find_node('GridContainer')
 onready var base_tile = find_node('BaseTile')
 
-onready var player_icon = preload("res://Assets/GUI/MiniMap/Player.png")
-onready var fox_icon = preload("res://Assets/GUI/MiniMap/EnemyFox.png")
-onready var imp_icon = preload("res://Assets/GUI/MiniMap/EnemyImp.png")
-onready var minotaur_icon = preload("res://Assets/GUI/MiniMap/EnemyMinotaur.png")
-onready var stairs_icon = preload("res://Assets/GUI/MiniMap/Stairs.png")
-onready var tile_icon = preload("res://Assets/GUI/MiniMap/Tile.png")
-onready var blank_icon = preload("res://Assets/GUI/MiniMap/Blank.png")
-onready var seen_icon = preload("res://Assets/GUI/MiniMap/Seen.png")
-onready var co_op_player = preload("res://Assets/GUI/MiniMap/CoOpPlayer.png")
+onready var player_icon = preload("res://Gui/InGame/MiniMap/Player.png")
+onready var fox_icon = preload("res://Gui/InGame/MiniMap/EnemyFox.png")
+onready var imp_icon = preload("res://Gui/InGame/MiniMap/EnemyImp.png")
+onready var minotaur_icon = preload("res://Gui/InGame/MiniMap/EnemyMinotaur.png")
+onready var stairs_icon = preload("res://Gui/InGame/MiniMap/Stairs.png")
+onready var tile_icon = preload("res://Gui/InGame/MiniMap/Tile.png")
+onready var blank_icon = preload("res://Gui/InGame/MiniMap/Blank.png")
+onready var seen_icon = preload("res://Gui/InGame/MiniMap/Seen.png")
+onready var co_op_player = preload("res://Gui/InGame/MiniMap/CoOpPlayer.png")
 
 var markers = []
 
@@ -24,7 +24,7 @@ var markers = []
 func _ready():
 	if len(PlayerInfo.abilities) == 0:
 		PlayerInfo.abilities = ["BasicAttackAbility", "FireballAbility", "SelfHealAbility"]
-		var _result = get_tree().change_scene("res://World.tscn")
+		var _result = get_tree().change_scene("res://Objects/Map/World.tscn")
 		self.queue_free()
 	else:
 		yield(Signals, "world_loaded")

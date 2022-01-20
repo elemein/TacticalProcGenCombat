@@ -6,7 +6,7 @@ var identity = {"Category": "Inv Item", "CategoryType": 'Accessory' ,
 				'Map ID': null, 'Position': [0,0], 'Instance ID': get_instance_id()}
 
 func _init().(identity):
-	inventory_icon = preload("res://Assets/Objects/MapObjects/InventoryObjects/ScabbardAndDagger_x76.png")
+	inventory_icon = preload("res://Resources/Objects/Items/ScabbardAndDagger_x76.png")
 
 var attack_power_bonus = 5
 	

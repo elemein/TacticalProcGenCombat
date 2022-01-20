@@ -1,6 +1,6 @@
 extends EnemyObj
 
-const FOX_AI = preload("res://Assets/Objects/EnemyObjects/FoxScripts/FoxAI.gd")
+const FOX_AI = preload("res://Scripts/Objects/Characters/Enemy/Fox/FoxAI.gd")
 
 var start_stats = {"Max HP" : 130, "HP" : 130, "Max MP": 0, "MP": 0, \
 				"HP Regen" : 1, "MP Regen": 0, "Attack Power" : 10, \

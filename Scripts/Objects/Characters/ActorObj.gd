@@ -1,8 +1,8 @@
 extends GameObj
 class_name ActorObj
 
-const ACTOR_MOVER = preload("res://Assets/SystemScripts/ActorMover.gd")
-const VIEW_FINDER = preload("res://Assets/SystemScripts/ViewFinder.gd")
+const ACTOR_MOVER = preload("res://Scripts/Ai/ActorMover.gd")
+const VIEW_FINDER = preload("res://Scripts/Ai/ViewFinder.gd")
 
 const ACTOR_NOTIF_LABEL = preload("res://Gui/InGame/Hud/SelectedAction.gd")
 
@@ -261,7 +261,7 @@ func die():
 func move_to_death_screen():
 	if GlobalVars.get_self_netid() != 1:
 		Server.peer.disconnect_peer(1, true)
-	get_tree().change_scene('res://Assets/GUI/DeathScreen/DeathScreen.tscn')
+	get_tree().change_scene('res://Gui/Menu/PostGame/DeathScreen.tscn')
 
 func play_death_anim():
 	var peak = Vector3(self.model.translation.x, 2, model.translation.z)

@@ -2,7 +2,7 @@ extends Base_Map
 
 var parent_mapset 
 
-var PSIDE_TURN_TIMER = preload("res://Assets/SystemScripts/PSideTurnTimer.gd")
+var PSIDE_TURN_TIMER = preload("res://Scripts/Objects/Characters/Player/PSideTurnTimer.gd")
 var turn_timer = self.PSIDE_TURN_TIMER.new()
 var rooms = []
 

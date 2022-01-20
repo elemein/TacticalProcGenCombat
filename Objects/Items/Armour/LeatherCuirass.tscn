@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Assets/Textures/BadLeather.tres" type="Material" id=1]
-[ext_resource path="res://Assets/Objects/MapObjects/InventoryObjects/LeatherCuirass.gd" type="Script" id=2]
+[ext_resource path="res://Resources/Textures/BadLeather.tres" type="Material" id=1]
+[ext_resource path="res://Scripts/Objects/Items/LeatherCuirass.gd" type="Script" id=2]
 
 [sub_resource type="CubeMesh" id=1]
 size = Vector3( 0.7, 0.7, 0.2 )

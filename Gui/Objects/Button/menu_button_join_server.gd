@@ -14,5 +14,5 @@ func _on_button_mouse_entered():
 	grab_focus()
 	
 func _on_button_pressed():
-	self.reference_path = 'res://Assets/GUI/IPInputScreen/IPInputScreen.tscn'
+	self.reference_path = 'res://Gui/Menu/Multiplayer/IPInputScreen.tscn'
 	var _result = get_tree().change_scene(self.reference_path)

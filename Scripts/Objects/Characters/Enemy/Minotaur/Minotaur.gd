@@ -1,6 +1,6 @@
 extends EnemyObj
 
-const MINOTAUR_AI = preload("res://Assets/Objects/EnemyObjects/MinotaurScripts/MinotaurAI.gd")
+const MINOTAUR_AI = preload("res://Scripts/Objects/Characters/Enemy/Minotaur/MinotaurAI.gd")
 
 var start_stats = {"Max HP" : 500, "HP" : 500, "Max MP": 40, "MP": 40, \
 				"HP Regen" : 1, "MP Regen": 2, "Attack Power" : 40, \

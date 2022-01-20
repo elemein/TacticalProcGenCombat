@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://Assets/Themes/GUI/ARIAL.TTF" type="DynamicFontData" id=1]
+[ext_resource path="res://Resources/Fonts/ARIAL.TTF" type="DynamicFontData" id=1]
 [ext_resource path="res://Gui/Menu/Main/background.jpg" type="Texture" id=2]
 [ext_resource path="res://Gui/Menu/Multiplayer/BacktoMain.gd" type="Script" id=3]
 [ext_resource path="res://Gui/Menu/Multiplayer/JoinServer.gd" type="Script" id=4]

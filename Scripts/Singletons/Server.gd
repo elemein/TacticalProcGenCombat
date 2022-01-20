@@ -370,7 +370,7 @@ remote func receive_map_object_event(map_id, map_action):
 				'Victory':
 					if GlobalVars.get_self_netid() != 1:
 						self.peer.disconnect_peer(1, true)
-					var _result = GlobalVars.get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
+					var _result = GlobalVars.get_tree().change_scene('res://Gui/Menu/PostGame/VictoryScreen.tscn')
 #
 func move_client_to_map(client_obj, map):
 	rpc_id(client_obj.get_id()['NetID'], 'prepare_for_map_change', map.get_map_server_id())

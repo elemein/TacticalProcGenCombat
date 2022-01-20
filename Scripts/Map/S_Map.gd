@@ -1,6 +1,6 @@
 extends Base_Map
 
-const TIMER_SCENE = preload("res://Assets/Objects/TurnTimer.tscn")
+const TIMER_SCENE = preload("res://Objects/Map/TurnTimer.tscn")
 var turn_timer = TIMER_SCENE.instance()
 
 var rng = RandomNumberGenerator.new()

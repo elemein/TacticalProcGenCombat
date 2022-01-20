@@ -17,7 +17,7 @@ func _ready():
 	
 	Throw a fireball {length} tiles in front of you.
 	""").format({'cost': spell_cost, 'power': spell_power, 'length': spell_length})
-	visual_effect = preload('res://Assets/Objects/3dEffects/Fire/Fire.tscn')
+	visual_effect = preload('res://Resources/3dEffects/Fire/Fire.tscn')
 
 func _on_Actions_spell_cast_fireball():
 	use()

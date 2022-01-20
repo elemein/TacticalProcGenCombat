@@ -1,6 +1,6 @@
 extends EnemyObj
 
-const IMP_AI = preload("res://Assets/Objects/EnemyObjects/ImpScripts/ImpAI.gd")
+const IMP_AI = preload("res://Scripts/Objects/Characters/Enemy/Imp/ImpAI.gd")
 
 var start_stats = {"Max HP" : 75, "HP" : 80, "Max MP": 40, "MP": 40, \
 				"HP Regen" : 1, "MP Regen": 10, "Attack Power" : 5, \

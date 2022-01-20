@@ -14,5 +14,5 @@ func _on_button_mouse_entered():
 	grab_focus()
 	
 func _on_button_pressed():
-	self.reference_path = 'res://Assets/GUI/TitleScreen/MainTitleScreen.tscn'
+	self.reference_path = 'res://Gui/Menu/Main/MainTitleScreen.tscn'
 	var _result = get_tree().change_scene(self.reference_path)

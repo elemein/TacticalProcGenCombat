@@ -14,10 +14,10 @@ func _on_button_mouse_entered():
 	grab_focus()
 	
 func _on_button_pressed():
-	if self.reference_path == 'res://World.tscn' && GlobalVars.peer_type == 'client':
-		self.reference_path = 'res://PlayerWorld.tscn'
+	if self.reference_path == 'res://Objects/Map/World.tscn' && GlobalVars.peer_type == 'client':
+		self.reference_path = 'res://Scripts/Map/Generation/PlayerWorld.tscn'
 		var _result = get_tree().change_scene(self.reference_path)
-	elif self.reference_path == 'res://Assets/GUI/CharacterSelect/CharacterSelect.tscn':
+	elif self.reference_path == 'res://Gui/Menu/CharacterSelect/CharacterSelect.tscn':
 		GlobalVars.peer_type = 'server'
 		var _result = get_tree().change_scene(self.reference_path)
 	elif self.reference_path != "":

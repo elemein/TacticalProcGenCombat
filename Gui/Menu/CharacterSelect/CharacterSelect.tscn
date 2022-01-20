@@ -3,11 +3,11 @@
 [ext_resource path="res://Gui/Objects/Button/menu_button.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Gui/Objects/LockInButton/AbilitySelectButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Gui/Objects/Icons/Arrows/Left_Arrow.png" type="Texture" id=3]
-[ext_resource path="res://Assets/NewArt/Gull.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Resources/Characters/Player/Gull.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Gui/Menu/CharacterSelect/CharacterSelect.gd" type="Script" id=5]
 [ext_resource path="res://Gui/Objects/Icons/Arrows/Right_Arrow.png" type="Texture" id=6]
 [ext_resource path="res://Resources/Themes/disabled_button_theme.tres" type="StyleBox" id=7]
-[ext_resource path="res://Assets/SystemScripts/Actions/Actions.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Scripts/Actions/Actions.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Gui/Objects/Button/menu_button_lock_in.gd" type="Script" id=9]
 
 [sub_resource type="Environment" id=1]
@@ -152,6 +152,7 @@ custom_styles/disabled = ExtResource( 7 )
 disabled = true
 text = "Start"
 script = ExtResource( 9 )
+reference_path = "res://Objects/Map/World.tscn"
 
 [node name="StartRequirements" type="Label" parent="."]
 margin_left = 696.545

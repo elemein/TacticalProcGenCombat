@@ -1,9 +1,9 @@
 extends Node
 
-const MAPSET = preload("res://Assets/SystemScripts/Mapset.gd")
+const MAPSET = preload("res://Scripts/Map/Generation/Mapset.gd")
 var map_set = MAPSET.new(null, null)
 
-const MAP_UNPACKER = preload("res://Assets/SystemScripts/MapUnpacker.gd")
+const MAP_UNPACKER = preload("res://Scripts/Map/Generation/MapUnpacker.gd")
 var map_unpacker = MAP_UNPACKER.new()
 
 func _ready():

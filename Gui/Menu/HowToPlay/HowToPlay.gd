@@ -21,5 +21,5 @@ func _on_Next_pressed():
 		self.tab_container.current_tab += 1
 
 func _on_MainMenu_pressed():
-	get_tree().change_scene("res://Assets/GUI/TitleScreen/MainTitleScreen.tscn")
+	get_tree().change_scene("res://Gui/Menu/Main/MainTitleScreen.tscn")
 
