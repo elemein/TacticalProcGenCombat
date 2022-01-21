@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scripts/Map/Objects/Wall.gd" type="Script" id=1]
+[ext_resource path="res://Resources/Map/Concrete/concrete.tres" type="Material" id=2]
+
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 2, 2.5, 2 )
+
+[node name="BaseWall" type="MeshInstance"]
+transform = Transform( 0.991, 0, 0, 0, 1, 0, 0, 0, 0.991, 0, 1, 0 )
+mesh = SubResource( 1 )
+material/0 = ExtResource( 2 )
+script = ExtResource( 1 )

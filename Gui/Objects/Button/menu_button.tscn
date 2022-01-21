@@ -1,0 +1,70 @@
+[gd_scene load_steps=4 format=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.121569, 0.219608, 0.815686, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0, 0, 0, 1 )
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_size = 2
+shadow_offset = Vector2( 0.6, 0 )
+anti_aliasing_size = 2.0
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.121569, 0.219608, 0.815686, 1 )
+border_color = Color( 0, 0, 0, 1 )
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_size = 2
+shadow_offset = Vector2( 0.6, 0 )
+anti_aliasing_size = 2.0
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Button
+
+export var reference_path = \"\"
+export(bool) var start_focused = false
+
+func _ready():
+	if self.start_focused:
+		grab_focus()
+		
+	var _result = connect(\"mouse_entered\", self, \"_on_button_mouse_entered\")
+	_result = connect(\"pressed\", self, \"_on_button_pressed\")
+	
+func _on_button_mouse_entered():
+	grab_focus()
+	
+func _on_button_pressed():
+	if self.reference_path == 'res://World.tscn' && GlobalVars.peer_type == 'client':
+		self.reference_path = 'res://PlayerWorld.tscn'
+		var _result = get_tree().change_scene(self.reference_path)
+	elif self.reference_path == 'res://Gui/Menu/CharacterSelect/CharacterSelect.tscn':
+		GlobalVars.peer_type = 'server'
+		var _result = get_tree().change_scene(self.reference_path)
+	elif self.reference_path != \"\":
+		var _result = get_tree().change_scene(self.reference_path)
+	else:
+		get_tree().quit()
+"
+
+[node name="Button" type="Button"]
+margin_right = 250.0
+margin_bottom = 75.0
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/focus = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
+script = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

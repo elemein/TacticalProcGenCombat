@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Gui/InGame/MiniMap/MiniMap.gd" type="Script" id=2]
+[ext_resource path="res://Gui/InGame/MiniMap/Blank.png" type="Texture" id=6]
+
+[node name="MiniMap" type="MarginContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GridContainer" type="GridContainer" parent="."]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 35.0
+margin_bottom = 35.0
+custom_constants/vseparation = 1
+custom_constants/hseparation = 1
+columns = 20
+
+[node name="BaseTile" type="TextureRect" parent="."]
+visible = false
+light_mask = 2
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 35.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 16, 16 )
+texture = ExtResource( 6 )
+expand = true
+stretch_mode = 5

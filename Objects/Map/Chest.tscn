@@ -1,0 +1,50 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Resources/Textures/Wood.tres" type="Material" id=1]
+[ext_resource path="res://Resources/Textures/Steell.tres" type="Material" id=2]
+[ext_resource path="res://Resources/Textures/Gold.tres" type="Material" id=3]
+[ext_resource path="res://Scripts/Map/Objects/Chest.gd" type="Script" id=4]
+
+[sub_resource type="CylinderMesh" id=1]
+
+[sub_resource type="CubeMesh" id=2]
+
+[sub_resource type="CubeMesh" id=3]
+
+[node name="Chest" type="MeshInstance"]
+script = ExtResource( 4 )
+
+[node name="ChestTop" type="MeshInstance" parent="."]
+transform = Transform( -2.95535e-08, 0.676105, 0, -0.367984, -1.60851e-08, 0, 0, 0, -0.495136, 0, 0.460025, 0 )
+mesh = SubResource( 1 )
+material/0 = ExtResource( 1 )
+
+[node name="ChestBody" type="MeshInstance" parent="."]
+transform = Transform( 0.687825, 0, 0, 0, 0.343336, 0, 0, 0, 0.504672, 0, 0, 0 )
+mesh = SubResource( 2 )
+material/0 = ExtResource( 1 )
+
+[node name="ChestBandFront" type="MeshInstance" parent="."]
+transform = Transform( 0.737315, 0, 0, 0, 0.0990479, 0, 0, 0, 0.0380377, 0, 0.383587, 0.51781 )
+mesh = SubResource( 3 )
+material/0 = ExtResource( 3 )
+
+[node name="ChestBandBack" type="MeshInstance" parent="."]
+transform = Transform( 0.737315, 0, 0, 0, 0.0990479, 0, 0, 0, 0.0380377, 0, 0.383587, -0.511374 )
+mesh = SubResource( 3 )
+material/0 = ExtResource( 3 )
+
+[node name="ChestBandLeft" type="MeshInstance" parent="."]
+transform = Transform( -3.22291e-08, 0, -0.0380377, 0, 0.0990479, 0, 0.495789, 0, -1.11803e-09, -0.707178, 0.383587, 0.00269932 )
+mesh = SubResource( 3 )
+material/0 = ExtResource( 3 )
+
+[node name="ChestBandRight" type="MeshInstance" parent="."]
+transform = Transform( -3.22291e-08, 0, -0.0380377, 0, 0.0990479, 0, 0.495789, 0, -1.11803e-09, 0.698869, 0.383587, 0.0122815 )
+mesh = SubResource( 3 )
+material/0 = ExtResource( 3 )
+
+[node name="ChestLock" type="MeshInstance" parent="."]
+transform = Transform( -1.56487e-07, 0, -0.184691, 0, 0.127185, 0, 0.0314138, 0, -7.08395e-11, 0, 0.384, 0.536945 )
+mesh = SubResource( 3 )
+material/0 = ExtResource( 2 )

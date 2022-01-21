@@ -1,0 +1,79 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Scripts/Actions/Actions.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/Actions/Spells/Fireball.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/Actions/Spells/BasicAttack.gd" type="Script" id=3]
+[ext_resource path="res://Audio/InGame/Spell/miss_basic_attack.wav" type="AudioStream" id=4]
+[ext_resource path="res://Audio/InGame/Spell/fireball_throw.wav" type="AudioStream" id=5]
+[ext_resource path="res://Audio/InGame/Spell/out_of_mana.wav" type="AudioStream" id=6]
+[ext_resource path="res://Scripts/Actions/DropItem.gd" type="Script" id=7]
+[ext_resource path="res://Scripts/Actions/EquipItem.gd" type="Script" id=8]
+[ext_resource path="res://Scripts/Actions/UnequipItem.gd" type="Script" id=9]
+[ext_resource path="res://Scripts/Actions/Spells/Dash.gd" type="Script" id=10]
+[ext_resource path="res://Scripts/Actions/Spells/SelfHeal.gd" type="Script" id=11]
+[ext_resource path="res://Scripts/Actions/Inventory.gd" type="Script" id=12]
+
+[node name="Actions" type="Node"]
+script = ExtResource( 1 )
+
+[node name="Attacks" type="Node" parent="."]
+
+[node name="Fireball" type="Node" parent="Attacks"]
+script = ExtResource( 2 )
+
+[node name="UseSpell" type="AudioStreamPlayer3D" parent="Attacks/Fireball"]
+stream = ExtResource( 5 )
+unit_db = 80.0
+
+[node name="out_of_mana" type="AudioStreamPlayer3D" parent="Attacks/Fireball"]
+transform = Transform( 0.999995, 0.00281064, -0.00174667, -0.00280796, 0.999995, 0.00153718, 0.00175098, -0.00153226, 0.999997, 0, 0, 0 )
+stream = ExtResource( 6 )
+unit_db = 80.0
+
+[node name="Tween" type="Tween" parent="Attacks/Fireball"]
+
+[node name="BasicAttack" type="Node" parent="Attacks"]
+script = ExtResource( 3 )
+
+[node name="UseSpell" type="AudioStreamPlayer3D" parent="Attacks/BasicAttack"]
+stream = ExtResource( 4 )
+unit_db = 80.0
+
+[node name="out_of_mana" type="AudioStreamPlayer3D" parent="Attacks/BasicAttack"]
+stream = ExtResource( 6 )
+unit_db = 80.0
+
+[node name="Tween" type="Tween" parent="Attacks/BasicAttack"]
+
+[node name="SelfHeal" type="Node" parent="."]
+script = ExtResource( 11 )
+
+[node name="UseSpell" type="AudioStreamPlayer3D" parent="SelfHeal"]
+stream = ExtResource( 5 )
+unit_db = 80.0
+
+[node name="out_of_mana" type="AudioStreamPlayer3D" parent="SelfHeal"]
+transform = Transform( 0.999995, 0.00281064, -0.00174667, -0.00280796, 0.999995, 0.00153718, 0.00175098, -0.00153226, 0.999997, 0, 0, 0 )
+stream = ExtResource( 6 )
+unit_db = 80.0
+
+[node name="Tween" type="Tween" parent="SelfHeal"]
+
+[node name="Dash" type="Node" parent="."]
+script = ExtResource( 10 )
+
+[node name="out_of_mana" type="AudioStreamPlayer3D" parent="Dash"]
+stream = ExtResource( 6 )
+unit_db = 80.0
+
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource( 12 )
+
+[node name="DropItem" type="Node" parent="Inventory"]
+script = ExtResource( 7 )
+
+[node name="EquipItem" type="Node" parent="Inventory"]
+script = ExtResource( 8 )
+
+[node name="UnequipItem" type="Node" parent="Inventory"]
+script = ExtResource( 9 )
