@@ -25,7 +25,12 @@ outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 
-[node name="IPInputScreen" type="Node"]
+[node name="IPInputScreen" type="Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="TextureRect" type="TextureRect" parent="."]
 margin_right = 4167.0
@@ -42,7 +47,7 @@ __meta__ = {
 margin_left = 524.0
 margin_top = 380.0
 margin_right = 1031.0
-margin_bottom = 502.0
+margin_bottom = 530.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

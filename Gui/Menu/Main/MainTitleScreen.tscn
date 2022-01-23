@@ -5,11 +5,16 @@
 [ext_resource path="res://Gui/Objects/Button/menu_button_new_game.gd" type="Script" id=3]
 [ext_resource path="res://Gui/Menu/Main/background.jpg" type="Texture" id=4]
 
-[node name="MainTitleScreen" type="Node"]
-
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="MainTitleScreen" type="Control"]
 margin_right = 40.0
 margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 4167.0
+margin_bottom = 2541.0
 rect_scale = Vector2( 0.4, 0.4 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -23,7 +28,7 @@ __meta__ = {
 margin_left = 675.0
 margin_top = 350.0
 margin_right = 925.0
-margin_bottom = 650.0
+margin_bottom = 662.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {

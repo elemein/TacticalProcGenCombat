@@ -1,9 +1,15 @@
-[gd_resource type="Theme" load_steps=2 format=2]
+[gd_resource type="Theme" load_steps=5 format=2]
 
 [ext_resource path="res://Resources/Themes/default_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Resources/Themes/disabled_button_theme.tres" type="StyleBox" id=2]
+[ext_resource path="res://Resources/Themes/selected_button_theme.tres" type="StyleBox" id=3]
+[ext_resource path="res://Resources/Themes/non-selected_button_theme.tres" type="StyleBox" id=4]
 
 [resource]
 default_font = ExtResource( 1 )
+Button/styles/disabled = ExtResource( 2 )
+Button/styles/normal = ExtResource( 4 )
+Button/styles/pressed = ExtResource( 3 )
 Label/colors/font_color = Color( 0, 0, 0, 1 )
 Label/colors/font_color_shadow = Color( 0, 0, 0, 0 )
 Label/colors/font_outline_modulate = Color( 1, 1, 1, 1 )
