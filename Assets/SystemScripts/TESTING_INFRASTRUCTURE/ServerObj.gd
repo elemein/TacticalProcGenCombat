@@ -158,7 +158,7 @@ func object_action_event(object_id, action):
 	var object = get_object_from_identity(object_id)
 	if object == null and action['Command Type'] != 'Spawn On Map': return
 
-	print("%s(%s) does: %s" % [object_id['Identifier'], object_id['Instance ID'], action])
+	print("SERVER: %s(%s) does: %s" % [object_id['Identifier'], object_id['Instance ID'], action])
 	
 	# determine action
 	match action['Command Type']:
@@ -243,13 +243,17 @@ func get_object_from_identity(object_id):
 
 	# determine object
 	var object
-	var x = object_id['Position'][0]
-	var z = object_id['Position'][1]
-	var tile_objs = map.get_tile_contents(x, z)
+	match object_id['Category']:
+		'Actor':
+			for obj in map.get_node("Enemies").get_children():
+				if obj.get_id()['Instance ID'] == object_id['Instance ID']: object = obj
+			for obj in map.get_node("Players").get_children():
+				if obj.get_id()['Instance ID'] == object_id['Instance ID']: object = obj
+		
+		'Inv Item':
+			for obj in map.get_node("Objects").get_children():
+				if obj.get_id()['Instance ID'] == object_id['Instance ID']: object = obj
 
-	for obj in tile_objs:
-		if obj.get_id()['Instance ID'] == object_id['Instance ID']:
-			object = obj
 	return object
 
 func get_map_from_map_id(mapid):
@@ -258,16 +262,21 @@ func get_map_from_map_id(mapid):
 		if mapid == flr.get_map_server_id(): map = flr
 	return map
 
+func update_round_for_players_in_map(map):
+	var map_id = map.get_map_server_id()
+	for player in players_dict.values():
+		if player.get_id()['Map ID'] == map_id: rpc_id(player.get_id()['NetID'], 'receive_round_update')
+
 remote func spawn_object_in_map(object_id):
 	var x = object_id['Position'][0]
 	var z = object_id['Position'][1]
 	
 	match object_id['Identifier']:
 		'PlagueDoc': 
-			var other_player = GlobalVars.obj_spawner.spawn_dumb_actor(object_id['Identifier'], MultiplayerTestenv.get_client().get_client_obj().get_parent_map(), [x,z], false)
-			other_player.set_id(object_id)
-			other_player.play_anim('idle')
-			self.player_list.append(other_player)
+			var player = GlobalVars.obj_spawner.spawn_dumb_actor(object_id['Identifier'], MultiplayerTestenv.get_client().get_client_obj().get_parent_map(), [x,z], false)
+			player.set_id(object_id)
+			player.play_anim('idle')
+			self.player_list.append(player)
 
 		'Spike Trap':
 			var trap = GlobalVars.obj_spawner.spawn_map_object(object_id['Identifier'], MultiplayerTestenv.get_client().get_client_obj().get_parent_map(), [x,z], false)
@@ -281,3 +290,10 @@ remote func spawn_object_in_map(object_id):
 		'Inv Item':
 			var obj = GlobalVars.obj_spawner.spawn_item(object_id['Identifier'], get_map_from_map_id(object_id['Map ID']), object_id['Position'], true)
 			obj.set_id(object_id)
+
+
+remote func send_inventory_to_requester(requester_identity):
+	var inventory_owner = get_object_from_identity(requester_identity)
+	var inventory = inventory_owner.inventory
+
+	rpc_id(requester_identity['NetID'], "receive_inventory_from_server", inventory)

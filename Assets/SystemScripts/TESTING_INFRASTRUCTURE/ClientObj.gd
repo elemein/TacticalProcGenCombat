@@ -112,9 +112,11 @@ remote func receive_object_action_event(object_id, action):
 	
 	var object = get_object_from_identity(object_id)
 
-	if object == null and action['Command Type'] != 'Spawn On Map': return
+	if object == null and action['Command Type'] != 'Spawn On Map': 
+		print("sTOPPED")
+		return
 
-	print("%s(%s) does: %s" % [object_id['Identifier'], object_id['Instance ID'], action])
+	print("CLIENT: %s(%s) does: %s" % [object_id['Identifier'], object_id['Instance ID'], action])
 	
 	# determine action
 	match action['Command Type']:
@@ -212,6 +214,18 @@ remote func receive_update_all_actor_stats(object_id, new_stat_dict, ready_statu
 		object.stat_dict = new_stat_dict
 		object.ready_status = ready_status
 
+remote func receive_inventory_from_server(inventory):
+	if not MultiplayerTestenv.get_client().get_client_state() != 'ingame': # If the client is loading, we don't want to change the map being loaded.
+		MultiplayerTestenv.get_client().get_client_obj().build_inv_from_server(inventory)
+
+remote func receive_round_update():
+	var gui = get_node("/root/World/GUI/Action")
+	gui.clear_action()
+
+# Request map from server.
+func request_map_from_server():
+	print("Requesting map from server.")
+	rpc_id(1, "send_map_to_requester")
 
 func get_object_from_identity(object_id):
 	var map
@@ -220,13 +234,17 @@ func get_object_from_identity(object_id):
 
 	# determine object
 	var object
-	var x = object_id['Position'][0]
-	var z = object_id['Position'][1]
-	var tile_objs = map.get_tile_contents(x, z)
+	match object_id['Category']:
+		'Actor':
+			for obj in map.get_node("Enemies").get_children():
+				if obj.get_id()['Instance ID'] == object_id['Instance ID']: object = obj
+			for obj in map.get_node("Players").get_children():
+				if obj.get_id()['Instance ID'] == object_id['Instance ID']: object = obj
+		
+		'Inv Item':
+			for obj in map.get_node("Objects").get_children():
+				if obj.get_id()['Instance ID'] == object_id['Instance ID']: object = obj
 
-	for obj in tile_objs:
-		if obj.get_id()['Instance ID'] == object_id['Instance ID']:
-			object = obj
 	return object
 
 func get_map_from_map_id(mapid):

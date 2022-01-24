@@ -118,7 +118,7 @@ func process_turn():
 	if proposed_action.split(" ")[0] == 'move':
 #		set_actor_dir(proposed_action.split(" ")[1])
 		if check_move_action(proposed_action) == true:
-			print([object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]}])
+#			print([object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]}])
 			MultiplayerTestenv.get_server().object_action_event(object_identity, {"Command Type": "Move", "Value": proposed_action.split(" ")[1]})
 	
 	elif proposed_action == 'idle': 

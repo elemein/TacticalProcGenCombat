@@ -26,7 +26,7 @@ func fill_map():
 	var grid_data = map_data['Grid Data']
 	var map_grid = []
 	
-	MultiplayerTestenv.get_server().players_dict = {}
+#	MultiplayerTestenv.get_server().players_dict = {}
 
 	print('Unpacking map.')
 	
@@ -56,8 +56,8 @@ func fill_map():
 						
 						new_object.play_anim('idle')
 						
-						if not new_object in MultiplayerTestenv.get_server().players_dict.values():
-							MultiplayerTestenv.get_server().players_dict[new_object.get_id()['NetID']] = new_object
+#						if not new_object in MultiplayerTestenv.get_server().players_dict.values():
+#							MultiplayerTestenv.get_server().players_dict[new_object.get_id()['NetID']] = new_object
 						
 					_:
 						match object['CategoryType']:

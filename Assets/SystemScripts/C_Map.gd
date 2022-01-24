@@ -7,7 +7,7 @@ var turn_timer = PSIDE_TURN_TIMER.new()
 var rooms = []
 
 # Getters
-func get_turn_timer(): return turn_timer
+func get_turn_timer(): return turn_timer.get_turn_timer()
 
 func set_map_grid(new_grid): map_grid = new_grid
 

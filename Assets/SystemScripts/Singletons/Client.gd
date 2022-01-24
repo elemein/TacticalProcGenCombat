@@ -35,7 +35,7 @@ func connect_to_server():
 func _connected_ok():
 	print("Connected to server successfully.")
 	get_node('/root/IPInputScreen/MarginContainer/VBoxContainer/JoinServer').on_successful_connect()
-	MultiplayerTestenv.get_server().request_map_from_server()
+	MultiplayerTestenv.get_client().request_map_from_server()
 #	MultiplayerTestenv.get_client().set_client_state('character select')
 
 func _connected_fail():
