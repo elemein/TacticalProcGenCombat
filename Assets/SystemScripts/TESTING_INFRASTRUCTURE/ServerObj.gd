@@ -153,6 +153,30 @@ remote func query_for_action(requester, request):
 				send_action_request_confirm(player_obj.get_id(), {"Condition": "Allow", "Option": "Unequip Item"})
 			else: print('Discarding unequip item request from ' + str(player_id))
 
+func map_object_event(map_id, map_action):
+	for player in players_dict.values():
+		if map_id == player.get_id()['Map ID']:
+			rpc_id(player.get_id()['NetID'], 'receive_map_object_event', map_id, map_action)
+
+	receive_map_object_event(map_id, map_action)
+
+remote func receive_map_object_event(map_id, map_action):
+	print([map_id, map_action])
+	match map_action['Scope']:
+		"Room":
+			var room
+			for map in world.get_node('The Cave').floors.values():
+				if map_id == map.get_map_server_id():
+					for each_room in map.rooms:
+						if each_room.id == map_action['Room ID']:
+							room = each_room
+			
+			match map_action['Action']:
+				'Block Exits':
+					room.block_exits()
+				'Unblock Exits':
+					room.unblock_exits()
+
 # Duplicate the object's resources to send out, and prompt all clients to receive command.
 func object_action_event(object_id, action):
 	var object = get_object_from_identity(object_id)

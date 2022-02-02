@@ -104,6 +104,33 @@ remote func prepare_for_map_change(map_id):
 	
 	rpc_id(1, "send_map_to_requester")
 
+remote func receive_map_object_event(map_id, map_action):
+	if MultiplayerTestenv.get_client().get_client_obj() != 'ingame': # If the client is loading, we don't want to change the map being loaded.
+		sync_queue.push_back({"Event Type": "Map Event", "MapID": map_id, "Map Action": map_action})
+		return
+	
+	print([map_id, map_action])
+	match map_action['Scope']:
+		"Room":
+			var room
+			var map = get_node('/root/World/The Cave').get_child(0).floors.values()
+			for each_room in map.rooms:
+				if each_room.id == map_action['Room ID']:
+					room = each_room
+			
+			match map_action['Action']:
+				'Block Exits':
+					room.block_exits()
+				'Unblock Exits':
+					room.unblock_exits()
+		
+		"Map":
+			match map_action['Action']:
+				'Victory':
+					if GlobalVars.get_self_netid() != 1:
+						network.disconnect_peer(1, true)
+					var _result = GlobalVars.get_tree().change_scene('res://Assets/GUI/VictoryScreen/VictoryScreen.tscn')
+
 # Parse action of object and run required actions to perform action.
 remote func receive_object_action_event(object_id, action):
 	if MultiplayerTestenv.get_client().get_client_state() != 'ingame': # If the client is loading, we don't want to change the map being loaded.
