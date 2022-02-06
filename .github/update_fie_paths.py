@@ -28,7 +28,6 @@ for path, folders, files in os.walk(os.getcwd()):
                             old_assets[bad_path[1:-1]] = {'bad_files': [f'{path}\\{file}']}
                         else:
                             old_assets[bad_path[1:-1]]['bad_files'].append(f'{path}\\{file}')
-                # print()
 
 # Add any paths that have the same filename as the old asset
 old_files = [file.split('/')[-1] for file in old_assets]

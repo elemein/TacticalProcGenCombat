@@ -50,7 +50,7 @@ class IssueChecker:
             path = path[1:] if path.startswith('\\') or path.startswith('/') else path
 
             # Ignored folders for the checks
-            if any([True for bad_path in [".github", '.git', 'venv'] if f'{os.sep}{bad_path}{os.sep}' in path]):
+            if any([True for bad_path in [".github", '.git', 'venv', '.idea'] if path.startswith(bad_path)]):
                 continue
 
             # todo add check for SnakeCase on folder names
@@ -71,7 +71,7 @@ class IssueChecker:
                     self.check_sync_queue()
 
                 self.check_file_types()
-        self.print()
+        self.print_results()
 
     def check_setget(self):
         """
@@ -158,9 +158,15 @@ class IssueChecker:
             case 'wav':
                 if not self.current_file_path.startswith('Audio'):
                     self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
-            # case 'wav':
-            #     if not self.current_file_path.startswith('Audio'):
-            #         self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')4
+            case 'gd':
+                if not self.current_file_path.startswith('Scripts'):
+                    self.issues['file_types'].append(f'Scripts \t- {self.current_file_path}')
+            case 'jpg' | 'TTF' | 'material' | 'png' | 'ttf':
+                if not self.current_file_path.startswith('Resources'):
+                    self.issues['file_types'].append(f'Resources \t- {self.current_file_path}')
+            case 'cfg' | 'exe':
+                if '\\' in self.current_file_path or '/' in self.current_file_path:
+                    self.issues['file_types'].append(f'Root \t- {self.current_file_path}')
             # case 'wav':
             #     if not self.current_file_path.startswith('Audio'):
             #         self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
@@ -171,7 +177,9 @@ class IssueChecker:
                 if missed_message not in self.issues['file_types']:
                     self.issues['file_types'].append(missed_message)
 
-    def print(self):
+        self.issues['file_types'] = sorted(self.issues['file_types'])
+
+    def print_results(self):
         """
         Print the results of the checks
         """
