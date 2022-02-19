@@ -80,7 +80,7 @@ class IssueChecker:
         with open(self.current_file_path, 'r') as my_file:
             for line in my_file.readlines():
                 if line[:4] == 'var ' and 'setget' not in line and '#ignore' not in line:
-                    self.issues['setget'].append(f'{self.current_file_path}\t{line}')
+                    self.issues['setget'].append(f'{self.current_file_path[44:]}\t{line}')
 
     def check_using_self(self):
         """
@@ -121,7 +121,7 @@ class IssueChecker:
                                 file_modified = True
                                 self.fixes['using_self'] += 1
                             else:
-                                self.issues['using_self'].append(f'{self.current_file_path}\t'
+                                self.issues['using_self'].append(f'{self.current_file_path[44:]}\t'
                                                                  f'var: {Colour.red}{var_name}{Colour.reset}\t'
                                                                  f'{reference_line[:reference_line.find(var_name)]}'
                                                                  f'{Colour.red}{var_name}{Colour.reset}'
@@ -140,7 +140,7 @@ class IssueChecker:
         with open(self.current_file_path, 'r') as my_file:
             for line in my_file.readlines():
                 if line.strip()[:4] == 'var ' and ' :' not in line and '#ignore' not in line:
-                    self.issues['type_hinting'].append(f'{self.current_file_path}\t{line}')
+                    self.issues['type_hinting'].append(f'{self.current_file_path[44:]}\t{line}')
 
     def check_sync_queue(self):
         """
@@ -157,16 +157,16 @@ class IssueChecker:
         match file_extension:
             case 'wav':
                 if not self.current_file_path.startswith('Audio'):
-                    self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')
+                    self.issues['file_types'].append(f'Audio \t- {self.current_file_path[44:]}')
             case 'gd':
                 if not self.current_file_path.startswith('Scripts'):
-                    self.issues['file_types'].append(f'Scripts \t- {self.current_file_path}')
+                    self.issues['file_types'].append(f'Scripts \t- {self.current_file_path[44:]}')
             case 'jpg' | 'TTF' | 'material' | 'png' | 'ttf':
                 if not self.current_file_path.startswith('Resources'):
-                    self.issues['file_types'].append(f'Resources \t- {self.current_file_path}')
+                    self.issues['file_types'].append(f'Resources \t- {self.current_file_path[44:]}')
             case 'cfg' | 'exe':
                 if '\\' in self.current_file_path or '/' in self.current_file_path:
-                    self.issues['file_types'].append(f'Root \t- {self.current_file_path}')
+                    self.issues['file_types'].append(f'Root \t- {self.current_file_path[44:]}')
             # case 'wav':
             #     if not self.current_file_path.startswith('Audio'):
             #         self.issues['file_types'].append(f'Audio \t- {self.current_file_path}')

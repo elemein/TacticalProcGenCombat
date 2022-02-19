@@ -1,26 +1,26 @@
 extends Base_Map
 
-const TIMER_SCENE = preload("res://Objects/Map/TurnTimer.tscn")
-var turn_timer = TIMER_SCENE.instance()
+const TIMER_SCENE : PackedScene = preload("res://Objects/Map/TurnTimer.tscn")
+var turn_timer : Timer = TIMER_SCENE.instance()
 
-var rng = RandomNumberGenerator.new()
+var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 
-var in_view_objects = []
+var in_view_objects : Array = []
 
 # MAP is meant to be accessed via [x][z] where '0' is a blank tile.
-var parent_mapset
+var parent_mapset : Object
 
-var map_id
+var map_id : int
 
-var rooms
+var rooms : int
 
-var map_type
+var map_type : String
 var spawn_room
 var exit_room
 
-var catalog_of_ground_tiles = []
+var catalog_of_ground_tiles : Array = []
 
-var current_number_of_enemies = 0
+var current_number_of_enemies : int = 0
 
 func _init(name, id, type):
 	map_name = name
@@ -65,7 +65,7 @@ func move_on_map(object, old_pos, new_pos):
 
 func print_map_grid():
 	print('-----') # Divider
-	var print_grid = map_grid.duplicate()
+	var print_grid : Array = map_grid.duplicate()
 	print_grid.invert()
 	for line in print_grid:
 		var converted_row = []
@@ -141,7 +141,7 @@ func add_map_object(object, tile):
 
 # REMOVE FROM MAP FUNCS --------------------
 func remove_map_object(object):
-	var tile = object.get_map_pos()
+	var tile : Array = object.get_map_pos()
 	
 	map_grid[tile[0]][tile[1]].erase(object)
 	object.get_parent().remove_child(object)
@@ -151,7 +151,7 @@ func remove_map_object(object):
 # -----------------------------------------
 
 func check_for_map_events():
-	var relevant_player_list = []
+	var relevant_player_list : Array = []
 	for player in Server.get_player_list():
 		if player.get_id()['Map ID'] == get_map_server_id():
 			relevant_player_list.append(player)
@@ -181,7 +181,7 @@ func log_enemy_death(dead_enemy):
 			room.log_enemy_death(dead_enemy)
 
 func return_map_grid_encoded_to_string():
-	var to_return = []
+	var to_return : Array = []
 	
 	for x in range(map_grid.size()):
 		to_return.append([])
@@ -194,10 +194,10 @@ func return_map_grid_encoded_to_string():
 	return to_return
 
 func return_rooms_encoded_to_dict():
-	var to_return = []
+	var to_return : Array = []
 	
 	for room in self.rooms:
-		var dict_to_add = {}
+		var dict_to_add : Dictionary = {}
 		
 		dict_to_add['parent_map_id'] = room.parent_map.map_server_id
 		dict_to_add['id'] = room.id

@@ -2,9 +2,9 @@ extends Base_Map
 
 var parent_mapset 
 
-var PSIDE_TURN_TIMER = preload("res://Scripts/Objects/Characters/Player/PSideTurnTimer.gd")
-var turn_timer = self.PSIDE_TURN_TIMER.new()
-var rooms = []
+var PSIDE_TURN_TIMER : GDScript = preload("res://Scripts/Objects/Characters/Player/PSideTurnTimer.gd")
+var turn_timer : Node = self.PSIDE_TURN_TIMER.new()
+var rooms : Array = []
 
 # Getters
 func get_turn_timer(): return turn_timer
@@ -38,7 +38,7 @@ func move_on_map(object, old_pos, new_pos):
 func set_map_server_id(server_id): map_server_id = server_id
 
 func remove_map_object(object):
-	var tile = object.get_map_pos()
+	var tile : Array = object.get_map_pos()
 	
 	map_grid[tile[0]][tile[1]].erase(object)
 	object.get_parent().remove_child(object)
